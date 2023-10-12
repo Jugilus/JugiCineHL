@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="breakablePlatformA" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="2" nTilesY="2">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="breakablePlatformA__whole" nameID="whole" x="50" y="50" handleSource="true"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Standard" name="breakablePlatformA_brokenPart_5" nameID="brokenPart5" x="67" y="31"/>
+        <sprite type="Standard" name="breakablePlatformA_brokenPart_3" nameID="brokenPart3" x="36" y="35"/>
+        <sprite type="Standard" name="breakablePlatformA_brokenPart_6" nameID="brokenPart6" x="87" y="37"/>
+        <sprite type="Standard" name="breakablePlatformA_brokenPart_1" nameID="brokenPart1" x="12" y="37"/>
+        <sprite type="Standard" name="breakablePlatformA_brokenPart_4" nameID="brokenPart4" x="65" y="42"/>
+        <sprite type="Standard" name="breakablePlatformA_brokenPart_2" nameID="brokenPart2" x="26" y="43"/>
+    </layer>
+</composedSprite>

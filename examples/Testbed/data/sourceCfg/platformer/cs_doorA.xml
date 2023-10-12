@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="doorA" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="2" nTilesY="6">
+    <layer content="Free sprites" name="Layer 1">
+        <parameter name="eMainShape" value="true" type="bool"/>
+        <sprite type="Standard" name="doorA_mainPart" nameID="mainPart" x="50" y="250"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 3">
+        <sprite type="Standard" name="doorA_bottomPart" nameID="bottomPart" x="50" y="42"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Standard" name="doorA_light" nameID="rightLight" x="95" y="220">
+            <parameter name="eLinkedGroupID" value="0" type="int"/>
+            <parameter name="entity" value="doorA_rightLight" type="string"/>
+        </sprite>
+        <sprite type="Standard" name="doorA_light" nameID="leftLight" x="5" y="220">
+            <parameter name="eLinkedGroupID" value="0" type="int"/>
+            <parameter name="entity" value="doorA_leftLight" type="string"/>
+        </sprite>
+        <sprite type="Standard" name="doorA_partAbove" x="50" y="250" handleSource="true"/>
+    </layer>
+    <vectorLayer name="Vector Layer 1">
+        <rectangle points="(-50,50);(50,50);(50,250);(-50,250)" nameID="leftArea">
+            <parameter name="eLinkedGroupID" value="0" type="int"/>
+            <parameter name="entity" value="doorA_leftSensorArea" type="string"/>
+        </rectangle>
+        <rectangle points="(50,50);(150,50);(150,250);(50,250)" nameID="rightArea">
+            <parameter name="eLinkedGroupID" value="0" type="int"/>
+            <parameter name="entity" value="doorA_rightSensorArea" type="string"/>
+        </rectangle>
+    </vectorLayer>
+    <parameter name="changeChildParameter" value="leftLight, eIdentifier, 0" type="string"/>
+    <parameter name="changeChildParameter2" value="rightLight, eIdentifier, 0" type="string"/>
+    <parameter name="changeChildParameter3" value="stringValue" type="string"/>
+    <parameter name="changeChildParameter4" value="stringValue" type="string"/>
+    <parameter name="eLinkedGroupID" value="0" type="int"/>
+    <parameter name="entity" value="doorA" type="string"/>
+    <timelineAnimation name="opening" loopCount="0">
+        <animationMember/>
+        <animationMember childNameID="mainPart">
+            <animationTrack kind="Scaling">
+                <key time="0" easing="Linear" scale="1"/>
+                <key time="300" easing="Linear" xScale="1" yScale="0"/>
+            </animationTrack>
+        </animationMember>
+        <animationMember childNameID="bottomPart">
+            <animationTrack kind="Translation">
+                <key time="0" easing="Linear" dx="0" dy="0"/>
+                <key time="300" easing="Linear" dx="0" dy="198"/>
+            </animationTrack>
+        </animationMember>
+    </timelineAnimation>
+    <timelineAnimation name="closing" loopCount="0">
+        <animationMember/>
+        <animationMember childNameID="mainPart">
+            <animationTrack kind="Scaling">
+                <key time="0" easing="Linear" xScale="1" yScale="0"/>
+                <key time="300" easing="Linear" xScale="1" yScale="1"/>
+            </animationTrack>
+        </animationMember>
+        <animationMember childNameID="bottomPart">
+            <animationTrack kind="Translation">
+                <key time="0" easing="Linear" dx="0" dy="198"/>
+                <key time="300" easing="Linear" dx="0" dy="0"/>
+            </animationTrack>
+        </animationMember>
+    </timelineAnimation>
+</composedSprite>

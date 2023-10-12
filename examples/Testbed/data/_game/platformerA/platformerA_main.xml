@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene name="PlatformerA">
+    <sceneMaps>
+        <sceneMap name="platformerA_background" mapFile="data/maps/platformer_background-0a.jma" mapType="Parallax" worldSceneMapForParrallaxMap="platformerA">
+            <viewport xMinRel="0" xMinAbs="0" xMaxRel="100" xMaxAbs="0" yMinRel="0" yMinAbs="0" yMaxRel="100" yMaxAbs="0"/>
+        </sceneMap>
+        <sceneMap name="platformerA" mapFile="data/maps/platformer-DemoTest-2.jma" mapType="World">
+            <viewport xMinRel="0" xMinAbs="0" xMaxRel="100" xMaxAbs="0" yMinRel="0" yMinAbs="0" yMaxRel="100" yMaxAbs="0"/>
+        </sceneMap>
+    </sceneMaps>
+
+    <!--
+    <components>
+        <entitySystemUpdater>
+        </entitySystemUpdater>
+
+    </components>
+-->
+
+
+    <!-- INIT ACTIONS - set objects into correct initial state -->
+    <init>
+        <do>
+            <setActiveState state="sceneLogic" />
+            <setActiveState state="sceneLogic/platformer" />
+        </do>
+    </init>
+    
+
+    <start>
+        <!-- it seems nothing need to be done here (maybe some initialization stuff would better fit here) -->
+    </start>
+
+
+    <update>
+        <state name="sceneLogic">   <!-- a root logic state is required -->
+    
+            <state name="platformer">
+                <use components="entitySystem" />
+            </state>
+        </state>
+    </update>
+ 
+</scene>

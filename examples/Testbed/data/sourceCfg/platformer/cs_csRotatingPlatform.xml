@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="csRotatingPlatform" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="7" nTilesY="3">
+    <layer content="Grid sprites" name="Layer 2">
+        <parameter name="eMainShape" value="true" type="bool"/>
+        <sprite type="Standard" name="platformerTilesA,57" x="175" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,58" x="225" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,37" x="175" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,38" x="225" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,17" x="175" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,18" x="225" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,16" x="275" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,36" x="275" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,56" x="275" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,18" x="125" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,38" x="125" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,58" x="125" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,16" x="75" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,36" x="75" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,56" x="75" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,55" x="25" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,35" x="25" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,15" x="25" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,59" x="325" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,39" x="325" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,19" x="325" y="125"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="markerA" x="175" y="75" handleSource="true"/>
+    </layer>
+    <parameter name="eBehRotation" value="CCW" type="string"/>
+    <parameter name="entity" value="rotatingPlatformC" type="string"/>
+</composedSprite>

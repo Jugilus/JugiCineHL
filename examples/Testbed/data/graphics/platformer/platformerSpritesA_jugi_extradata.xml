@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<imageExtraData>
+    <subimage name="rotatingPlatformB" handlePoint="375,75">
+        <rectangle points="(-219,-69);(219,-69);(219,69);(-219,69)"/>
+    </subimage>
+    <subimage name="rotatingPlatform">
+        <rectangle points="(-169,-69);(169,-69);(169,69);(-169,69)"/>
+    </subimage>
+    <subimage name="doorA__mainPart" handlePoint="11,198">
+        <rectangle points="(-11,-99);(12,-99);(12,99);(-11,99)"/>
+    </subimage>
+    <subimage name="doorA__bottomPart" handlePoint="11,0"/>
+    <subimage name="doorB__blueDoor" handlePoint="11,195"/>
+    <subimage name="doorB__yellowDoor" handlePoint="11,195"/>
+    <subimage name="doorB__greenDoor" handlePoint="11,195"/>
+    <subimage name="doorB__topPart" handlePoint="11,45"/>
+    <subimage name="doorB__bottomPart" handlePoint="11,0"/>
+    <subimage name="fancyPlatformA__body" handlePoint="75,48">
+        <rectangle points="(-71,-18);(71,-18);(71,20);(-71,20)"/>
+    </subimage>
+    <subimage name="platformB" handlePoint="50,69">
+        <rectangle points="(-46,-37);(46,-37);(46,-15);(-46,-15)"/>
+    </subimage>
+    <subimage name="platformA" handlePoint="50,30">
+        <rectangle points="(-46,-11);(46,-11);(46,11);(-46,11)"/>
+    </subimage>
+    <subimage name="breakablePlatformA__whole-jfr1" handlePoint="50,25"/>
+    <subimage name="breakablePlatformA__whole-jfr2" handlePoint="50,25"/>
+    <subimage name="breakablePlatformA__whole-jfr3" handlePoint="50,25"/>
+    <subimage name="breakablePlatformA__whole-jfr4" handlePoint="50,25"/>
+    <subimage name="breakablePlatformA__whole-jfr5" handlePoint="50,25"/>
+    <subimage name="dissapearingPlatformA__shapeDummy" handlePoint="46,30"/>
+    <subimage name="switchB-jfr1">
+        <rectangle points="(-39,-39);(39,-39);(39,39);(-39,39)"/>
+    </subimage>
+    <subimage name="switchB-jfr2">
+        <rectangle points="(-39,-39);(39,-39);(39,39);(-39,39)"/>
+    </subimage>
+    <subimage name="boxA">
+        <polyline points="(38,-37);(38,37);(0,38);(-37,37);(-37,-37)" closed="true"/>
+    </subimage>
+    <subimage name="switchA-jfr1">
+        <rectangle points="(-25,-37);(25,-37);(25,38);(-25,38)"/>
+    </subimage>
+    <subimage name="switchA-jfr2">
+        <rectangle points="(-25,-37);(25,-37);(25,38);(-25,38)"/>
+    </subimage>
+    <subimage name="trampolineA-jfr1" handlePoint="36,6"/>
+    <subimage name="trampolineA-jfr2" handlePoint="36,6"/>
+    <subimage name="trampolineA-jfr3" handlePoint="36,6"/>
+    <subimage name="doorTopB" handlePoint="25,15"/>
+    <subimage name="doorTopA" handlePoint="25,13"/>
+    <subimage name="groundSwitchA-jfr1" handlePoint="23,18">
+        <rectangle points="(-18,1);(18,1);(18,11);(-18,11)"/>
+    </subimage>
+    <subimage name="groundSwitchA-jfr2" handlePoint="23,18">
+        <rectangle points="(-18,1);(18,1);(18,11);(-18,11)"/>
+    </subimage>
+</imageExtraData>

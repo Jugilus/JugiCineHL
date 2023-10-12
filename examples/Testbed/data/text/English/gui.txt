@@ -1,0 +1,165 @@
+>defFont:fontNormal
+>defColor:violetA
+>defTabSpacing:30
+>defIndent:0
+
+>id:0  // main menu screen - main buttons
+PLAY SCENE
+
+>id:1
+SETTINGS
+
+>id:2
+ABOUT
+
+>id:3
+QUIT
+
+>id:4
+(not used)
+
+>id:5    //scene selector panel title	
+Scenes
+
+>id:6   //active user panel title	
+User
+
+>id:7   //active user panel - change user button
+Change
+
+>id:8   //user selector panel title
+Users
+
+>id:9  //user selector buttons
+New
+
+>id:10
+Delete
+
+>id:11
+Close
+
+>id:12
+(not used)
+
+>id:13   //new user panel title
+New User
+
+>id:14   //new user panel buttons
+Ok
+
+>id:15
+Cancel
+
+>id:16   //settings panel title
+Settings
+
+>id:17   //settings panel buttons
+GAME
+
+>id:18
+GRAPHICS
+
+>id:19
+AUDIO
+
+>id:20
+CONTROLS
+
+>id:21
+LANGUAGE
+
+>id:22
+MAIN MENU
+
+>id:23   //graphics subpanel content 
+Full Screen
+
+>id:24
+(not used)
+
+>id:25
+(not used)
+
+>id:26    //audio subpanel content
+Music
+
+>id:27
+Sfx
+
+>id:28
+Speech
+
+>id:29
+(not used)
+
+>id:30
+(not used)
+
+>id:31     //input subpanel content - input device selector item: keyboard
+Keyboard
+
+>id:32     //input device selector entry - no name controller
+Joystick
+
+>id:33     //button for setting default input keys/buttons
+Default
+
+>id:34
+(not used)
+
+>id:35
+(not used)
+
+>id:36     //language subpanel content
+For language change to takes effect, the game needs to be restarted!
+
+>id:37
+(not used)
+
+>id:38
+(not used)
+
+>id:39
+(not used)
+
+>id:40     //confirm box 
+Yes
+
+>id:41
+No
+
+>id:42
+(not used)
+
+>id:43	// WHEN TRANSLATING DO NOT TRANSLATE userName AS THAT IS A KEYWORD
+Deleting an user deletes all data associated with that user including stored game positions! Are you sure you want to delete user <font:fontNormal_bold> userName <defFont> ?
+
+>id:44
+Sorry, nothing to see here! In-game stuff has yet to be implemented.
+
+>id:45   //about panel
+About
+
+>id:46
+<font:fontNormal_bold> Jugicine Player <defFont> (working name) is an application for playing 2d games created with <font:fontNormal_bold> Jugicine HL framework. <defFont> Jugicine HL framework is an extension of previous Jugimap framework which bring high level system for game creation. The backend engine and renderer is <font:fontNormal_bold> nCine <defFont> .
+The new framework is still early in development. This testbed application serves for adding and testing new features. The main goal is to develop a system for creating games where no classic programming would be required. Or at least a system which approaches that goal.
+ 
+>id:47
+(not used)
+
+>id:48
+(not used)
+
+>id:49
+(not used)
+
+>id:50
+(not used)
+
+>id:51
+(not used)
+
+>id:52
+(not used)
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="dissapearingPlatformA" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="2" nTilesY="2">
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Standard" name="dissapearingPlatformA_part" nameID="part3" x="81" y="35"/>
+        <sprite type="Standard" name="dissapearingPlatformA_part" nameID="part2" x="50" y="35"/>
+        <sprite type="Standard" name="dissapearingPlatformA_part" nameID="part1" x="19" y="35"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="dissapearingPlatformA_shapeDummy" nameID="shapeDummy" x="50" y="50" handleSource="true"/>
+    </layer>
+</composedSprite>

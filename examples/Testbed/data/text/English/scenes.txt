@@ -1,0 +1,53 @@
+>defFont:fontNormal
+>defColor:violetA
+
+>id:0
+Run and jump
+
+>id:1
+Testing movements and traversals in a platformer game environment.
+
+>id:2
+Items and triggers
+
+>id:3
+Testing item effects and connections with other items to trigger game events.  
+
+>id:4
+Scene 3
+
+>id:5
+Scene 3 description
+
+>id:6
+Scene 4
+
+>id:7
+Scene 4 description
+
+>id:8
+Scene 5
+
+>id:9
+Scene 5 description
+
+>id:10
+Another scene
+
+>id:11
+Another scene description
+
+>id:12
+Scene 7
+
+>id:13
+Scene 7 description
+
+>id:14
+(not used)
+
+>id:15
+(not used)
+
+>id:16
+(not used)

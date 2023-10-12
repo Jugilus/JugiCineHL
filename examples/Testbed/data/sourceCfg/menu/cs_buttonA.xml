@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="buttonA" set="spritesA" tileWidth="64" tileHeight="64" nTilesX="1" nTilesY="1">
+    <layer content="Grid sprites" name="Layer 1">
+        <sprite type="Standard" name="buttonA_background" x="32" y="32" handleSource="true"/>
+    </layer>
+    <layer content="Grid sprites" name="Layer 2">
+        <sprite type="Text" name="buttonA_text" nameID="label" x="32" y="32" text="buttonA"/>
+    </layer>
+    <parameter name="changeChildText" value="string value" type="string"/>
+    <parameter name="wName" value="value" type="string"/>
+    <constantParameter name="widget" value="button" type="string"/>
+</composedSprite>

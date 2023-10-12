@@ -1,0 +1,55 @@
+>defFont:fontNormal
+>defColor:violetA
+>defTabSpacing:30
+
+
+>id:0
+Teci in skoči
+
+>id:1
+Testiranje premikanja v okolju platformer igre.
+
+>id:2
+Predmeti in stikala
+
+>id:3
+Testiranje predmetov, njihovih učinkov in povezave med predmeti.  
+
+>id:4
+Prizor 3
+
+>id:5
+Opis prizora 3
+
+>id:6
+Prizor 4
+
+>id:7
+Opis prizora 4
+
+>id:8
+Prizor 5
+
+>id:9
+Opis prizora 5
+
+>id:10
+Še en prizor
+
+>id:11
+Opis še enega prizora
+
+>id:12
+Prizor 7
+
+>id:13
+Opis prizora 5
+
+>id:14
+(not used)
+
+>id:15
+(not used)
+
+>id:16
+(not used)

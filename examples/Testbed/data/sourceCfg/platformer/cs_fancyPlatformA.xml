@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="fancyPlatformA" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="2">
+    <layer content="Free sprites" name="Layer 1">
+        <parameter name="eMainShape" value="true" type="bool"/>
+        <sprite type="Standard" name="fancyPlatformA_body" x="0" y="50" handleSource="true"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Standard" name="fancyPlatformA_light" nameID="light" x="0" y="21">
+            <parameter name="entity" value="fancyPlatformA_light" type="string"/>
+            <parameter name="eLinkedGroupID" value="0" type="int"/>
+        </sprite>
+    </layer>
+    <parameter name="entity" value="fancyPlatformA" type="string"/>
+    <parameter name="eLinkedGroupID" value="0" type="int"/>
+    <parameter name="eTransporterDisabledOnStart" value="false" type="bool" active="false"/>
+</composedSprite>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sourceGraphicSet name="spritesA">
+    <images>
+        <spriteSheetImage file="data/graphics/platformer/platformerSpritesA.png"/>
+        <singleImage file="data/graphics/platformer/platformerSkyGradient.png"/>
+    </images>
+    <textSprites/>
+    <sprites>
+        <sprite name="platformA" imageName="platformA" imageFile="data/graphics/platformer/platformerSpritesA.png">
+            <parameter name="eDirection" value="FORWARD" type="string"/>
+            <parameter name="eStartingDelay" value="0.0" type="float" active="false"/>
+            <parameter name="eStopDuration" value="0.0" type="float" active="false"/>
+            <parameter name="entity" value="platformA" type="string"/>
+            <parameter name="eLinkedGroupID" value="0" type="int" active="false"/>
+            <parameter name="eTransporterDisabledOnStart" value="true" type="bool" active="false"/>
+            <constantParameter name="eKinematic" value="platformA" type="string"/>
+        </sprite>
+        <sprite name="platformB" imageName="platformB" imageFile="data/graphics/platformer/platformerSpritesA.png">
+            <parameter name="eBehAniObject" value="stringValue" type="string"/>
+            <parameter name="entity" value="platformB" type="string"/>
+            <timelineAnimation name="test" loopCount="forever">
+                <animationMember>
+                    <animationTrack kind="Path movement" pathNameId="">
+                        <key time="0" easing="Linear" pos="0.250055"/>
+                        <key time="1490" easing="Linear" pos="0.75"/>
+                        <key time="3000" easing="Linear" pos="0.25"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+            <timelineAnimation name="compAniTest" loopCount="forever">
+                <animationMember>
+                    <animationTrack kind="Path movement" pathNameId="bezCircle">
+                        <key time="0" easing="Linear" pos="0"/>
+                        <key time="3000" easing="Linear" pos="0.37"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
+        <sprite name="rotatingWheel_wheel" imageName="rotatingWheel__wheel" imageFile="data/graphics/platformer/platformerSpritesA.png">
+            <timelineAnimation name="fullCircleRotation" loopCount="forever">
+                <animationMember>
+                    <animationTrack kind="Rotation">
+                        <key time="0" easing="Linear" rotation="0"/>
+                        <key time="6000" easing="Linear" rotation="360"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+            <timelineAnimation name="135degRotation" loopCount="forever">
+                <animationMember>
+                    <animationTrack kind="Rotation">
+                        <key time="0" easing="Linear" rotation="0"/>
+                        <key time="2000" easing="Linear" rotation="-135"/>
+                        <key time="4000" easing="Linear" rotation="0"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
+        <sprite name="boxA" imageName="boxA" imageFile="data/graphics/platformer/platformerSpritesA.png">
+            <parameter name="entity" value="box" type="string"/>
+        </sprite>
+        <sprite name="sphereA" imageName="sphereA" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="sphereB" imageName="sphereB" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="conveyorB_arrow">
+            <image name="conveyorB_arrow-jfr1" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="conveyorB_arrow-jfr2" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <parameter name="aniObject" value="stringValue" type="string"/>
+            <parameter name="aniObjectAnimation" value="" type="string"/>
+            <frameAnimation name="blinking-slow" loopCount="forever">
+                <frame image="conveyorB_arrow-jfr1" duration="700"/>
+                <frame image="conveyorB_arrow-jfr2" duration="700"/>
+            </frameAnimation>
+            <frameAnimation name="blinking-fast" loopCount="forever">
+                <frame image="conveyorB_arrow-jfr1" duration="350"/>
+                <frame image="conveyorB_arrow-jfr2" duration="350"/>
+            </frameAnimation>
+        </sprite>
+        <sprite name="markerA" imageName="markerA" imageFile="data/graphics/platformer/platformerSpritesA.png">
+            <constantParameter name="invisibleDummy" value="true" type="bool"/>
+        </sprite>
+        <sprite name="rotPlatform" imageName="rotatingPlatform" imageFile="data/graphics/platformer/platformerSpritesA.png">
+            <parameter name="eBehRotation" value="stringValue" type="string"/>
+            <parameter name="eTransporter" value="rotatingPlatformA" type="string"/>
+            <constantParameter name="eKinematic" value="rotatingPlatformA" type="string"/>
+        </sprite>
+        <sprite name="rotPlatformB" imageName="rotatingPlatformB" imageFile="data/graphics/platformer/platformerSpritesA.png">
+            <parameter name="eBehRotation" value="stringValue" type="string"/>
+            <parameter name="eTransporter" value="rotatingPlatformB" type="string"/>
+            <constantParameter name="eKinematic" value="rotatingPlatformB" type="string"/>
+        </sprite>
+        <sprite name="skyGradient" imageName="platformerSkyGradient" imageFile="data/graphics/platformer/platformerSkyGradient.png"/>
+        <sprite name="rotatingWheel_axis" imageName="rotatingWheel__axis" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="switchA">
+            <image name="switchA-jfr1" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="switchA-jfr2" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <parameter name="entity" value="wallSwitchA" type="string"/>
+            <frameAnimation name="on" loopCount="0">
+                <frame image="switchA-jfr1" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="off" loopCount="0">
+                <frame image="switchA-jfr2" duration="100"/>
+            </frameAnimation>
+        </sprite>
+        <sprite name="switchB">
+            <image name="switchB-jfr1" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="switchB-jfr2" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <parameter name="entity" value="wallSwitchB" type="string"/>
+            <parameter name="eLinkedGroupID" value="0" type="int"/>
+            <frameAnimation name="on" loopCount="0">
+                <frame image="switchB-jfr1" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="off" loopCount="0">
+                <frame image="switchB-jfr2" duration="100"/>
+            </frameAnimation>
+        </sprite>
+        <sprite name="trampolineA">
+            <image name="trampolineA-jfr1" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="trampolineA-jfr2" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="trampolineA-jfr3" file="data/graphics/platformer/platformerSpritesA.png"/>
+        </sprite>
+        <sprite name="detail_light1">
+            <image name="detail__light1-jfr1" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="detail__light1-jfr2" file="data/graphics/platformer/platformerSpritesA.png"/>
+        </sprite>
+        <sprite name="groundSwitchA">
+            <image name="groundSwitchA-jfr1" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="groundSwitchA-jfr2" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <parameter name="eLinkedGroupID" value="0" type="int"/>
+            <parameter name="eLinkedEntityID" value="0" type="int"/>
+            <parameter name="entity" value="stringValue" type="string"/>
+            <frameAnimation name="off" loopCount="0">
+                <frame image="groundSwitchA-jfr1" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="on" loopCount="0">
+                <frame image="groundSwitchA-jfr2" duration="100"/>
+            </frameAnimation>
+        </sprite>
+        <sprite name="doorA_slidingDoor" imageName="doorA__slidingDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorA_partAbove" imageName="doorA__partAbove" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorA_light">
+            <image name="doorA__noLight" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="doorA__greenLight" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="doorA__redLight" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <parameter name="eLinkedGroupID" value="0" type="int"/>
+            <parameter name="entity" value="stringValue" type="string"/>
+            <frameAnimation name="green" loopCount="0">
+                <frame image="doorA__greenLight" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="red" loopCount="0">
+                <frame image="doorA__redLight" duration="100"/>
+            </frameAnimation>
+        </sprite>
+        <sprite name="doorB_blueDoor" imageName="doorB__blueDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_greenDoor" imageName="doorB__greenDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_yellowDoor" imageName="doorB__yellowDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_blueKey" imageName="doorB__blueKey" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_greenKey" imageName="doorB__greenKey" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_keyYellow" imageName="doorB__yellowKey" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_partAbove" imageName="doorB__partAbove" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="fancyPlatformA_body" imageName="fancyPlatformA__body" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="fancyPlatformA_light" imageName="fancyPlatformA__light" imageFile="data/graphics/platformer/platformerSpritesA.png">
+            <parameter name="entity" value="fancyPlatformA_light" type="string"/>
+            <parameter name="eLinkedGroupID" value="0" type="int"/>
+            <timelineAnimation name="off" loopCount="0">
+                <animationMember>
+                    <animationTrack kind="Alpha">
+                        <key time="0" easing="Linear" alpha="0"/>
+                        <key time="1000" easing="Linear" alpha="0"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+            <timelineAnimation name="on" loopCount="0">
+                <animationMember>
+                    <animationTrack kind="Alpha">
+                        <key time="0" easing="Linear" alpha="1"/>
+                        <key time="1000" easing="Linear" alpha="1"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+            <timelineAnimation name="standBy" loopCount="0">
+                <animationMember>
+                    <animationTrack kind="Alpha">
+                        <key time="0" easing="Linear" alpha="0.6"/>
+                        <key time="1000" easing="Linear" alpha="0.6"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+            <timelineAnimation name="blinking" loopCount="forever" scaleDuration="0.5">
+                <animationMember>
+                    <animationTrack kind="Alpha">
+                        <key time="0" easing="Linear" alpha="0.6"/>
+                        <key time="100" easing="Linear" alpha="0.6"/>
+                        <key time="200" easing="Linear" alpha="1"/>
+                        <key time="300" easing="Linear" alpha="1"/>
+                        <key time="410" easing="Linear" alpha="0.6"/>
+                        <key time="500" easing="Linear" alpha="0.6"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
+        <sprite name="breakablePlatformA__whole">
+            <image name="breakablePlatformA__whole-jfr1" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="breakablePlatformA__whole-jfr2" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="breakablePlatformA__whole-jfr3" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="breakablePlatformA__whole-jfr4" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="breakablePlatformA__whole-jfr5" file="data/graphics/platformer/platformerSpritesA.png"/>
+        </sprite>
+        <sprite name="breakablePlatformA_brokenPart_1" imageName="breakablePlatformA__brokenPart_1" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_2" imageName="breakablePlatformA__brokenPart_2" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_3" imageName="breakablePlatformA__brokenPart_3" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_4" imageName="breakablePlatformA__brokenPart_4" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_5" imageName="breakablePlatformA__brokenPart_5" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_6" imageName="breakablePlatformA__brokenPart_6" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="dissapearingPlatformA_part" imageName="dissapearingPlatformA__part" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="dissapearingPlatformA_shapeDummy" imageName="dissapearingPlatformA__shapeDummy" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_bottomPart" imageName="doorB__bottomPart" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_topPart" imageName="doorB__topPart" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorA_bottomPart" imageName="doorA__bottomPart" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorA_mainPart" imageName="doorA__mainPart" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorTopA" imageName="doorTopA" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorTopB" imageName="doorTopB" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="lightA">
+            <image name="lightA_grey" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="lightA_green" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="lightA_red" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <parameter name="entity" value="doorA2_light" type="string"/>
+            <frameAnimation name="noLight" loopCount="0">
+                <frame image="lightA_grey" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="green" loopCount="0">
+                <frame image="lightA_green" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="red" loopCount="0">
+                <frame image="lightA_red" duration="100"/>
+            </frameAnimation>
+        </sprite>
+    </sprites>
+</sourceGraphicSet>

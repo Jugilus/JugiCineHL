@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="doorA2" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="6">
+    <layer content="Free sprites" name="Layer 1">
+        <parameter name="eMainShape" value="true" type="bool"/>
+        <sprite type="Standard" name="doorA_mainPart" nameID="mainPart" x="0" y="250" handleSource="true"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 3">
+        <sprite type="Standard" name="doorA_bottomPart" nameID="bottomPart" x="0" y="42"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Standard" name="doorTopB" x="0" y="250"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 4">
+        <sprite type="Standard" name="lightA" x="0" y="255">
+            <parameter name="entity" value="doorA2_light" type="string"/>
+        </sprite>
+    </layer>
+    <vectorLayer name="Vector Layer 1">
+        <rectangle points="(-100,50);(100,50);(100,250);(-100,250)" nameID="doorArea">
+            <parameter name="entity" value="doorA2_area" type="string"/>
+        </rectangle>
+    </vectorLayer>
+    <parameter name="entity" value="doorA2" type="string"/>
+    <parameter name="eLinkedGroupID" value="0" type="int"/>
+	    <timelineAnimation name="opening" loopCount="0">
+        <animationMember/>
+        <animationMember childNameID="mainPart">
+            <animationTrack kind="Scaling">
+                <key time="0" easing="Linear" scale="1"/>
+                <key time="300" easing="Linear" xScale="1" yScale="0"/>
+            </animationTrack>
+        </animationMember>
+        <animationMember childNameID="bottomPart">
+            <animationTrack kind="Translation">
+                <key time="0" easing="Linear" dx="0" dy="0"/>
+                <key time="300" easing="Linear" dx="0" dy="198"/>
+            </animationTrack>
+        </animationMember>
+    </timelineAnimation>
+    <timelineAnimation name="closing" loopCount="0">
+        <animationMember/>
+        <animationMember childNameID="mainPart">
+            <animationTrack kind="Scaling">
+                <key time="0" easing="Linear" xScale="1" yScale="0"/>
+                <key time="300" easing="Linear" xScale="1" yScale="1"/>
+            </animationTrack>
+        </animationMember>
+        <animationMember childNameID="bottomPart">
+            <animationTrack kind="Translation">
+                <key time="0" easing="Linear" dx="0" dy="198"/>
+                <key time="300" easing="Linear" dx="0" dy="0"/>
+            </animationTrack>
+        </animationMember>
+    </timelineAnimation>
+
+</composedSprite>

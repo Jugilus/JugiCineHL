@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sourceGraphicSet name="tilesA">
+    <images>
+        <tileSheetImage file="data/graphics/platformer/platformerTilesA.png"/>
+    </images>
+    <textSprites/>
+    <sprites>
+        <sprite name="platformerTilesA,0" imageName="0" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,1" imageName="1" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,2" imageName="2" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,3" imageName="3" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,4" imageName="4" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,5" imageName="5" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,6" imageName="6" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,7" imageName="7" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,8" imageName="8" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,9" imageName="9" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,10" imageName="10" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,11" imageName="11" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,12" imageName="12" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,13" imageName="13" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,14" imageName="14" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,15" imageName="15" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,16" imageName="16" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,17" imageName="17" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,18" imageName="18" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,19" imageName="19" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,20" imageName="20" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,21" imageName="21" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,22" imageName="22" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,23" imageName="23" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,24" imageName="24" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,25" imageName="25" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,26" imageName="26" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,27" imageName="27" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,28" imageName="28" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,29" imageName="29" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,30" imageName="30" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,31" imageName="31" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,32" imageName="32" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,33" imageName="33" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,34" imageName="34" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,35" imageName="35" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,36" imageName="36" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,37" imageName="37" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,38" imageName="38" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,39" imageName="39" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,40" imageName="40" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,41" imageName="41" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,42" imageName="42" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,43" imageName="43" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,44" imageName="44" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,45" imageName="45" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,46" imageName="46" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,47" imageName="47" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,48" imageName="48" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,49" imageName="49" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,50" imageName="50" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,51" imageName="51" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,52" imageName="52" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,53" imageName="53" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,54" imageName="54" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,55" imageName="55" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,56" imageName="56" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,57" imageName="57" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,58" imageName="58" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,59" imageName="59" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,60" imageName="60" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,61" imageName="61" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,62" imageName="62" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,63" imageName="63" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,64" imageName="64" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,65" imageName="65" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,66" imageName="66" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,67" imageName="67" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,68" imageName="68" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,69" imageName="69" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,70" imageName="70" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,71" imageName="71" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,72" imageName="72" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,73" imageName="73" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,74" imageName="74" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,75" imageName="75" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="ePassthroughFromBellow" value="true" type="bool"/>
+        </sprite>
+        <sprite name="platformerTilesA,76" imageName="76" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="ePassthroughFromBellow" value="true" type="bool"/>
+        </sprite>
+        <sprite name="platformerTilesA,77" imageName="77" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="ePassthroughFromBellow" value="true" type="bool"/>
+        </sprite>
+        <sprite name="platformerTilesA,78" imageName="78" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="ePassthroughFromBellow" value="true" type="bool"/>
+        </sprite>
+        <sprite name="platformerTilesA,79" imageName="79" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,80" imageName="80" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,81" imageName="81" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,82" imageName="82" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,83" imageName="83" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,84" imageName="84" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,85" imageName="85" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,86" imageName="86" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,87" imageName="87" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,88" imageName="88" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,89" imageName="89" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,90" imageName="90" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,91" imageName="91" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,92" imageName="92" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,93" imageName="93" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,94" imageName="94" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,95" imageName="95" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,96" imageName="96" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,97" imageName="97" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,98" imageName="98" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,99" imageName="99" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,100" imageName="100" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,101" imageName="101" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,102" imageName="102" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,103" imageName="103" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,104" imageName="104" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,105" imageName="105" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,106" imageName="106" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,107" imageName="107" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,108" imageName="108" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,109" imageName="109" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,110" imageName="110" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,111" imageName="111" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,112" imageName="112" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,113" imageName="113" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,114" imageName="114" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,115" imageName="115" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,116" imageName="116" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,117" imageName="117" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,118" imageName="118" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,119" imageName="119" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,120" imageName="120" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,121" imageName="121" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,122" imageName="122" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,123" imageName="123" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,124" imageName="124" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,125" imageName="125" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,126" imageName="126" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,127" imageName="127" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,128" imageName="128" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,129" imageName="129" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,130" imageName="130" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,131" imageName="131" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,132" imageName="132" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,133" imageName="133" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,134" imageName="134" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,135" imageName="135" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,136" imageName="136" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,137" imageName="137" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,138" imageName="138" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,139" imageName="139" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,140" imageName="140" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,141" imageName="141" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,142" imageName="142" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,143" imageName="143" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,144" imageName="144" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,145" imageName="145" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,146" imageName="146" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,147" imageName="147" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,148" imageName="148" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,149" imageName="149" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,150" imageName="150" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,151" imageName="151" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,152" imageName="152" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,153" imageName="153" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,154" imageName="154" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,155" imageName="155" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,156" imageName="156" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,157" imageName="157" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,158" imageName="158" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,159" imageName="159" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,160" imageName="160" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,161" imageName="161" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,162" imageName="162" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,163" imageName="163" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,164" imageName="164" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,165" imageName="165" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,166" imageName="166" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,167" imageName="167" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,168" imageName="168" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,169" imageName="169" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,170" imageName="170" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,171" imageName="171" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,172" imageName="172" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,173" imageName="173" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,174" imageName="174" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="leftConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,175" imageName="175" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,176" imageName="176" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,177" imageName="177" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,178" imageName="178" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,179" imageName="179" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,180" imageName="180" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,181" imageName="181" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,182" imageName="182" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,183" imageName="183" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,184" imageName="184" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,185" imageName="185" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,186" imageName="186" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,187" imageName="187" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,188" imageName="188" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,189" imageName="189" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,190" imageName="190" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,191" imageName="191" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,192" imageName="192" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,193" imageName="193" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,194" imageName="194" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,195" imageName="195" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,196" imageName="196" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,197" imageName="197" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,198" imageName="198" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,199" imageName="199" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,200" imageName="200" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,201" imageName="201" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,202" imageName="202" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,203" imageName="203" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,204" imageName="204" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,205" imageName="205" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,206" imageName="206" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,207" imageName="207" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,208" imageName="208" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,209" imageName="209" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,210" imageName="210" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,211" imageName="211" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,212" imageName="212" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,213" imageName="213" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,214" imageName="214" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eConveyorGround" value="rightConveyor" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,215" imageName="215" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,216" imageName="216" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,217" imageName="217" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,218" imageName="218" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,219" imageName="219" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,220" imageName="220" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,221" imageName="221" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,222" imageName="222" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,223" imageName="223" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,224" imageName="224" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,225" imageName="225" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,226" imageName="226" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,227" imageName="227" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,228" imageName="228" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,229" imageName="229" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,230" imageName="230" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,231" imageName="231" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,232" imageName="232" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,233" imageName="233" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,234" imageName="234" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,235" imageName="235" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,236" imageName="236" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,237" imageName="237" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,238" imageName="238" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,239" imageName="239" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,240" imageName="240" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,241" imageName="241" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,242" imageName="242" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,243" imageName="243" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,244" imageName="244" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,245" imageName="245" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,246" imageName="246" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,247" imageName="247" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,248" imageName="248" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,249" imageName="249" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,250" imageName="250" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,251" imageName="251" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,252" imageName="252" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,253" imageName="253" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,254" imageName="254" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,255" imageName="255" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,256" imageName="256" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,257" imageName="257" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,258" imageName="258" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,259" imageName="259" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,260" imageName="260" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,261" imageName="261" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,262" imageName="262" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,263" imageName="263" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,264" imageName="264" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,265" imageName="265" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,266" imageName="266" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,267" imageName="267" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,268" imageName="268" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,269" imageName="269" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,270" imageName="270" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,271" imageName="271" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,272" imageName="272" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,273" imageName="273" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,274" imageName="274" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,275" imageName="275" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,276" imageName="276" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,277" imageName="277" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,278" imageName="278" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,279" imageName="279" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,280" imageName="280" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,281" imageName="281" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,282" imageName="282" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,283" imageName="283" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,284" imageName="284" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,285" imageName="285" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,286" imageName="286" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,287" imageName="287" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,288" imageName="288" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,289" imageName="289" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,290" imageName="290" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,291" imageName="291" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,292" imageName="292" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,293" imageName="293" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,294" imageName="294" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,295" imageName="295" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,296" imageName="296" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,297" imageName="297" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,298" imageName="298" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,299" imageName="299" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,300" imageName="300" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,301" imageName="301" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,302" imageName="302" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,303" imageName="303" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,304" imageName="304" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,305" imageName="305" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,306" imageName="306" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,307" imageName="307" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,308" imageName="308" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,309" imageName="309" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,310" imageName="310" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,311" imageName="311" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,312" imageName="312" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,313" imageName="313" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,314" imageName="314" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,315" imageName="315" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,316" imageName="316" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,317" imageName="317" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,318" imageName="318" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,319" imageName="319" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,320" imageName="320" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,321" imageName="321" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,322" imageName="322" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,323" imageName="323" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,324" imageName="324" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,325" imageName="325" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,326" imageName="326" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,327" imageName="327" imageFile="data/graphics/platformer/platformerTilesA.png">
+            <constantParameter name="eSlidingGround" value="ice" type="string"/>
+        </sprite>
+        <sprite name="platformerTilesA,328" imageName="328" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,329" imageName="329" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,330" imageName="330" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,331" imageName="331" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,332" imageName="332" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,333" imageName="333" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,334" imageName="334" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,335" imageName="335" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,336" imageName="336" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,337" imageName="337" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,338" imageName="338" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,339" imageName="339" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,340" imageName="340" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,341" imageName="341" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,342" imageName="342" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,343" imageName="343" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,344" imageName="344" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,345" imageName="345" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,346" imageName="346" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,347" imageName="347" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,348" imageName="348" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,349" imageName="349" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,350" imageName="350" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,351" imageName="351" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,352" imageName="352" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,353" imageName="353" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,354" imageName="354" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,355" imageName="355" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,356" imageName="356" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,357" imageName="357" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,358" imageName="358" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,359" imageName="359" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,360" imageName="360" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,361" imageName="361" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,362" imageName="362" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,363" imageName="363" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,364" imageName="364" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,365" imageName="365" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,366" imageName="366" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,367" imageName="367" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,368" imageName="368" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,369" imageName="369" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,370" imageName="370" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,371" imageName="371" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,372" imageName="372" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,373" imageName="373" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,374" imageName="374" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,375" imageName="375" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,376" imageName="376" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,377" imageName="377" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,378" imageName="378" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,379" imageName="379" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,380" imageName="380" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,381" imageName="381" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,382" imageName="382" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,383" imageName="383" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,384" imageName="384" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,385" imageName="385" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,386" imageName="386" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,387" imageName="387" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,388" imageName="388" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,389" imageName="389" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,390" imageName="390" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,391" imageName="391" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,392" imageName="392" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,393" imageName="393" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,394" imageName="394" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,395" imageName="395" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,396" imageName="396" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,397" imageName="397" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,398" imageName="398" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+        <sprite name="platformerTilesA,399" imageName="399" imageFile="data/graphics/platformer/platformerTilesA.png"/>
+    </sprites>
+</sourceGraphicSet>

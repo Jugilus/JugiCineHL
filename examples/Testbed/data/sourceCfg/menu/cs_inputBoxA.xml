@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="inputBoxA" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="5" nTilesY="2">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="inputBoxA_background" x="200" y="50"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Text" name="inputBoxA_cursor" x="233" y="36" text="_"/>
+        <sprite type="Text" name="inputBoxA_text" x="37" y="36" text="inputBoxA_text"/>
+    </layer>
+    <parameter name="wName" value="textInputA" type="string"/>
+    <constantParameter name="widget" value="textInput" type="string"/>
+</composedSprite>

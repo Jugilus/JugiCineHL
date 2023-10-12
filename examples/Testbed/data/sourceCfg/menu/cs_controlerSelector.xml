@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="controlerSelector" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="9" nTilesY="1">
+    <layer content="Grid sprites" name="Layer 2">
+        <sprite type="Standard" name="tilesA,14" x="25" y="25"/>
+        <sprite type="Standard" name="tilesA,15" x="75" y="25"/>
+        <sprite type="Standard" name="tilesA,16" x="125" y="25"/>
+        <sprite type="Standard" name="tilesA,16" x="175" y="25"/>
+        <sprite type="Standard" name="tilesA,16" x="225" y="25"/>
+        <sprite type="Standard" name="tilesA,16" x="275" y="25"/>
+        <sprite type="Standard" name="tilesA,16" x="325" y="25"/>
+        <sprite type="Standard" name="tilesA,17" x="375" y="25"/>
+        <sprite type="Standard" name="tilesA,18" x="425" y="25"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Composite" name="inputDeviceSelectorSlider" x="225" y="30"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 3">
+        <sprite type="Composite" name="inputDeviceSelectorSlot" x="225" y="30"/>
+    </layer>
+    <parameter name="wName" value="inputDeviceSelector" type="string"/>
+    <constantParameter name="widget" value="table" type="string"/>
+    <constantParameter name="wNumSlotsHorizontal" value="1" type="int"/>
+    <constantParameter name="wNumSlotsVertical" value="1" type="int"/>
+</composedSprite>

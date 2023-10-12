@@ -1,0 +1,53 @@
+>id:0
+premikanje v levo
+
+>id:1
+premikanje v desno
+
+>id:2
+premikanje navzgor
+
+>id:3
+premikanje navzdol
+
+>id:4
+skoži
+
+>id:5
+teci
+
+>id:6
+ogenj / interakcija
+
+>id:7
+izbira orožja
+
+>id:8
+dodatna komanda 1
+
+>id:9
+dodatna komanda 2
+
+>id:10
+dodatna komanda 3
+
+>id:11
+dodatna komanda 4
+
+>id:12
+dodatna komanda 5
+
+>id:12
+(not used)
+
+>id:13
+(not used)
+
+>id:14
+(not used)
+
+>id:15
+(not used)
+
+>id:16
+(not used)

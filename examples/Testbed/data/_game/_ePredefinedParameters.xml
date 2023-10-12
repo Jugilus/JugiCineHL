@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationParameters>
+
+    <sourceSpriteParameters>
+        <group name="widgets">
+            <group name="button">
+                <sharedSet name="alpha">
+                    <parameter name="wAlpha" value="1.0" type="string" />
+                    <parameter name="wAlpha_CO" value="1.0" type="string" />
+                    <parameter name="wAlpha_CD" value="1.0" type="string" />
+                    <parameter name="wAlpha_checked" value="1.0" type="string" />
+                    <parameter name="wAlpha_checkedCO" value="1.0" type="string" />
+                    <parameter name="wAlpha_checkedCD" value="1.0" type="string" />
+                    <parameter name="wAlpha_HL" value="1.0" type="string" />
+                    <parameter name="wAlpha_checkedHL" value="1.0" type="string" />
+                    <parameter name="wAlpha_disabled" value="1.0" type="string" />
+                    <parameter name="wAlpha_transitionDur" value="1.0, 0.3" type="string" />
+                </sharedSet>
+                <sharedSet name="scale">
+                    <parameter name="wScale" value="1.0" type="string" />
+                    <parameter name="wScale_CO" value="1.0" type="string" />
+                    <parameter name="wScale_CD" value="1.0" type="string" />
+                    <parameter name="wScale_checked" value="1.0" type="string" />
+                    <parameter name="wScale_checkedCO" value="1.0" type="string" />
+                    <parameter name="wScale_checkedCD" value="1.0" type="string" />
+                    <parameter name="wScale_HL" value="1.0" type="string" />
+                    <parameter name="wScale_checkedHL" value="1.0" type="string" />
+                    <parameter name="wScale_disabled" value="1.0" type="string" />
+                    <parameter name="wScale_transitionDur" value="0.5, 0.5" type="string" />
+                </sharedSet>
+                <sharedSet name="rotation">
+                    <parameter name="wRotation" value="0.0" type="string" />
+                    <parameter name="wRotation_CO" value="0.0" type="string" />
+                    <parameter name="wRotation_CD" value="0.0" type="string" />
+                    <parameter name="wRotation_checked" value="0.0" type="string" />
+                    <parameter name="wRotation_checkedCO" value="0.0" type="string" />
+                    <parameter name="wRotation_checkedCD" value="0.0" type="string" />
+                    <parameter name="wRotation_HL" value="0.0" type="string" />
+                    <parameter name="wRotation_checkedHL" value="0.0" type="string" />
+                    <parameter name="wRotation_disabled" value="0.0" type="string" />
+                    <parameter name="wRotation_transitionDur" value="180.0, 1.0" type="string" />
+                </sharedSet>
+                <sharedSet name="colorOverlay">
+                    <parameter name="wColorOverlay" value="FF0000" type="string" />
+                    <parameter name="wColorOverlay_CO" value="FF0000" type="string" />
+                    <parameter name="wColorOverlay_CD" value="FF0000" type="string" />
+                    <parameter name="wColorOverlay_checked" value="FF0000" type="string" />
+                    <parameter name="wColorOverlay_checkedCO" value="FF0000" type="string" />
+                    <parameter name="wColorOverlay_checkedCD" value="FF0000" type="string" />
+                    <parameter name="wColorOverlay_HL" value="FF0000" type="string" />
+                    <parameter name="wColorOverlay_checkedHL" value="FF0000" type="string" />
+                    <parameter name="wColorOverlay_disabled" value="FF0000" type="string" />
+                    <parameter name="wColorOverlay_transitionDur" value="1.0, 0.2" type="string" />
+                    <parameter name="wColorOverlay_blend" value="normal,multiply,linDodge,color" type="valuesSet" />
+                </sharedSet>
+                <sharedSet name="labelColor">
+                    <parameter name="wLabelColor" value="FF0000" type="string" />
+                    <parameter name="wLabelColor_CO" value="FF0000" type="string" />
+                    <parameter name="wLabelColor_CD" value="FF0000" type="string" />
+                    <parameter name="wLabelColor_checked" value="FF0000" type="string" />
+                    <parameter name="wLabelColor_checkedCO" value="FF0000" type="string" />
+                    <parameter name="wLabelColor_checkedCD" value="FF0000" type="string" />
+                    <parameter name="wLabelColor_HL" value="FF0000" type="string" />
+                    <parameter name="wLabelColor_checkedHL" value="FF0000" type="string" />
+                    <parameter name="wLabelColor_disabled" value="FF0000" type="string" />
+                    <parameter name="wLabelColor_transitionDur" value="1.0, 0.2" type="string" />
+                </sharedSet>
+                <sharedSet name="frame">
+                    <parameter name="wFrame" value="0" type="int" />
+                    <parameter name="wFrame_CO" value="0" type="int" />
+                    <parameter name="wFrame_CD" value="0" type="int" />
+                    <parameter name="wFrame_checked" value="0" type="int" />
+                    <parameter name="wFrame_checkedCO" value="0" type="int" />
+                    <parameter name="wFrame_checkedCD" value="0" type="int" />
+                    <parameter name="wFrame_HL" value="0" type="int" />
+                    <parameter name="wFrame_checkedHL" value="0" type="int" />
+                    <parameter name="wFrame_disabled" value="0" type="int" />
+                </sharedSet>
+                <sharedSet name="visible">
+                    <parameter name="wVisible" value="1" type="int" />
+                    <parameter name="wVisible_CO" value="1" type="int" />
+                    <parameter name="wVisible_CD" value="1" type="int" />
+                    <parameter name="wVisible_checked" value="1" type="int" />
+                    <parameter name="wVisible_checkedCO" value="1" type="int" />
+                    <parameter name="wVisible_checkedCD" value="1" type="int" />
+                    <parameter name="wVisible_HL" value="1" type="int" />
+                    <parameter name="wVisible_checkedHL" value="1" type="int" />
+                    <parameter name="wVisible_disabled" value="1" type="int" />
+                </sharedSet>
+    
+                <group name="rootSprite">
+                    <parameter name="widget" value="button" type="string" />
+                    <parameter name="wCheckable" value="false" type="bool" />
+                    <addSharedSets sets="alpha,scale,rotation,colorOverlay,labelColor,frame,visible" />
+                </group>
+                <group name="childSprites">
+                    <parameter name="wHighlightMarker" value="true" type="bool" />
+                    <addSharedSets sets="alpha,scale,rotation,colorOverlay,labelColor,frame,visible" />
+                </group>
+            </group> 
+
+            <group name="slider">
+                <group name="rootSprite">
+                    <parameter name="widget" value="slider" type="string" />
+                    <parameter name="wValueRange" value="0, 100" type="string" />
+                    <parameter name="wDeltaValue" value="10" type="string" />
+                </group>
+                <group name="childSprites">
+                    <parameter name="wSlidingScale" value="true" type="bool" />
+                    <parameter name="wSlidingButton" value="true" type="bool" />
+                    <parameter name="wIncrementButton" value="true" type="bool" />
+                    <parameter name="wDecrementButton" value="true" type="bool" />
+                    <parameter name="wLabel" value="0,%" type="string" />
+                    <parameter name="wHighlightMarker" value="true" type="bool" />
+                </group>
+            </group>
+    
+            <group name="bar">
+                <group name="rootSprite">
+                    <parameter name="widget" value="bar" type="string" />
+                    <parameter name="wValueRange" value="0, 100" type="string" />
+                    <parameter name="wFrame" value="true" type="bool" />
+                    <parameter name="wScale" value="x" type="string" />
+                </group>
+                <group name="childSprites">
+                    <parameter name="wFrame" value="true" type="bool" />
+                    <parameter name="wScale" value="x" type="string" />
+                    <parameter name="wLabel" value="0, %" type="string" />
+                </group>
+            </group>
+    
+            <group name="textInput">
+                <group name="rootSprite">
+                    <parameter name="widget" value="textInput" type="string" />
+                </group>
+                <group name="childSprites">
+                    <parameter name="wTextInputBox" value="true" type="bool" required="true" />
+                    <parameter name="wText" value="true" type="bool" required="true" />
+                    <parameter name="wTextColor" value="FFFFFF, FF0000" type="bool" />
+                    <parameter name="wCursor" value="true" type="bool" required="true" />
+                </group>
+            </group>
+    
+            <group name="table">
+                <group name="rootSprite">
+                    <parameter name="widget" value="table" type="string" />
+                    <parameter name="wLayout" value="horizontal" type="values set" valuesSet="horizontal, vertical" />
+                    <parameter name="wNumSlotsHorizontal" value="3" type="int" />
+                    <parameter name="wNumSlotsVertical" value="3" type="int" />
+                    <parameter name="wSlotsSpacingHorizontal" value="2" type="int" />
+                    <parameter name="wSlotsSpacingVertical" value="2" type="int" />
+                </group>
+                <group name="childSprites">
+                    <parameter name="wFirstSlot" value="true" type="bool" required="true" />
+                    <parameter name="wSlider" value="true" type="bool" />
+                    <set name="Slot Components">
+                        <parameter name="wSlotSprite" value="slotSprite" type="string" />
+                        <parameter name="wSlotTextSprite" value="slotTextSprite" type="string" />
+                    </set>
+                </group>
+            </group>
+        </group>
+
+    </sourceSpriteParameters>
+
+    <spriteParameters>
+        <group name="widgets">
+            <group name="button">
+                <group name="rootSprite">
+                    <parameter name="wName" value="button" type="string" />
+                    <parameter name="wInitialState" value="normal" type="values set" valuesSet="normal, checked, disabled" />
+                    <parameter name="wExclusiveGroup" value="buttonsGroup" type="string" />
+                </group>
+            </group>
+
+            <group name="slider">
+                <group name="rootSprite">
+                    <parameter name="wName" value="slider" type="string" />
+                    <parameter name="wValue" value="0" type="string" />
+                </group>
+            </group>
+    
+            <group name="bar">
+                <group name="rootSprite">
+                    <parameter name="wName" value="bar" type="string" />
+                    <parameter name="wValue" value="0" type="string" />
+                </group>
+            </group>
+    
+            <group name="textInput">
+                <group name="rootSprite">
+                    <parameter name="wName" value="textInput" type="string" />
+                </group>
+            </group>
+    
+            <group name="table">
+                <group name="rootSprite">
+                    <parameter name="wName" value="table" type="string" />
+                </group>
+            </group>
+        </group>
+    </spriteParameters>    
+
+    <vectorShapeParameters>
+        <group name="widgets">
+            <group name="textField">
+                <parameter name="widget" value="textField" type="string" required="true" />
+                <parameter name="wLayer" value="layer" type="string" required="true" />
+                <parameter name="wName" value="textField" type="string" required="true" />
+                <parameter name="wVisibleBox" value="visibleBox" type="string" />
+                <parameter name="wClickableBox" value="clickableBox" type="string" />
+                <parameter name="wSlider" value="slider" type="string" />
+            </group>
+            <group name="table">
+                <set name="Slot Components">
+                    <parameter name="wSlotTextField" value="slotTextField" type="string" />
+                    <parameter name="wLayer" value="layer" type="string" />
+                </set>
+            </group>
+        </group>
+    </vectorShapeParameters>
+
+</configurationParameters>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="aboutPanel" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="16" nTilesY="13">
+    <layer content="Grid sprites" name="Layer 2">
+        <sprite type="Standard" name="tilesA,55" x="275" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="575"/>
+        <sprite type="Standard" name="tilesA,55" x="325" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="575"/>
+        <sprite type="Standard" name="tilesA,55" x="375" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="575"/>
+        <sprite type="Standard" name="tilesA,55" x="425" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="425" y="575"/>
+        <sprite type="Standard" name="tilesA,55" x="475" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="475" y="575"/>
+        <sprite type="Standard" name="tilesA,55" x="525" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="525" y="575"/>
+        <sprite type="Standard" name="tilesA,55" x="575" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="575" y="575"/>
+        <sprite type="Standard" name="tilesA,55" x="625" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="625" y="575"/>
+        <sprite type="Standard" name="tilesA,55" x="675" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="675" y="575"/>
+        <sprite type="Standard" name="tilesA,57" x="725" y="625"/>
+        <sprite type="Standard" name="tilesA,67" x="725" y="575"/>
+        <sprite type="Standard" name="tilesA,23" x="775" y="625"/>
+        <sprite type="Standard" name="tilesA,33" x="775" y="575"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="425" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="475" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="525" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="575" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="625" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="675" y="525"/>
+        <sprite type="Standard" name="tilesA,67" x="725" y="525"/>
+        <sprite type="Standard" name="tilesA,33" x="775" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="425" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="475" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="525" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="575" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="625" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="675" y="475"/>
+        <sprite type="Standard" name="tilesA,67" x="725" y="475"/>
+        <sprite type="Standard" name="tilesA,33" x="775" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="425" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="475" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="525" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="625" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="675" y="425"/>
+        <sprite type="Standard" name="tilesA,67" x="725" y="425"/>
+        <sprite type="Standard" name="tilesA,33" x="775" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="425" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="475" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="525" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="575" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="625" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="675" y="375"/>
+        <sprite type="Standard" name="tilesA,67" x="725" y="375"/>
+        <sprite type="Standard" name="tilesA,33" x="775" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="425" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="475" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="525" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="575" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="625" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="675" y="325"/>
+        <sprite type="Standard" name="tilesA,67" x="725" y="325"/>
+        <sprite type="Standard" name="tilesA,33" x="775" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="425" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="475" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="525" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="575" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="625" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="675" y="275"/>
+        <sprite type="Standard" name="tilesA,67" x="725" y="275"/>
+        <sprite type="Standard" name="tilesA,33" x="775" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="425" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="475" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="525" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="575" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="625" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="675" y="175"/>
+        <sprite type="Standard" name="tilesA,67" x="725" y="175"/>
+        <sprite type="Standard" name="tilesA,33" x="775" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="425" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="475" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="525" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="575" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="625" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="675" y="225"/>
+        <sprite type="Standard" name="tilesA,67" x="725" y="225"/>
+        <sprite type="Standard" name="tilesA,33" x="775" y="225"/>
+        <sprite type="Standard" name="tilesA,77" x="725" y="125"/>
+        <sprite type="Standard" name="tilesA,43" x="775" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="275" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="325" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="375" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="425" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="475" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="525" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="575" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="625" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="675" y="125"/>
+        <sprite type="Standard" name="tilesA,78" x="25" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="75" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="125" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="175" y="125"/>
+        <sprite type="Standard" name="tilesA,79" x="225" y="125"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="175"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="225"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="225"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="275"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="275"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="325"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="325"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="375"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="375"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="425"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="425"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="475"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="475"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="525"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="525"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="575"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="575"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="575"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="575"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="575"/>
+        <sprite type="Standard" name="tilesA,54" x="25" y="625"/>
+        <sprite type="Standard" name="tilesA,55" x="75" y="625"/>
+        <sprite type="Standard" name="tilesA,55" x="125" y="625"/>
+        <sprite type="Standard" name="tilesA,55" x="175" y="625"/>
+        <sprite type="Standard" name="tilesA,55" x="225" y="625"/>
+        <sprite type="Standard" name="tilesA,65" x="575" y="425"/>
+    </layer>
+    <layer content="Free sprites" name="aboutPanel_content">
+        <sprite type="Composite" name="buttonB" x="242" y="27">
+            <parameter name="changeChildText" value="label,gui,22" type="string"/>
+            <parameter name="wName" value="aboutPanel_mainMenuButton" type="string"/>
+        </sprite>
+        <sprite type="Composite" name="sliderB" x="766" y="370">
+            <parameter name="wName" value="aboutPanel_slider" type="string"/>
+        </sprite>
+        <sprite type="Text" name="Window Title" x="15" y="617" text="About " book="gui" segment="45"/>
+    </layer>
+    <vectorLayer name="Vector Layer 1">
+        <rectangle points="(50,156);(711,156);(711,573);(50,573)">
+            <parameter name="widget" value="textField" type="string"/>
+            <parameter name="wLayer" value="aboutPanel_content" type="string"/>
+            <parameter name="wSlider" value="aboutPanel_slider" type="string"/>
+            <parameter name="wName" value="aboutPanel_textField" type="string"/>
+            <parameter name="wTextSegment" value="gui, 46" type="string"/>
+            <parameter name="wVisibleBox" value="aboutPanel_visibleBox" type="string"/>
+        </rectangle>
+        <rectangle points="(50,141);(711,141);(711,588);(50,588)" nameID="aboutPanel_visibleBox"/>
+    </vectorLayer>
+</composedSprite>

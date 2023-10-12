@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<scene name="PlatformerA">
+
+
+    <entitySystem>
+
+        <entityCategories>
+
+            <mainCategory name="solidEnvironment" role="BLOCKING_ENVIRONMENT" />
+            <mainCategory name="controlledCharacter" role="ACTOR" />
+            <mainCategory name="enemy" role="ACTOR" />
+            <mainCategory name="movableBox" role="MOVABLE_OBJECT" />
+            <mainCategory name="movingPlatform" role="TRANSPORTER" />
+            <mainCategory name="wallSwitch" role="PASSABLE_OBJECT" />
+            <mainCategory name="groundSwitch" role="PASSABLE_OBJECT" />
+            <mainCategory name="door" solid="TRUE" role="BLOCKING_OBJECT" />
+            <mainCategory name="doorSensorArea" role="PASSABLE_AREA" />
+            <mainCategory name="ladder" role="PATHWAY" />
+            <mainCategory name="entityWithoutShape" role="OBJECT_WITHOUT_SHAPE" />
+
+            <extraCategory name="groundSensor" role="GROUND_SENSOR"  />
+            <extraCategory name="ceilingSensor" role="CEILING_SENSOR"  />
+            <extraCategory name="heroHandSensor" role="CUSTOM_SENSOR" />
+
+
+            <!-- CONTACT FILTERS (must be defined bellow categories) -->
+            <contactFilter category="controlledCharacter" skipContacts="enemy" />
+            <contactFilter category="enemy" skipContacts="controlledCharacter, wallSwitch, ladder" />
+            <contactFilter category="groundSensor" contacts="solidEnvironment, movingPlatform, groundSwitch" />
+            <contactFilter category="ceilingSensor" contacts="solidEnvironment" />
+            <contactFilter category="heroHandSensor" contacts="wallSwitch" />
+
+        </entityCategories>
+
+
+        <extraGroundTypes>
+            <slidingGround name="ice" speedOn45degSlopeP="300" accDistanceP="75" />
+            <conveyorGround name="rightConveyor" speedP="100" direction="RIGHT" />
+            <conveyorGround name="leftConveyor" speedP="300" direction="LEFT" />
+        </extraGroundTypes>
+    
+
+        <behaviorEngines>
+
+            <groundMovement name="heroRunning" >
+                <movement maxSpeedP="250" accDistanceP="25" maxSlope="50.0" jumpXSpeedInheritFactor="0.5" animationSpeedFactor="1.0" steepSlopeSpeedP="400"/>
+                <triggers moveLeft="INPUT_COMMAND/moveLeft" moveRight="INPUT_COMMAND/moveRight" />
+                <baseStates>
+                    <standing animationLeft="standingLeft" animationRight="standingRight" />
+                    <turning animationLeft="turningToLeft" animationRight="turningToRight" />
+                    <idle delay="5" animationLeft="idleLeft" animationRight="idleRight" />
+                    <moving animationLeft="walkingLeft" animationRight="walkingRight" />
+                    <steepSlopeStaggering animationLeft="staggeringLeft" animationRight="staggeringRight" />
+                </baseStates>
+                <customState name="turnWallSwitch" baseState="STANDING" trigger="INPUT_COMMAND/fire" animationLeft="turnWallSwitchLeft" animationRight="turnWallSwitchRight">
+                    <context onSignal="ENTITY:THIS/CONTACT:CATEGORY:wallSwitch" />
+                    <customSensor extraShapeCategory="heroHandSensor" vectorShapeData="1" activeOnAnimationKeyData="1" />
+                </customState>
+            </groundMovement>
+
+            <groundMovement name="heroMovingMovableObjectOnRight" >
+                <movement maxSpeedP="100" accDistanceP="25" maxSlope="50.0"/>
+                <triggers moveLeft="INPUT_COMMAND/moveLeft" moveRight="INPUT_COMMAND/moveRight" />
+                <baseStates>
+                    <standing animationLeft="standingToRightObject" bodyOrientationLeft="RIGHT" animationRight="standingToRightObject" />
+                    <moving animationLeft="pullingRightObject" bodyOrientationLeft="RIGHT" animationRight="pushingRightObject" />
+                </baseStates>
+            </groundMovement>
+
+            <groundMovement name="heroMovingMovableObjectOnLeft" >
+                <movement maxSpeedP="100" accDistanceP="25" maxSlope="50.0"/>
+                <triggers moveLeft="INPUT_COMMAND/moveLeft" moveRight="INPUT_COMMAND/moveRight" />
+                <baseStates>
+                    <standing animationLeft="standingToLeftObject" animationRight="standingToLeftObject" bodyOrientationRight="LEFT" />
+                    <moving animationLeft="pushingLeftObject" animationRight="pullingLeftObject" bodyOrientationRight="LEFT"/>
+                </baseStates>
+            </groundMovement>
+
+
+            <groundMovement name="groundMovableObjectDummy" >
+            </groundMovement>
+            
+
+            <jumpMovement name="heroJumping" >
+                <yMovement maxHeightP="150" pushOffSpeedP="500" intermediateHeightRatio="0.75" intermediateSpeedRatio="0.9"/> 
+                <xMovement xMaxSpeedP="150" xAccDistanceP="25" xGroundSpeedInheritFactor="0.5" />
+                <otherParameters maxSlope = "60.0" pushImpulseSpeedFactor="1.0f" addCeilingSensor="TRUE" />
+                <triggers startJump="INPUT_COMMAND/jump" moveLeft="INPUT_COMMAND/moveLeft" moveRight="INPUT_COMMAND/moveRight" />
+                <baseStates>
+                    <!-- <takeOff animationLeft="jumpingTakeOffLeft" animationRight="jumpingTakeOffRight" /> -->
+                    <ascending animationLeft="jumpingAscendingLeft" animationRight="jumpingAscendingRight" />
+                    <atMaxHeight animationLeft="jumpingAtMaxHeightLeft" animationRight="jumpingAtMaxHeightRight" />
+                    <descending animationLeft="jumpingDescendingLeft" animationRight="jumpingDescendingRight" />
+                    <!-- <landing animationLeft="jumpingLandingLeft" animationRight="jumpingLandingRight" /> -->
+                </baseStates>
+            </jumpMovement>
+
+
+            <jumpMovement name="objectFalling" >
+                <yMovement maxHeightP="150" pushOffSpeedP="500" intermediateHeightRatio="0.75" intermediateSpeedRatio="0.9"/> 
+                <xMovement xMaxSpeedP="150" xAccDistanceP="25" xGroundSpeedInheritFactor="0.5" />
+            </jumpMovement>
+
+
+            <pathMovement name="heroClimbingLadder" >
+                <parameters maxSpeedP="200" accDistanceP="25" pathways="ladder" />
+                <triggers moveForward="INPUT_COMMAND/moveUp" moveBackward="INPUT_COMMAND/moveDown" />
+                <baseStates>
+                    <standing animationForward="standingOnLadder" animationBackward="standingOnLadder" />
+                    <!--
+                    <turning animationForward="turningToLeft" animationBackward="turningToRight" />
+                    <idle delay="5" animationForward="idleLeft" animationBackward="idleRight" />
+                    -->
+                    <moving animationForward="climbingLadder" animationBackward="climbingLadder" />
+                </baseStates>
+            </pathMovement>
+
+            <pathPointToPointMovement name="behMovingPlatformA" >
+                <parameters maxSpeedP="300" accDistanceP="100" />
+            </pathPointToPointMovement>
+
+
+            <pathPointToPointMovement name="behRotatingPlatformA" >
+                <parameters maxSpeedP="75" accDistanceP="50" angularSpeed ="25" angularAccDistance="20" />
+            </pathPointToPointMovement>
+
+            <animatedBehavior name ="commonAnimatedMovement">
+            </animatedBehavior>
+
+        </behaviorEngines>
+
+
+        <behaviorControllers>
+
+            <behaviorController name="heroBehaviorController">
+
+                <state name="groundMovement" movementEngine="heroRunning">
+                    <a onSignal="ENTITY:THIS/ENGINE:heroJumping:START_JUMP" doSetState="jumping" />
+                    <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
+                    <a onSignal="ENTITY:THIS/ENGINE:heroClimbingLadder:PATWAY_ACCESSED" doSetState="climbingLadder" />
+                    <a onSignals="ENTITY:THIS/MOVABLE_OBJECT:ON_RIGHT, INPUT_COMMAND/fire" doSetState="movingMovableObjectOnRight" />
+                    <a onSignals="ENTITY:THIS/MOVABLE_OBJECT:ON_LEFT, INPUT_COMMAND/fire" doSetState="movingMovableObjectOnLeft" />
+                </state>
+
+                <state name="movingMovableObjectOnRight" movementEngine="heroMovingMovableObjectOnRight">
+                    <a onSignal="ENTITY:THIS/STATE:THIS/START" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED/SET" />
+                    <a onSignals="[INPUT_COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED/UNSET" doSetState="groundMovement" />
+                    <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
+                </state>
+
+                <state name="movingMovableObjectOnLeft" movementEngine="heroMovingMovableObjectOnLeft">
+                    <a onSignal="ENTITY:THIS/STATE:THIS/START" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED/SET" />
+                    <a onSignals="[INPUT_COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED/UNSET" doSetState="groundMovement" />
+                    <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
+                </state>
+        
+                <state name="jumping" movementEngine="heroJumping">
+                    <a onSignals="ENTITY:THIS/ENGINE:heroJumping:STATE:LANDED" doSetState="groundMovement" />
+                </state>
+
+                <state name="climbingLadder" movementEngine="heroClimbingLadder">
+                    <a onSignal="ENTITY:THIS/ENGINE:heroClimbingLadder:PATHWAY_LEFT:heroRunning" doSetState="groundMovement" />
+                </state>
+        
+            </behaviorController>
+
+
+            <behaviorController name="movableBoxBehaviorController">
+                <state name="groundMovement" movementEngine="groundMovableObjectDummy">
+                    <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="falling" />
+                </state>
+                <state name="falling" movementEngine="objectFalling">
+                    <a onSignals="ENTITY:THIS/ENGINE:objectFalling:STATE:LANDED" doSetState="groundMovement" />
+                </state>
+            </behaviorController>
+        
+           
+            <behaviorController name="bcFancyPlatformA" >
+                <state name="normal" movementEngine="behMovingPlatformA" />
+            </behaviorController>
+
+
+        </behaviorControllers>
+
+    
+
+        <taskEngines>
+            <transporter name="tPlatformA" >
+                <parameters waitingDurationAtPoints="1.5" />
+            </transporter>
+
+            <transporter name="tRotatingPlatformA" >
+                <parameters waitingDurationAtPoints="0.0"/>
+            </transporter>
+            
+            <transporter name="tFancyPlatformA" >
+                <parameters waitingDurationAtPoints="1.0" movingMode="AUTOMATIC_WITH_PASSENGER" disablePassengerMovement="TRUE" />
+                <inputCommands moveForward="INPUT_COMMAND/moveUp" moveBackward="INPUT_COMMAND/moveDown" />
+            </transporter>
+        
+        </taskEngines>
+
+
+        <taskControllers>
+
+            <taskController name="tcFancyPlatformA" >
+                <state name="normal" taskEngine="tFancyPlatformA" />
+            </taskController>
+
+        </taskControllers>
+
+
+        <entities>
+
+            <entity name="worldEnvironment" mainCategory="solidEnvironment">
+            </entity>
+
+            <entity name="hero" mainCategory="controlledCharacter" >
+                <behaviorController use="heroBehaviorController" startState="groundMovement" />
+            </entity>
+
+            <entity name="box" mainCategory="movableBox" >
+                <behaviorController use="movableBoxBehaviorController" startState="groundMovement" />
+            </entity>
+
+
+
+            <entity name="ladder" mainCategory="ladder" >
+                <parameters centerMarginP="10" />
+                <pathwayParameters orientation="VERTICAL" centeringStyle="SNAP" >
+                    <actorContactingPointOffset entity="hero" xOffsetP="0" yOffsetP="-47" />
+                </pathwayParameters>
+            </entity>
+
+
+
+            <!--//////     MOVING PLATFORMS     //////-->
+
+            <entity name="platformA" mainCategory="movingPlatform">
+                <parameters passableFromBellow="TRUE" />
+                <behaviorController>
+                    <state name="normal" movementEngine="behMovingPlatformA" />
+                </behaviorController>   
+                <taskController>
+                    <state name="normal" taskEngine="tPlatformA" />
+                </taskController>
+            </entity>
+
+
+            <entity name="platformB" mainCategory="movingPlatform">
+                <parameters passableFromBellow="TRUE" />
+                <behaviorController>
+                    <state name="normal" movementEngine="commonAnimatedMovement" />
+                </behaviorController>
+            </entity>
+
+
+            <entity name="rotatingPlatformA" mainCategory="movingPlatform">
+                <behaviorController>
+                    <state name="normal" movementEngine="behRotatingPlatformA" />
+                </behaviorController>
+                <taskController>
+                    <state name="normal" taskEngine="tRotatingPlatformA" />
+                </taskController>
+            </entity>
+
+            <entity name="rotatingPlatformB" mainCategory="movingPlatform">
+                <behaviorController>
+                    <state name="normal" movementEngine="behRotatingPlatformA" />
+                </behaviorController>
+                <taskController>
+                    <state name="normal" taskEngine="tRotatingPlatformA" />
+                </taskController>
+            </entity>
+
+            <entity name="rotatingPlatformC" mainCategory="movingPlatform">
+                <behaviorController>
+                    <state name="normal" movementEngine="behRotatingPlatformA" />
+                </behaviorController>
+                <taskController>
+                    <state name="normal" taskEngine="tRotatingPlatformA" />
+                </taskController>
+            </entity>
+
+
+
+            <!--//////   MOVING PLATFORMS , SWITCHES     //////-->
+
+            <entity name="fancyPlatformA" mainCategory="movingPlatform">
+                <parameters passableFromBellow="TRUE" />
+                <behaviorController use="bcFancyPlatformA" startState="normal" />
+                <taskController use="tcFancyPlatformA" /> 
+            </entity>
+
+
+            <entity name="fancyPlatformA_light" mainCategory="entityWithoutShape" >
+                <behaviorController>
+                    <state name="off">
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/ACTIVE" doSetState="standBy" />
+                    </state>
+                    <state name="standBy">
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE" doSetState="off" />
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_PARTLY_ON" doSetState="blinking" />
+                    </state>
+                    <state name="blinking">
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE" doSetState="off" />
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:NO_PASSENGER" doSetState="standBy" />
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_FULLY_ON" doSetState="on" />
+                    </state>
+                    <state name="on">
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE,  
+                                    ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:MOVING/NOT_ACTIVE" 
+                                    doSetState="off"/>
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_PARTLY_ON" doSetState="blinking" />
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:NO_PASSENGER" doSetState="standBy" />
+                    </state>
+                </behaviorController>
+            </entity>
+
+
+            <entity name="wallSwitchB" mainCategory="wallSwitch">
+                <parameters centerMarginP="25" />
+                <behaviorController>
+                    <state name="off">
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING" doSetState="on" />
+                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/SET" doSetState="on" />
+                    </state> 
+                    <state name="on">
+                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/UNSET" doSetState="off" />
+                    </state>
+                </behaviorController>  
+            </entity>
+
+
+
+            <!-- /////////////////////////////////////////////////////// -->
+
+            <entity name="platformA_v2" mainCategory="movingPlatform">
+                <parameters passableFromBellow="TRUE" />
+                <behaviorController>
+                    <state name="disabled" movementEngine="behMovingPlatformA" >
+                        <a onSignals= "ENTITY:groundSwitch_platformA_v2:1/STATE:on , 
+                                        ENTITY:groundSwitch_platformA_v2:2/STATE:off ,
+                                        ENTITY:groundSwitch_platformA_v2:3/STATE:on "
+                                doSetSignal="ENTITY:THIS/TASK:tPlatformA:STATUS:OPERATING/SET" 
+                                doSetState="enabled" >
+                        </a>
+                    </state>
+                    <state name="enabled" movementEngine="behMovingPlatformA" >
+                        <a onSignals= "[ENTITY:groundSwitch_platformA_v2:1/STATE:on / NOT_ACTIVE , 
+                                         ENTITY:groundSwitch_platformA_v2:2/STATE:off/ NOT_ACTIVE ,
+                                         ENTITY:groundSwitch_platformA_v2:3/STATE:on / NOT_ACTIVE ]"
+                                doSetSignal="ENTITY:THIS/TASK:tPlatformA:STATUS:OPERATING/UNSET"                         
+                                doSetState="disabled" >
+                        </a>
+                    </state>
+                </behaviorController>   
+                <taskController>
+                    <state name="normal" taskEngine="tPlatformA" />
+                </taskController>
+            </entity>
+
+
+            <entity name="groundSwitch_platformA_v2" mainCategory="groundSwitch">
+                <behaviorController>
+                    <state name="off">
+                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                    </state> 
+                    <state name="on">
+                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
+                    </state>
+                </behaviorController>   
+            </entity>
+
+
+            
+            <!--//////     DOORS , SWITCHES     //////-->
+
+            <entity name="doorA1" mainCategory="door">
+                <behaviorController>
+                    <state name="closed" contactsEnabled="TRUE">
+                        <a onSignals="ENTITY:groundSwitch_doorA1/STATE:on" doSetState="opening" />
+                    </state>
+                    <state name="opening" animation="opening" contactsEnabled="FALSE">
+                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
+                    </state>
+                    <state name="opened" contactsEnabled="FALSE"> 
+                        <a onSignals="ENTITY:groundSwitch_doorA1/STATE:off" doSetState="closing" />
+                    </state>
+                    <state name="closing" animation="closing" contactsEnabled="TRUE">
+                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
+                    </state>
+                </behaviorController>
+            </entity>
+
+
+            <entity name="groundSwitch_doorA1" mainCategory="groundSwitch">
+                <behaviorController>
+                    <state name="off">
+                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                    </state> 
+                    <state name="on">
+                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
+                    </state>
+                </behaviorController>   
+            </entity>
+
+
+
+            <!-- /////////////////////////////////////////////////////// -->
+
+            <entity name="doorA1_v2" mainCategory="door">
+                <behaviorController>
+                    <state name="closed" contactsEnabled="TRUE">
+                        <a onSignals="ENTITY:groundSwitch_doorA1_v2/STATE:on" doSetState="opening" />
+                    </state>
+                    <state name="opening" animation="opening" contactsEnabled="FALSE">
+                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
+                    </state>
+                    <state name="opened" contactsEnabled="FALSE"> 
+                        <a onSignals="ENTITY:groundSwitch_doorA1_v2/STATE:off" doSetState="closing" />
+                    </state>
+                    <state name="closing" animation="closing" contactsEnabled="TRUE">
+                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
+                    </state>
+                </behaviorController>
+            </entity>
+
+
+            <entity name="groundSwitch_doorA1_v2" mainCategory="groundSwitch">
+                <behaviorController>
+                    <state name="off">
+                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                    </state> 
+                    <state name="on">
+                        <a onSignal="ENTITY:THIS/CONTACT:ANY/END" doSetState="off" />
+                    </state>
+                </behaviorController>   
+            </entity>
+
+
+
+            <!-- /////////////////////////////////////////////////////// -->
+
+            <entity name="doorA2" mainCategory="door">
+                
+                <behaviorController>
+                    <state name="closed" contactsEnabled="TRUE">
+                        <a onSignals="ENTITY:doorA2_area/STATE:opened" doSetState="opening" />
+                    </state>
+                    <state name="opening" animation="opening" contactsEnabled="FALSE">
+                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
+                    </state>
+                    <state name="opened" contactsEnabled="FALSE"> 
+                        <a onSignals="ENTITY:doorA2_area/STATE:closed" doSetState="closing" />
+                    </state>
+                    <state name="closing" animation="closing" contactsEnabled="TRUE">
+                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
+                    </state>
+                </behaviorController>
+            
+            </entity>
+
+
+            <entity name="doorA2_light" mainCategory="entityWithoutShape">
+                <behaviorController>
+                    <state name="red">
+                        <a onSignals= "ENTITY:groundSwitch_doorA2/STATE:on/ACTIVE" doSetState="green" />
+                    </state>
+                    <state name="green">
+                        <a onSignals= "ENTITY:groundSwitch_doorA2/STATE:off/ACTIVE" doSetState="red" />
+                    </state>
+                </behaviorController>
+
+            </entity>
+
+
+            <entity name="doorA2_area" mainCategory="doorSensorArea">
+                <behaviorController>
+                    <state name="closed">
+                        <a onSignals="ENTITY:THIS/CONTACT, ENTITY:doorA2_light/STATE:green/ACTIVE" doSetState="opened" />
+                    </state>
+                    <state name="opened">
+                        <a onSignals="ENTITY:THIS/CONTACT:ANY/NOT_ACTIVE" doSetState="closed" />
+                    </state>
+                </behaviorController>
+            </entity>
+
+
+            <entity name="groundSwitch_doorA2" mainCategory="groundSwitch">
+                <behaviorController>
+                    <state name="off">
+                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                    </state> 
+                    <state name="on">
+                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
+                    </state>
+                </behaviorController>   
+            </entity>
+
+
+
+            <!--//////     OTHER SWITCHES     //////-->
+
+            <entity name="wallSwitchA" mainCategory="wallSwitch">
+                <parameters centerMarginP="25" />
+                <behaviorController>
+                    <state name="off">
+                        <a onSignals="ANIMATED_OBJECT:rotatingWheelA/DISABLED/NOT_ACTIVE" doSetState="on" />
+                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ANIMATED_OBJECT:rotatingWheelA/DISABLED/UNSET" doSetState="on" />
+                    </state> 
+                    <state name="on">
+                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ANIMATED_OBJECT:rotatingWheelA/DISABLED/SET" doSetState="off" />
+                    </state>
+                </behaviorController>  
+            </entity>
+
+
+        </entities>
+
+
+    </entitySystem>
+
+
+
+</scene>

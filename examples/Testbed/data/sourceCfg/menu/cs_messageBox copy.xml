@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="messageBox copy" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="9" nTilesY="5">
+    <layer content="Grid sprites" name="Layer 2">
+        <sprite type="Standard" name="tilesA,45" x="75" y="25"/>
+        <sprite type="Standard" name="tilesA,44" x="25" y="25"/>
+        <sprite type="Standard" name="tilesA,45" x="125" y="25"/>
+        <sprite type="Standard" name="tilesA,45" x="175" y="25"/>
+        <sprite type="Standard" name="tilesA,45" x="225" y="25"/>
+        <sprite type="Standard" name="tilesA,45" x="275" y="25"/>
+        <sprite type="Standard" name="tilesA,45" x="325" y="25"/>
+        <sprite type="Standard" name="tilesA,45" x="375" y="25"/>
+        <sprite type="Standard" name="tilesA,43" x="425" y="25"/>
+        <sprite type="Standard" name="tilesA,58" x="75" y="225"/>
+        <sprite type="Standard" name="tilesA,58" x="125" y="225"/>
+        <sprite type="Standard" name="tilesA,58" x="175" y="225"/>
+        <sprite type="Standard" name="tilesA,58" x="225" y="225"/>
+        <sprite type="Standard" name="tilesA,58" x="275" y="225"/>
+        <sprite type="Standard" name="tilesA,58" x="325" y="225"/>
+        <sprite type="Standard" name="tilesA,58" x="375" y="225"/>
+        <sprite type="Standard" name="tilesA,59" x="425" y="225"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="175"/>
+        <sprite type="Standard" name="tilesA,64" x="25" y="125"/>
+        <sprite type="Standard" name="tilesA,74" x="25" y="75"/>
+        <sprite type="Standard" name="tilesA,76" x="425" y="75"/>
+        <sprite type="Standard" name="tilesA,66" x="425" y="175"/>
+        <sprite type="Standard" name="tilesA,66" x="425" y="125"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="175"/>
+        <sprite type="Standard" name="tilesA,65" x="375" y="125"/>
+        <sprite type="Standard" name="tilesA,65" x="325" y="125"/>
+        <sprite type="Standard" name="tilesA,65" x="275" y="125"/>
+        <sprite type="Standard" name="tilesA,65" x="225" y="125"/>
+        <sprite type="Standard" name="tilesA,65" x="175" y="125"/>
+        <sprite type="Standard" name="tilesA,65" x="125" y="125"/>
+        <sprite type="Standard" name="tilesA,65" x="75" y="125"/>
+        <sprite type="Standard" name="tilesA,75" x="75" y="75"/>
+        <sprite type="Standard" name="tilesA,75" x="125" y="75"/>
+        <sprite type="Standard" name="tilesA,75" x="175" y="75"/>
+        <sprite type="Standard" name="tilesA,75" x="225" y="75"/>
+        <sprite type="Standard" name="tilesA,75" x="275" y="75"/>
+        <sprite type="Standard" name="tilesA,75" x="325" y="75"/>
+        <sprite type="Standard" name="tilesA,75" x="375" y="75"/>
+        <sprite type="Standard" name="tilesA,68" x="25" y="225"/>
+    </layer>
+    <layer content="Free sprites" name="messagePanel_content">
+        <sprite type="Composite" name="buttonA" x="225" y="33">
+            <parameter name="changeChildText" value="label,gui, 14" type="string"/>
+            <parameter name="wName" value="messagePanel_Ok" type="string"/>
+        </sprite>
+        <sprite type="Standard" name="tilesA,9" x="200" y="100" handleSource="true"/>
+    </layer>
+    <vectorLayer name="Vector Layer 1">
+        <rectangle points="(49,83);(400,83);(400,182);(49,182)">
+            <parameter name="widget" value="textField" type="string"/>
+            <parameter name="wLayer" value="messagePanel_content" type="string"/>
+            <parameter name="wName" value="messagePanel_textField" type="string"/>
+        </rectangle>
+    </vectorLayer>
+</composedSprite>

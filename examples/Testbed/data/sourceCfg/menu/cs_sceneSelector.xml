@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="sceneSelector" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="14" nTilesY="10">
+    <layer content="Grid sprites" name="box">
+        <sprite type="Standard" name="tilesA,21" x="275" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="325" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="375" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="425" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="475" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="525" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="575" y="475"/>
+        <sprite type="Standard" name="tilesA,31" x="275" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="325" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="375" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="425" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="475" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="525" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="575" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="275" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="325" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="375" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="425" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="475" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="525" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="575" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="275" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="325" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="375" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="425" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="475" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="525" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="575" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="275" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="325" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="375" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="425" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="475" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="525" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="575" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="275" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="325" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="375" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="425" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="475" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="525" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="575" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="275" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="325" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="375" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="425" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="475" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="525" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="575" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="275" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="325" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="375" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="425" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="475" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="525" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="575" y="125"/>
+        <sprite type="Standard" name="tilesA,41" x="275" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="325" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="375" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="425" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="475" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="525" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="575" y="25"/>
+        <sprite type="Standard" name="tilesA,31" x="275" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="325" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="375" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="425" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="475" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="525" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="575" y="75"/>
+        <sprite type="Standard" name="tilesA,22" x="625" y="475"/>
+        <sprite type="Standard" name="tilesA,23" x="675" y="475"/>
+        <sprite type="Standard" name="tilesA,33" x="675" y="425"/>
+        <sprite type="Standard" name="tilesA,32" x="625" y="425"/>
+        <sprite type="Standard" name="tilesA,42" x="625" y="25"/>
+        <sprite type="Standard" name="tilesA,43" x="675" y="25"/>
+        <sprite type="Standard" name="tilesA,32" x="625" y="375"/>
+        <sprite type="Standard" name="tilesA,33" x="675" y="375"/>
+        <sprite type="Standard" name="tilesA,32" x="625" y="325"/>
+        <sprite type="Standard" name="tilesA,33" x="675" y="325"/>
+        <sprite type="Standard" name="tilesA,32" x="625" y="275"/>
+        <sprite type="Standard" name="tilesA,33" x="675" y="275"/>
+        <sprite type="Standard" name="tilesA,32" x="625" y="225"/>
+        <sprite type="Standard" name="tilesA,33" x="675" y="225"/>
+        <sprite type="Standard" name="tilesA,32" x="625" y="175"/>
+        <sprite type="Standard" name="tilesA,33" x="675" y="175"/>
+        <sprite type="Standard" name="tilesA,32" x="625" y="125"/>
+        <sprite type="Standard" name="tilesA,33" x="675" y="125"/>
+        <sprite type="Standard" name="tilesA,32" x="625" y="75"/>
+        <sprite type="Standard" name="tilesA,33" x="675" y="75"/>
+        <sprite type="Standard" name="tilesA,40" x="25" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="75" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="125" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="175" y="25"/>
+        <sprite type="Standard" name="tilesA,41" x="225" y="25"/>
+        <sprite type="Standard" name="tilesA,30" x="25" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="75" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="125" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="175" y="75"/>
+        <sprite type="Standard" name="tilesA,31" x="225" y="75"/>
+        <sprite type="Standard" name="tilesA,30" x="25" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="75" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="125" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="175" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="225" y="125"/>
+        <sprite type="Standard" name="tilesA,30" x="25" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="75" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="125" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="175" y="175"/>
+        <sprite type="Standard" name="tilesA,31" x="225" y="175"/>
+        <sprite type="Standard" name="tilesA,30" x="25" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="75" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="125" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="175" y="225"/>
+        <sprite type="Standard" name="tilesA,31" x="225" y="225"/>
+        <sprite type="Standard" name="tilesA,30" x="25" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="75" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="125" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="175" y="275"/>
+        <sprite type="Standard" name="tilesA,31" x="225" y="275"/>
+        <sprite type="Standard" name="tilesA,30" x="25" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="75" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="125" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="175" y="325"/>
+        <sprite type="Standard" name="tilesA,31" x="225" y="325"/>
+        <sprite type="Standard" name="tilesA,30" x="25" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="75" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="125" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="175" y="375"/>
+        <sprite type="Standard" name="tilesA,31" x="225" y="375"/>
+        <sprite type="Standard" name="tilesA,30" x="25" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="75" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="125" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="175" y="425"/>
+        <sprite type="Standard" name="tilesA,31" x="225" y="425"/>
+        <sprite type="Standard" name="tilesA,20" x="25" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="75" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="125" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="175" y="475"/>
+        <sprite type="Standard" name="tilesA,21" x="225" y="475"/>
+    </layer>
+    <layer content="Free sprites" name="parts">
+        <sprite type="Composite" name="sliderB" x="668" y="237">
+            <parameter name="wName" value="slider" type="string"/>
+        </sprite>
+        <sprite type="Composite" name="slotSceneSelector" x="21" y="367"/>
+        <sprite type="Text" name="Window Title" x="20" y="468" text="Scenes " book="gui" segment="5"/>
+    </layer>
+    <vectorLayer name="Vector Layer 1">
+        <rectangle points="(100,291);(260,291);(260,363);(100,363)"/>
+        <bezierPolycurve points="(300,200,287,223,313,177);(366,139,268,144,464,134);(500,350,667,307,333,393)" closed="false"/>
+        <bezierPolycurve points="(300,350,300,350,300,350);(597,402,597,402,597,402)" closed="false"/>
+        <singlePoint points="(21,367)" nameID="firstSlot"/>
+        <singlePoint points="(868,339)"/>
+    </vectorLayer>
+    <parameter name="wName" value="sceneSelector" type="string"/>
+    <constantParameter name="widget" value="table" type="string"/>
+    <constantParameter name="wNumSlotsHorizontal" value="1" type="int"/>
+    <constantParameter name="wNumSlotsVertical" value="5" type="int"/>
+    <constantParameter name="wSlotsSpacingVertical" value="0" type="int"/>
+    <constantParameter name="wLayout" value="vertical" type="string"/>
+</composedSprite>

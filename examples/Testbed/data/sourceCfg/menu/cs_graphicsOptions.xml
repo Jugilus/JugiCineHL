@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="graphicsOptions" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="2" nTilesY="1">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Text" name="Window Title" x="66" y="12" text="FULL SCREEN"/>
+        <sprite type="Standard" name="checkBoxA" x="25" y="25">
+            <parameter name="wName" value="fullScreen" type="string"/>
+        </sprite>
+    </layer>
+</composedSprite>

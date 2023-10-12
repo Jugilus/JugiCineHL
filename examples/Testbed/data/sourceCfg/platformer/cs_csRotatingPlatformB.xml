@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="csRotatingPlatformB" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="9" nTilesY="3">
+    <layer content="Grid sprites" name="Layer 2">
+        <parameter name="eMainShape" value="true" type="bool"/>
+        <sprite type="Standard" name="platformerTilesA,59" x="425" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,39" x="425" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,19" x="425" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,55" x="25" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,35" x="25" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,15" x="25" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,18" x="75" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,38" x="75" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,58" x="75" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,18" x="175" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,38" x="175" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,58" x="175" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,16" x="125" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,36" x="125" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,56" x="125" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,58" x="275" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,38" x="275" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,18" x="275" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,16" x="225" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,36" x="225" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,56" x="225" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,57" x="375" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,37" x="375" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,17" x="375" y="125"/>
+        <sprite type="Standard" name="platformerTilesA,58" x="325" y="25"/>
+        <sprite type="Standard" name="platformerTilesA,38" x="325" y="75"/>
+        <sprite type="Standard" name="platformerTilesA,18" x="325" y="125"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="markerA" x="375" y="75" handleSource="true"/>
+    </layer>
+    <parameter name="eBehRotation" value="stringValue" type="string"/>
+    <parameter name="entity" value="rotatingPlatformC" type="string"/>
+</composedSprite>

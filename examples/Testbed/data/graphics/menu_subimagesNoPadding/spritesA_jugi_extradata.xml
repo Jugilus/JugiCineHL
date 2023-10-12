@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<imageExtraData>
+    <subimage name="title" handlePoint="0,0"/>
+    <subimage name="slotItemA__background-jfr1" handlePoint="0,0">
+        <rectangle points="(-304,-39);(304,-39);(304,39);(-304,39)"/>
+    </subimage>
+    <subimage name="slotItemA__background-jfr2" handlePoint="0,0">
+        <rectangle points="(-304,-39);(304,-39);(304,39);(-304,39)"/>
+    </subimage>
+    <subimage name="slotItemA__background-jfr3" handlePoint="0,0">
+        <rectangle points="(-304,-39);(304,-39);(304,39);(-304,39)"/>
+    </subimage>
+    <subimage name="slotItemA__background-jfr4" handlePoint="0,0">
+        <rectangle points="(-304,-39);(304,-39);(304,39);(-304,39)"/>
+    </subimage>
+    <subimage name="slotItemC__background-jfr1" handlePoint="0,0"/>
+    <subimage name="slotItemC__background-jfr2" handlePoint="0,0"/>
+    <subimage name="slotItemC__background-jfr3" handlePoint="0,0"/>
+    <subimage name="slotItemC__background-jfr4" handlePoint="0,0"/>
+    <subimage name="slotItemB__background-jfr1" handlePoint="0,0"/>
+    <subimage name="slotItemB__background-jfr2" handlePoint="0,0"/>
+    <subimage name="slotItemB__background-jfr3" handlePoint="0,0"/>
+    <subimage name="slotItemB__background-jfr4" handlePoint="0,0"/>
+    <subimage name="sliderB__line">
+        <singlePoint points="(0,135)" dataFlags="1" probe="true"/>
+        <singlePoint points="(0,-135)" dataFlags="2" probe="true"/>
+    </subimage>
+    <subimage name="sliderA__line">
+        <singlePoint points="(-95,0)" dataFlags="1" probe="true"/>
+        <singlePoint points="(95,0)" dataFlags="2" probe="true"/>
+    </subimage>
+    <subimage name="sliderB2__line">
+        <singlePoint points="(0,45)" dataFlags="1" probe="true"/>
+        <singlePoint points="(0,-45)" dataFlags="2" probe="true"/>
+    </subimage>
+</imageExtraData>

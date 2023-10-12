@@ -1,0 +1,164 @@
+>defFont:fontNormal
+>defColor:violetA
+>defTabSpacing:30
+
+>id:0  // main menu screen - main buttons
+POŽENI PRIZOR
+
+>id:1
+NASTAVITVE
+
+>id:2
+INFO
+
+>id:3
+IZHOD
+
+>id:4
+(not used)
+
+>id:5    //scene selector panel title	
+Prizori
+
+>id:6   //active user panel title	
+Uporabnik
+
+>id:7   //active user panel - change user button
+Spremeni
+
+>id:8   //user selector panel title
+Uporabniki
+
+>id:9  //user selector buttons
+Novi
+
+>id:10
+Izbriši
+
+>id:11
+Zapri
+
+>id:12
+(not used)
+
+>id:13   //new user panel title
+Novi Uporabnik
+
+>id:14   //new user panel buttons
+Potrdi
+
+>id:15
+Zavrži
+
+>id:16   //settings panel title
+Nastavitve
+
+>id:17   //settings panel buttons
+IGRA
+
+>id:18
+GRAFIKA
+
+>id:19
+ZVOK
+
+>id:20
+KONTROLE
+
+>id:21
+JEZIK
+
+>id:22
+GLAVNI MENI
+
+>id:23   //graphics subpanel content 
+Celozaslonski Prikaz
+
+>id:24
+(not used)
+
+>id:25
+(not used)
+
+>id:26    //audio subpanel content
+Glasba
+
+>id:27
+Efekti
+
+>id:28
+Govor
+
+>id:29
+(not used)
+
+>id:30
+(not used)
+
+>id:31     //input subpanel content - input device selector item: keyboard
+Tipkovnica
+
+>id:32     //input device selector entry - no name controller
+Igralna palica
+
+>id:33     //button for setting default input keys/buttons
+Privzeto
+
+>id:34
+(not used)
+
+>id:35
+(not used)
+
+>id:36     //language subpanel content
+Za spremembo jezika je potreben ponovem zagon igre!
+
+>id:37
+(not used)
+
+>id:38
+(not used)
+
+>id:39
+(not used)
+
+>id:40     //confirm box 
+Da
+
+>id:41
+Ne
+
+>id:42
+(not used)
+
+>id:43	//WHEN TRANSLATING DO NOT TRANSLATE userName AS THAT IS USED AS KEYWORD
+Izbris uporabnika izbriše vse podatke povezane z uporabikom vključno s shranjenimi pozicijami igre! Si prepričan da želiš izbrisati uporabnika z imenom <font:fontNormal_bold> userName <defFont> ?
+
+>id:44
+Prizori še niso na voljo. Igralne zadeve bo potrebno še implentirati!
+
+>id:45   //about panel
+O Programu
+
+>id:46
+<font:fontNormal_bold> Jugicine Player <defFont> (delovno ime) je aplikacija za poganjanje 2d iger narejenih z Jugicine HL ogrodjem. Jugicine HL ogrodje je razširitev predhodnega Jugimap ogrodja, ki prinaša visoko nivojski sistem kreiranja iger. Ogrodje uporablja nCine kot nisko nivojki pogon.
+Novo ogrodje je še vedno v začetni fazi razvoja, pri čemer tale aplikacija služi kot pripomoček pri dodajanju novih elemntov ogrodja in testiranju. Končni cilj je sistem za kreiranje iger, kjer klasično programiranje ni potrebno. Ali vsaj sistem, ki se pribčiža temu cilju.
+ 
+>id:47
+(not used)
+
+>id:48
+(not used)
+
+>id:49
+(not used)
+
+>id:50
+(not used)
+
+>id:51
+(not used)
+
+>id:52
+(not used)
+

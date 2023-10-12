@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sourceGraphicSet name="spritesB">
+    <images>
+        <spriteSheetImage file="data/graphics/platformer/platformerSpritesB.png"/>
+    </images>
+    <textSprites/>
+    <sprites>
+        <sprite name="charA">
+            <image name="charA__stand-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="charA__walk-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__walk-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__walk-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__walk-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__walk-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__walk-jfr6" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__walk-jfr7" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__walk-jfr8" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__swing-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__swing-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__swing-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__dead-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__turnAround-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__turnAround-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__idle-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__idle-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__turnToBack-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__turnToBack-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__turnToBack-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__turnToBack-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__climbing-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__climbing-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__climbing-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__stagger-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__stagger-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__stagger-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__idle-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__stand-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__stand-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__turnToBack__turnSwitch-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__turnToBack__turnSwitch-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA_pull-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA_pull-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA_pull-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA_push-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA_push-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA_push-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA_push-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA_push-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA_push_standing-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <parameter name="entity" value="hero" type="string"/>
+            <frameAnimation name="standingRight" loopCount="forever" horMirror="standingLeft">
+                <frame image="charA__stand-jfr1" duration="200"/>
+                <frame image="charA__stand-jfr2" duration="200"/>
+                <frame image="charA__stand-jfr3" duration="200"/>
+                <frame image="charA__stand-jfr2" duration="200"/>
+            </frameAnimation>
+            <frameAnimation name="standingLeft" loopCount="forever" horMirror="standingRight">
+                <frame image="charA__stand-jfr1" duration="200" xFlip="1"/>
+                <frame image="charA__stand-jfr2" duration="200" xFlip="1"/>
+                <frame image="charA__stand-jfr3" duration="200" xFlip="1"/>
+                <frame image="charA__stand-jfr2" duration="200" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="walkingRight" loopCount="forever" horMirror="walkingLeft">
+                <frame image="charA__walk-jfr8" duration="100"/>
+                <frame image="charA__walk-jfr1" duration="100"/>
+                <frame image="charA__walk-jfr2" duration="100"/>
+                <frame image="charA__walk-jfr3" duration="100"/>
+                <frame image="charA__walk-jfr4" duration="100"/>
+                <frame image="charA__walk-jfr5" duration="100"/>
+                <frame image="charA__walk-jfr6" duration="100"/>
+                <frame image="charA__walk-jfr7" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="walkingLeft" loopCount="forever" horMirror="walkingRight">
+                <frame image="charA__walk-jfr8" duration="100" xFlip="1"/>
+                <frame image="charA__walk-jfr1" duration="100" xFlip="1"/>
+                <frame image="charA__walk-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__walk-jfr3" duration="100" xFlip="1"/>
+                <frame image="charA__walk-jfr4" duration="100" xFlip="1"/>
+                <frame image="charA__walk-jfr5" duration="100" xFlip="1"/>
+                <frame image="charA__walk-jfr6" duration="100" xFlip="1"/>
+                <frame image="charA__walk-jfr7" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingTakeOffRight" loopCount="0" horMirror="jumpingTakeOffLeft">
+                <frame image="charA__jump-jfr4" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingTakeOffLeft" loopCount="0" horMirror="jumpingTakeOffRight">
+                <frame image="charA__jump-jfr4" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingAscendingRight" loopCount="1" horMirror="jumpingAscendingLeft">
+                <frame image="charA__jump-jfr1" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingAscendingLeft" loopCount="1" horMirror="jumpingAscendingRight">
+                <frame image="charA__jump-jfr1" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingAtMaxHeightRight" loopCount="0" horMirror="jumpingAtMaxHeightLeft">
+                <frame image="charA__jump-jfr2" duration="100"/>
+                <frame image="charA__jump-jfr3" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingAtMaxHeightLeft" loopCount="0" horMirror="jumpingAtMaxHeightRight">
+                <frame image="charA__jump-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__jump-jfr3" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingDescendingRight" loopCount="forever" horMirror="jumpingDescendingLeft">
+                <frame image="charA__jump-jfr3" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingDescendingLeft" loopCount="forever" horMirror="jumpingDescendingRight">
+                <frame image="charA__jump-jfr3" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingLandingRight" loopCount="0" horMirror="jumpingLandingLeft">
+                <frame image="charA__jump-jfr4" duration="100"/>
+                <frame image="charA__jump-jfr5" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingLandingLeft" loopCount="0" horMirror="jumpingLandingRight">
+                <frame image="charA__jump-jfr4" duration="100" xFlip="1"/>
+                <frame image="charA__jump-jfr5" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="swingRight" loopCount="0" horMirror="swingLeft">
+                <frame image="charA__swing-jfr1" duration="100"/>
+                <frame image="charA__swing-jfr2" duration="100"/>
+                <frame image="charA__swing-jfr3" duration="300"/>
+                <frame image="charA__swing-jfr2" duration="100"/>
+                <frame image="charA__swing-jfr1" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="swingLeft" loopCount="0" horMirror="swingRight">
+                <frame image="charA__swing-jfr1" duration="100" xFlip="1"/>
+                <frame image="charA__swing-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__swing-jfr3" duration="300" xFlip="1"/>
+                <frame image="charA__swing-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__swing-jfr1" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="turningToLeft" loopCount="0" horMirror="turningToRight">
+                <frame image="charA__turnAround-jfr1" duration="50"/>
+                <frame image="charA__turnAround-jfr2" duration="50"/>
+            </frameAnimation>
+            <frameAnimation name="turningToRight" loopCount="0" horMirror="turningToLeft">
+                <frame image="charA__turnAround-jfr1" duration="100" xFlip="1"/>
+                <frame image="charA__turnAround-jfr2" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="idleRight" loopCount="0" horMirror="idleLeft">
+                <frame image="charA__idle-jfr1" duration="2000"/>
+                <frame image="charA__idle-jfr2" duration="100"/>
+                <frame image="charA__idle-jfr3" duration="1000"/>
+                <frame image="charA__idle-jfr2" duration="100"/>
+                <frame image="charA__idle-jfr1" duration="500"/>
+            </frameAnimation>
+            <frameAnimation name="idleLeft" loopCount="0" horMirror="idleRight">
+                <frame image="charA__idle-jfr1" duration="2000" xFlip="1"/>
+                <frame image="charA__idle-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__idle-jfr3" duration="1000" xFlip="1"/>
+                <frame image="charA__idle-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__idle-jfr1" duration="500" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="turnToBackRight" loopCount="0" horMirror="turnToBackLeft">
+                <frame image="charA__turnToBack-jfr1" duration="100"/>
+                <frame image="charA__turnToBack-jfr2" duration="100"/>
+                <frame image="charA__turnToBack-jfr3" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="turnToBackLeft" loopCount="0" horMirror="turnToBackRight">
+                <frame image="charA__turnToBack-jfr1" duration="100" xFlip="1"/>
+                <frame image="charA__turnToBack-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__turnToBack-jfr3" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="standingOnLadder" loopCount="0">
+                <frame image="charA__turnToBack-jfr4" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="climbingLadder" loopCount="forever">
+                <frame image="charA__climbing-jfr1" duration="150"/>
+                <frame image="charA__climbing-jfr2" duration="150"/>
+                <frame image="charA__climbing-jfr3" duration="150"/>
+                <frame image="charA__climbing-jfr2" duration="150"/>
+            </frameAnimation>
+            <frameAnimation name="staggeringRight" loopCount="forever" horMirror="staggeringLeft">
+                <frame image="charA__stagger-jfr2" duration="150"/>
+                <frame image="charA__stagger-jfr3" duration="150"/>
+                <frame image="charA__stagger-jfr2" duration="150"/>
+                <frame image="charA__stagger-jfr1" duration="150"/>
+            </frameAnimation>
+            <frameAnimation name="staggeringLeft" loopCount="forever" horMirror="staggeringRight">
+                <frame image="charA__stagger-jfr2" duration="150" xFlip="1"/>
+                <frame image="charA__stagger-jfr3" duration="150" xFlip="1"/>
+                <frame image="charA__stagger-jfr2" duration="150" xFlip="1"/>
+                <frame image="charA__stagger-jfr1" duration="150" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="pushingRightObject" loopCount="forever" horMirror="pushingLeftObject">
+                <frame image="charA_push-jfr2" duration="200"/>
+                <frame image="charA_push-jfr3" duration="200"/>
+                <frame image="charA_push-jfr4" duration="200"/>
+                <frame image="charA_push-jfr5" duration="200"/>
+                <frame image="charA_push-jfr4" duration="200"/>
+                <frame image="charA_push-jfr3" duration="200"/>
+                <frame image="charA_push-jfr2" duration="200"/>
+                <frame image="charA_push-jfr1" duration="200"/>
+            </frameAnimation>
+            <frameAnimation name="pushingLeftObject" loopCount="forever" horMirror="pushingRightObject">
+                <frame image="charA_push-jfr2" duration="200" xFlip="1"/>
+                <frame image="charA_push-jfr3" duration="200" xFlip="1"/>
+                <frame image="charA_push-jfr4" duration="200" xFlip="1"/>
+                <frame image="charA_push-jfr5" duration="200" xFlip="1"/>
+                <frame image="charA_push-jfr4" duration="200" xFlip="1"/>
+                <frame image="charA_push-jfr3" duration="200" xFlip="1"/>
+                <frame image="charA_push-jfr2" duration="200" xFlip="1"/>
+                <frame image="charA_push-jfr1" duration="200" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="pullingRightObject" loopCount="forever" horMirror="pullingLeftObject">
+                <frame image="charA_pull-jfr1" duration="200"/>
+                <frame image="charA_pull-jfr2" duration="200"/>
+                <frame image="charA_pull-jfr3" duration="200"/>
+                <frame image="charA_pull-jfr2" duration="200"/>
+            </frameAnimation>
+            <frameAnimation name="pullingLeftObject" loopCount="forever" horMirror="pullingRightObject">
+                <frame image="charA_pull-jfr1" duration="200" xFlip="1"/>
+                <frame image="charA_pull-jfr2" duration="200" xFlip="1"/>
+                <frame image="charA_pull-jfr3" duration="200" xFlip="1"/>
+                <frame image="charA_pull-jfr2" duration="200" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="standingToRightObject" loopCount="0" horMirror="standingToLeftObject">
+                <frame image="charA_push_standing-jfr1" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="standingToLeftObject" loopCount="0" horMirror="standingToRightObject">
+                <frame image="charA_push_standing-jfr1" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <timelineAnimation name="turnWallSwitchRight" loopCount="0">
+                <animationMember>
+                    <animationTrack kind="Translation">
+                        <key time="0" easing="Linear" dx="0" dy="0"/>
+                        <key time="500" easing="Ease end quad" dx="0" dy="0"/>
+                        <key time="752" easing="Ease start quad" dx="0" dy="30"/>
+                        <key time="1000" easing="Linear" dx="0" dy="0"/>
+                    </animationTrack>
+                    <animationTrack kind="Flip hide">
+                        <key time="0" xFlip="0" yFlip="0"/>
+                        <key time="1400" xFlip="0" yFlip="0"/>
+                    </animationTrack>
+                    <animationTrack kind="Frame change">
+                        <key time="0" index="22"/>
+                        <key time="100" index="23"/>
+                        <key time="200" index="24"/>
+                        <key time="300" index="35"/>
+                        <key time="500" index="36"/>
+                        <key time="1000" index="35"/>
+                        <key time="1100" index="24"/>
+                        <key time="1200" index="23"/>
+                        <key time="1300" index="22"/>
+                        <key time="1400" index="0"/>
+                    </animationTrack>
+                </animationMember>
+                <metaAnimationTrack kind="Meta">
+                    <key time="0"/>
+                    <key time="752" dataFlags="1"/>
+                    <key time="1000"/>
+                    <key time="1400"/>
+                </metaAnimationTrack>
+            </timelineAnimation>
+            <timelineAnimation name="turnWallSwitchLeft" loopCount="0">
+                <animationMember>
+                    <animationTrack kind="Translation">
+                        <key time="0" easing="Linear" dx="0" dy="0"/>
+                        <key time="500" easing="Ease end quad" dx="0" dy="0"/>
+                        <key time="752" easing="Ease start quad" dx="0" dy="30"/>
+                        <key time="1000" easing="Linear" dx="0" dy="0"/>
+                    </animationTrack>
+                    <animationTrack kind="Flip hide">
+                        <key time="0" xFlip="1" yFlip="0"/>
+                        <key time="1400" xFlip="1" yFlip="0"/>
+                    </animationTrack>
+                    <animationTrack kind="Frame change">
+                        <key time="0" index="22" xFlip="1"/>
+                        <key time="100" index="23" xFlip="1"/>
+                        <key time="200" index="24"/>
+                        <key time="300" index="35" xFlip="1"/>
+                        <key time="500" index="36" xFlip="1"/>
+                        <key time="1000" index="35" xFlip="1"/>
+                        <key time="1100" index="24" xFlip="1"/>
+                        <key time="1200" index="23" xFlip="1"/>
+                        <key time="1300" index="22" xFlip="1"/>
+                        <key time="1400" index="0" xFlip="1"/>
+                    </animationTrack>
+                </animationMember>
+                <metaAnimationTrack kind="Meta">
+                    <key time="0"/>
+                    <key time="752" dataFlags="1"/>
+                    <key time="1000"/>
+                    <key time="1400"/>
+                </metaAnimationTrack>
+            </timelineAnimation>
+        </sprite>
+    </sprites>
+</sourceGraphicSet>

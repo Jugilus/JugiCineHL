@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="soundOptions" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="7" nTilesY="3">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Text" name="Window Title" x="65" y="12" text="SPEECH"/>
+        <sprite type="Composite" name="sliderA" x="325" y="25">
+            <parameter name="wName" value="speechVolume" type="string"/>
+        </sprite>
+        <sprite type="Standard" name="checkBoxA" x="25" y="25">
+            <parameter name="wName" value="speechActive" type="string"/>
+        </sprite>
+        <sprite type="Text" name="Window Title" x="65" y="62" text="SFX"/>
+        <sprite type="Composite" name="sliderA" x="325" y="75">
+            <parameter name="wName" value="sfxVolume" type="string"/>
+        </sprite>
+        <sprite type="Standard" name="checkBoxA" x="25" y="75">
+            <parameter name="wName" value="sfxActive" type="string"/>
+        </sprite>
+        <sprite type="Text" name="Window Title" x="65" y="112" text="MUSIC"/>
+        <sprite type="Composite" name="sliderA" x="325" y="125">
+            <parameter name="wName" value="musicVolume" type="string"/>
+        </sprite>
+        <sprite type="Standard" name="checkBoxA" x="25" y="125">
+            <parameter name="wName" value="musicActive" type="string"/>
+        </sprite>
+    </layer>
+</composedSprite>

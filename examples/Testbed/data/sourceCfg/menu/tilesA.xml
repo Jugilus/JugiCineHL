@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sourceGraphicSet name="tilesA">
+    <images>
+        <tileSheetImage file="data/graphics/menu/tilesA.png"/>
+    </images>
+    <textSprites/>
+    <sprites>
+        <sprite name="tilesA,0" imageName="0" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,1" imageName="1" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,2" imageName="2" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,3" imageName="3" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,4" imageName="4" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,5" imageName="5" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,6" imageName="6" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,7" imageName="7" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,8" imageName="8" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,9" imageName="9" imageFile="data/graphics/menu/tilesA.png">
+            <constantParameter name="invisibleDummy" value="true" type="bool"/>
+        </sprite>
+        <sprite name="tilesA,10" imageName="10" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,11" imageName="11" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,12" imageName="12" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,13" imageName="13" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,14" imageName="14" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,15" imageName="15" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,16" imageName="16" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,17" imageName="17" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,18" imageName="18" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,19" imageName="19" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,20" imageName="20" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,21" imageName="21" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,22" imageName="22" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,23" imageName="23" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,24" imageName="24" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,25" imageName="25" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,26" imageName="26" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,27" imageName="27" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,28" imageName="28" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,29" imageName="29" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,30" imageName="30" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,31" imageName="31" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,32" imageName="32" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,33" imageName="33" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,34" imageName="34" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,35" imageName="35" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,36" imageName="36" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,37" imageName="37" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,38" imageName="38" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,39" imageName="39" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,40" imageName="40" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,41" imageName="41" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,42" imageName="42" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,43" imageName="43" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,44" imageName="44" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,45" imageName="45" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,46" imageName="46" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,47" imageName="47" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,48" imageName="48" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,49" imageName="49" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,50" imageName="50" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,51" imageName="51" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,52" imageName="52" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,53" imageName="53" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,54" imageName="54" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,55" imageName="55" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,56" imageName="56" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,57" imageName="57" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,58" imageName="58" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,59" imageName="59" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,60" imageName="60" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,61" imageName="61" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,62" imageName="62" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,63" imageName="63" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,64" imageName="64" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,65" imageName="65" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,66" imageName="66" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,67" imageName="67" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,68" imageName="68" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,69" imageName="69" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,70" imageName="70" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,71" imageName="71" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,72" imageName="72" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,73" imageName="73" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,74" imageName="74" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,75" imageName="75" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,76" imageName="76" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,77" imageName="77" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,78" imageName="78" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,79" imageName="79" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,80" imageName="80" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,81" imageName="81" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,82" imageName="82" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,83" imageName="83" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,84" imageName="84" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,85" imageName="85" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,86" imageName="86" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,87" imageName="87" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,88" imageName="88" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,89" imageName="89" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,90" imageName="90" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,91" imageName="91" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,92" imageName="92" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,93" imageName="93" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,94" imageName="94" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,95" imageName="95" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,96" imageName="96" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,97" imageName="97" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,98" imageName="98" imageFile="data/graphics/menu/tilesA.png"/>
+        <sprite name="tilesA,99" imageName="99" imageFile="data/graphics/menu/tilesA.png"/>
+    </sprites>
+</sourceGraphicSet>

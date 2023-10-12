@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sourceGraphicSet name="spritesA">
+    <images>
+        <spriteSheetImage file="data/graphics/menu/spritesA.png"/>
+    </images>
+    <textSprites/>
+    <sprites>
+        <sprite name="menu_title" imageName="title" imageFile="data/graphics/menu/spritesA.png"/>
+        <sprite name="menu_background" imageName="background" imageFile="data/graphics/menu/spritesA.png"/>
+        <sprite name="sliderA_line" imageName="sliderA__line" imageFile="data/graphics/menu/spritesA.png">
+            <constantParameter name="wSlidingScale" value="true" type="bool"/>
+        </sprite>
+        <sprite name="sliderA_slidingButton" imageName="sliderA__slidingButton" imageFile="data/graphics/menu/spritesA.png">
+            <constantParameter name="wSlidingButton" value="true" type="bool"/>
+        </sprite>
+        <sprite name="sliderA_highlightMarker" imageName="sliderA__highlightMarker" imageFile="data/graphics/menu/spritesA.png">
+            <constantParameter name="wHighlightMarker" value="true" type="bool"/>
+        </sprite>
+        <sprite name="gearA_background" imageName="gearA__background" imageFile="data/graphics/menu/spritesA.png"/>
+        <sprite name="gearA_gear" imageName="gearA__gear" imageFile="data/graphics/menu/spritesA.png"/>
+        <sprite name="sliderB_line" imageName="sliderB__line" imageFile="data/graphics/menu/spritesA.png">
+            <constantParameter name="wSlidingScale" value="true" type="bool"/>
+        </sprite>
+        <sprite name="sliderB_incrementButton">
+            <image name="sliderB__incrementButton-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="sliderB__incrementButton-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <image name="sliderB__incrementButton-jfr3" file="data/graphics/menu/spritesA.png"/>
+            <constantParameter name="wIncrementButton" value="true" type="bool"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_CO" value="1" type="int"/>
+            <constantParameter name="wFrame_disabled" value="2" type="int"/>
+        </sprite>
+        <sprite name="sliderB_decrementButton">
+            <image name="sliderB__decrementButton-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="sliderB__decrementButton-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <image name="sliderB__decrementButton-jfr3" file="data/graphics/menu/spritesA.png"/>
+            <constantParameter name="wDecrementButton" value="true" type="bool"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_CO" value="1" type="int"/>
+            <constantParameter name="wFrame_disabled" value="2" type="int"/>
+        </sprite>
+        <sprite name="sliderB_slidingButton">
+            <image name="sliderB__slidingButton-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="sliderB__slidingButton-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <image name="sliderB__slidingButton-jfr3" file="data/graphics/menu/spritesA.png"/>
+            <constantParameter name="wSlidingButton" value="true" type="bool"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_CO" value="1" type="int"/>
+            <constantParameter name="wFrame_disabled" value="2" type="int"/>
+        </sprite>
+        <sprite name="checkBoxA">
+            <image name="checkBoxA-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="checkBoxA-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <parameter name="wName" value="value" type="string"/>
+            <constantParameter name="widget" value="button" type="string"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_checked" value="1" type="int"/>
+            <constantParameter name="wCheckable" value="true" type="bool"/>
+        </sprite>
+        <sprite name="slotItemA_background">
+            <image name="slotItemA__background-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="slotItemA__background-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <image name="slotItemA__background-jfr3" file="data/graphics/menu/spritesA.png"/>
+            <image name="slotItemA__background-jfr4" file="data/graphics/menu/spritesA.png"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_CO" value="1" type="int"/>
+            <constantParameter name="wFrame_checked" value="2" type="int"/>
+            <constantParameter name="wFrame_disabled" value="3" type="int"/>
+        </sprite>
+        <sprite name="slotItemB_background">
+            <image name="slotItemB__background-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="slotItemB__background-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <image name="slotItemB__background-jfr3" file="data/graphics/menu/spritesA.png"/>
+            <image name="slotItemB__background-jfr4" file="data/graphics/menu/spritesA.png"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_CO" value="1" type="int"/>
+            <constantParameter name="wFrame_checked" value="2" type="int"/>
+            <constantParameter name="wFrame_disabled" value="3" type="int"/>
+        </sprite>
+        <sprite name="slotItemC_background">
+            <image name="slotItemC__background-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="slotItemC__background-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <image name="slotItemC__background-jfr3" file="data/graphics/menu/spritesA.png"/>
+            <image name="slotItemC__background-jfr4" file="data/graphics/menu/spritesA.png"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_CO" value="1" type="int"/>
+            <constantParameter name="wFrame_checked" value="2" type="int"/>
+            <constantParameter name="wFrame_disabled" value="3" type="int"/>
+        </sprite>
+        <sprite name="buttonA_background">
+            <image name="buttonA__background-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="buttonA__background-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <image name="buttonA__background-jfr3" file="data/graphics/menu/spritesA.png"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_CO" value="1" type="int"/>
+            <constantParameter name="wFrame_CD" value="2" type="int"/>
+            <constantParameter name="wFrame_disabled" value="0" type="int"/>
+        </sprite>
+        <sprite name="sliderB2_line" imageName="sliderB2__line" imageFile="data/graphics/menu/spritesA.png">
+            <constantParameter name="wSlidingScale" value="true" type="bool"/>
+        </sprite>
+        <sprite name="buttonArrowLeftA">
+            <image name="buttonArrowA__left-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="buttonArrowA__left-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <image name="buttonArrowA__left-jfr3" file="data/graphics/menu/spritesA.png"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_CO" value="1" type="int"/>
+            <constantParameter name="wFrame_disabled" value="2" type="int"/>
+            <constantParameter name="wDecrementButton" value="true" type="bool"/>
+        </sprite>
+        <sprite name="buttonArrowRightA">
+            <image name="buttonArrowA__right-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="buttonArrowA__right-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <image name="buttonArrowA__right-jfr3" file="data/graphics/menu/spritesA.png"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_CO" value="1" type="int"/>
+            <constantParameter name="wFrame_disabled" value="2" type="int"/>
+            <constantParameter name="wIncrementButton" value="true" type="bool"/>
+        </sprite>
+        <sprite name="inputBoxA_background" imageName="inputBoxA__background-jfr1" imageFile="data/graphics/menu/spritesA.png">
+            <constantParameter name="wTextInputBox" value="true" type="bool"/>
+        </sprite>
+        <sprite name="inputDeviceSelectorDummySlot" imageName="inputDeviceSelectorDummySlot" imageFile="data/graphics/menu/spritesA.png">
+            <constantParameter name="invisibleDummy" value="true" type="bool"/>
+        </sprite>
+        <sprite name="attentionIcon" imageName="attentionIcon" imageFile="data/graphics/menu/spritesA.png">
+            <constantParameter name="wSlotSprite" value="duplicateButton" type="string"/>
+        </sprite>
+        <sprite name="radioBoxA">
+            <image name="radioBoxA-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
+            <image name="radioBoxA-jfr2" file="data/graphics/menu/spritesA.png"/>
+            <parameter name="wName" value="value" type="string"/>
+            <parameter name="wExclusiveGroup" value="value" type="string"/>
+            <constantParameter name="widget" value="button" type="string"/>
+            <constantParameter name="wCheckable" value="true" type="bool"/>
+            <constantParameter name="wFrame" value="0" type="int"/>
+            <constantParameter name="wFrame_checked" value="1" type="int"/>
+        </sprite>
+    </sprites>
+</sourceGraphicSet>

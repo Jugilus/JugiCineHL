@@ -1,0 +1,539 @@
+<?xml version="1.0"?>
+<info scene="Menu">
+	<map sceneMap="menuMap">
+		<tables>
+			<table name="sceneSelector">
+				<rootSprite sourceSprite="sceneSelector">
+					<constantParameter widget="table" />
+					<constantParameter wLayout="vertical" />
+					<constantParameter wNumSlotsHorizontal="1" />
+					<constantParameter wNumSlotsVertical="5" />
+					<constantParameter wSlotsSpacingVertical="0" />
+					<parameter wName="sceneSelector" />
+				</rootSprite>
+				<childSprite sourceSprite="slotSceneSelector">
+					<constantParameter wFirstSlot="true" />
+				</childSprite>
+				<childSprite sourceSprite="sliderB">
+					<constantParameter wSlider="true" />
+				</childSprite>
+				<childSprite sourceSprite="sceneName">
+					<constantParameter wSlotTextSprite="sceneName" />
+				</childSprite>
+			</table>
+			<table name="userSelector">
+				<rootSprite sourceSprite="userSelector">
+					<constantParameter widget="table" />
+					<constantParameter wNumSlotsHorizontal="1" />
+					<constantParameter wNumSlotsVertical="5" />
+					<constantParameter wSlotsSpacingVertical="2" />
+					<parameter wName="userSelector" />
+				</rootSprite>
+				<childSprite sourceSprite="slotUserSelector">
+					<constantParameter wFirstSlot="true" />
+				</childSprite>
+				<childSprite sourceSprite="sliderB2">
+					<constantParameter wSlider="true" />
+				</childSprite>
+				<childSprite sourceSprite="userName">
+					<constantParameter wSlotTextSprite="itemName" />
+				</childSprite>
+			</table>
+			<table name="inputButtonsEditor">
+				<rootSprite sourceSprite="inputKeysSelector">
+					<constantParameter widget="table" />
+					<constantParameter wNumSlotsVertical="9" />
+					<constantParameter wSlotsSpacingVertical="5" />
+					<parameter wName="inputButtonsEditor" />
+				</rootSprite>
+				<childSprite sourceSprite="slotInputKey">
+					<constantParameter wFirstSlot="true" />
+				</childSprite>
+				<childSprite sourceSprite="sliderB">
+					<constantParameter wSlider="true" />
+				</childSprite>
+				<childSprite sourceSprite="attentionIcon">
+					<constantParameter wSlotSprite="duplicateButton" />
+				</childSprite>
+				<childSprite sourceSprite="inputCommandButton">
+					<constantParameter wSlotTextSprite="inputCommandButton" />
+				</childSprite>
+				<childSprite sourceSprite="inputCommandDescription">
+					<constantParameter wSlotTextSprite="inputCommandDescription" />
+				</childSprite>
+			</table>
+			<table name="inputDeviceSelector">
+				<rootSprite sourceSprite="controlerSelector">
+					<constantParameter widget="table" />
+					<constantParameter wNumSlotsHorizontal="1" />
+					<constantParameter wNumSlotsVertical="1" />
+					<parameter wName="inputDeviceSelector" />
+				</rootSprite>
+				<childSprite sourceSprite="inputDeviceSelectorSlot">
+					<constantParameter wFirstSlot="true" />
+				</childSprite>
+				<childSprite sourceSprite="inputDeviceSelectorSlider">
+					<constantParameter wSlider="true" />
+				</childSprite>
+				<childSprite sourceSprite="controlerName">
+					<constantParameter wSlotTextSprite="itemName" />
+				</childSprite>
+			</table>
+		</tables>
+		<buttons>
+			<button name="quit">
+				<rootSprite sourceSprite="buttonB">
+					<constantParameter widget="button" />
+					<parameter wName="quit" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonB_text1">
+					<constantParameter wVisible="1" />
+					<constantParameter wVisible_CO="0" />
+				</childSprite>
+				<childSprite sourceSprite="buttonB_text2">
+					<constantParameter wVisible="0" />
+					<constantParameter wVisible_CO="1" />
+				</childSprite>
+			</button>
+			<button name="about">
+				<rootSprite sourceSprite="buttonB">
+					<constantParameter widget="button" />
+					<parameter wName="about" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonB_text1">
+					<constantParameter wVisible="1" />
+					<constantParameter wVisible_CO="0" />
+				</childSprite>
+				<childSprite sourceSprite="buttonB_text2">
+					<constantParameter wVisible="0" />
+					<constantParameter wVisible_CO="1" />
+				</childSprite>
+			</button>
+			<button name="settings">
+				<rootSprite sourceSprite="buttonB">
+					<constantParameter widget="button" />
+					<parameter wName="settings" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonB_text1">
+					<constantParameter wVisible="1" />
+					<constantParameter wVisible_CO="0" />
+				</childSprite>
+				<childSprite sourceSprite="buttonB_text2">
+					<constantParameter wVisible="0" />
+					<constantParameter wVisible_CO="1" />
+				</childSprite>
+			</button>
+			<button name="playScene">
+				<rootSprite sourceSprite="buttonB">
+					<constantParameter widget="button" />
+					<parameter wName="playScene" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonB_text1">
+					<constantParameter wVisible="1" />
+					<constantParameter wVisible_CO="0" />
+				</childSprite>
+				<childSprite sourceSprite="buttonB_text2">
+					<constantParameter wVisible="0" />
+					<constantParameter wVisible_CO="1" />
+				</childSprite>
+			</button>
+			<button name="openUsersDialog">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="openUsersDialog" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+			<button name="closeUsersDialog">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="closeUsersDialog" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+			<button name="deleteUser">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="deleteUser" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+			<button name="addNewUser">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="addNewUser" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+			<button name="mainMenu">
+				<rootSprite sourceSprite="buttonB">
+					<constantParameter widget="button" />
+					<parameter wName="mainMenu" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonB_text1">
+					<constantParameter wVisible="1" />
+					<constantParameter wVisible_CO="0" />
+				</childSprite>
+				<childSprite sourceSprite="buttonB_text2">
+					<constantParameter wVisible="0" />
+					<constantParameter wVisible_CO="1" />
+				</childSprite>
+			</button>
+			<button name="languageSettings">
+				<rootSprite sourceSprite="buttonC">
+					<constantParameter widget="button" />
+					<constantParameter wCheckable="true" />
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_checked="ffcd34" />
+					<parameter wName="languageSettings" />
+					<parameter wExclusiveGroup="settingsSections" />
+				</rootSprite>
+			</button>
+			<button name="inputSettings">
+				<rootSprite sourceSprite="buttonC">
+					<constantParameter widget="button" />
+					<constantParameter wCheckable="true" />
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_checked="ffcd34" />
+					<parameter wName="inputSettings" />
+					<parameter wExclusiveGroup="settingsSections" />
+				</rootSprite>
+			</button>
+			<button name="audioSettings">
+				<rootSprite sourceSprite="buttonC">
+					<constantParameter widget="button" />
+					<constantParameter wCheckable="true" />
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_checked="ffcd34" />
+					<parameter wName="audioSettings" />
+					<parameter wExclusiveGroup="settingsSections" />
+				</rootSprite>
+			</button>
+			<button name="graphicsSettings">
+				<rootSprite sourceSprite="buttonC">
+					<constantParameter widget="button" />
+					<constantParameter wCheckable="true" />
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_checked="ffcd34" />
+					<parameter wName="graphicsSettings" />
+					<parameter wExclusiveGroup="settingsSections" />
+				</rootSprite>
+			</button>
+			<button name="fullScreen">
+				<rootSprite sourceSprite="checkBoxA">
+					<constantParameter widget="button" />
+					<constantParameter wCheckable="true" />
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_checked="1" />
+					<parameter wName="fullScreen" />
+				</rootSprite>
+			</button>
+			<button name="speechActive">
+				<rootSprite sourceSprite="checkBoxA">
+					<constantParameter widget="button" />
+					<constantParameter wCheckable="true" />
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_checked="1" />
+					<parameter wName="speechActive" />
+				</rootSprite>
+			</button>
+			<button name="sfxActive">
+				<rootSprite sourceSprite="checkBoxA">
+					<constantParameter widget="button" />
+					<constantParameter wCheckable="true" />
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_checked="1" />
+					<parameter wName="sfxActive" />
+				</rootSprite>
+			</button>
+			<button name="musicActive">
+				<rootSprite sourceSprite="checkBoxA">
+					<constantParameter widget="button" />
+					<constantParameter wCheckable="true" />
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_checked="1" />
+					<parameter wName="musicActive" />
+				</rootSprite>
+			</button>
+			<button name="defaultInputAssignment">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="defaultInputAssignment" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+			<button name="languageButton">
+				<rootSprite sourceSprite="radioBoxA">
+					<constantParameter widget="button" />
+					<constantParameter wCheckable="true" />
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_checked="1" />
+					<parameter wName="languageButton" />
+					<parameter wExclusiveGroup="languageButtons" />
+				</rootSprite>
+			</button>
+			<button name="aboutPanel_mainMenuButton">
+				<rootSprite sourceSprite="buttonB">
+					<constantParameter widget="button" />
+					<parameter wName="aboutPanel_mainMenuButton" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonB_text1">
+					<constantParameter wVisible="1" />
+					<constantParameter wVisible_CO="0" />
+				</childSprite>
+				<childSprite sourceSprite="buttonB_text2">
+					<constantParameter wVisible="0" />
+					<constantParameter wVisible_CO="1" />
+				</childSprite>
+			</button>
+			<button name="confirmPanel_Yes">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="confirmPanel_Yes" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+			<button name="confirmPanel_No">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="confirmPanel_No" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+			<button name="messagePanel_Ok">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="messagePanel_Ok" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+			<button name="newUserDialog_Cancel">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="newUserDialog_Cancel" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+			<button name="newUserDialog_Ok">
+				<rootSprite sourceSprite="buttonA">
+					<constantParameter widget="button" />
+					<parameter wName="newUserDialog_Ok" />
+				</rootSprite>
+				<childSprite sourceSprite="buttonA_text">
+					<constantParameter wLabelColor="bdbeff" />
+					<constantParameter wLabelColor_CO="e6c79a" />
+					<constantParameter wLabelColor_CD="ffcd34" />
+					<constantParameter wLabelColor_disabled="826f9e" />
+				</childSprite>
+				<childSprite sourceSprite="buttonA_background">
+					<constantParameter wFrame="0" />
+					<constantParameter wFrame_CO="1" />
+					<constantParameter wFrame_CD="2" />
+					<constantParameter wFrame_disabled="0" />
+				</childSprite>
+			</button>
+		</buttons>
+		<sliders>
+			<slider name="speechVolume">
+				<rootSprite sourceSprite="sliderA">
+					<constantParameter widget="slider" />
+					<constantParameter wValueRange="0.0, 1.0" />
+					<parameter wName="speechVolume" />
+				</rootSprite>
+				<childSprite sourceSprite="sliderA_line">
+					<constantParameter wSlidingScale="true" />
+				</childSprite>
+				<childSprite sourceSprite="sliderA_slidingButton">
+					<constantParameter wSlidingButton="true" />
+				</childSprite>
+				<childSprite sourceSprite="sliderA_highlightMarker">
+					<constantParameter wHighlightMarker="true" />
+				</childSprite>
+			</slider>
+			<slider name="sfxVolume">
+				<rootSprite sourceSprite="sliderA">
+					<constantParameter widget="slider" />
+					<constantParameter wValueRange="0.0, 1.0" />
+					<parameter wName="sfxVolume" />
+				</rootSprite>
+				<childSprite sourceSprite="sliderA_line">
+					<constantParameter wSlidingScale="true" />
+				</childSprite>
+				<childSprite sourceSprite="sliderA_slidingButton">
+					<constantParameter wSlidingButton="true" />
+				</childSprite>
+				<childSprite sourceSprite="sliderA_highlightMarker">
+					<constantParameter wHighlightMarker="true" />
+				</childSprite>
+			</slider>
+			<slider name="musicVolume">
+				<rootSprite sourceSprite="sliderA">
+					<constantParameter widget="slider" />
+					<constantParameter wValueRange="0.0, 1.0" />
+					<parameter wName="musicVolume" />
+				</rootSprite>
+				<childSprite sourceSprite="sliderA_line">
+					<constantParameter wSlidingScale="true" />
+				</childSprite>
+				<childSprite sourceSprite="sliderA_slidingButton">
+					<constantParameter wSlidingButton="true" />
+				</childSprite>
+				<childSprite sourceSprite="sliderA_highlightMarker">
+					<constantParameter wHighlightMarker="true" />
+				</childSprite>
+			</slider>
+		</sliders>
+		<textInputs>
+			<textInput name="newUserDialog_textInput">
+				<rootSprite sourceSprite="inputBoxA">
+					<constantParameter widget="textInput" />
+					<parameter wName="newUserDialog_textInput" />
+				</rootSprite>
+				<childSprite sourceSprite="inputBoxA_background">
+					<constantParameter wTextInputBox="true" />
+				</childSprite>
+				<childSprite sourceSprite="inputBoxA_text">
+					<constantParameter wText="true" />
+				</childSprite>
+				<childSprite sourceSprite="inputBoxA_cursor">
+					<constantParameter wCursor="true" />
+				</childSprite>
+			</textInput>
+		</textInputs>
+		<textFields>
+			<textField name="__annonymous">
+				<vectorShape>
+					<parameter widget="textField" />
+					<parameter wLayer="language" />
+					<parameter wName="__annonymous" />
+				</vectorShape>
+			</textField>
+			<textField name="aboutPanel_textField">
+				<vectorShape>
+					<parameter widget="textField" />
+					<parameter wLayer="aboutPanel_content" />
+					<parameter wName="aboutPanel_textField" />
+					<parameter wVisibleBox="aboutPanel_visibleBox" />
+					<parameter wSlider="aboutPanel_slider" />
+				</vectorShape>
+			</textField>
+			<textField name="confirmPanel_textField">
+				<vectorShape>
+					<parameter widget="textField" />
+					<parameter wLayer="confirmPanel_content" />
+					<parameter wName="confirmPanel_textField" />
+				</vectorShape>
+			</textField>
+			<textField name="messagePanel_textField">
+				<vectorShape>
+					<parameter widget="textField" />
+					<parameter wLayer="messagePanel_content" />
+					<parameter wName="messagePanel_textField" />
+				</vectorShape>
+			</textField>
+		</textFields>
+	</map>
+</info>

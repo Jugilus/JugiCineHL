@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="rotatingWheelB" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="5">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="rotatingWheel_wheel" nameID="wheel" x="0" y="200" handleSource="true"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 4">
+        <sprite type="Standard" name="markerA" nameID="marker1" x="1" y="25"/>
+        <sprite type="Standard" name="rotatingWheel_axis" x="0" y="200"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 5">
+        <sprite type="Standard" name="markerA" nameID="marker2" x="1" y="25"/>
+    </layer>
+    <vectorLayer name="Vector Layer 1" hidden="true">
+        <ellipse points="(0,200);(0,25);(175,200);(0,375);(-175,200)" nameID="circle"/>
+    </vectorLayer>
+    <vectorLayer name="Vector Layer 2">
+        <bezierPolycurve points="(1,25,-97.9995,26.0532,95,24);(175,200,175,103,175,297);(0,375,98.9997,373.969,-96,376);(-175,200,-175,297,-175,103)" closed="true" nameID="bezCircle"/>
+    </vectorLayer>
+    <parameter name="aniObject" value="stringValue" type="string"/>
+    <timelineAnimation name="135degRotation" loopCount="forever" scaleDuration="1.33">
+        <animationMember/>
+        <animationMember childNameID="wheel">
+            <animationTrack kind="Rotation">
+                <key time="0" easing="Ease start and end quad" rotation="0"/>
+                <key time="2000" easing="Ease start and end quad" rotation="180"/>
+                <key time="4000" easing="Ease start and end quad" rotation="0"/>
+            </animationTrack>
+        </animationMember>
+        <animationMember childNameID="marker1">
+            <animationTrack kind="Path movement" pathNameId="bezCircle">
+                <key time="0" easing="Ease start and end quad" pos="0"/>
+                <key time="2000" easing="Ease start and end quad" pos="0.5"/>
+                <key time="4000" easing="Ease start and end quad" pos="0"/>
+            </animationTrack>
+        </animationMember>
+        <animationMember childNameID="marker2">
+            <animationTrack kind="Path movement" pathNameId="bezCircle">
+                <key time="0" easing="Ease start and end quad" pos="0.5"/>
+                <key time="1999" easing="Ease start and end quad" pos="1"/>
+                <key time="4000" easing="Ease start and end quad" pos="0.5"/>
+            </animationTrack>
+        </animationMember>
+    </timelineAnimation>
+</composedSprite>

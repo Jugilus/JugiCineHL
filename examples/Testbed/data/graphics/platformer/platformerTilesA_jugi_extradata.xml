@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<imageExtraData>
+    <subimage name="0">
+        <polyline points="(25,21);(-21,21);(-21,-25);(25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="1">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+        <polyline points="(-25,-25);(25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="2">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="3">
+        <polyline points="(-25,-25);(21,-25);(21,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="4">
+        <polyline points="(25,21);(-21,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="5">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="6">
+        <polyline points="(21,-25);(21,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="7">
+        <polyline points="(-25,-25);(25,0)" closed="false"/>
+    </subimage>
+    <subimage name="8">
+        <polyline points="(-25,0);(25,25)" closed="false"/>
+    </subimage>
+    <subimage name="9">
+        <polyline points="(-25,25);(25,0)" closed="false"/>
+    </subimage>
+    <subimage name="10">
+        <polyline points="(-25,0);(25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="15">
+        <polyline points="(25,21);(-21,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="16">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="17">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="18">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="19">
+        <polyline points="(21,-25);(21,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="22">
+        <polyline points="(-21,25);(-21,-25)" closed="false"/>
+        <polyline points="(21,-25);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="24">
+        <polyline points="(-21,25);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="26">
+        <polyline points="(21,-25);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="31">
+        <polyline points="(-25,-25);(25,-25)" closed="false"/>
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="32">
+        <polyline points="(-25,-25);(25,-25)" closed="false"/>
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="33">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="34">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="35">
+        <polyline points="(-21,25);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="39">
+        <polyline points="(21,-25);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="44">
+        <polyline points="(-21,25);(-21,-25);(25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="45">
+        <polyline points="(-25,-25);(25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="46">
+        <polyline points="(-25,-25);(21,-25);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="51">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="52">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="55">
+        <polyline points="(-21,25);(-21,-21);(25,-21)" closed="false"/>
+    </subimage>
+    <subimage name="56">
+        <polyline points="(-25,-21);(25,-21)" closed="false"/>
+    </subimage>
+    <subimage name="57">
+        <polyline points="(-25,-21);(25,-21)" closed="false"/>
+    </subimage>
+    <subimage name="58">
+        <polyline points="(-25,-21);(25,-21)" closed="false"/>
+    </subimage>
+    <subimage name="59">
+        <polyline points="(-25,-21);(21,-21);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="71">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="72">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="73">
+        <polyline points="(-25,-25);(25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="74">
+        <polyline points="(-25,-25);(25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="75">
+        <polyline points="(25,21);(-21,21);(-21,-10);(25,-10)" closed="false"/>
+    </subimage>
+    <subimage name="76">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+        <polyline points="(-25,-10);(25,-10)" closed="false"/>
+    </subimage>
+    <subimage name="77">
+        <polyline points="(-25,-10);(21,-10);(21,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="78">
+        <polyline points="(-21,-10);(21,-10);(21,21);(-21,21)" closed="true"/>
+    </subimage>
+    <subimage name="81">
+        <polyline points="(25,-12);(-13,-25)" closed="false"/>
+    </subimage>
+    <subimage name="82">
+        <polyline points="(25,5);(-25,-12)" closed="false"/>
+    </subimage>
+    <subimage name="83">
+        <polyline points="(25,22);(-25,5)" closed="false"/>
+    </subimage>
+    <subimage name="84">
+        <polyline points="(25,21);(-25,5)" closed="false"/>
+    </subimage>
+    <subimage name="85">
+        <polyline points="(25,21);(-25,5)" closed="false"/>
+    </subimage>
+    <subimage name="86">
+        <polyline points="(25,5);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="87">
+        <polyline points="(25,5);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="88">
+        <polyline points="(25,5);(-25,22)" closed="false"/>
+    </subimage>
+    <subimage name="89">
+        <polyline points="(25,-12);(-25,5)" closed="false"/>
+    </subimage>
+    <subimage name="90">
+        <polyline points="(13,-25);(-25,-12)" closed="false"/>
+    </subimage>
+    <subimage name="100">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="101">
+        <polyline points="(-13,25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="110">
+        <polyline points="(25,21);(13,25)" closed="false"/>
+    </subimage>
+    <subimage name="111">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="116">
+        <polyline points="(25,21);(-2,21);(-25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="117">
+        <polyline points="(25,-25);(2,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="141">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="142">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="143">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="144">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="145">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="146">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="149">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="150">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="151">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="152">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="153">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="156">
+        <polyline points="(-21,25);(-25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="157">
+        <polyline points="(25,-25);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="160">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="161">
+        <polyline points="(-21,25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="166">
+        <polyline points="(25,21);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="167">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="168">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="169">
+        <polyline points="(-21,25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="173">
+        <polyline points="(25,21);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="174">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="189">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="190">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="191">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="192">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="193">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="196">
+        <polyline points="(0,25);(-25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="197">
+        <polyline points="(25,-25);(0,25)" closed="false"/>
+    </subimage>
+    <subimage name="200">
+        <polyline points="(25,21);(-21,21);(-21,-25);(25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="201">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+        <polyline points="(-25,-25);(25,-25)" closed="false"/>
+    </subimage>
+    <subimage name="202">
+        <polyline points="(-25,-25);(21,-25);(21,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="203">
+        <polyline points="(25,21);(-21,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="204">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="205">
+        <polyline points="(21,-25);(21,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="208">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="209">
+        <polyline points="(-21,25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="213">
+        <polyline points="(25,21);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="214">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="215">
+        <polyline points="(25,25);(0,-25)" closed="false"/>
+    </subimage>
+    <subimage name="218">
+        <polyline points="(0,-25);(-25,25)" closed="false"/>
+    </subimage>
+    <subimage name="235">
+        <polyline points="(0,25);(0,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="238">
+        <polyline points="(25,21);(0,21);(0,25)" closed="false"/>
+    </subimage>
+    <subimage name="241">
+        <polyline points="(25,-12);(-13,-25)" closed="false"/>
+    </subimage>
+    <subimage name="242">
+        <polyline points="(25,5);(-25,-12)" closed="false"/>
+    </subimage>
+    <subimage name="243">
+        <polyline points="(25,22);(-25,5)" closed="false"/>
+    </subimage>
+    <subimage name="244">
+        <polyline points="(25,21);(-25,5)" closed="false"/>
+    </subimage>
+    <subimage name="245">
+        <polyline points="(25,21);(-25,5)" closed="false"/>
+    </subimage>
+    <subimage name="246">
+        <polyline points="(25,5);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="247">
+        <polyline points="(25,5);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="248">
+        <polyline points="(25,5);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="249">
+        <polyline points="(25,-12);(-25,5)" closed="false"/>
+    </subimage>
+    <subimage name="250">
+        <polyline points="(13,-25);(-25,-12)" closed="false"/>
+    </subimage>
+    <subimage name="257">
+        <polyline points="(25,-25);(0,25)" closed="false"/>
+    </subimage>
+    <subimage name="260">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="261">
+        <polyline points="(-13,25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="270">
+        <polyline points="(25,21);(13,25)" closed="false"/>
+    </subimage>
+    <subimage name="271">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="275">
+        <polyline points="(25,25);(25,17);(19,17);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="278">
+        <polyline points="(21,-25);(-20,17);(-25,17);(-25,25)" closed="false"/>
+    </subimage>
+    <subimage name="301">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="302">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="303">
+        <polyline points="(25,21);(-21,-25)" closed="false"/>
+    </subimage>
+    <subimage name="304">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="305">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="306">
+        <polyline points="(21,-25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="320">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="321">
+        <polyline points="(-21,25);(-25,21)" closed="false"/>
+    </subimage>
+    <subimage name="326">
+        <polyline points="(25,21);(21,25)" closed="false"/>
+    </subimage>
+    <subimage name="327">
+        <polyline points="(25,21);(-25,21)" closed="false"/>
+    </subimage>
+</imageExtraData>

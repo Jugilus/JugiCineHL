@@ -1,0 +1,54 @@
+
+>id:0
+move left
+
+>id:1
+move right
+
+>id:2
+move up
+
+>id:3
+move down
+
+>id:4
+jump
+
+>id:5
+dash
+
+>id:6
+fire / handle objects
+
+>id:7
+select weapon
+
+>id:8
+extra command 1
+
+>id:9
+extra command 2
+
+>id:10
+extra command 3
+
+>id:11
+extra command 4
+
+>id:12
+extra command 5
+
+>id:12
+(not used)
+
+>id:13
+(not used)
+
+>id:14
+(not used)
+
+>id:15
+(not used)
+
+>id:16
+(not used)

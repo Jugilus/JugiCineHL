@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<imageExtraData>
+    <subimage name="charA__climbing-jfr1">
+        <rectangle points="(-30,-46);(31,-46);(31,34);(-30,34)"/>
+    </subimage>
+    <subimage name="charA__climbing-jfr2">
+        <rectangle points="(-30,-46);(31,-46);(31,34);(-30,34)"/>
+    </subimage>
+    <subimage name="charA__climbing-jfr3">
+        <rectangle points="(-30,-46);(31,-46);(31,34);(-30,34)"/>
+    </subimage>
+    <subimage name="charA__dead-jfr1">
+        <rectangle points="(-30,-46);(31,-46);(31,34);(-30,34)"/>
+    </subimage>
+    <subimage name="charA__idle-jfr1">
+        <rectangle points="(-30,-46);(31,-46);(31,34);(-30,34)"/>
+    </subimage>
+    <subimage name="charA__idle-jfr2">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__idle-jfr3">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__jump-jfr1">
+        <rectangle points="(-30,-46);(31,-46);(31,49);(-30,49)"/>
+    </subimage>
+    <subimage name="charA__jump-jfr2">
+        <rectangle points="(-30,-46);(31,-46);(31,49);(-30,49)"/>
+    </subimage>
+    <subimage name="charA__jump-jfr3">
+        <rectangle points="(-30,-46);(31,-46);(31,49);(-30,49)"/>
+    </subimage>
+    <subimage name="charA__jump-jfr4">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__jump-jfr5">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__stagger-jfr1">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__stagger-jfr2">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__stagger-jfr3">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__stand-jfr1">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+        <rectangle points="(-11,49);(11,49);(11,71);(-11,71)" dataFlags="1" probe="true"/>
+    </subimage>
+    <subimage name="charA__stand-jfr2">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__stand-jfr3">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__swing-jfr1">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__swing-jfr2">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__swing-jfr3">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__turnAround-jfr1">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__turnAround-jfr2">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__turnToBack-jfr1">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__turnToBack-jfr2">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__turnToBack-jfr3">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__turnToBack-jfr4">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__walk-jfr1">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__walk-jfr2">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__walk-jfr3">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__walk-jfr4">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__walk-jfr5">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__walk-jfr6">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__walk-jfr7">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA__walk-jfr8">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA_pull-jfr1">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA_pull-jfr2">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA_pull-jfr3">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA_push-jfr1">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA_push-jfr2">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA_push-jfr3">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA_push-jfr4">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="charA_push-jfr5">
+        <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+</imageExtraData>

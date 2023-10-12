@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sourceGraphicSet name="compositeSpritesPartsA">
+    <images>
+        <spriteSheetImage file="data/graphics/platformer/platformerSpritesA.png"/>
+    </images>
+    <textSprites/>
+    <sprites>
+        <sprite name="doorA_slidingDoor" imageName="doorA__slidingDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorA_partAbove" imageName="doorA__partAbove" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorA_light">
+            <image name="doorA__noLight" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="doorA__greenLight" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="doorA__redLight" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <frameAnimation name="greenLight" loopCount="0">
+                <frame image="doorA__greenLight" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="redLight" loopCount="0">
+                <frame image="doorA__redLight" duration="100"/>
+            </frameAnimation>
+        </sprite>
+        <sprite name="doorB_blueDoor" imageName="doorB__blueDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_greenDoor" imageName="doorB__greenDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_yellowDoor" imageName="doorB__yellowDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_blueKey" imageName="doorB__blueKey" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_greenKey" imageName="doorB__greenKey" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_keyYellow" imageName="doorB__yellowKey" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_partAbove" imageName="doorB__partAbove" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="fancyPlatformA_body" imageName="fancyPlatformA__body" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="fancyPlatformA_light" imageName="fancyPlatformA__light" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA__whole">
+            <image name="breakablePlatformA__whole-jfr1" file="data/graphics/platformer/platformerSpritesA.png" marker="1"/>
+            <image name="breakablePlatformA__whole-jfr2" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="breakablePlatformA__whole-jfr3" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="breakablePlatformA__whole-jfr4" file="data/graphics/platformer/platformerSpritesA.png"/>
+            <image name="breakablePlatformA__whole-jfr5" file="data/graphics/platformer/platformerSpritesA.png"/>
+        </sprite>
+        <sprite name="breakablePlatformA_brokenPart_1" imageName="breakablePlatformA__brokenPart_1" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_2" imageName="breakablePlatformA__brokenPart_2" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_3" imageName="breakablePlatformA__brokenPart_3" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_4" imageName="breakablePlatformA__brokenPart_4" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_5" imageName="breakablePlatformA__brokenPart_5" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="breakablePlatformA_brokenPart_6" imageName="breakablePlatformA__brokenPart_6" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="dissapearingPlatformA_part" imageName="dissapearingPlatformA__part" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="dissapearingPlatformA_shapeDummy" imageName="dissapearingPlatformA__shapeDummy" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_bottomPart" imageName="doorB__bottomPart" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_topPart" imageName="doorB__topPart" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorA_bottomPart" imageName="doorA__bottomPart" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorA_mainPart" imageName="doorA__mainPart" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+    </sprites>
+</sourceGraphicSet>

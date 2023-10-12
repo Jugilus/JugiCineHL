@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="blueDoorB" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="6">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="doorB_blueDoor" nameID="mainPart" x="0" y="250"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 3">
+        <sprite type="Standard" name="doorB_bottomPart" nameID="bottomPart" x="0" y="42"/>
+        <sprite type="Standard" name="doorB_topPart" nameID="topPart" x="0" y="250"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Standard" name="doorB_partAbove" x="0" y="250" handleSource="true"/>
+    </layer>
+</composedSprite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="slotUserSelector" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="1">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="slotItemB_background" x="0" y="0" handleSource="true"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Text" name="userName" nameID="itemName" x="15" y="3" text="userName"/>
+    </layer>
+    <constantParameter name="wFirstSlot" value="true" type="bool"/>
+</composedSprite>

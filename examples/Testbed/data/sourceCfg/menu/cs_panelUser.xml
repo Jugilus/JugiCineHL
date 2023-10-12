@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="panelUser" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="14" nTilesY="1">
+    <layer content="Grid sprites" name="Layer 2">
+        <sprite type="Standard" name="tilesA,24" x="25" y="25"/>
+        <sprite type="Standard" name="tilesA,25" x="75" y="25"/>
+        <sprite type="Standard" name="tilesA,25" x="125" y="25"/>
+        <sprite type="Standard" name="tilesA,26" x="175" y="25"/>
+        <sprite type="Standard" name="tilesA,27" x="225" y="25"/>
+        <sprite type="Standard" name="tilesA,27" x="275" y="25"/>
+        <sprite type="Standard" name="tilesA,27" x="325" y="25"/>
+        <sprite type="Standard" name="tilesA,27" x="375" y="25"/>
+        <sprite type="Standard" name="tilesA,27" x="425" y="25"/>
+        <sprite type="Standard" name="tilesA,27" x="475" y="25"/>
+        <sprite type="Standard" name="tilesA,27" x="525" y="25"/>
+        <sprite type="Standard" name="tilesA,27" x="575" y="25"/>
+        <sprite type="Standard" name="tilesA,27" x="625" y="25"/>
+        <sprite type="Standard" name="tilesA,28" x="675" y="25"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Text" name="activeUserName" nameID="activeUserName" x="169" y="10" text="activeUserName"/>
+        <sprite type="Text" name="Window Title" x="10" y="15" text="User " book="gui" segment="6"/>
+        <sprite type="Composite" name="buttonA" x="616" y="26">
+            <parameter name="changeChildText" value="label, gui, 7" type="string"/>
+            <parameter name="wName" value="openUsersDialog" type="string"/>
+        </sprite>
+    </layer>
+</composedSprite>

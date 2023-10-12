@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commonData>
+    <settings yOrientation="Up" dummiesTextureSize="32"/>
+    <fonts>
+        <font name="fontBig_blue" file="data/fonts/calibri_r_bold_50px_outline2px_A.fnt"/>
+        <font name="fontBig_yellow" file="data/fonts/calibri_r_bold_50px_outline2px_B.fnt"/>
+        <font name="fontNormal_bold" file="data/fonts/calibri_bold_widthScale120_30px.fnt"/>
+        <font name="fontNormal" file="data/fonts/calibri_widthScale120_30px.fnt"/>
+    </fonts>
+    <colors>
+        <color name="violetA" color="776AA0"/>
+        <color name="yellowA" color="FFCC33"/>
+        <color name="yellowB" color="9E7700"/>
+        <color name="violetB" color="BDBEFF"/>
+        <color name="redA" color="9E4249"/>
+    </colors>
+    <texts>
+        <textFile file="data/text/English/scenes.txt"/>
+        <textFile file="data/text/English/inputCommands.txt"/>
+        <textFile file="data/text/English/gui.txt"/>
+    </texts>
+</commonData>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<predefinedParameters>
+
+    <group name="widgets">
+        <group name="button">
+            <group name="button_rootSprite">
+                <constPar name="widget" fixedValue="button" type="string" required="false" />
+                <constPar name="wCheckable" value="false" type="bool" required="false" />
+                <par name="wName" value="buttonName" type="string" required="true" />
+                <par name="wInitialState " value="normal, checked, disabled" type="valuesSet" required="false" />
+                <par name="wExclusiveGroup " value="buttonsGroup" type="string" required="false" />
+                <addSharedGroups sharedGroups="alpha,scale,rotation,colorOverlay,labelColor,frame,visible" />
+            </group>
+            <group name="button_visualStateSprites">
+                <addSharedGroups sharedGroups="alpha,scale,rotation,colorOverlay,labelColor,frame,visible" />
+            </group>
+            <group name="button_highlightMarkerSprite">
+                <constPar name="wHighlightMarker " value="true" type="bool" required="false" />
+            </group>
+
+            <sharedGroup name="alpha">
+                <constPar name="wAlpha" value="1.0" type="string" required="true" />
+                <constPar name="wAlpha_CO" value="1.0" type="string" required="false" />
+                <constPar name="wAlpha_CD" value="1.0" type="string" required="false" />
+                <constPar name="wAlpha_checked" value="1.0" type="string" required="false" />
+                <constPar name="wAlpha_checkedCO" value="1.0" type="string" required="false" />
+                <constPar name="wAlpha_checkedCD" value="1.0" type="string" required="false" />
+                <constPar name="wAlpha_HL" value="1.0" type="string" required="false" />
+                <constPar name="wAlpha_checkedHL" value="1.0" type="string" required="false" />
+                <constPar name="wAlpha_disabled" value="1.0" type="string" required="false" />
+                <constPar name="wAlpha_transitionDur" value="1.0, 0.3" type="string" required="false" />
+            </sharedGroup>
+            <sharedGroup name="scale">
+                <constPar name="wScale" value="1.0" type="string" required="true" />
+                <constPar name="wScale_CO" value="1.0" type="string" required="false" />
+                <constPar name="wScale_CD" value="1.0" type="string" required="false" />
+                <constPar name="wScale_checked" value="1.0" type="string" required="false" />
+                <constPar name="wScale_checkedCO" value="1.0" type="string" required="false" />
+                <constPar name="wScale_checkedCD" value="1.0" type="string" required="false" />
+                <constPar name="wScale_HL" value="1.0" type="string" required="false" />
+                <constPar name="wScale_checkedHL" value="1.0" type="string" required="false" />
+                <constPar name="wScale_disabled" value="1.0" type="string" required="false" />
+                <constPar name="wScale_transitionDur" value="0.5, 0.5" type="string" required="false" />
+            </sharedGroup>
+            <sharedGroup name="rotation">
+                <constPar name="wRotation" value="0.0" type="string" required="true" />
+                <constPar name="wRotation_CO" value="0.0" type="string" required="false" />
+                <constPar name="wRotation_CD" value="0.0" type="string" required="false" />
+                <constPar name="wRotation_checked" value="0.0" type="string" required="false" />
+                <constPar name="wRotation_checkedCO" value="0.0" type="string" required="false" />
+                <constPar name="wRotation_checkedCD" value="0.0" type="string" required="false" />
+                <constPar name="wRotation_HL" value="0.0" type="string" required="false" />
+                <constPar name="wRotation_checkedHL" value="0.0" type="string" required="false" />
+                <constPar name="wRotation_disabled" value="0.0" type="string" required="false" />
+                <constPar name="wRotation_transitionDur" value="180.0, 1.0" type="string" required="false" />
+            </sharedGroup>
+            <sharedGroup name="colorOverlay">
+                <constPar name="wColorOverlay" value="FF0000" type="string" required="true" />
+                <constPar name="wColorOverlay_CO" value="FF0000" type="string" required="false" />
+                <constPar name="wColorOverlay_CD" value="FF0000" type="string" required="false" />
+                <constPar name="wColorOverlay_checked" value="FF0000" type="string" required="false" />
+                <constPar name="wColorOverlay_checkedCO" value="FF0000" type="string" required="false" />
+                <constPar name="wColorOverlay_checkedCD" value="FF0000" type="string" required="false" />
+                <constPar name="wColorOverlay_HL" value="FF0000" type="string" required="false" />
+                <constPar name="wColorOverlay_checkedHL" value="FF0000" type="string" required="false" />
+                <constPar name="wColorOverlay_disabled" value="FF0000" type="string" required="false" />
+                <constPar name="wColorOverlay_transitionDur" value="1.0, 0.2" type="string" required="false" />
+                <constPar name="wColorOverlay_blend" value="normal,multiply,linDodge,color" type="valuesSet" required="false" />
+            </sharedGroup>
+            <sharedGroup name="labelColor">
+                <constPar name="wLabelColor" value="FF0000" type="string" required="true" />
+                <constPar name="wLabelColor_CO" value="FF0000" type="string" required="false" />
+                <constPar name="wLabelColor_CD" value="FF0000" type="string" required="false" />
+                <constPar name="wLabelColor_checked" value="FF0000" type="string" required="false" />
+                <constPar name="wLabelColor_checkedCO" value="FF0000" type="string" required="false" />
+                <constPar name="wLabelColor_checkedCD" value="FF0000" type="string" required="false" />
+                <constPar name="wLabelColor_HL" value="FF0000" type="string" required="false" />
+                <constPar name="wLabelColor_checkedHL" value="FF0000" type="string" required="false" />
+                <constPar name="wLabelColor_disabled" value="FF0000" type="string" required="false" />
+                <constPar name="wLabelColor_transitionDur" value="1.0, 0.2" type="string" required="false" />
+            </sharedGroup>
+            <sharedGroup name="frame">
+                <constPar name="wFrame" value="0" type="int" required="true" />
+                <constPar name="wFrame_CO" value="0" type="int" required="false" />
+                <constPar name="wFrame_CD" value="0" type="int" required="false" />
+                <constPar name="wFrame_checked" value="0" type="int" required="false" />
+                <constPar name="wFrame_checkedCO" value="0" type="int" required="false" />
+                <constPar name="wFrame_checkedCD" value="0" type="int" required="false" />
+                <constPar name="wFrame_HL" value="0" type="int" required="false" />
+                <constPar name="wFrame_checkedHL" value="0" type="int" required="false" />
+                <constPar name="wFrame_disabled" value="0" type="int" required="false" />
+            </sharedGroup>
+            <sharedGroup name="visible">
+                <constPar name="wVisible" value="1" type="int" required="true" />
+                <constPar name="wVisible_CO" value="1" type="int" required="false" />
+                <constPar name="wVisible_CD" value="1" type="int" required="false" />
+                <constPar name="wVisible_checked" value="1" type="int" required="false" />
+                <constPar name="wVisible_checkedCO" value="1" type="int" required="false" />
+                <constPar name="wVisible_checkedCD" value="1" type="int" required="false" />
+                <constPar name="wVisible_HL" value="1" type="int" required="false" />
+                <constPar name="wVisible_checkedHL" value="1" type="int" required="false" />
+                <constPar name="wVisible_disabled" value="1" type="int" required="false" />
+            </sharedGroup>
+
+        </group> 
+
+        
+    </group>
+
+</predefinedParameters>

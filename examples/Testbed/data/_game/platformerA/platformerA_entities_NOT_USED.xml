@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<scene name="PlatformerA">
+
+
+    <entitySystem_SKIP>
+
+
+        <entities>
+
+
+            <!-- DOORS -->
+
+            <entity name="groundSwitchA_doorA_leftLight" mainShape="groundSwitch">
+                <behaviorController>
+                    <state name="off">
+                        <a onTrigger="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                    </state> 
+                    <state name="on">
+                        <a onTrigger="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
+                    </state>
+                </behaviorController>    
+            </entity>
+
+            
+            <entity name="groundSwitchA_doorA_rightLight" mainShape="groundSwitch">
+                <behaviorController>
+                    <state name="off">
+                        <a onTrigger="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                    </state> 
+                    <state name="on">
+                        <a onTrigger="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
+                    </state>    
+                </behaviorController>
+            </entity>
+
+
+            <entity name="doorA_leftLight" mainShape="entityWithoutShape">
+                <behaviorController>
+                    <state name="red">
+                        <a onTriggers="ENTITY:groundSwitchA_doorA_leftLight/STATE:on/ACTIVE" doSetState="green" />
+                    </state>
+                    <state name="green">
+                        <a onTriggers="ENTITY:groundSwitchA_doorA_leftLight/STATE:off/ACTIVE" doSetState="red" />
+                    </state>
+                </behaviorController>
+            </entity>
+
+
+            <entity name="doorA_rightLight" mainShape="entityWithoutShape">
+                <behaviorController>
+                    <state name="red">
+                        <a onTriggers="ENTITY:groundSwitchA_doorA_rightLight:1/STATE:on/ACTIVE, 
+                                    ENTITY:groundSwitchA_doorA_rightLight:2/STATE:on/ACTIVE " doSetState="green" />
+                    </state>
+                    <state name="green">
+                        <a onTriggers="[ENTITY:groundSwitchA_doorA_rightLight:1/STATE:off/ACTIVE, 
+                                        ENTITY:groundSwitchA_doorA_rightLight:2/STATE:off/ACTIVE]" doSetState="red" />
+                    </state>
+                </behaviorController>
+            </entity>
+
+
+            <entity name="doorA_leftSensorArea" mainShape="doorSensorArea">
+                <behaviorController>
+                    <state name="closed">
+                        <a onTriggers="ENTITY:THIS/CONTACT, ENTITY:doorA_leftLight/STATE:green/ACTIVE" doSetState="opened" />
+                    </state>
+                    <state name="opened">
+                        <a onTriggers="ENTITY:THIS/CONTACT:ANY/NOT_ACTIVE, ENTITY:doorA_rightSensorArea/CONTACT:ANY/NOT_ACTIVE" doSetState="closed" />
+                        <a onTriggers="ENTITY:THIS/CONTACT:ANY/NOT_ACTIVE, ENTITY:doorA_rightLight/STATE:red/ACTIVE" doSetState="closed" />
+                    </state>
+                </behaviorController>
+            </entity>
+
+
+            <entity name="doorA_rightSensorArea" mainShape="doorSensorArea">
+                <behaviorController>
+                    <state name="closed">
+                        <a onTriggers="ENTITY:THIS/CONTACT:ANY/ACTIVE, ENTITY:doorA_rightLight/STATE:green/ACTIVE" doSetState="opened" />
+                    </state>
+                    <state name="opened">
+                        <a onTriggers="ENTITY:THIS/CONTACT:ANY/NOT_ACTIVE, ENTITY:doorA_leftSensorArea/CONTACT:ANY/NOT_ACTIVE" doSetState="closed" />
+                        <a onTriggers="ENTITY:THIS/CONTACT:ANY/NOT_ACTIVE, ENTITY:doorA_leftLight/STATE:red/ACTIVE" doSetState="closed" />
+                    </state>
+                </behaviorController>
+            </entity>
+
+
+            <entity name="doorA" mainShape="door">
+                <behaviorController>
+                    <state name="closed" contactsEnabled="TRUE">
+                        <a onTriggers="ENTITY:doorA_leftSensorArea/STATE:opened/ACTIVE" doSetState="opening" />
+                        <a onTriggers="ENTITY:doorA_rightSensorArea/STATE:opened/ACTIVE" doSetState="opening" />
+                    </state>
+                    <state name="opening" animation="opening" contactsEnabled="FALSE">
+                        <a onTriggers="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
+                    </state>
+                    <state name="opened" contactsEnabled="FALSE"> 
+                        <a onTriggers="ENTITY:doorA_leftSensorArea/STATE:closed/ACTIVE, ENTITY:doorA_rightSensorArea/STATE:closed/ACTIVE" doSetState="closing" />
+                    </state>
+                    <state name="closing" animation="closing" contactsEnabled="TRUE">
+                        <a onTriggers="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
+                    </state>
+                </behaviorController>
+            </entity>
+
+            
+            
+        </entities>
+
+
+    </entitySystem_SKIP>
+
+
+
+</scene>

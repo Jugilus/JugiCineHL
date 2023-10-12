@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="newUserDialog" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="8" nTilesY="4">
+    <layer content="Grid sprites" name="Layer 2">
+        <sprite type="Standard" name="tilesA,34" x="25" y="75"/>
+        <sprite type="Standard" name="tilesA,35" x="75" y="75"/>
+        <sprite type="Standard" name="tilesA,45" x="75" y="25"/>
+        <sprite type="Standard" name="tilesA,44" x="25" y="25"/>
+        <sprite type="Standard" name="tilesA,35" x="125" y="75"/>
+        <sprite type="Standard" name="tilesA,45" x="125" y="25"/>
+        <sprite type="Standard" name="tilesA,35" x="175" y="75"/>
+        <sprite type="Standard" name="tilesA,45" x="175" y="25"/>
+        <sprite type="Standard" name="tilesA,35" x="225" y="75"/>
+        <sprite type="Standard" name="tilesA,45" x="225" y="25"/>
+        <sprite type="Standard" name="tilesA,35" x="275" y="75"/>
+        <sprite type="Standard" name="tilesA,45" x="275" y="25"/>
+        <sprite type="Standard" name="tilesA,45" x="325" y="25"/>
+        <sprite type="Standard" name="tilesA,35" x="325" y="75"/>
+        <sprite type="Standard" name="tilesA,47" x="375" y="75"/>
+        <sprite type="Standard" name="tilesA,43" x="375" y="25"/>
+        <sprite type="Standard" name="tilesA,30" x="25" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="75" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="125" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="175" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="225" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="275" y="125"/>
+        <sprite type="Standard" name="tilesA,31" x="325" y="125"/>
+        <sprite type="Standard" name="tilesA,63" x="375" y="125"/>
+        <sprite type="Standard" name="tilesA,20" x="25" y="175"/>
+        <sprite type="Standard" name="tilesA,21" x="75" y="175"/>
+        <sprite type="Standard" name="tilesA,21" x="125" y="175"/>
+        <sprite type="Standard" name="tilesA,21" x="175" y="175"/>
+        <sprite type="Standard" name="tilesA,21" x="225" y="175"/>
+        <sprite type="Standard" name="tilesA,21" x="275" y="175"/>
+        <sprite type="Standard" name="tilesA,21" x="325" y="175"/>
+        <sprite type="Standard" name="tilesA,53" x="375" y="175"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 3">
+        <sprite type="Composite" name="buttonA" x="277" y="34">
+            <parameter name="changeChildText" value="label, gui, 15" type="string"/>
+            <parameter name="wName" value="newUserDialog_Cancel" type="string"/>
+        </sprite>
+        <sprite type="Composite" name="buttonA" x="122" y="34">
+            <parameter name="changeChildText" value="label,gui, 14" type="string"/>
+            <parameter name="wName" value="newUserDialog_Ok" type="string"/>
+        </sprite>
+        <sprite type="Composite" name="inputBoxA" x="0" y="66">
+            <parameter name="wName" value="newUserDialog_textInput" type="string"/>
+        </sprite>
+        <sprite type="Standard" name="tilesA,9" x="200" y="100" handleSource="true"/>
+        <sprite type="Text" name="Window Title" x="20" y="168" text="User Name " book="gui" segment="13"/>
+    </layer>
+</composedSprite>

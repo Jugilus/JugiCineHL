@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spriteSheetImage width="2145" height="1842">
+    <subimage name="part1" x="0" y="0" width="1902" height="832"/>
+    <subimage name="sky" x="0" y="832" width="246" height="1010"/>
+    <subimage name="part3" x="246" y="832" width="505" height="1003"/>
+    <subimage name="part2" x="751" y="832" width="873" height="315"/>
+    <subimage name="cloud1" x="751" y="1147" width="445" height="164"/>
+    <subimage name="charAni_jfr1" x="751" y="1311" width="243" height="313"/>
+    <subimage name="charAni_jfr2" x="994" y="1311" width="243" height="313"/>
+    <subimage name="charAni_jfr3" x="1237" y="1311" width="243" height="313"/>
+    <subimage name="charAni_jfr4" x="1480" y="1311" width="243" height="313"/>
+    <subimage name="charAni_jfr5" x="1624" y="832" width="243" height="313"/>
+    <subimage name="charAni_jfr6" x="1902" y="0" width="243" height="313"/>
+    <subimage name="charAni_jfr7" x="1902" y="313" width="243" height="313"/>
+    <subimage name="platform1" x="751" y="1624" width="303" height="113"/>
+    <subimage name="cloud2" x="1054" y="1624" width="240" height="113"/>
+    <subimage name="platform2" x="751" y="1737" width="70" height="58"/>
+</spriteSheetImage>
