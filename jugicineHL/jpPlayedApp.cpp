@@ -54,7 +54,7 @@ void PlayedApp::preInit()
     CurrentProject.gameCfgDir = CurrentProject.gameRootDir + "/data/_game";
 #endif
 
-    //jugimap::TextLibrary::path = "data/text/";
+    //jugimap::TextLibrary::path = "data/text/";¸¸¸¸
 
     jugimap::settings.setYorientation(jugimap::Yorientation::UP);
 

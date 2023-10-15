@@ -1,6 +1,5 @@
-#include <chrono>
+#include <cmath>
 #include <assert.h>
-#include <sstream>
 #include "pugixml/pugixml.hpp"
 #include "jmUtilities.h"
 #include "jmTimelineAnimation.h"
@@ -296,7 +295,7 @@ bool GroundMovementCfg::initCfg(const pugi::xml_node &_node)
     }
 
 
-    b2Vec2 _maxSlope{ std::cos(maxSlope*b2_pi/180.0f), std::sin(maxSlope*b2_pi/180.0f)};
+    //b2Vec2 _maxSlope{ std::cos(maxSlope*b2_pi/180.0f), std::sin(maxSlope*b2_pi/180.0f)};
     //maxSlopeNormal.Set(-_maxSlope.y, _maxSlope.x );
 
     yMinNormalForMaxSlope = std::abs(std::cos(maxSlope*b2_pi/180.0f));
@@ -833,7 +832,7 @@ b2Vec2 ESlopeSliding::updateVelocity(float _timeStep, b2Vec2 _prevEngineVelocity
 
         //mUnitVelocity.SetZero();
 
-        float slopAngle = 90.0f - 180.0f * std::atan2f(std::abs(_slopeNormal.y), std::abs(_slopeNormal.x))/b2_pi;
+        float slopAngle = 90.0f - 180.0f * atan2(std::abs(_slopeNormal.y), std::abs(_slopeNormal.x))/b2_pi;
         assert(slopAngle >= 0.0f && slopAngle <=90.0f);
         float f = slopAngle/45.0;
         mSpeedMax = mSpeedAt45deg * f;

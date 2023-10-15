@@ -1,6 +1,5 @@
-#include <chrono>
-#include <assert.h>
-#include <sstream>
+#include <cmath>
+#include <cassert>
 #include "pugixml/pugixml.hpp"
 #include "jmSystem.h"
 #include "jmMap.h"
@@ -251,7 +250,7 @@ DirectionAndAngle GetBlockedDirectionFromSurfaceNormal(b2Vec2 normal)
 {
 
 
-    float angle = 180 * std::atan2f(normal.y, normal.x)/b2_pi;
+    float angle = 180 * atan2(normal.y, normal.x)/b2_pi;
     if(angle<0.0f) angle += 360.0f;
 
     /*

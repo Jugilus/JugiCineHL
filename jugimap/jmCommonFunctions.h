@@ -349,7 +349,7 @@ inline double distToLine(const T& P, const T& P1, const T& P2)
 template<typename T>
 inline double AngleBetweenTwoPoints(const T& P1, const T& P2)
 {
-    return std::atan2(P2.y-P1.y, P2.x-P1.x) * 180.0/mathPI;
+    return atan2(P2.y-P1.y, P2.x-P1.x) * 180.0/mathPI;
 }
 
 
