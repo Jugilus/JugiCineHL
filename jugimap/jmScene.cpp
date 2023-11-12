@@ -5,6 +5,7 @@
 #ifdef JUGI_EDITOR
 #include "eFramework/projectManager.h"
 #endif
+#include "jmCommonFunctions.h"
 #include "jmSystem.h"
 #include "jmMapLoader_bin.h"
 #include "jmSourceSprite.h"
@@ -15,7 +16,7 @@
 #include "jmFont.h"
 #include "jmInput.h"
 #include "jmCamera.h"
-#include "jmGuiCommon.h"
+//#include "jmGuiCommon.h"
 #include "jmVectorShapeDrawing.h"
 #include "jmSceneLayout.h"
 #include "jmApp.h"
@@ -27,44 +28,26 @@ namespace jugimap {
 
 
 
-/*
-Scene::Scene()
-{
-    engineScene = objectFactory->NewEngineScene(this);
-}
-*/
 
 bool Scene::mUpdateWidgetsOnPreUpdate = true;
 
 
 Scene::Scene(const std::string &_name, App *_parent)
 {
-
     mName = _name;
     mParentApplication = _parent;
     mNode= new LayerNode(nullptr);
     mNode->scene = this;
 
-
-    //mParentApplication = gameApp;
-
 }
-
-
-//Scene::Scene(App * _app)
-//{
-//    type_ = ncine::Object::ObjectType::SCENENODE;
-//    mParentApplication = _app;
-//}
-
 
 
 Scene::~Scene()
 {
 
-    if(mWidgetManager){
-        delete mWidgetManager;
-    }
+    //if(mWidgetManager){
+    //    delete mWidgetManager;
+    //}
 
     for(SceneMap * sm : mSceneMaps){
         delete sm;
@@ -78,15 +61,9 @@ Scene::~Scene()
 void Scene::deleteContent()
 {
 
-    //ncine::Viewport *viewport = &ncine::theApplication().rootViewport();
-    //viewport->setNextViewport(nullptr);
-
-    //ncine::Viewport *viewport = &ncine::theApplication().screenViewport();
-
-
-    if(mWidgetManager){
-        delete mWidgetManager;
-    }
+    //if(mWidgetManager){
+    //    delete mWidgetManager;
+    //}
 
     ncine::Viewport::chain().clear();
 
@@ -100,47 +77,8 @@ void Scene::deleteContent()
 
     mBuilt = false;
 
-    //----
-    //if(mCustomScene){
-    //    delete mCustomScene;
-    //}
-
 }
 
-
-/*
-bool Scene::Init()
-{
-
-
-    bool initialized = false;
-
-    if(mCustomScene){
-        initialized = mCustomScene->Init();
-    }
-
-    return initialized;
-}
-*/
-
-
-void Scene::start()
-{
-    //node()->update(1);
-
-    //if(mCustomScene){
-    //    mCustomScene->Start();
-    //}
-}
-
-
-
-//void Scene::Update()
-//{
-    //if(mCustomScene){
-    //    mCustomScene->Update();
-    //}
-//}
 
 
 void Scene::preUpdate()
@@ -150,7 +88,7 @@ void Scene::preUpdate()
         mouse.cursorSprite()->setPosition(Vec2f(mouse.posX(), mouse.posY()));
     }
 
-
+    /*
     guiKeyboardAndJoystickInput.Update();
 
     guiCursorDeviceInput._SetCursorScreenPosition(Vec2f(mouse.posX(), mouse.posY()));
@@ -158,11 +96,6 @@ void Scene::preUpdate()
     guiCursorDeviceInput._SetCursorDown(mouse.isButtonDown(MouseButton::LEFT));
 
     for(SceneMap *sm : mSceneMaps){
-    //for(SceneNode *n : children()){
-        //LayerNode *node = dynamic_cast<LayerNode*>(n);   assert(node);   assert(node->layerElement->kind()==LayerKind::MAP);
-
-        //jugimap::Map *m = static_cast<jugimap::Map*>(node->layerElement);
-        //if(m->isVisible()==false) continue;
 
         if(sm->isVisible()==false) continue;
 
@@ -170,20 +103,16 @@ void Scene::preUpdate()
 
         if(map->isHidden()) continue;
 
+
         Vec2f cursorInMapPosition = map->camera()->MapPointFromScreenPoint(guiCursorDeviceInput.GetCursorScreenPosition());
-        //m->_SetCursorInMapPosition(cursorInMapPosition);
         guiCursorDeviceInput._SetCursorInMapPosition(cursorInMapPosition);
 
-
-
-        //if(mUpdateWidgetsOnPreUpdate){
-        //    map->updateWidgets();
-        //}
         if(mWidgetManager){
             mWidgetManager->updateWidgets();
         }
 
     }
+    */
 
     //----
     time.UpdatePassedTimeMS();
@@ -194,11 +123,6 @@ void Scene::preUpdate()
 void Scene::postUpdate()
 {
 
-
-    //for(SceneNode *n : children()){
-    //    LayerNode *node = dynamic_cast<LayerNode*>(n);   assert(node);   assert(node->layerElement->kind()==LayerKind::MAP);
-    //    jugimap::Map *m = static_cast<jugimap::Map*>(node->layerElement);
-    //    if(m->isHidden()) continue;
     for(SceneMap *sm : mSceneMaps){
         if(sm->isVisible()==false) continue;
         jugimap::Map *map = sm->map();
@@ -209,10 +133,6 @@ void Scene::postUpdate()
 
 
     //----
-    //for(SceneNode *n : children()){
-    //    LayerNode *node = dynamic_cast<LayerNode*>(n);   assert(node);   assert(node->layerElement->kind()==LayerKind::MAP);
-    //    jugimap::Map *m = static_cast<jugimap::Map*>(node->layerElement);
-
     for(SceneMap *sm : mSceneMaps){
         sm->map()->camera()->ClearChangeFlags();
     }
@@ -221,27 +141,12 @@ void Scene::postUpdate()
     keyboard.resetPerUpdate();
     touch.resetPerUpdate();
     for(Joystick &gc: joysticks) gc.resetPerUpdate();
-    GuiWidget::ResetInteractedPerUpdate();
 
-
-}
-
-
-
-
-
-
-
-
-/*
-
-void Scene::setCustomScene(CustomScene *_customScene)
-{
-    mCustomScene = _customScene;
-    mCustomScene->mScene = this;
+    //GuiWidget::ResetInteractedPerUpdate();
 
 }
-*/
+
+
 
 bool Scene::build()
 {
@@ -259,13 +164,7 @@ bool Scene::build()
 
 
     //----
-    //if(mCustomScene){
-
-    //    if(mCustomScene->Init()==false){
-    //        return false;
-    //    }
-    //}
-
+    /*
     if(mWidgetManager){
         for(SceneMap *sm : mSceneMaps){
             if(mWidgetManager->createWidgets(sm->map())==false){
@@ -276,13 +175,11 @@ bool Scene::build()
             sm->map()->changeEllipsesToBezierCurves(1);
         }
         mWidgetManager->setWidgetsToInitialState();
-
-
     }
+    */
 
 
-
-    mBuilt = true;
+    //mBuilt = true;
 
     return true;
 

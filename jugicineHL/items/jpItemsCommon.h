@@ -109,7 +109,7 @@ public:
     ItemsGroup(const std::string &_name, BaseObject* _parent ): mName(_name), mParent(_parent){}
     ~ItemsGroup();
 
-    bool initItems(PlayedScene* _scene);
+    bool initConnections(PlayedScene* _scene);
 
 
     const std::string &name(){ return mName; }
@@ -159,7 +159,7 @@ public:
     ~ItemsLibrary();
 
 
-    bool initItems(PlayedScene* _scene);
+    bool initConnections(PlayedScene* _scene);
     void addItemsGroup(ItemsGroup* _itemsGroup){ mItemsGroups.push_back(_itemsGroup); }
 
     std::vector<ItemsGroup*>& itemsGroups(){ return mItemsGroups; }

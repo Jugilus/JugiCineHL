@@ -28,7 +28,7 @@ class FrameAnimation;
 class TimelineAnimation;
 
 class SourceGroup;
-class GuiWidget;
+//class GuiWidget;
 
 
 /// \addtogroup SearchFunctions
@@ -305,6 +305,9 @@ void CollectVectorShapesWithParameter(SpriteLayer *spriteLayer, std::vector<Vect
 
 
 
+void CollectVectorShapesWithName(Map *map, std::vector<VectorShape*>&collectedShapes, const std::string &name, ShapeKind kind = ShapeKind::NOT_DEFINED);
+
+
 
 
 /// \brief Find a vector shape with the given properties.
@@ -370,6 +373,7 @@ VectorShape* FindVectorShapeWithParameter(std::vector<VectorShape*>&vectorShapes
 void CollectVectorShapesWithParameter(std::vector<VectorShape*>&vectorShapes, std::vector<VectorShape*>&collectedShapes,  const std::string &pName, const std::string &pValue="", ShapeKind kind = ShapeKind::NOT_DEFINED);
 
 
+void CollectVectorShapesWithName(std::vector<VectorShape*>&vectorShapes, std::vector<VectorShape*>&collectedShapes, const std::string &name, ShapeKind kind = ShapeKind::NOT_DEFINED);
 
 
 /// \brief Find a vector shape with the given properties.
@@ -518,7 +522,7 @@ void GatherSpritesWithSetNameID(CompositeSprite *_compositSprite, std::vector<st
 
 
 //---
-GuiWidget* FindGuiWidgetWithName(std::vector<GuiWidget*> &widgets, const std::string &name,  GuiWidgetKind widgetKind);
+//GuiWidget* FindGuiWidgetWithName(std::vector<GuiWidget*> &widgets, const std::string &name,  GuiWidgetKind widgetKind);
 
 
 //---

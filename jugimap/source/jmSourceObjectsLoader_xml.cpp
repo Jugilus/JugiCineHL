@@ -30,7 +30,7 @@
 #include "jmStreams.h"
 #include "jmFont.h"
 #include "jmColor.h"
-#include "jmGuiText.h"
+#include "jmText.h"
 #include "jmSourceObjectsLoader_xml.h"
 
 
@@ -1330,6 +1330,9 @@ bool SourceObjectsLoader_xml::loadSourceCompositeSprite(CompositeSprite *cs, con
 
 
                     o->mName = n2.attribute("nameID").value();
+                    o->mId = n2.attribute("id").as_int(0);
+                    o->mDataFlags = n2.attribute("data").as_int(0);
+
                     if(n2.attribute("scale")){
                         o->mScale.x = o->mScale.y = n2.attribute("scale").as_float(1.0f);
                     }else{

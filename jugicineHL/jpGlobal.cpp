@@ -222,44 +222,7 @@ GfxObjectType VerifyIfObjectTypeIsAllowed(GfxObjectType objectType, const std::v
 }
 
 
-//----------------------------------------------------------------------------------------------
 
-
-SystemParameter GetSystemParameterFromString(const std::string &parameter)
-{
-
-    if(parameter=="fullScreen"){
-        return SystemParameter::FULL_SCREEN;
-
-    }else if(parameter=="pixelZoom"){
-        return SystemParameter::PIXEL_ZOOM;
-
-    }else if(parameter=="musicActive"){
-        return SystemParameter::MUSIC_ACTIVE;
-
-    }else if(parameter=="sfxActive"){
-        return SystemParameter::SFX_ACTIVE;
-
-    }else if(parameter=="speechActive"){
-        return SystemParameter::SPEECH_ACTIVE;
-
-    }else if(parameter=="musicVolume"){
-        return SystemParameter::MUSIC_VOLUME;
-
-    }else if(parameter=="sfxVolume"){
-        return SystemParameter::SFX_VOLUME;
-
-    }else if(parameter=="speechVolume"){
-        return SystemParameter::SPEECH_VOLUME;
-
-    }else if(parameter=="language"){
-        return SystemParameter::LANGUAGE;
-
-    }
-
-    return SystemParameter::NOT_DEFINED;
-
-}
 
 
 

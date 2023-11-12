@@ -4,34 +4,19 @@
     <textSprites>
         <textSprite name="Window Title" fontName="fontNormal_bold" colorName="yellowB" handle="left-bottom"/>
         <textSprite name="key" fontName="fontNormal_bold" colorName="yellowA" handle="left-bottom"/>
-        <textSprite name="userName" fontName="fontNormal_bold" handle="left-bottom">
-            <constantParameter name="wLabelColor" value="776AA0" type="string"/>
-            <constantParameter name="wLabelColor_checked" value="FFCC33" type="string"/>
-            <constantParameter name="wSlotTextSprite" value="itemName" type="string"/>
-        </textSprite>
+        <textSprite name="userName" fontName="fontNormal_bold" handle="left-bottom"/>
         <textSprite name="sceneName" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom">
             <constantParameter name="wSlotTextSprite" value="sceneName" type="string"/>
         </textSprite>
         <textSprite name="common" fontName="fontNormal" colorName="violetA" handle="left-bottom"/>
         <textSprite name="commonBold" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom"/>
-        <textSprite name="controlerName" fontName="fontNormal_bold" colorName="violetA" handle="center">
-            <constantParameter name="wSlotTextSprite" value="itemName" type="string"/>
-        </textSprite>
+        <textSprite name="controlerName" fontName="fontNormal_bold" colorName="violetA" handle="center"/>
         <textSprite name="buttonC" fontName="fontNormal_bold" colorName="violetB" handle="left-bottom">
             <parameter name="wName" value="value" type="string"/>
             <parameter name="wExclusiveGroup" value="settingsSections" type="string"/>
-            <constantParameter name="widget" value="button" type="string"/>
-            <constantParameter name="wCheckable" value="true" type="bool"/>
-            <constantParameter name="wLabelColor" value="bdbeff" type="string"/>
-            <constantParameter name="wLabelColor_CO" value="e6c79a" type="string"/>
-            <constantParameter name="wLabelColor_checked" value="ffcd34" type="string"/>
+            <parameter name="widgetNew" value="panelButton_var2" type="string"/>
         </textSprite>
-        <textSprite name="buttonA_text" fontName="fontNormal_bold" handle="center">
-            <constantParameter name="wLabelColor" value="bdbeff" type="string"/>
-            <constantParameter name="wLabelColor_CD" value="ffcd34" type="string"/>
-            <constantParameter name="wLabelColor_CO" value="e6c79a" type="string"/>
-            <constantParameter name="wLabelColor_disabled" value="826f9e" type="string"/>
-        </textSprite>
+        <textSprite name="buttonA_text" fontName="fontNormal_bold" handle="center"/>
         <textSprite name="buttonB_text1" fontName="fontBig_blue" handle="left-bottom">
             <constantParameter name="wVisible" value="1" type="int"/>
             <constantParameter name="wVisible_CO" value="0" type="int"/>
@@ -47,14 +32,8 @@
             <constantParameter name="wCursor" value="true" type="bool"/>
         </textSprite>
         <textSprite name="activeUserName" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom"/>
-        <textSprite name="inputCommandDescription" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom">
-            <constantParameter name="wSlotTextSprite" value="inputCommandDescription" type="string"/>
-        </textSprite>
-        <textSprite name="inputCommandButton" fontName="fontNormal_bold" handle="left-bottom">
-            <constantParameter name="wLabelColor" value="776AA0" type="string"/>
-            <constantParameter name="wLabelColor_checked" value="FFCC33" type="string"/>
-            <constantParameter name="wSlotTextSprite" value="inputCommandButton" type="string"/>
-        </textSprite>
+        <textSprite name="inputCommandDescription" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom"/>
+        <textSprite name="inputCommandButton" fontName="fontNormal_bold" handle="left-bottom"/>
     </textSprites>
     <sprites/>
 </sourceGraphicSet>

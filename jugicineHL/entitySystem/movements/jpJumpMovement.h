@@ -22,7 +22,6 @@ class PlayedScene;
 class Animation;
 class AnimationInstance;
 class FrameAnimationInstance;
-class BoolSignal;
 struct EntityContactSignal;
 
 
@@ -39,6 +38,9 @@ enum class JumpMovementState : int
 };
 
 JumpMovementState GetJumpMovementStateFromString(const std::string &state);
+
+
+extern std::vector<NamedValue>gJumpMovementStateNamedValues;
 
 
 //------------------------------------------------------------------------------------
@@ -189,8 +191,8 @@ public:
 
     MovementEngineData * currentData() override { return mCurrentData; }
     MovementEngineData* getMovementEngineData(const std::string &_name, bool _setErrorMessage) override;
-    void obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage=true) override;
-    void obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage = true) override;
+    void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true) override;
+    void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage = true) override;
 
     JumpMovementState state(){ return mState; }
     //Direction direction(){ return mXDirection; }
@@ -214,7 +216,7 @@ private:
     void setState(JumpMovementState _state)
     {
         mState = _state;
-        mSigState._setOnNextFrame(static_cast<int>(mState));
+        mSigState.setValue_onNextFrame(static_cast<int>(mState));
     }
 
 

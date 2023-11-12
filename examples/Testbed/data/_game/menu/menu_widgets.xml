@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene name="Menu">
+ 
+    <guiSystem>
+
+        <widgets>
+
+            <button name="mainMenuButton">
+                <parameters />
+                <style sprite="label, 1" property="VISIBILITY">
+                    <state_NORMAL visible="1" />
+                    <state_NORMAL_OVER visible="0" />
+                </style>
+                <style sprite="label, 2" property="VISIBILITY">
+                    <state_NORMAL visible="0" />
+                    <state_NORMAL_OVER visible="1" />
+                </style>
+            </button>
+
+            <button name="panelButton">
+                <style sprite="label" property="LABEL_COLOR">
+                    <state_NORMAL def="#bdbeff" />
+                    <state_NORMAL_OVER def="#e6c79a" />
+                    <state_NORMAL_PRESSED def="#ffcd34" />
+                    <state_DISABLED def="#826f9e" />
+                </style>
+                <style sprite="background" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                    <state_NORMAL_PRESSED frame="2" />
+                    <state_DISABLED frame="0" />
+                </style>
+
+            </button>
+
+            <button name="panelButton_var2">
+                <parameters checkable="TRUE" />
+                <style sprite="ROOT_SPRITE" property="LABEL_COLOR">
+                    <state_NORMAL def="#bdbeff" />
+                    <state_NORMAL_OVER def="#e6c79a" />
+                    <state_CHECKED def="#ffcd34" />
+                </style>
+            </button>
+
+            <button name="checkBoxA">
+                <parameters checkable="TRUE" />
+                <style sprite="ROOT_SPRITE" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_CHECKED frame="1" />
+                </style>
+            </button>
+
+            <button name="radioBoxA">
+                <parameters checkable="TRUE" />
+                <style sprite="ROOT_SPRITE" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_CHECKED frame="1" />
+                </style>
+            </button>
+
+            <button name="incrementButton">
+                <parameters />
+                <style sprite="ROOT_SPRITE" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                    <state_DISABLED frame="2" />
+                </style>
+            </button>
+
+            <button name="decrementButton">
+                <parameters />
+                <style sprite="ROOT_SPRITE" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                    <state_DISABLED frame="2" />
+                </style>
+            </button>
+
+            <button name="slidingButton">
+                <parameters />
+                <style sprite="ROOT_SPRITE" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                    <state_DISABLED frame="2" />
+                </style>
+            </button>
+
+            <button name="simpleButton">
+            </button>
+
+            <!-- 
+            <slider name="slider">
+                <parameters min="0" max="80" snapDivision="8" deltaPerc="10" />
+                <highlightSprite sprite="highlightSprite" />
+                <slidingLine sprite="slidingScale" />
+                <slidingButton sprite="slidingButton" button="slidingButton" />
+                <incrementButton sprite="incrementButton" button="incrementButton" />
+                <decrementButton sprite="decrementButton" button="decrementButton"/>
+                <label textSprite="labelSprite" displayedPrecision="2" suffix="%" />
+            </slider>
+            -->
+
+            
+
+            <slider name="parameterSlider">
+                <parameters min="0" max="100" />
+                <slidingLine sprite="slidingLine" />
+                <slidingButton sprite="slidingButton" button="simpleButton" />
+                <highlightSprite sprite="highlightMarker" />
+            </slider>
+
+
+            <slider name="verticalSliderB">
+                <parameters min="0.0" max="1.0" />
+                <slidingLine sprite="slidingLine" />
+                <slidingButton sprite="slidingButton" button="slidingButton" />
+                <incrementButton sprite="incrementButton" button="incrementButton" />
+                <decrementButton sprite="decrementButton" button="decrementButton"/>
+            </slider>
+
+
+            
+
+            <!--
+            <table name="inventory">
+                <parameters scrollingLayout="HORIZONTAL" numRows="1" numColumns="4" spacingColumns="0" spacingRows="0" />
+                <slot sprite="inventory" button="inventory">
+                    <spriteComponent sprite="item" />
+                    <textSpriteComponent textSprite="count"/>
+                    <textFieldComponent textField="description" layer="text"/>
+                </slot>
+                <tableSlider sprite="tableSlider" slider="tableSlider" />
+            </table>
+        -->
+
+        <textField name="simpleTextField">
+            <textArea textRectangle="textArea" /> 
+            <parameters linesSpacingFactor="0.3" /> 
+            <text layer="content" />
+        </textField>
+
+        <textField name="aboutPanelTextField">
+            <textArea textRectangle="textArea" visibleRectangle="visibleArea" /> 
+            <parameters textAlignment="LEFT" textDrawingDelay="NONE" textScrollingMode="NORMAL" /> 
+            <text layer="content" book="gui" segmentID="46" />
+            <normalScrollingSlider sprite="slider" slider="verticalSliderB" /> 
+            <!--<fixedScrollingButtons scrollDownSprite="scrollDownButton" scrollDownButton="scrollDownButton" scrollUpSprite="scrollUpButton" scrollUpButton="scrollUpButton" /> -->
+        </textField>
+
+            <!-- scene selector -->
+
+            <button name="sceneSelectorSlotButton">
+                <parameters checkable="TRUE" />
+                <style sprite="slotButton" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                    <state_CHECKED frame="2" />
+                    <state_DISABLED frame="3" />
+                </style>
+            </button>
+
+            <textField name="sceneDescription">
+                <textArea textRectangle="textArea" /> 
+                <parameters textAlignment="LEFT" textDrawingDelay="NONE" textScrollingMode="NORMAL" linesSpacingFactor="0.3" /> 
+                <text layer="text" />
+            </textField>
+
+            <table name="sceneSelectorTable">
+                <parameters scrollingLayout="VERTICAL" numRows="5" numColumns="1" spacingColumns="0" spacingRows="0" />
+                <slot sprite="slot" button="sceneSelectorSlotButton">
+                    <textSpriteComponent textSprite="sceneName"/>
+                    <textFieldComponent textField="sceneDescription" textFieldSprite="slot"/>
+                </slot>
+                <tableSlider sprite="slider" slider="verticalSliderB" />
+            </table>
+
+            <!-- user selector -->
+
+            <button name="userSelectorSlotButton">
+                <parameters checkable="TRUE" />
+                <style sprite="background" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                    <state_CHECKED frame="2" />
+                    <state_DISABLED frame="3" />
+                </style>
+                <style sprite="itemName" property="LABEL_COLOR">
+                    <state_NORMAL def="#776AA0" />
+                    <state_CHECKED def="#FFCC33" />
+                </style>
+            </button>
+
+            <table name="userSelectorTable">
+                <parameters scrollingLayout="VERTICAL" numRows="5" numColumns="1" spacingColumns="0" spacingRows="2" />
+                <slot sprite="slot" button="userSelectorSlotButton">
+                    <textSpriteComponent textSprite="itemName"/>
+                </slot>
+                <tableSlider sprite="slider" slider="verticalSliderB" />
+            </table>
+
+            <!-- input device selector -->
+
+            <slider name="inputDeviceSelectorSlider">
+                <parameters min="0.0" max="1.0" />
+                <decrementButton sprite="decrementButton" button="decrementButton"/>
+                <incrementButton sprite="incrementButton" button="incrementButton" />
+            </slider>
+
+            <table name="inputDeviceSelectorTable">
+                <parameters numRows="1" numColumns="1" />
+                <slot sprite="slot" button="simpleButton" >
+                    <textSpriteComponent textSprite="itemName" />
+                </slot>
+                <tableSlider sprite="slider" slider="inputDeviceSelectorSlider" />
+            </table>
+
+            <!-- input commands editor -->
+
+            <button name="inputButtonsSlotButton">
+                <parameters checkable="TRUE" />
+                <style sprite="background" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                    <state_CHECKED frame="2" />
+                    <state_DISABLED frame="3" />
+                </style>
+                <style sprite="inputCommandButton" property="LABEL_COLOR">
+                    <state_NORMAL def="#776AA0" />
+                    <state_CHECKED def="#FFCC33" />
+                </style>
+            </button>
+
+            <table name="inputButtonsEditor">
+                <parameters scrollingLayout="VERTICAL" numRows="9" numColumns="1" spacingColumns="0" spacingRows="5" />
+                <slot sprite="slot" button="inputButtonsSlotButton">
+                    <textSpriteComponent textSprite="inputCommandDescription"/>
+                    <textSpriteComponent textSprite="inputCommandButton"/>
+                    <spriteComponent sprite="duplicateButton"/>
+                </slot>
+                <tableSlider sprite="slider" slider="verticalSliderB" />
+            </table>
+
+
+            <!-- -->
+
+            <textInput name="textInput">
+                <parameters />
+                <backgroundBox sprite="backgroundBox" idleFrame="0" cursorOverFrame="0" activeFrame="0" disabledFrame="0" />
+                <text textSprite="text" />
+            </textInput>
+
+
+
+            <!-- not used -->
+
+            <textField name="description">
+                <textArea textRectangle="textArea" visibleRectangle="visibleArea" clickableRectangle="clickableArea" /> 
+                <parameters textAlignment="LEFT" textDrawingDelay="NONE" textScrollingMode="NORMAL" /> 
+                <text layer="textLayer" book="textBook" segmentID="3" />
+                <normalScrollingSlider sprite="slider" slider="textFieldSlider" /> 
+                <!--<fixedScrollingButtons scrollDownSprite="scrollDownButton" scrollDownButton="scrollDownButton" scrollUpSprite="scrollUpButton" scrollUpButton="scrollUpButton" /> -->
+            </textField>
+
+            <!--
+            <textInput name="textInput">
+                <parameters />
+                <backgroundBox sprite="textBox" idleFrame="0" cursorOverFrame="1" activeFrame="2" disabledFrame="3" />
+                <text textSprite="text" idleColor="#aabbcc" activeColor="#aabbcc" />
+            </textInput>
+        -->
+
+        <!--
+            <comfirmPanel rootSprite="confirmPanel">
+                <yesButton button="panelButton" sprite="yesButton" />
+                <noButton button="panelButton" sprite="noButton" />
+                <textArea textField="confirmPanel_textField" sprite="confirmPanel" />
+                
+            </comfirmPanel> 
+        -->
+
+
+            <bar name="testBar">
+                <parameters min="0.0" max="1.0" default="0.5" />
+                <style sprite="barSprite" property="X_SCALE" positionColors="#cb9923ff,0.0, #aa34bbff,1.0" />
+                <label textSprite="labelSprite" displayedPrecision="2" suffix="%" />
+            </bar>
+            
+        </widgets>
+
+    </guiSystem>
+
+    
+</scene>

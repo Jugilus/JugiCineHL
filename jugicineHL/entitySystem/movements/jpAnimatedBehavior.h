@@ -24,7 +24,6 @@ class Entity;
 class PlayedScene;
 class AnimationInstance;
 class AnimationPlayer;
-class BoolSignal;
 class VectorShape;
 class AnimationObject;
 

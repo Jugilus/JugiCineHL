@@ -1245,7 +1245,7 @@ b2Vec2 GroundMovementEngine::update(EngineUpdateParameters &eup)
 
 
 
-    mDirectionSignal._setOnNextFrame(static_cast<int>(mDirection));
+    mDirectionSignal.setValue_onNextFrame(static_cast<int>(mDirection));
 
     //---
     updateAnimationPlayer();

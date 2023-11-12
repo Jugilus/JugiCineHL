@@ -13,14 +13,14 @@ namespace jugimap {
 
 
 class Action;
-class BehaviorAction;
+//class BehaviorAction;
 class ActionCommand;
-class ActionTrigger;
+//class ActionTrigger;
 class ActionCondition;
 class TransitionOp;
 class TransitionMember;
 class Component;
-class BehaviorState;
+//class BehaviorState;
 
 
 
@@ -31,14 +31,17 @@ public:
 
     virtual ~ActionFactory(){}
 
-    virtual ActionTrigger* createActionTrigger(const std::string &type, Action* parentAction, const pugi::xml_node& node);
-    virtual ActionCondition* createActionCondition(const std::string &type, Action* parentAction, const pugi::xml_node& node);
-    virtual ActionCommand* createActionCommands(const std::string &type, Action* parentAction, const pugi::xml_node& node);
+    //virtual ActionTrigger* createActionTrigger(const std::string &type, Action* parentAction, const pugi::xml_node& node);
+    virtual ActionCondition* createActionCondition(const std::string &type, Action* parentAction, const std::string &value);
+    //virtual ActionCommand* createActionCommands(const std::string &type, Action* parentAction, const pugi::xml_node& node);
+    virtual ActionCommand* createActionCommands(const std::string &type, Action* parentAction, const std::string &value);
 
-    virtual ActionCondition* createActionConditionForEntityAction(const std::string &type, BehaviorAction* parentAction, const std::string& value);
-    virtual ActionCommand* createActionCommandsForEntityAction(const std::string &type, BehaviorAction* parentAction, const std::string& value);
-    virtual ActionCondition* createActionConditionDirectionCopy(ActionCondition* source, BehaviorAction *parentAction, const std::string& value);
-    virtual ActionCommand* createActionCommandsDirectionCopy(ActionCommand* source, jugimap::BehaviorAction *parentAction, const std::string& value);
+
+   // virtual ActionCondition* createActionConditionForEntityAction(const std::string &type, BehaviorAction* parentAction, const std::string& value);
+
+    //virtual ActionCommand* createActionCommandsForEntityAction(const std::string &type, BehaviorAction* parentAction, const std::string& value);
+    //virtual ActionCondition* createActionConditionDirectionCopy(ActionCondition* source, BehaviorAction *parentAction, const std::string& value);
+    //virtual ActionCommand* createActionCommandsDirectionCopy(ActionCommand* source, jugimap::BehaviorAction *parentAction, const std::string& value);
 
 
     virtual TransitionOp* createTransitionInOut(const std::string &type, TransitionMember* transitionedObject, const pugi::xml_node& node);

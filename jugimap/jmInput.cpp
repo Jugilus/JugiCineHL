@@ -277,30 +277,30 @@ void Keyboard::_setKeyState(KeyCode _keyCode, bool _keyDown)
     assert((int)_keyCode>=0 && (int)_keyCode<mKeys.size());
 
     BoolSignal &k = mKeys[(int)_keyCode];
-    k._Set(_keyDown);
+    k.setValue(_keyDown);
 
     //---
     mPressedKey = _keyCode;
-    mPressedKeyButton._Set(_keyDown);
+    mPressedKeyButton.setValue(_keyDown);
 
 }
 
 
 bool Keyboard::isKeyDown(KeyCode _keyCode)
 {
-    return mKeys[(int)_keyCode].active();
+    return mKeys[(int)_keyCode].active(true);
 }
 
 
 bool Keyboard::isKeyPressed(KeyCode _keyCode)
 {
-    return mKeys[(int)_keyCode].activeStarted();
+    return mKeys[(int)_keyCode].activeStarted(true);
 }
 
 
 bool Keyboard::isKeyReleased(KeyCode _keyCode)
 {
-    return mKeys[(int)_keyCode].activeEnded();
+    return mKeys[(int)_keyCode].activeEnded(true);
 }
 
 
@@ -308,7 +308,7 @@ bool Keyboard::isKeyReleased(KeyCode _keyCode)
 KeyCode Keyboard::pressedKey()
 {
     if(mPressedKey != KeyCode::UNKNOWN){
-        if(mPressedKeyButton.activeStarted()){
+        if(mPressedKeyButton.activeStarted(true)){
             return mPressedKey;
         }
     }
@@ -322,7 +322,7 @@ KeyCode Keyboard::downKey()
 {
 
     if(mPressedKey != KeyCode::UNKNOWN){
-        if(mPressedKeyButton.active()){
+        if(mPressedKeyButton.active(true)){
             return mPressedKey;
         }
     }
@@ -336,7 +336,7 @@ KeyCode Keyboard::releasedKey()
 {
 
     if(mPressedKey != KeyCode::UNKNOWN){
-        if(mPressedKeyButton.activeEnded()){
+        if(mPressedKeyButton.activeEnded(true)){
             return mPressedKey;
         }
     }
@@ -390,6 +390,31 @@ KeyCode Keyboard::keyCodeForKeyName(const std::string &_name)
 
     return keyCode;
 }
+
+
+BoolSignal * Keyboard::keySignalForKeyName(const std::string &_name, bool _setErrorMessage)
+{
+
+    int index=-1;
+    for(int i=0; i<mKeyNames.size(); i++){
+        if(mKeyNames.at(i) == _name){
+            index = i;
+            break;
+        }
+    }
+
+    if(index != -1){
+        return &mKeys[index];
+    }
+
+    if(_setErrorMessage){
+        dbgSystem.addMessage("Unknown key '" + _name + "'!");
+    }
+
+
+    return nullptr;
+}
+
 
 
 const std::string & Keyboard::keyNameFromKeyCode(KeyCode _keyCode)
@@ -455,7 +480,7 @@ void Mouse::_setButtonState(MouseButton _mouseButton, bool _down)
 
     BoolSignal &b = mButtons[(int)_mouseButton];
 
-    b._Set(_down);
+    b.setValue(_down);
 
 }
 
@@ -519,7 +544,7 @@ void Touch::_setFingerState(int _finger, bool _down, Vec2i _position)
     if(_finger<0 || _finger>=mFingers.size()) return;
 
     Finger &f = mFingers[_finger];
-    f._Set(_down);
+    f.setValue(_down);
     f.position = _position;
 
 }
@@ -568,7 +593,7 @@ void Joystick::createButtonNameStrings()
 
 int Joystick::pressedButton()
 {
-    if(mIndexPressedButton != -1 && mPressedButton.activeStarted()){
+    if(mIndexPressedButton != -1 && mPressedButton.activeStarted(true)){
         return  mIndexPressedButton;
     }
 
@@ -578,7 +603,7 @@ int Joystick::pressedButton()
 
 int Joystick::downButton()
 {
-    if(mIndexPressedButton != -1 && mPressedButton.active()){
+    if(mIndexPressedButton != -1 && mPressedButton.active(true)){
         return  mIndexPressedButton;
     }
 
@@ -589,7 +614,7 @@ int Joystick::downButton()
 
 int Joystick::releasedButton()
 {
-    if(mIndexPressedButton != -1 && mPressedButton.activeEnded()){
+    if(mIndexPressedButton != -1 && mPressedButton.activeEnded(true)){
         return  mIndexPressedButton;
     }
 
@@ -639,11 +664,11 @@ void Joystick::_setPOV_X(JoystickPOV_X _povX)
 
     BoolSignal &b = mPovXButtons[(int)_povX];
 
-    b._Set(true);
+    b.setValue(true);
 
     for(int i=0; i< mPovXButtons.size(); i++){
         if(i != (int)_povX){
-           mPovXButtons[i]._Set(false);
+           mPovXButtons[i].setValue(false);
         }
     }
 
@@ -658,11 +683,11 @@ void Joystick::_setPOV_Y(JoystickPOV_Y _povY)
 
     BoolSignal &b = mPovYButtons[(int)_povY];
 
-    b._Set(true);
+    b.setValue(true);
 
     for(int i=0; i< mPovYButtons.size(); i++){
         if(i != (int)_povY){
-            mPovYButtons[i]._Set(false);
+            mPovYButtons[i].setValue(false);
         }
     }
 
@@ -708,7 +733,7 @@ void Joystick::_setButtonState(int _buttonIndex, bool _down)
 
 
     BoolSignal &b = mButtons[_buttonIndex];
-    b._Set(_down);
+    b.setValue(_down);
 
     //---
     //mJoystickAction.mButtonName = static_cast<ncine::ButtonName>(_buttonIndex);
@@ -728,12 +753,12 @@ void Joystick::_setButtonStateViaMappedButton(ncine::ButtonName _buttonName, boo
 
 
     BoolSignal &b = mButtons[index];
-    b._Set(_down);
+    b.setValue(_down);
 
     //---
     //mJoystickAction.mButtonName = _buttonName;
     mIndexPressedButton = index;
-    mPressedButton._Set(_down);
+    mPressedButton.setValue(_down);
 }
 
 

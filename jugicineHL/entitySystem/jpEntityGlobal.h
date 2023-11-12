@@ -162,6 +162,8 @@ Direction GetDirectionFromString(const std::string &direction);
 std::string GetDirectionString(Direction direction);
 
 
+extern std::vector<NamedValue>gDirectionNamedValues;
+
 
 enum class DirectionMode
 {
@@ -295,22 +297,7 @@ enum class TaskType
 
 };
 
-//------------------------------------------------------------------------------------
 
-enum class SignalID : unsigned char
-{
-    UNKNOWN = 0,
-    ENTITY_CONTACT_TRIGGER = 1,
-    CONTACT_TRIGGER = 2,
-    FILTERED_CONTACT_TRIGGER = 3,
-    TRANSPORTER_STATUS = 4,
-    MOVABLE_OBJECT = 5,
-    DIRECTION = 6,
-    PASSENGER = 7,
-    OPERATING = 8,
-    CUSTOM_ENTITY_SIGNAL = 9
-
-};
 
 
 }

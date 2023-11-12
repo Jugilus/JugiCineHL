@@ -7,7 +7,7 @@
 #include "box2d.h"
 #include "jmCommon.h"
 #include "jpEntityGlobal.h"
-#include "scripting/jpBehCfg.h"
+#include "jpEntityLogicState.h"
 
 
 namespace pugi{
@@ -26,6 +26,7 @@ class SourceBody;
 class SpriteLayer;
 class FixtureUserDataGroup;
 struct EntityCategory;
+struct EntityLogicStateCfg;
 //struct EnginesControllerCfg;
 //struct TaskControllerCfg;
 //struct EnvironmentObjectBehaviorCfg;
@@ -89,11 +90,11 @@ struct SourceEntityCfg
     //EntityType type = EntityType::UNKNOWN;
     //EntityBodyType bodyType = EntityBodyType::SOLID;
 
-    EntityControllerCfg *enginesControllerCfg = nullptr;  //LINK
+    EntityLogicStateCfg *enginesControllerCfg = nullptr;  //LINK
     std::string startState;
     //bool ownedEnginesControllerCfg = false;
 
-    EntityControllerCfg *taskControllerCfg = nullptr;               // LINK
+    EntityLogicStateCfg *taskControllerCfg = nullptr;               // LINK
     std::string taskHandlerStartState;
 
     //----

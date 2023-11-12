@@ -3,8 +3,12 @@
 #include <sstream>
 #include "pugixml/pugixml.hpp"
 #include "jmSystem.h"
-#include "jmGuiButton.h"
-#include "jmGuiTextField.h"
+
+#include "gui/widgets/jpGuiButton.h"
+#include "gui/widgets/jpGuiTextField.h"
+#include "gui/jpGuiSystem.h"
+
+#include "jpCompound.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
 #include "jpUtilities.h"
@@ -21,7 +25,7 @@ ConfirmPanel::ConfirmPanel(const pugi::xml_node &_node)
     mName = "confirmPanel";
 
     mCfg.reset(new Cfg());
-    mModal = _node.attribute("modal").as_bool("true");
+    //mModal = _node.attribute("modal").as_bool("true");
 
     //---
     for(pugi::xml_node n = _node.first_child(); n; n = n.next_sibling()){
@@ -31,9 +35,13 @@ ConfirmPanel::ConfirmPanel(const pugi::xml_node &_node)
             mCfg->mTextField = n.attribute("textField").as_string("");
             mCfg->mYesButton = n.attribute("YesButton").as_string("");
             mCfg->mNoButton = n.attribute("NoButton").as_string("");
-        }
-    }
 
+        }else if(nodeName=="signals"){
+            mCfg->mSigConfirmsYes = n.attribute("confirmYes").as_string("");
+            mCfg->mSigConfirmsNo = n.attribute("confirmNo").as_string("");
+        }
+
+    }
 
 }
 
@@ -41,26 +49,35 @@ ConfirmPanel::ConfirmPanel(const pugi::xml_node &_node)
 bool ConfirmPanel::initConnections(PlayedScene *_scene)
 {
 
+    if(mInitialized) return true;
+
+    //if(_scene->guiSystem()->isInitialized()==false){
+    //    if(_scene->guiSystem()->initConnections(_scene)==false){
+    //        return false;
+    //    }
+    //}
+
+
     dbgSystem.addMessage("init component '" + mName + "'");
 
     mParentPlayerScene = _scene;
 
     //---
-    mYesButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mYesButton, GuiWidgetKind::BUTTON));
+    mYesButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mYesButton, WidgetType::BUTTON));
     if(mYesButton==nullptr){
         return false;
     }
     mUsedWidgets.push_back(mYesButton);
 
     //---
-    mNoButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mNoButton, GuiWidgetKind::BUTTON));
+    mNoButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mNoButton, WidgetType::BUTTON));
     if(mNoButton==nullptr){
         return false;
     }
     mUsedWidgets.push_back(mNoButton);
 
     //---
-    mTextField = dynamic_cast<GuiTextField*>(ObtainGuiWidget(_scene, mCfg->mTextField, GuiWidgetKind::TEXT_FIELD));
+    mTextField = dynamic_cast<GuiTextField*>(ObtainGuiWidget(_scene, mCfg->mTextField, WidgetType::TEXT_FIELD));
     if(mTextField==nullptr){
         return false;
     }
@@ -84,6 +101,27 @@ bool ConfirmPanel::initConnections(PlayedScene *_scene)
     }
 
 
+    //---
+    if(mCfg->mSigConfirmsYes.empty()==false){
+        app->signalParserManager()->parseSignalAccessor(_scene, mCfg->mSigConfirmsYes, mQConfirmsYes);
+        if(mQConfirmsYes.isValid()==false){
+            return false;
+        }
+        //mQConfirmsYes.mOwnedSignal = true;
+    }
+
+    if(mCfg->mSigConfirmsNo.empty()==false){
+        app->signalParserManager()->parseSignalAccessor(_scene, mCfg->mSigConfirmsNo, mQConfirmsNo);
+        if(mQConfirmsNo.isValid()==false){
+            return false;
+        }
+        //mQConfirmsNo.mOwnedSignal = true;
+    }
+
+
+    //---
+    mInitialized = true;
+
     dbgSystem.removeLastMessage();
 
     return true;
@@ -93,7 +131,7 @@ bool ConfirmPanel::initConnections(PlayedScene *_scene)
 void ConfirmPanel::start()
 {
 
-    startOpenTransition();                  // must call this!
+    //startOpenTransition();
 
     //---
     if(mData){
@@ -105,22 +143,22 @@ void ConfirmPanel::start()
 }
 
 
-void ConfirmPanel::update(UpdateMode _updateMode)
+void ConfirmPanel::update(UpdateMode &_updateMode)
 {
 
-    OverlayComponent::update(_updateMode);     // // must call parent class which manages transitions!
+    //OverlayComponent::update(_updateMode);     // // must call parent class which manages transitions!
 
-    if(mState==State::NORMAL){
+    //if(mState==State::NORMAL){
 
-        if(mYesButton->IsPressed()){
+        if(mYesButton->isPressedStarted()){
             mParentPlayerScene->activatedTriggersUpdater().addTrigger(mResult_Yes);
             startCloseTransition();
 
-        }else if(mNoButton->IsPressed()){
+        }else if(mNoButton->isPressedStarted()){
             mParentPlayerScene->activatedTriggersUpdater().addTrigger(mResult_No);
             startCloseTransition();
         }
-    }
+    //}
 
 }
 

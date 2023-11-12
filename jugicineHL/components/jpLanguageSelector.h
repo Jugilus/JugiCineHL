@@ -33,14 +33,14 @@ public:
     bool initConnections(PlayedScene *_scene) override;
 
     void start() override;
-    void update(UpdateMode _updateMode) override;
+    void update(UpdateMode &_updateMode) override;
     void onStateEnded() override;
 
 
 private:
 
-    PlayedScene *mParentPlayerScene = nullptr;
-    std::vector<GuiWidget*>mUsedWidgets;            // LINKS
+    //PlayedScene *mParentPlayerScene = nullptr;
+    //std::vector<GuiWidget*>mUsedWidgets;            // LINKS
 
     //GuiButton* mFirstButton = nullptr;              // LINK
     std::vector<GuiButton*>mExtraButtons;           // OWNED  ( only one button for one language is created in the editor, other are copies stored here)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <composedSprite name="slotInputKey" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="11" nTilesY="1">
     <layer content="Free sprites" name="Layer 1">
-        <sprite type="Standard" name="slotItemC_background" x="0" y="0" handleSource="true"/>
+        <sprite type="Standard" name="slotItemC_background" nameID="background" x="0" y="0" handleSource="true"/>
     </layer>
     <layer content="Free sprites" name="Layer 2">
         <sprite type="Text" name="inputCommandButton" nameID="inputCommandButton" x="320" y="3" text="inputCommandButton"/>
@@ -10,5 +10,4 @@
     <layer content="Free sprites" name="Layer 3">
         <sprite type="Standard" name="attentionIcon" nameID="duplicateButton" x="531" y="17"/>
     </layer>
-    <constantParameter name="wFirstSlot" value="true" type="bool"/>
 </composedSprite>

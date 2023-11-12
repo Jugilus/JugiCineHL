@@ -20,10 +20,14 @@
 
     <!-- INIT ACTIONS - set objects into correct initial state -->
     <init>
+        <!-- 
         <do>
-            <setActiveState state="sceneLogic" />
-            <setActiveState state="sceneLogic/platformer" />
+            <setNextState state="sceneLogic" />
+            <setNextState state="sceneLogic/platformer" />
         </do>
+    -->
+        <a doSetState="sceneLogic" />
+        <a doSetState="sceneLogic:platformer" />
     </init>
     
 
@@ -35,8 +39,8 @@
     <update>
         <state name="sceneLogic">   <!-- a root logic state is required -->
     
-            <state name="platformer">
-                <use components="entitySystem" />
+            <state name="platformer" component="entitySystem" >
+                <!-- <use components="entitySystem" />-->
             </state>
         </state>
     </update>

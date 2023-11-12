@@ -3,7 +3,9 @@
     <images>
         <spriteSheetImage file="data/graphics/platformer/platformerSpritesB.png"/>
     </images>
-    <textSprites/>
+    <textSprites>
+        <textSprite name="score" fontName="fontBig_yellow" handle="right-top"/>
+    </textSprites>
     <sprites>
         <sprite name="charA">
             <image name="charA__stand-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
@@ -289,5 +291,26 @@
                 </metaAnimationTrack>
             </timelineAnimation>
         </sprite>
+        <sprite name="invSlot_background">
+            <image name="invSlot__background-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="invSlot__background-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+        </sprite>
+        <sprite name="healthBar_background" imageName="healthBar__background" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="3partSwitch_background" imageName="i3partSwitch__background" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="3partSwitch_middle" imageName="i3partSwitch__middle" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="3partSwitch_left" imageName="i3partSwitch__left" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="3partSwitch_right" imageName="i3partSwitch__right" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iBoomerang" imageName="iBoomerang" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iUmbrella" imageName="iUmbrella" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iUmbrella_inv" imageName="iUmbrella_inv" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iBoomerang_inv" imageName="iBoomerang_inv" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iGamepad" imageName="iGamepad" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iGamepad_inv" imageName="iGamepad_inv" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iShuriken" imageName="iShuriken" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iShuriken_inv" imageName="iShuriken_inv" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iStarA" imageName="iStarA" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iStarB" imageName="iStarB" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iCoinA" imageName="iCoinA-jfr1" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iHeart" imageName="iHeart" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
     </sprites>
 </sourceGraphicSet>

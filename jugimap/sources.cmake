@@ -26,13 +26,6 @@ animation/jmAnimationCommon.h
 animation/jmTimelineAnimation.h
 animation/jmTimelineAnimationInstance.h
 animation/jmFrameAnimation.h
-gui/jmGuiCommon.h
-gui/jmGuiBar.h
-gui/jmGuiButton.h
-gui/jmGuiSlider.h
-gui/jmGuiTextField.h
-gui/jmGuiTextInput.h
-gui/jmGuiText.h
 jmApp.h
 jmScene.h
 jmSceneLayout.h
@@ -45,6 +38,7 @@ jmGlobal.h
 jmScene.h
 jmUtilities.h
 jmStreams.h
+jmText.h
 jmInput.h
 jugimap.h
 jmMapLoader_bin.h
@@ -53,6 +47,7 @@ jmSaveSignatures.h
 jmTimer.h
 jmTween.h
 jmSignal.h
+jmStorage.h
 jmUsingDeclarations.h
 
 map/jmLayerElement.cpp
@@ -80,13 +75,6 @@ animation/jmAnimationCommon.cpp
 animation/jmTimelineAnimation.cpp
 animation/jmTimelineAnimationInstance.cpp
 animation/jmFrameAnimation.cpp
-gui/jmGuiCommon.cpp
-gui/jmGuiBar.cpp
-gui/jmGuiButton.cpp
-gui/jmGuiSlider.cpp
-gui/jmGuiTextField.cpp
-gui/jmGuiTextInput.cpp
-gui/jmGuiText.cpp
 jmApp.cpp
 jmScene.cpp
 jmSceneLayout.cpp
@@ -98,6 +86,7 @@ jmGlobal.cpp
 jmSystem.cpp
 jmUtilities.cpp
 jmStreams.cpp
+jmText.cpp
 jmInput.cpp
 jmMapLoader_bin.cpp
 jmParameter.cpp

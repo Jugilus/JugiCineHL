@@ -5,24 +5,30 @@
 #include "jpSettings.h"
 #include "jpVariables.h"
 #include "jmScene.h"
+#include "jmStorage.h"
 
 
 
 namespace jugimap{
 
 
+class GuiSystem;
 class TransitionsGroup;
 class ItemsLibrary;
 class LogicState;
 class Action;
-class ActionTrigger;
+//class ActionTrigger;
 class AppConfigurationLoader_xml;
-class WidgetManager;
+//class WidgetManager;
 class Component;
-class OverlayComponent;
+//class OverlayComponent;
 class ComponentsGroup;
 class GfxObjectsGroup;
 class AnimationManager;
+class CompoundStorage;
+class Compound;
+class OverlayState;
+struct SceneLogicStateCfg;
 //class EntitySystem;
 //class SourceEntitiesGroup;
 
@@ -51,6 +57,7 @@ public:
 
 
     //---
+    bool build() override;
     virtual bool init() override;
     virtual void start() override;
     virtual bool startingPhaseUpdate() override;
@@ -61,12 +68,16 @@ public:
 
 
 
-    bool initActionTasksAndEvents();
+    bool initConnections();
 
-    void startOverlayComponent(OverlayComponent *_component);
-    void endOverlayComponent(OverlayComponent *_component);
+    //void startOverlayComponent(OverlayComponent *_component);
+    //void endOverlayComponent(OverlayComponent *_component);
 
-    bool updateLogicData(PlayedScene *newPSData);
+    void startOverlayCompound(Compound *_previosCompound, Compound *_currentCompound);
+    void endOverlayCompound(Compound *_compound);
+
+
+    //bool updateLogicData(PlayedScene *newPSData);
 
 
     LogicState* initState(){ return mInitState.get(); }
@@ -89,12 +100,24 @@ public:
 
     //---
     ComponentsGroup* componentsGroup(){ return mComponentsGroup.get(); }
-    ComponentsGroup* overlayComponentsGroup(){ return mOverlayComponentsGroup.get(); }
+    //ComponentsGroup* overlayComponentsGroup(){ return mOverlayComponentsGroup.get(); }
     GfxObjectsGroup* gfxObjectsGroup(){ return mGfxObjectsGroup.get(); }
     //SourceEntitiesGroup* sourceEntitiesGroup(){ return mSourceEntitiesGroup.get(); }
     AnimationManager* animationManager(){ return mAnimationManager.get(); }
 
+    GuiSystem * guiSystem();
 
+    CompoundStorage* compoundStorage(){ return mCompoundStorage.get(); }
+
+    //SimpleStorage<SceneLogicStateCfg*> & initStateCfgStorage(){ return mInitStateCfgStorage; }
+    //SimpleStorage<SceneLogicStateCfg*> & startStateCfgStorage(){ return mStartStateCfgStorage; }
+    //SimpleStorage<SceneLogicStateCfg*> & updateStateCfgStorage(){ return mUpdateStateCfgStorage; }
+
+    SceneLogicStateCfg* initStateCfg(){ return mInitStateCfg.get(); }
+    SceneLogicStateCfg* startStateCfg(){ return mStartStateCfg.get(); }
+    SceneLogicStateCfg* updateStateCfg(){ return mUpdateStateCfg.get(); }
+
+    std::vector<OverlayState*> & overlayStates(){ return mOverlayStates;}
 
 private:
     InitializationStatus mInitializationStatus = InitializationStatus::NONE;
@@ -103,6 +126,7 @@ private:
     std::unique_ptr<LogicState> mStartState;
     std::unique_ptr<LogicState> mUpdateState;
 
+    UpdateMode mUpdateMode;
 
     std::unique_ptr<ItemsLibrary> mItemsLibrary;
     std::unique_ptr<TransitionsGroup> mTransitionsGroup;
@@ -114,21 +138,32 @@ private:
 
     VariableManager mLocalVariablesStorage;
 
-    std::vector<OverlayComponent*>mRunningOverlayComponents;    // LINKS
+    //std::vector<OverlayComponent*>mRunningOverlayComponents;    // LINKS
     bool mModalOverlayComponents= false;
+
+     std::vector<Compound*>mRunningOverlayCompounds;    // LINKS
 
     //---
     ActivatedTriggersUpdater mActivatedTriggersUpdater;
 
     std::unique_ptr<ComponentsGroup> mComponentsGroup;
-    std::unique_ptr<ComponentsGroup> mOverlayComponentsGroup;
+    //std::unique_ptr<ComponentsGroup> mOverlayComponentsGroup;
     std::unique_ptr<GfxObjectsGroup> mGfxObjectsGroup;
 
     std::unique_ptr<AnimationManager>mAnimationManager;
 
+    std::unique_ptr<CompoundStorage>mCompoundStorage;
 
-    //std::unique_ptr<EntitySystem> mEntitySystem;
-    //std::unique_ptr<SourceEntitiesGroup> mSourceEntitiesGroup;
+    //SimpleStorage<SceneLogicStateCfg*>mInitStateCfgStorage;
+    //SimpleStorage<SceneLogicStateCfg*>mStartStateCfgStorage;
+    //SimpleStorage<SceneLogicStateCfg*>mUpdateStateCfgStorage;
+
+    std::unique_ptr<SceneLogicStateCfg>mInitStateCfg;
+    std::unique_ptr<SceneLogicStateCfg>mStartStateCfg;
+    std::unique_ptr<SceneLogicStateCfg>mUpdateStateCfg;
+
+    //WidgetManager * mWidgetManager = nullptr;
+    std::vector<OverlayState*>mOverlayStates;
 
 };
 

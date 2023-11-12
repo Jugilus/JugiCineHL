@@ -172,6 +172,7 @@ public:
     //-------------------------------------------------------
     std::vector<BoolSignal> & keys(){ return mKeys; }
     std::vector<std::string> & keyNames(){ return mKeyNames; }
+    BoolSignal * keySignalForKeyName(const std::string &_name, bool _setErrorMessage=true);
 
 
     void resetPerUpdate();
@@ -246,13 +247,13 @@ public:
 
 
     /// Returns true if the given *_mouse button* is pressed; otherwise returns false.
-    bool isButtonPressed(MouseButton _mouseButton){ return mButtons[(int)_mouseButton].activeStarted(); }
+    bool isButtonPressed(MouseButton _mouseButton){ return mButtons[(int)_mouseButton].activeStarted(true); }
 
     /// Returns true if the given *_mouse button* is hold down; otherwise returns false.
-    bool isButtonDown(MouseButton _mouseButton){ return mButtons[(int)_mouseButton].active(); }
+    bool isButtonDown(MouseButton _mouseButton){ return mButtons[(int)_mouseButton].active(true); }
 
     /// Returns true if the given *_mouse button* is released; otherwise returns false.
-    bool isButtonReleased(MouseButton _mouseButton){ return mButtons[(int)_mouseButton].activeEnded(); }
+    bool isButtonReleased(MouseButton _mouseButton){ return mButtons[(int)_mouseButton].activeEnded(true); }
 
     /// \brief Set the cursor sprite to the given *_cursorSprite*.
     ///
@@ -318,13 +319,13 @@ public:
 
 
     /// Returns true if the given *_finger* is pressed; otherwise returns false.
-    bool isFingerPressed(int _finger){ return mFingers[_finger].activeStarted(); }
+    bool isFingerPressed(int _finger){ return mFingers[_finger].activeStarted(true); }
 
     /// Returns true if the given *_finger* is hold down; otherwise returns false.
-    bool isFingerDown(int _finger){ return mFingers[_finger].active(); }
+    bool isFingerDown(int _finger){ return mFingers[_finger].active(true); }
 
     /// Returns true if the given *_finger* is released; otherwise returns false.
-    bool isFingerReleased(int _finger){ return mFingers[_finger].activeEnded(); }
+    bool isFingerReleased(int _finger){ return mFingers[_finger].activeEnded(true); }
 
     /// Returns the x coordinate of the given *_finger* on screen.
     int fingerX(int _finger){ return mFingers[_finger].position.x; }
@@ -414,40 +415,40 @@ public:
 
 
     /// Returns true if a button with the given *_buttonIndex* is pressed; otherwise returns false.
-    bool isButtonPressed(int _buttonIndex){ return mButtons[_buttonIndex].activeStarted(); }
+    bool isButtonPressed(int _buttonIndex){ return mButtons[_buttonIndex].activeStarted(true); }
 
     /// Returns true if a button with the given *_buttonIndex* is hold down; otherwise returns false.
-    bool isButtonDown(int _buttonIndex){ return mButtons[_buttonIndex].active(); }
+    bool isButtonDown(int _buttonIndex){ return mButtons[_buttonIndex].active(true); }
 
     /// Returns true if a button with the given *_buttonIndex* is released; otherwise returns false.
-    bool isButtonReleased(int _buttonIndex){ return mButtons[_buttonIndex].activeEnded(); }
+    bool isButtonReleased(int _buttonIndex){ return mButtons[_buttonIndex].activeEnded(true); }
 
     /// Returns true if a button with the given *_buttonIndex* is pressed; otherwise returns false.
-    bool isButtonPressed(ncine::ButtonName _buttonName){ return mButtons[static_cast<short int>(_buttonName)].activeStarted(); }
+    bool isButtonPressed(ncine::ButtonName _buttonName){ return mButtons[static_cast<short int>(_buttonName)].activeStarted(true); }
 
     /// Returns true if a button with the given *_buttonIndex* is hold down; otherwise returns false.
-    bool isButtonDown(ncine::ButtonName _buttonName){ return mButtons[static_cast<short int>(_buttonName)].active(); }
+    bool isButtonDown(ncine::ButtonName _buttonName){ return mButtons[static_cast<short int>(_buttonName)].active(true); }
 
     /// Returns true if a button with the given *_buttonIndex* is released; otherwise returns false.
-    bool isButtonReleased(ncine::ButtonName _buttonName){ return mButtons[static_cast<short int>(_buttonName)].activeEnded(); }
+    bool isButtonReleased(ncine::ButtonName _buttonName){ return mButtons[static_cast<short int>(_buttonName)].activeEnded(true); }
 
     /// Returns true if the given *_povX* button is pressed; otherwise returns false.
-    bool isPOV_XPressed(JoystickPOV_X _povX){ return mPovXButtons[(int)_povX].activeStarted(); }
+    bool isPOV_XPressed(JoystickPOV_X _povX){ return mPovXButtons[(int)_povX].activeStarted(true); }
 
     /// Returns true if the given *_povX* button is hold down; otherwise returns false.
-    bool isPOV_XDown(JoystickPOV_X _povX){ return mPovXButtons[(int)_povX].active(); }
+    bool isPOV_XDown(JoystickPOV_X _povX){ return mPovXButtons[(int)_povX].active(true); }
 
     /// Returns true if the given *_povX* button is released; otherwise returns false.
-    bool isPOV_XReleased(JoystickPOV_X _povX){ return mPovXButtons[(int)_povX].activeEnded(); }
+    bool isPOV_XReleased(JoystickPOV_X _povX){ return mPovXButtons[(int)_povX].activeEnded(true); }
 
     /// Returns true if the given *_povY* button is pressed; otherwise returns false.
-    bool isPOV_YPressed(JoystickPOV_Y _povY){ return mPovYButtons[(int)_povY].activeStarted(); }
+    bool isPOV_YPressed(JoystickPOV_Y _povY){ return mPovYButtons[(int)_povY].activeStarted(true); }
 
     /// Returns true if the given *_povY* button is hold down; otherwise returns false.
-    bool isPOV_YDown(JoystickPOV_Y _povY){ return mPovYButtons[(int)_povY].active(); }
+    bool isPOV_YDown(JoystickPOV_Y _povY){ return mPovYButtons[(int)_povY].active(true); }
 
     /// Returns true if the given *_povY* button is released; otherwise returns false.
-    bool isPOV_YReleased(JoystickPOV_Y _povY){ return mPovYButtons[(int)_povY].activeEnded(); }
+    bool isPOV_YReleased(JoystickPOV_Y _povY){ return mPovYButtons[(int)_povY].activeEnded(true); }
 
     /// Returns the value of x axis.
     float xAxis(){ return mXAxis; }

@@ -7,16 +7,14 @@
 #include "jmCamera.h"
 #include "jmSceneLayout.h"
 #include "jmCommonFunctions.h"
-#include "jmGuiText.h"
 #include "jmTextSprite.h"
 #include "jmUtilities.h"
 
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
-#include "jpActionsCommon.h"
+//#include "jpActionsCommon.h"
 
 #include "movements/jpMovementBase.h"
 #include "jpB2Body.h"
@@ -393,9 +391,10 @@ void EntityContactListener::PreSolve(b2Contact *contact, const b2Manifold *oldMa
 
         // normal points from  entity A to B, which is in this case from entity1 to entity2 !
 
-        if(mDynamicEntity1->entityMovingGroup() && mDynamicEntity2->entityMovingGroup()){
-            DummyFunction();
-        }
+        //if(mDynamicEntity1->entityMovingGroup() && mDynamicEntity2->entityMovingGroup()){
+        //    DummyFunction();
+        //}
+
 
         if(mWorldManifold.normal.y<0){
 
@@ -416,6 +415,41 @@ void EntityContactListener::PreSolve(b2Contact *contact, const b2Manifold *oldMa
         }else if(mWorldManifold.normal.y>0){
 
             // entity2 is above entity1
+
+            /*
+            b2Vec2 normal = mWorldManifold.normal; // oriented terrain -> player
+            //b2Vec2 vel = mDynamicEntity2->engineVelocity();
+            b2Vec2 vel = mDynamicEntity2->body()->B2Body()->GetLinearVelocity();
+            vel.y = 0.0f;
+            float len = vel.Length();
+
+            if(len>0.0f){
+                b2Vec2 uVel{ vel.x/len, vel.y/len };
+
+                print (mDynamicEntity2->sourceEntity()->sourceEntityCfg()->name);
+                print("normal x=" + std::to_string(normal.x) + " y=" + std::to_string(normal.y));
+                print("vel x=" + std::to_string(vel.x) + " y=" + std::to_string(vel.y));
+                print("b2Dot=" + std::to_string(b2Dot(normal, uVel)));
+
+                // Prevent snags (ghost collisions) for face-face collisions
+
+                if(b2Dot(normal, uVel) == -1.0f) {
+                    if (manifold->pointCount > 1) {
+                        // our threshold needs to be at least `2.0 * b2_linearSlop`
+                        // (which is the deepest overlap we should ever encounter)
+                        // to be extra safe let's double it
+                        constexpr float overlap_slop = 4.0 * b2_linearSlop;
+
+                        float contact_area = (mWorldManifold.points[0] - mWorldManifold.points[1]).Length();
+                        // if contact_area > threshold, then this is a wall, not a ghost collision
+                        if (contact_area < overlap_slop) {
+                            contact->SetEnabled(false);         // only disabled for 1 frame
+                        }
+                    }
+                }
+
+            }
+            */
 
             if(mDynamicEntity2->currentEngine()->type()==MovementEngineType::GROUND_MOVEMENT){
                 if((mDynamicEntity2->statusFlagsRef() & EntityStatusFlags::MOVING_ON_GROUND)==0){
@@ -471,6 +505,32 @@ void EntityContactListener::PreSolve(b2Contact *contact, const b2Manifold *oldMa
                 }
             }else{
                 contact->SetFriction(0.0f);
+            }
+
+
+            b2Vec2 normal = mWorldManifold.normal;
+            if(mNonDynamicEntity==entityB){
+                normal = -normal;
+            }
+
+            if(mDynamicEntity1->engineVelocity().y==0.0f && mDynamicEntity1->engineVelocity().x!=0){
+                b2Vec2 vel = mDynamicEntity1->engineVelocity();
+                float speed = vel.Length();
+                b2Vec2 nVel{vel.x/speed , vel.y/speed};
+                if(nVel == - normal){
+                    if (manifold->pointCount > 1) {
+                        // our threshold needs to be at least `2.0 * b2_linearSlop`
+                        // (which is the deepest overlap we should ever encounter)
+                        // to be extra safe let's double it
+                        constexpr float overlap_slop = 4.0 * b2_linearSlop;
+
+                        float contact_area = (mWorldManifold.points[0] - mWorldManifold.points[1]).Length();
+                        // if contact_area > threshold, then this is a wall, not a ghost collision
+                        if (contact_area < overlap_slop) {
+                            contact->SetEnabled(false);         // only disabled for 1 frame
+                        }
+                    }
+                }
             }
 
 

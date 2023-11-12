@@ -7,18 +7,16 @@
 #include "jmCamera.h"
 #include "jmSceneLayout.h"
 #include "jmCommonFunctions.h"
-#include "jmGuiText.h"
 #include "jmStandardSprite.h"
 #include "jmUtilities.h"
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
-#include "jpActionsCommon.h"
+//#include "jpActionsCommon.h"
 
 
-#include "scripting/jpBehavior.h"
+#include "jpEntityLogicState.h"
 #include "movements/jpMovementBase.h"
 #include "jpB2Body.h"
 #include "jpEntitySystem.h"
@@ -71,11 +69,31 @@ int GetMovableObjectFromString_signalSetter(const std::string &_type)
 
 }
 
+
+std::vector<NamedValue>gMovableObjectNamedValues_query
+{
+    {"MOVED", MovableObject::MOVED },
+    {"ON_LEFT", MovableObject::ON_LEFT },
+    {"ON_RIGHT", MovableObject::ON_RIGHT},
+    {"ON_TOP", MovableObject::ON_TOP},
+    {"ON_BOTTOM", MovableObject::ON_BOTTOM}
+
+};
+
+
+std::vector<NamedValue>gMovableObjectNamedValues_setter
+{
+    {"MOVED", MovableObject::MOVED }
+
+};
+
+
+
 //-----------------------------------------------------------------------------------------------
 
 
 
-void MovingMovableObjectGroup::initBehavior(IntBitsSignal *_movableObjectSignal, Direction _movableObjectPosition)
+void MovingMovableObjectGroup::initBehavior(BitsetSignal *_movableObjectSignal, Direction _movableObjectPosition)
 {
     mMovableObjectSignal = _movableObjectSignal;
     mMovableObjectPosition = _movableObjectPosition;
@@ -84,7 +102,7 @@ void MovingMovableObjectGroup::initBehavior(IntBitsSignal *_movableObjectSignal,
 
 
 
-void MovingMovableObjectGroup::update_Movement(UpdateMode _updateMode)
+void MovingMovableObjectGroup::update_Movement(UpdateMode &_updateMode)
 {
 
 
@@ -93,9 +111,8 @@ void MovingMovableObjectGroup::update_Movement(UpdateMode _updateMode)
         return;
     }
     for(Entity *e : mMembers){
-        //if(e->movementEngineType()!=BehaviorEngineType::GROUND_MOVEMENT){
         if(e->currentEngine()->type()!=MovementEngineType::GROUND_MOVEMENT){
-            mMovableObjectSignal->_unsetFlagOnNextFrame(MovableObject::MOVED);
+            mMovableObjectSignal->setFlags_onNextFrame(MovableObject::MOVED, false);
             return;
         }
     }

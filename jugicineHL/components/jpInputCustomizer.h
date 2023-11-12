@@ -3,6 +3,9 @@
 
 
 #include <memory>
+
+#include "jmInput.h"
+
 #include "jpComponentsCommon.h"
 #include "jpItemsCommon.h"
 #include "jpVariables.h"
@@ -35,7 +38,7 @@ public:
     bool initConnections(PlayedScene *_scene) override;
 
     void start() override;
-    void update(UpdateMode _updateMode) override;
+    void update(UpdateMode &_updateMode) override;
     void onStateEnded() override;
 
     // rebuild items which represents input devices and input commands
@@ -44,10 +47,10 @@ public:
 
 private:
 
-    PlayedScene *mParentPlayerScene = nullptr;              // LINK
+    //PlayedScene *mParentPlayerScene = nullptr;              // LINK
     GuiTable* mDevicesTable = nullptr;                      // LINK
     GuiTable* mButtonsTable = nullptr;                      // LINK
-    std::vector<GuiWidget*>mUsedWidgets;                    // LINKS
+    //std::vector<GuiWidget*>mUsedWidgets;                    // LINKS
     GuiButton *mBRestoreDefaultButtons;                     // LINK
     std::unique_ptr<ItemsGroup>mInputDeviceItems;
 

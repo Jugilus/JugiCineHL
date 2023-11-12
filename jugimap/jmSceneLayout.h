@@ -18,8 +18,6 @@ namespace jugimap {
 
 class Scene;
 class Map;
-//class SourceGraphics;
-//class EngineScene;
 class App;
 class Camera;
 

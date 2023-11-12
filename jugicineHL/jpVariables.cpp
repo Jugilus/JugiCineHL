@@ -1,9 +1,10 @@
 #include "pugixml/pugixml.hpp"
+#include "jmCommonFunctions.h"
 #include "jmSystem.h"
 #include "jmSprite.h"
 #include "jmCompositeSprite.h"
 #include "jmStreams.h"
-#include "jpItemsTable.h"
+//#include "jpItemsTable.h"
 #include "jmUtilities.h"
 #include "jpVariables.h"
 

@@ -1,10 +1,11 @@
 #include <ncine/Application.h>
 #include <ncine/IInputManager.h>
 #include "pugixml/pugixml.hpp"
+#include "jmCommonFunctions.h"
 #include "jmSystem.h"
 #include "jmStreams.h"
 #include "jmCompositeSprite.h"
-#include "jpItemsTable.h"
+//#include "jpItemsTable.h"
 #include "jpPlayedApp.h"
 #include "jpInputCustomizer.h"
 #include "jmUtilities.h"
@@ -83,6 +84,33 @@ void GameInputCommand::reset()
 }
 
 
+void GameInputCommand::setSignalValues(bool _active, bool _activeStarted, bool _activeEnded)
+{
+
+    //BoolSignal::_setSignalManually(_active, _activeStarted, _activeEnded);
+
+    _setValue(_active);
+
+    if(_activeStarted || _activeEnded){
+        _setPreviousValue(!_active);
+        _setValueChanged(true);
+
+    }else{
+        _setPreviousValue(_active);
+        _setValueChanged(false);
+
+    }
+
+    //if(mName.empty()==false){
+    //    print(getDbgInfo());
+    //}
+
+
+    mXAxis = mYAxis = mZAxis = 0.0f;
+
+}
+
+
 /*
 GameInputCommand::Trigger GameInputCommand::getTriggerFromString(const std::string &_trigger)
 {
@@ -131,20 +159,28 @@ void KeyboardProfile::update()
 
     for(KeyboardInputCommand &c : mKeyboardInputCommands){
 
-        //c.mGameInputCommand->reset();
-        //c.mGameInputCommand->Reset();
-
+        /*
         if(keyboard.isKeyDown(c.mKeyCode)){
-            //c.mGameInputCommand->mActive = true;
-            c.mGameInputCommand->_setActive(true);
+            c.mGameInputCommand->setValue(true);
         }
         if(keyboard.isKeyPressed(c.mKeyCode)){
-            //c.mGameInputCommand->mStartedBeingActive = true;
             c.mGameInputCommand->_setActiveStarted(true);
         }
         if(keyboard.isKeyReleased(c.mKeyCode)){
-            //c.mGameInputCommand->mEndedBeingActive = true;
             c.mGameInputCommand->_setActiveEnded(true);
+        }
+        */
+
+        if(c.mKeyCode==KeyCode::LCTRL && keyboard.isKeyReleased(c.mKeyCode)){
+            DummyFunction();
+        }
+
+        bool active = keyboard.isKeyDown(c.mKeyCode);
+        bool activeStarted = keyboard.isKeyPressed(c.mKeyCode);
+        bool activeEnded = keyboard.isKeyReleased(c.mKeyCode);
+
+        if(active || activeStarted || activeEnded){
+            c.mGameInputCommand->setSignalValues(active, activeStarted, activeEnded);
         }
     }
 
@@ -182,11 +218,9 @@ void JoystickProfile::update()
 
     for(JoystickInputCommand &c : mJoystickInputCommands){
 
-        //c.mGameInputCommand->reset();
-        //c.mGameInputCommand->Reset();
-
         if(c.mJoystickControl.mButtonName != ncine::ButtonName::UNKNOWN){
 
+            /*
             if(mJoystick->isButtonDown(c.mJoystickControl.mButtonName)){
                 c.mGameInputCommand->_setActive(true);
             }
@@ -196,9 +230,20 @@ void JoystickProfile::update()
             if(mJoystick->isButtonReleased(c.mJoystickControl.mButtonName)){
                 c.mGameInputCommand->_setActiveEnded(true);
             }
+            */
+
+            bool active = mJoystick->isButtonDown(c.mJoystickControl.mButtonName);
+            bool activeStarted = mJoystick->isButtonPressed(c.mJoystickControl.mButtonName);
+            bool activeEnded = mJoystick->isButtonReleased(c.mJoystickControl.mButtonName);
+
+            if(active || activeStarted || activeEnded){
+                c.mGameInputCommand->setSignalValues(active, activeStarted, activeEnded);
+            }
+
 
         }else if(c.mJoystickControl.mPovX != JoystickPOV_X::NONE){
 
+            /*
             if(mJoystick->isPOV_XDown(c.mJoystickControl.mPovX)){
                 c.mGameInputCommand->_setActive(true);
             }
@@ -208,9 +253,20 @@ void JoystickProfile::update()
             if(mJoystick->isPOV_XReleased(c.mJoystickControl.mPovX)){
                 c.mGameInputCommand->_setActiveEnded(true);
             }
+            */
+
+            bool active = mJoystick->isPOV_XDown(c.mJoystickControl.mPovX);
+            bool activeStarted = mJoystick->isPOV_XPressed(c.mJoystickControl.mPovX);
+            bool activeEnded = mJoystick->isPOV_XReleased(c.mJoystickControl.mPovX);
+
+            if(active || activeStarted || activeEnded){
+                c.mGameInputCommand->setSignalValues(active, activeStarted, activeEnded);
+            }
+
 
         }else if(c.mJoystickControl.mPovY != JoystickPOV_Y::NONE){
 
+            /*
             if(mJoystick->isPOV_YDown(c.mJoystickControl.mPovY)){
                 c.mGameInputCommand->_setActive(true);
             }
@@ -220,6 +276,16 @@ void JoystickProfile::update()
             if(mJoystick->isPOV_YReleased(c.mJoystickControl.mPovY)){
                 c.mGameInputCommand->_setActiveEnded(true);
             }
+            */
+
+            bool active = mJoystick->isPOV_YDown(c.mJoystickControl.mPovY);
+            bool activeStarted = mJoystick->isPOV_YPressed(c.mJoystickControl.mPovY);
+            bool activeEnded = mJoystick->isPOV_YReleased(c.mJoystickControl.mPovY);
+
+            if(active || activeStarted || activeEnded){
+                c.mGameInputCommand->setSignalValues(active, activeStarted, activeEnded);
+            }
+
 
         }else if(c.mJoystickControl.mAxis != JoystickAxis::NONE){
 
@@ -452,7 +518,7 @@ bool InputSystem::initConnections()
 
 
 
-void InputSystem::update()
+void InputSystem::preUpdate()
 {
 
     assert(mActiveInputProfiles);
@@ -565,13 +631,13 @@ void InputSystem::dbgPrint()
 {
 
     for(GameInputCommand *c  : mGameInputCommands){
-        if(c->activeStarted()){
+        if(c->activeStarted(true)){
             print("Input command '" + c->name() + " pressed!");
         }
-        if(c->active()){
+        if(c->active(true)){
             print("Input command '" + c->name() + " down!");
         }
-        if(c->activeEnded()){
+        if(c->activeEnded(true)){
             print("Input command '" + c->name() + " released!");
         }
         if(c->xAxis() != 0.0f ){

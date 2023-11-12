@@ -465,52 +465,52 @@ ColorOverlayBlend GetColorOverlayBlendFromInt(int _blend)
 
 
 
-GuiWidgetKind GetGuiWidgetKindFromString(const std::string &_kind)
+WidgetType GetGuiWidgetKindFromString(const std::string &_kind)
 {
 
     if(_kind=="button"){
-        return GuiWidgetKind::BUTTON;
+        return WidgetType::BUTTON;
 
     }else if(_kind=="bar"){
-        return GuiWidgetKind::BAR;
+        return WidgetType::BAR;
 
     }else if(_kind=="slider"){
-        return GuiWidgetKind::SLIDER;
+        return WidgetType::SLIDER;
 
     }else if(_kind=="textField"){
-        return GuiWidgetKind::TEXT_FIELD;
+        return WidgetType::TEXT_FIELD;
 
     }else if(_kind=="textInput"){
-        return GuiWidgetKind::TEXT_INPUT;
+        return WidgetType::TEXT_INPUT;
 
     }else if(_kind=="table"){
-        return GuiWidgetKind::TABLE;
+        return WidgetType::TABLE;
 
     }
 
-    return GuiWidgetKind::NOT_DEFINED;
+    return WidgetType::NOT_DEFINED;
 }
 
 
-std::string GetGuiWidgetKindString(GuiWidgetKind _kind)
+std::string GetGuiWidgetKindString(WidgetType _kind)
 {
 
-    if(_kind==GuiWidgetKind::BUTTON){
+    if(_kind==WidgetType::BUTTON){
         return "button";
 
-    }else if(_kind==GuiWidgetKind::BAR){
+    }else if(_kind==WidgetType::BAR){
         return "bar";
 
-    }else if(_kind==GuiWidgetKind::SLIDER){
+    }else if(_kind==WidgetType::SLIDER){
         return "slider";
 
-    }else if(_kind==GuiWidgetKind::TEXT_FIELD){
+    }else if(_kind==WidgetType::TEXT_FIELD){
         return "textField";
 
-    }else if(_kind==GuiWidgetKind::TEXT_INPUT){
+    }else if(_kind==WidgetType::TEXT_INPUT){
         return "textInput";
 
-    }else if(_kind==GuiWidgetKind::TABLE){
+    }else if(_kind==WidgetType::TABLE){
         return "table";
 
     }

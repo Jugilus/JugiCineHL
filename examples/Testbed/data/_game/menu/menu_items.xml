@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene name="Menu">
+   
+    
+    <!-- <variable name="sceneToLoad" type="string" /> -->
+
+
+    <itemsGroup name="sceneNames">
+        <item name="runAndJump">
+            <guiSlotData>
+                <!-- <sprite sourceSprite="srcSpriteName" slotSpriteDummy="slotSpriteDummyName" /> -->
+                <textSprite textSegment="scenes/0" slotTextSprite="sceneName" />
+                <textField textSegment="scenes/1" slotTextField="sceneDescription" />
+            </guiSlotData>
+
+            <onSelected>
+                <!--<setSceneVariable variable="sceneToLoad" value="runAndJump" />-->
+            </onSelected>
+
+        </item>
+        <item name="scene2">
+            <guiSlotData>
+                <textSprite textSegment="scenes/2" slotTextSprite="sceneName" />
+                <textField textSegment="scenes/3" slotTextField="sceneDescription" />
+            </guiSlotData>
+            <onSelected>
+                <!--<setSceneVariable variable="sceneToLoad" value="scene2" />-->
+            </onSelected>
+        </item>
+        <item name="scene3">
+            <guiSlotData>
+                <textSprite textSegment="scenes/4" slotTextSprite="sceneName" />
+                <textField textSegment="scenes/5" slotTextField="sceneDescription" />
+            </guiSlotData>
+            <onSelected>
+                <!--<setSceneVariable variable="sceneToLoad" value="scene3" />-->
+            </onSelected>
+        </item>
+        <item name="scene4">
+            <guiSlotData>
+                <textSprite textSegment="scenes/6" slotTextSprite="sceneName" />
+                <textField textSegment="scenes/7" slotTextField="sceneDescription" />
+            </guiSlotData>
+            <onSelected>
+                <!--<setSceneVariable variable="sceneToLoad" value="runAndJump" />-->
+            </onSelected>
+        </item>
+        <item name="scene5">
+            <guiSlotData>
+                <textSprite textSegment="scenes/8" slotTextSprite="sceneName" />
+                <textField textSegment="scenes/9" slotTextField="sceneDescription" />
+            </guiSlotData>
+            <onSelected>
+                <!--<setSceneVariable variable="sceneToLoad" value="runAndJump" />-->
+            </onSelected>
+        </item>
+        <item name="scene6">
+            <guiSlotData>
+                <textSprite textSegment="scenes/10" slotTextSprite="sceneName" />
+                <textField textSegment="scenes/11" slotTextField="sceneDescription" />
+            </guiSlotData>
+            <onSelected>
+                <!--<setSceneVariable variable="sceneToLoad" value="runAndJump" />-->
+            </onSelected>
+        </item>
+        <item name="scene7">
+            <guiSlotData>
+                <textSprite textSegment="scenes/12" slotTextSprite="sceneName" />
+                <textField textSegment="scenes/13" slotTextField="sceneDescription" />
+            </guiSlotData>
+            <onSelected>
+                <!--<setSceneVariable variable="sceneToLoad" value="runAndJump" />-->
+            </onSelected>
+        </item>
+    </itemsGroup>
+
+    <!-- 
+    <itemsGroup name="userNames">
+
+        <dynamicItem parameters="itemName">
+            <guiSlotData>
+                <textSprite textSource="itemName" slotTextSprite="userName" />
+            </guiSlotData>
+        </dynamicItem>
+
+    </itemsGroup>
+-->
+    
+ 
+</scene>

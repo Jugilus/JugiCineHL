@@ -14,20 +14,6 @@ namespace jugimap{
 
 
 
-//class SourceGraphics;
-class Map;
-class SourceFile;
-class SourceImage;
-class SourceSprite;
-//class VectorShape;
-class FrameAnimation;
-class SpriteLayer;
-class VectorLayer;
-class CompositeSprite;
-
-
-
-
 ///\ingroup Streams
 ///\brief The base abstract class for reading binary streams.
 class BinaryStreamReader

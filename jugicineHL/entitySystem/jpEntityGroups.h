@@ -39,6 +39,9 @@ int GetMovableObjectFromString_signalQuery(const std::string &_type);
 
 int GetMovableObjectFromString_signalSetter(const std::string &_type);
 
+extern std::vector<NamedValue>gMovableObjectNamedValues_query;
+extern std::vector<NamedValue>gMovableObjectNamedValues_setter;
+
 
 //------------------------------------------------------------------------------------
 
@@ -50,12 +53,12 @@ public:
     MovingMovableObjectGroup() : EntityMovingGroup(EntityGroupType::MOVING_MOVABLE_OBJECT){}
 
 
-    void initBehavior(IntBitsSignal *_movableObjectSignal, Direction _movableObjectPosition);
-    void update_Movement(UpdateMode _updateMode) override;
+    void initBehavior(BitsetSignal *_movableObjectSignal, Direction _movableObjectPosition);
+    void update_Movement(UpdateMode &_updateMode) override;
 
 
 private:
-    IntBitsSignal *mMovableObjectSignal = nullptr;      // LINK
+    BitsetSignal *mMovableObjectSignal = nullptr;      // LINK
 
     Direction mMovableObjectPosition = Direction::NONE;
 

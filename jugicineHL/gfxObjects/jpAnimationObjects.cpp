@@ -70,7 +70,7 @@ bool AnimationObject::initConnections(PlayedScene *_scene)
     */
 
     std::string aniName;
-    bool paused = false;
+    //bool paused = false;
 
      std::string aniOnStart = s->parameters().value("aniOnStart");
 
@@ -79,7 +79,7 @@ bool AnimationObject::initConnections(PlayedScene *_scene)
          if(parts.size()==1){
 
              if(parts[0] == "PAUSED"){
-                 paused = true;
+                 mPaused = true;
              }else{
                  aniName = parts[0];
              }
@@ -88,7 +88,7 @@ bool AnimationObject::initConnections(PlayedScene *_scene)
              aniName = parts[0];
 
              if(parts[1] == "PAUSED"){
-                 paused = true;
+                 mPaused = true;
              }else{
                  dbgSystem.addMessage("Error parsing paramter value '" + aniOnStart +"' !");
                  return false;
@@ -100,9 +100,8 @@ bool AnimationObject::initConnections(PlayedScene *_scene)
          }
      }
 
-     if(paused){
-         mSigDisabled._set();
-     }
+
+    mSigEnabled.reset(!mPaused);
 
 
     if(aniName.empty()==false){
@@ -165,7 +164,7 @@ bool AnimationObject::initConnections(PlayedScene *_scene)
 
 void AnimationObject::preUpdate()
 {
-    mSigDisabled.preUpdate();
+    //mSigDisabled.preUpdate();
 }
 
 
@@ -177,13 +176,14 @@ void AnimationObject::update()
         aniPlayerFlags = mAnimationPlayer.Play(mAnimationInstance);
      }else{
 
-        if(mSigDisabled.active()){
-            if(mAnimationPlayer.GetState()!=AnimationPlayerState::PAUSED){
-                mAnimationPlayer.Pause();
-            }
-        }else{
+        if(mSigEnabled.active(true)){
             if(mAnimationPlayer.GetState()==AnimationPlayerState::PAUSED){
                 mAnimationPlayer.Resume();
+            }
+
+        }else{
+            if(mAnimationPlayer.GetState()!=AnimationPlayerState::PAUSED){
+                mAnimationPlayer.Pause();
             }
         }
 
@@ -198,28 +198,35 @@ void AnimationObject::update()
 
 void AnimationObject::postUpdate()
 {
-    mSigDisabled.postUpdate();
+    //mSigDisabled.postUpdate();
 }
 
 
 
-void AnimationObject::obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_path, bool _setErrorMessage)
+void AnimationObject::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage)
 {
 
-    if(_path=="DISABLED"){
-        _signalQuery.mSignal = &mSigDisabled;
+    if(_psp.signalFullName()=="ENABLED"){
+        _psp.obtainValue(_signalQuery, &mSigEnabled);
+    }
+
+    if(_signalQuery.mSignal==nullptr &&_setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
 }
 
 
-void AnimationObject::obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_path, bool _setErrorMessage)
+void AnimationObject::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage)
 {
 
-    if(_path=="DISABLED"){
-        _signalSetter.mSignal = &mSigDisabled;
+    if(_psp.signalFullName()=="ENABLED"){
+        _psp.obtainValue(_signalSetter, &mSigEnabled);
     }
 
+    if(_signalSetter.mSignal==nullptr &&_setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting it!");
+    }
 }
 
 
@@ -347,8 +354,70 @@ AnimationObject * AnimationManager::getAnimationObject(const std::string &_name,
 }
 
 
+//=========================================================================================================
+
+/*
+
+bool AnimationObjectSignalStrings::parse(const std::string &_path)
+{
+
+    std::vector<std::string> parts = StdString::splitString(_path, ":");
+
+    if(parts.size()>0){
+        animationObject = parts[0];
+    }
+
+    if(parts.size()>1){
+        signalName = parts[1];
+    }
+
+    if(signalName.empty()){
+        dbgSystem.addMessage("Error parsing signal path '" + _path + "'!");
+        return false;
+    }
+
+    // parsing value state for bool signals
+    std::vector<std::string> parts2 = StdString::splitString(signalName, "=");
+    if(parts2.size()==2){
+        signalName = parts2[0];
+        signalValueState = parts2[1];
+    }
+
+    // parsing value state for int signals and bitflag signals
+    if(signalValue.empty()==false){
+        parts2 = StdString::splitString(signalValue, "=");
+        if(parts2.size()==2){
+            signalValue = parts2[0];
+            signalValueState = parts2[1];
+        }
+    }
+
+    return true;
+
+}
 
 
+bool AnimationObjectSignalStrings::getBoolValue(bool &_state, bool _setErrorMessage) const
+{
+
+    if(signalValueState=="TRUE" || signalValueState=="ON" || signalValueState=="1"){
+        _state = true;
+        return true;
+
+    }else if(signalValueState=="FALSE" || signalValueState=="OFF" || signalValueState=="0"){
+        _state = false;
+        return true;
+    }
+
+    if(_setErrorMessage){
+        dbgSystem.addMessage("Wrong signal value '" + signalValueState +" ' !");
+    }
+
+    return false;
+
+}
+
+*/
 
 
 

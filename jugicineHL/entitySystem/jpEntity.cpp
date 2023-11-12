@@ -7,7 +7,6 @@
 #include "jmCamera.h"
 #include "jmSceneLayout.h"
 #include "jmCommonFunctions.h"
-#include "jmGuiText.h"
 #include "jmSpriteLayer.h"
 #include "jmVectorLayer.h"
 #include "jmStandardSprite.h"
@@ -20,9 +19,9 @@
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
-#include "jpActionsCommon.h"
+#include "jpLogicState.h"
+#include "jpLogicStateCfg.h"
 
 //-----
 #include "jpB2Body.h"
@@ -34,9 +33,9 @@
 #include "jpEntitySystem.h"
 #include "movements/jpMovementBase.h"
 #include "task/jpTaskBase.h"
-#include "scripting/jpBehavior.h"
-#include "scripting/jpBehCfg.h"
+#include "jpEntityLogicState.h"
 #include "jpEntityGroups.h"
+#include "jpEntityUtilities.h"
 #include "jpEntity.h"
 
 
@@ -208,7 +207,6 @@ EntityType Entity::type() const
 */
 
 
-
 Entity::~Entity()
 {
 
@@ -234,7 +232,6 @@ EntitySystem * Entity::parentEntitySystem()
 }
 
 
-
 EntityRole Entity::mainShapeRole() const
 {
     return mSourceEntity->sourceEntityCfg()->category->role;
@@ -254,7 +251,7 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
     mCurrentTaskEngine = parentEntitySystem()->taskEnginesManager()->getDummyTaskEngine();
 
     SourceEntityCfg *sourceEntityCfg = mSourceEntity->sourceEntityCfg();
-    EntityControllerCfg *enginesControllerCfg = sourceEntityCfg->enginesControllerCfg;
+    EntityLogicStateCfg *enginesControllerCfg = sourceEntityCfg->enginesControllerCfg;
 
 
     if(enginesControllerCfg){
@@ -262,9 +259,11 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
         MovementEnginesManager *mem = parentEntitySystem()->movementEnginesManager();
         std::map<std::string, std::vector<MovementEngineCfg*>> movementEngineCfgs;
 
-        for(BehaviorStateCfg& stateCfg : enginesControllerCfg->statesCfgs){
-            if(stateCfg.movementEngine.empty()==false){
-                MovementEngineCfg* cfg = mem->getMovementEngineCfg(stateCfg.movementEngine);
+        for(LogicStateCfg* _stateCfg : enginesControllerCfg->childStatesCfgs()){
+            EntityLogicStateCfg* stateCfg = static_cast<EntityLogicStateCfg*>(_stateCfg);
+
+            if(stateCfg->movementEngine.empty()==false){
+                MovementEngineCfg* cfg = mem->getMovementEngineCfg(stateCfg->movementEngine);
                 if(cfg==nullptr){
                     return false;
                 }
@@ -283,9 +282,9 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
         }
 
         //----
-        if(enginesControllerCfg->statesCfgs.empty()==false){
-            mEntityController.reset(new EntityController(enginesControllerCfg, this));
-            if(mEntityController->build()==false){
+        if(enginesControllerCfg->childStatesCfgs().empty()==false){
+            mEntityController.reset(new LogicState(enginesControllerCfg, this));
+            if(mEntityController->build(enginesControllerCfg)==false){
                 return false;
             }
         }
@@ -293,15 +292,16 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
 
 
 
-    EntityControllerCfg * taskHandlerCfg = sourceEntityCfg->taskControllerCfg;
+    EntityLogicStateCfg * taskHandlerCfg = sourceEntityCfg->taskControllerCfg;
     if(taskHandlerCfg){
 
         TaskEngineManager *mem = parentEntitySystem()->taskEnginesManager();
         std::map<std::string, std::vector<TaskEngineCfg*>> deciderCfgs;
 
-        for(BehaviorStateCfg& stateCfg : taskHandlerCfg->statesCfgs){
-            if(stateCfg.taskEngine.empty()==false){
-                TaskEngineCfg* cfg = mem->getTaskEngineCfg(stateCfg.taskEngine);
+        for(LogicStateCfg* _stateCfg : taskHandlerCfg->childStatesCfgs()){
+            EntityLogicStateCfg * stateCfg = static_cast<EntityLogicStateCfg*>(_stateCfg);
+            if(stateCfg->taskEngine.empty()==false){
+                TaskEngineCfg* cfg = mem->getTaskEngineCfg(stateCfg->taskEngine);
                 if(cfg==nullptr){
                     return false;
                 }
@@ -320,9 +320,9 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
         }
 
         //----
-        if(taskHandlerCfg->statesCfgs.empty()==false){
-            mTaskController.reset(new EntityController(taskHandlerCfg, this));
-            if(mTaskController->build()==false){
+        if(taskHandlerCfg->childStatesCfgs().empty()==false){
+            mTaskController.reset(new LogicState(taskHandlerCfg, this));
+            if(mTaskController->build(taskHandlerCfg)==false){
                 return false;
             }
         }
@@ -369,14 +369,15 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
     //
     //}else
     if(mainShapeRole()==EntityRole::ACTOR){
-        mSigMovableObject = new IntBitsSignal(static_cast<unsigned char>(SignalID::MOVABLE_OBJECT));
+        mSigMovableObject = new BitsetSignal(static_cast<unsigned char>(SignalID::MOVABLE_OBJECT));
+        mSigMovableObject->setName("mSigMovableObject");
         mSignals.push_back(mSigMovableObject);
 
-        mSigBlockedDirection = new IntBitsSignal();
+        mSigBlockedDirection = new BitsetSignal();
         mSignals.push_back(mSigBlockedDirection);
 
     }else if(mainShapeRole()==EntityRole::MOVABLE_OBJECT){
-        mSigBlockedDirection = new IntBitsSignal();
+        mSigBlockedDirection = new BitsetSignal();
         mSignals.push_back(mSigBlockedDirection);
 
     }
@@ -492,19 +493,22 @@ bool Entity::initConnections(PlayedScene *_scene)
         }
 
         //--- set start state
-        BehaviorState *startState = mEntityController->state(sourceEntity()->sourceEntityCfg()->startState, false);
+        LogicState *startState = mEntityController->findChildState(sourceEntity()->sourceEntityCfg()->startState, false);
         if(startState==nullptr){
             //return false;
-            startState = mEntityController->states().front();
+            startState = mEntityController->childStates().front();
         }
 
         const std::string direction = mMapElement.parameters().value("eDirection", "NONE");
         mDirection = GetDirectionFromString(direction);
 
         //mDirection = Direction::LEFT;   // direction must be set before we start movement engine
-        mEntityController->setCurrentState(startState);
-        if(startState->movementEngineData()){
-            startMovementEngine(startState->movementEngineData());
+        //mEntityController->setCurrentState(startState);
+        mEntityController->setNextChildState(startState);
+
+        EntityCustomLogicState *stateData = dynamic_cast<EntityCustomLogicState *>(startState->customState());  assert(stateData);
+        if(stateData->movementEngineData()){
+            startMovementEngine(stateData->movementEngineData());
         }
     }
 
@@ -537,14 +541,17 @@ bool Entity::initConnections(PlayedScene *_scene)
         }
 
         //--- set start state
-        BehaviorState *startState = mTaskController->state(sourceEntity()->sourceEntityCfg()->taskHandlerStartState, false);
+        LogicState *startState = mTaskController->findChildState(sourceEntity()->sourceEntityCfg()->taskHandlerStartState, false);
         if(startState==nullptr){
             //return false;
-            startState = mTaskController->states().front();
+            startState = mTaskController->childStates().front();
         }
-        mTaskController->setCurrentState(startState);
-        if(startState->taskEngineData()){
-            startTaskEngine(startState->taskEngineData());
+        //mTaskController->setCurrentState(startState);
+        mTaskController->setNextChildState(startState);
+
+        EntityCustomLogicState *stateData = dynamic_cast<EntityCustomLogicState *>(startState->customState());  assert(stateData);
+        if(stateData->taskEngineData()){
+            startTaskEngine(stateData->taskEngineData());
         }
     }
 
@@ -600,6 +607,10 @@ void Entity::reset()
 void Entity::start()
 {
 
+    if(sourceEntity()->name()=="hero"){
+        DummyFunction();
+    }
+
     if(mBody){
         if(mStatusFlags & EntityStatusFlags::GROUNDED_ON_START){
             mBody->B2Body()->SetGravityScale(1.0f);
@@ -632,7 +643,7 @@ bool Entity::startingPhaseUpdate()
 
     bool doStartingPhase = false;
 
-    mContactTrigger.preUpdate_postBox2dStep();
+    //mContactTrigger.preUpdate_postBox2dStep();
 
     if(mBody){
         if(mStatusFlags & EntityStatusFlags::GROUNDED_ON_START){
@@ -640,6 +651,12 @@ bool Entity::startingPhaseUpdate()
             // when an entity settles on the ground its Box2D body enters into the sleep state
             doStartingPhase = mBody->B2Body()->IsAwake();
             if(doStartingPhase==false){
+
+                if(sourceEntity()->name()=="hero"){
+                    DummyFunction();
+                }
+
+
                 mBody->B2Body()->SetGravityScale(0.0f);
                 //mBody->B2Body()->SetSleepingAllowed(false);
                 mStatusFlags |= EntityStatusFlags::STARTED;
@@ -970,7 +987,7 @@ void Entity::preUpdate_resolveContacts()
     */
 
     if(mSigBlockedDirection){
-        mSigBlockedDirection->_setAllFlags(mBlockedDirections);
+        mSigBlockedDirection->setValue(mBlockedDirections);
     }
 
     if((mBlockedDirections & static_cast<int>(Direction::DOWN))==0){
@@ -988,7 +1005,6 @@ void Entity::preUpdate_resolveContacts()
 }
 
 
-
 void Entity::preUpdate_resolveContacts_part2()
 {
 
@@ -1004,35 +1020,35 @@ void Entity::preUpdate_resolveContacts_part2()
     mLift = nullptr;
 
 
-    for(EntityContactSignal &ect : mContactTrigger.contactedEntitiesTriggers()){
+    for(EntityContactSignal *ect : mContactTrigger.contactedEntitiesTriggers()){
 
-        if(ect.contactNormalBtoA.x==0.0f && ect.contactNormalBtoA.y==0.0f)      // contacts with sensors
+        if(ect->contactNormalBtoA.x==0.0f && ect->contactNormalBtoA.y==0.0f)      // contacts with sensors
         {
             continue;
         }
 
-        Entity* otherEntity = ect.mTwoEntitiesContact.entityShapeB().entity;
+        Entity* otherEntity = ect->mTwoEntitiesContact.entityShapeB().entity;
 
         if(mCurrentEngine->type()==MovementEngineType::GROUND_MOVEMENT){
 
             if(otherEntity->mainShapeRole() == EntityRole::MOVABLE_OBJECT && otherEntity->currentEngine()->type() == MovementEngineType::GROUND_MOVEMENT){
 
-                if(ect.contactNormalBtoA.y > 0.0f ){         // other entity is bellow this entity
+                if(ect->contactNormalBtoA.y > 0.0f ){         // other entity is bellow this entity
                     mStatusFlags |= EntityStatusFlags::MOVABLE_OBJECT_BELLOW;
                 }
 
                 float otherEntityBottomPos = otherEntity->body()->B2Body()->GetPosition().y - otherEntity->body()->sourceBody()->centerToBottomDistance();
                 if(std::abs(actorBottomPos-otherEntityBottomPos)<0.5){
 
-                    //if(ect.contactNormalBtoA.x == 1.0f){        // movable object is LEFT of this actor
-                    if(ect.contactNormalBtoA.x > 0.707f){        // movable object is LEFT of this actor
+                    //if(ect->contactNormalBtoA.x == 1.0f){        // movable object is LEFT of this actor
+                    if(ect->contactNormalBtoA.x > 0.707f){        // movable object is LEFT of this actor
                         if(mCurrentEngine->direction()==Direction::LEFT){
                             mMovableObject = otherEntity;
                             movableObjectFlags |= MovableObject::ON_LEFT;
                         }
 
-                    //}else if(ect.contactNormalBtoA.x == -1.0f){     // movable object is RIGHT of this actor
-                    }else if(ect.contactNormalBtoA.x < -0.707){     // movable object is RIGHT of this actor
+                    //}else if(ect->contactNormalBtoA.x == -1.0f){     // movable object is RIGHT of this actor
+                    }else if(ect->contactNormalBtoA.x < -0.707){     // movable object is RIGHT of this actor
                         if(mCurrentEngine->direction()==Direction::RIGHT){
                             mMovableObject = otherEntity;
                             movableObjectFlags |= MovableObject::ON_RIGHT;
@@ -1047,11 +1063,11 @@ void Entity::preUpdate_resolveContacts_part2()
 
             }
 
-            if(ect.contactNormalBtoA.y > 0.0f ){         // other entity is bellow this entity
+            if(ect->contactNormalBtoA.y > 0.0f ){         // other entity is bellow this entity
 
                 if(otherEntity->mainShapeRole()==EntityRole::TRANSPORTER){
                     mLift = otherEntity;
-                    contactPointWithLift =  ect.contactPosition;
+                    contactPointWithLift =  ect->contactPosition;
 
                 }else if(otherEntity->netoVelocity().x != 0.0f || otherEntity->netoVelocity().y != 0.0f){
 
@@ -1059,7 +1075,7 @@ void Entity::preUpdate_resolveContacts_part2()
                     // an example is a movable object on a lift and this entity standing on the movable object
                     //   -> the movable object is treated as transporter of this entity
                     mLift = otherEntity;
-                    contactPointWithLift = ect.contactPosition;
+                    contactPointWithLift = ect->contactPosition;
                 }
             }
         }
@@ -1084,7 +1100,7 @@ void Entity::preUpdate_resolveContacts_part2()
         if(mSigMovableObject->active(MovableObject::MOVED)){     // this bit is set from other place !
             movableObjectFlags |= MovableObject::MOVED;
         }
-        mSigMovableObject->_setAllFlags(movableObjectFlags);
+        mSigMovableObject->setValue(movableObjectFlags);
     }
 
 
@@ -1148,16 +1164,16 @@ void Entity::checkGroundContactViaContactSignal()
     }
     */
 
-    for(EntityContactSignal &ect : mContactTrigger.contactedEntitiesTriggers()){
-        assert(ect.mTwoEntitiesContact.entityShapeA().entity == this);
-        if(ect.mTwoEntitiesContact.entityShapeA().category->role == EntityRole::GROUND_SENSOR){
+    for(EntityContactSignal *ect : mContactTrigger.contactedEntitiesTriggers()){
+        assert(ect->mTwoEntitiesContact.entityShapeA().entity == this);
+        if(ect->mTwoEntitiesContact.entityShapeA().category->role == EntityRole::GROUND_SENSOR){
 
-            Entity *contactedEntity = ect.mTwoEntitiesContact.entityShapeB().entity;
-            EntityCategory *contactedCategory = ect.mTwoEntitiesContact.entityShapeB().category;
+            Entity *contactedEntity = ect->mTwoEntitiesContact.entityShapeB().entity;
+            EntityCategory *contactedCategory = ect->mTwoEntitiesContact.entityShapeB().category;
             if(contactedCategory->shapeRole != EntityCategory::ShapeRole::MAIN_SHAPE) continue;
             if(contactedCategory->sensor) continue;
 
-            for(TwoEntitiesContact::DualFixture &df : ect.mTwoEntitiesContact.dualFixtures()){
+            for(TwoEntitiesContact::DualFixture &df : ect->mTwoEntitiesContact.dualFixtures()){
                 b2Fixture * contactedFixture = df.fixtureB;
                 FixtureUserData *fudContacted = reinterpret_cast<FixtureUserData*>(contactedFixture->GetUserData().pointer);
 
@@ -1194,12 +1210,14 @@ void Entity::checkGroundContactViaContactSignal()
 
 
 
-void Entity::preUpdate(UpdateMode _updateMode)
+void Entity::preUpdate(UpdateMode &_updateMode)
 {
 
     if(sourceEntity()->name()=="hero"){
         DummyFunction();
     }
+
+
 
 
     if(mSourceEntity->sourceEntityCfg()->category->mB2BodyType==b2BodyType::b2_dynamicBody){
@@ -1213,18 +1231,24 @@ void Entity::preUpdate(UpdateMode _updateMode)
     if(mEntityController.get()){
         mEntityController->preUpdate(_updateMode);
 
-        //--- set the current state animation trigger if the animation has stalled
-        if(mEntityController->currentState() && mAnimationPlayer.GetAnimationInstance() && mAnimationPlayer.GetAnimationInstance()==mEntityController->currentState()->animationInstance()){
-            if(mAnimationPlayer.GetState()==AnimationPlayerState::STALLED){
-                mEntityController->currentState()->animationTrigger()._Set(false);
+        if(mEntityController->activeChildState()){
+            EntityCustomLogicState *stateData = dynamic_cast<EntityCustomLogicState *>(mEntityController->activeChildState()->customState());  assert(stateData);
+
+            //--- set the current state animation trigger if the animation has stalled
+            if(mAnimationPlayer.GetAnimationInstance() && mAnimationPlayer.GetAnimationInstance()==stateData->animationInstance()){
+                if(mAnimationPlayer.GetState()==AnimationPlayerState::STALLED){
+
+                    stateData->animationSignal().setValue(false);
+                }
             }
         }
+
     }
 
-    mContactTrigger.preUpdate_postBox2dStep();
-    Signal::preUpdateSignals(mSignals);
-    mCurrentEngine->preUpdateSignals();
-    mCurrentTaskEngine->preUpdateSignals();
+    //mContactTrigger.preUpdate_postBox2dStep();
+    //Signal::preUpdateSignals(mSignals);
+    // mCurrentEngine->preUpdateSignals();
+    // mCurrentTaskEngine->preUpdateSignals();
 
 }
 
@@ -1248,7 +1272,7 @@ void Entity::preUpdate_CheckActorGrouping()
                     static_cast<MovingMovableObjectGroup*>(mEntityMovingGroup)->initBehavior(mSigMovableObject, movableObjectPosition);
 
                 }else{
-                    mSigMovableObject->_unsetFlag(MovableObject::MOVED);
+                    mSigMovableObject->setFlags(MovableObject::MOVED, false);
                 }
             }
         }
@@ -1258,7 +1282,7 @@ void Entity::preUpdate_CheckActorGrouping()
 
 
 
-void Entity::update_Controller(UpdateMode _updateMode)
+void Entity::update_Controller(UpdateMode &_updateMode)
 {
 
     //mUpdateMode = _updateMode;
@@ -1300,9 +1324,10 @@ void Entity::update_Controller(UpdateMode _updateMode)
     if(mTaskController.get()){
         mTaskController->update(_updateMode);
 
-        BehaviorState * nextState = mTaskController->nextState();
+        LogicState * nextState = mTaskController->nextChildState();
         if(nextState){
-            TaskEngineData *data = nextState->taskEngineData();
+            EntityCustomLogicState *stateData = dynamic_cast<EntityCustomLogicState *>(nextState->customState());  assert(stateData);
+            TaskEngineData *data = stateData->taskEngineData();
             if(data){
                 startTaskEngine(data);
             }
@@ -1332,21 +1357,23 @@ void Entity::update_Controller(UpdateMode _updateMode)
 
         // if engine is going to change we must change it before the call Box2d step!
         // Box2d step and entity update must always be callled with the same active engine! ( NOT Box2D step -> change engine -> update entity )
-        BehaviorState * nextState = mEntityController->nextState();
+        LogicState * nextState = mEntityController->nextChildState();
         if(nextState){
-            MovementEngineData *data = nextState->movementEngineData();
+            EntityCustomLogicState *stateData = dynamic_cast<EntityCustomLogicState *>(nextState->customState());  assert(stateData);
+            MovementEngineData *data = stateData->movementEngineData();
             if(data){
                 startMovementEngine(data);
             }
         }
 
-        BehaviorState * currentState = mEntityController->currentState();
+        LogicState * currentState = mEntityController->activeChildState();
         if(currentState){
             if(mSourceEntity->name()=="doorA"){
                 DummyFunction();
             }
 
-            mCurrentAnimationInstance = currentState->animationInstance();
+            EntityCustomLogicState *stateData = dynamic_cast<EntityCustomLogicState *>(currentState->customState());  assert(stateData);
+            mCurrentAnimationInstance = stateData->animationInstance();
             if(mCurrentAnimationInstance){
                 int aniPlayerFlags = 0;
                 if(mAnimationPlayer.GetAnimationInstance() != mCurrentAnimationInstance){
@@ -1368,7 +1395,7 @@ void Entity::update_Controller(UpdateMode _updateMode)
 
 
 
-void Entity::update_Movement(UpdateMode _updateMode)
+void Entity::update_Movement(UpdateMode &_updateMode)
 {
 
     if(sourceEntity()->name()=="box"){
@@ -1376,7 +1403,15 @@ void Entity::update_Movement(UpdateMode _updateMode)
     }
     if(sourceEntity()->name()=="hero"){
         DummyFunction();
+
+        if(mSigMovableObject->active(MovableObject::MOVED)){
+            print("MovableObject 1");
+        }else{
+            print("MovableObject   0");
+        }
+
     }
+
 
 
     if(mBody.get()==nullptr){
@@ -1611,7 +1646,7 @@ void Entity::update_Movement(UpdateMode _updateMode)
 
 
 
-void Entity::postUpdate(UpdateMode _updateMode)
+void Entity::postUpdate(UpdateMode &_updateMode)
 {
 
     if(mTaskController.get()){
@@ -1635,9 +1670,9 @@ void Entity::postUpdate(UpdateMode _updateMode)
 
     //---
     mContactTrigger.postUpdateSignals();
-    Signal::postUpdateSignals(mSignals);
-    mCurrentEngine->postUpdateSignals();
-    mCurrentTaskEngine->postUpdateSignals();
+    //Signal::postUpdateSignals(mSignals);
+    //mCurrentEngine->postUpdateSignals();
+    //mCurrentTaskEngine->postUpdateSignals();
 }
 
 
@@ -1771,183 +1806,303 @@ TaskEngineData* Entity::getTaskData(const std::string &_name)
 }
 
 
-
-
-bool _parseSignalPath(const std::string &_path, std::string &engineCfgName, std::string &taskCfgName, std::string &signalName,  std::string &signalValue)
-{
-
-    std::vector<std::string> parts = StdString::splitString(_path, ":");
-
-    if(parts.size()>0){
-        if(parts[0]=="ENGINE"){
-            engineCfgName = parts[1];
-             if(parts.size()>2){
-                 signalName = parts[2];
-             }
-             if(parts.size()>3){
-                 signalValue = parts[3];
-            }
-
-        }else if(parts[0]=="TASK"){
-             taskCfgName = parts[1];
-             if(parts.size()>2){
-                 signalName = parts[2];
-             }
-             if(parts.size()>3){
-                 signalValue = parts[3];
-             }
-
-        }else{
-
-            signalName = parts[0];
-            if(parts.size()>1){
-                signalValue = parts[1];
-            }
-        }
-    }
-
-    if(signalName.empty()){
-        dbgSystem.addMessage("Error parsing signal path '" + _path + "'!");
-        return false;
-    }
-
-    return true;
-}
-
-
+/*
 void Entity::obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_path, const std::string &stateMovementEngineCfg, bool _setErrorMessage)
 {
 
-    std::string engineCfgName;
-    std::string taskCfgName;
-    std::string signalName;
-    std::string signalValue;
+
+    EntitySignalStrings ess;
 
 
-    if(_parseSignalPath(_path, engineCfgName, taskCfgName, signalName, signalValue)==false){
+    if(ess.parse(_path)==false){
         return;
     }
 
-    if(engineCfgName.empty()==false){
+
+
+    //---
+    if(ess.engineCfgName.empty()==false){
         //signals stored in engine
 
-        MovementEngine *behaviorEngine = _obtainEngineForSignal(engineCfgName, signalName);
+        MovementEngine *behaviorEngine = _obtainEngineForSignal(ess.engineCfgName, ess.signalName);
         if(behaviorEngine==nullptr){
             return;
         }
-        behaviorEngine->obtainSignal_signalQuery(_signalQuery, engineCfgName, signalName, signalValue, _setErrorMessage);
+        behaviorEngine->obtainSignal_signalQuery(_signalQuery, ess, _setErrorMessage);
 
         return;
     }
 
-    if(taskCfgName.empty()==false){
+    if(ess.taskCfgName.empty()==false){
         //signals stored in task engine
 
-        TaskEngine *taskEngine = _obtainTaskEngineForSignal(taskCfgName, signalName);
+        TaskEngine *taskEngine = _obtainTaskEngineForSignal(ess.taskCfgName, ess.signalName);
         if(taskEngine==nullptr){
             return;
         }
-        taskEngine->obtainSignal_signalQuery(_signalQuery, taskCfgName, signalName, signalValue, _setErrorMessage);
+        taskEngine->obtainSignal_signalQuery(_signalQuery, ess, _setErrorMessage);
 
         return;
     }
 
     // signals stored in entity
 
-    if(signalName=="MOVABLE_OBJECT"){
+    if(ess.signalName=="MOVABLE_OBJECT"){
         if(mSigMovableObject){
             _signalQuery.mSignal = mSigMovableObject;
 
-            _signalQuery.mIntValue = GetMovableObjectFromString_signalQuery(signalValue);
+            _signalQuery.mIntValue = GetMovableObjectFromString_signalQuery(ess.signalValue);
             if(_signalQuery.mIntValue == MovableObject::UNKNOWN){
-                dbgSystem.addMessage("Unknown movable object value '" + signalValue +" ' !");
+                dbgSystem.addMessage("Unknown movable object value '" + ess.signalValue +" ' !");
                 return;
             }
 
+
         }else{
-            dbgSystem.addMessage("Signal '"+ signalName+ " ' can used only for entities with 'ACTOR' role!");
+            dbgSystem.addMessage("Signal '"+ ess.signalName+ " ' can used only for entities with 'ACTOR' role!");
             return;
         }
 
-    }else if(signalName=="BLOCKED_DIRECTION"){
+    }else if(ess.signalName=="BLOCKED_DIRECTION"){
          if(mSigBlockedDirection){
              _signalQuery.mSignal = mSigBlockedDirection;
 
-             _signalQuery.mIntValue = static_cast<int>(GetDirectionFromString(signalValue));
+             _signalQuery.mIntValue = static_cast<int>(GetDirectionFromString(ess.signalValue));
              if(_signalQuery.mIntValue == static_cast<int>(Direction::NONE)){
-                 dbgSystem.addMessage("Unknown direction value '" + signalValue +" ' !");
+                 dbgSystem.addMessage("Unknown direction value '" + ess.signalValue +" ' !");
                  return;
              }
 
          }else{
-             dbgSystem.addMessage("Signal '"+ signalName+ " ' can used only for entities with dynamic body (actor, movable object) !");
+             dbgSystem.addMessage("Signal '"+ ess.signalName+ " ' can used only for entities with dynamic body (actor, movable object) !");
              return;
          }
 
     }
 
+    if(_signalQuery.mSignal==nullptr &&_setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + ess.signalName + "' error! The signal is unknown!");
+    }
 }
 
 
 void Entity::obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_path, const std::string &stateMovementEngineCfg, bool _setErrorMessage)
 {
 
-    std::string engineCfgName;
-    std::string taskCfgName;
-    std::string signalName;
-    std::string signalValue;
-
-
-    if(_parseSignalPath(_path, engineCfgName, taskCfgName, signalName, signalValue)==false){
+    EntitySignalStrings ess;
+    if(ess.parse(_path)==false){
         return;
     }
 
-    if(engineCfgName.empty()==false){
+    //---
+    if(ess.engineCfgName.empty()==false){
 
         //signals stored in behavior engine
-        MovementEngine *engine = _obtainEngineForSignal(engineCfgName, signalName);
+        MovementEngine *engine = _obtainEngineForSignal(ess.engineCfgName, ess.signalName);
         if(engine==nullptr){
             return;
         }
-        engine->obtainSignal_signalSetter(_signalSetter, engineCfgName, signalName, signalValue, _setErrorMessage);
+        engine->obtainSignal_signalSetter(_signalSetter, ess, _setErrorMessage);
 
         return;
     }
 
-    if(taskCfgName.empty()==false){
+    if(ess.taskCfgName.empty()==false){
 
         //signals stored in task engine
-        TaskEngine *taskEngine = _obtainTaskEngineForSignal(taskCfgName, signalName);
+        TaskEngine *taskEngine = _obtainTaskEngineForSignal(ess.taskCfgName, ess.signalName);
         if(taskEngine==nullptr){
             return;
         }
-        taskEngine->obtainSignal_signalSetter(_signalSetter, taskCfgName, signalName, signalValue, _setErrorMessage);
+        taskEngine->obtainSignal_signalSetter(_signalSetter, ess, _setErrorMessage);
 
         return;
     }
 
 
-
     // signals stroed in entity
-
-    if(signalName=="MOVABLE_OBJECT"){
+    if(ess.signalName=="MOVABLE_OBJECT"){
         if(mSigMovableObject){
             _signalSetter.mSignal = mSigMovableObject;
 
-            _signalSetter.mIntValue = GetMovableObjectFromString_signalSetter(signalValue);
+            _signalSetter.mIntValue = GetMovableObjectFromString_signalSetter(ess.signalValue);
             if(_signalSetter.mIntValue == MovableObject::UNKNOWN){
-                dbgSystem.addMessage("Unknown movable object value '" + signalValue +" ' !");
+                dbgSystem.addMessage("Unknown movable object value '" + ess.signalValue +" ' !");
+                return;
+            }
+
+            if(ess.getBoolValue(_signalSetter.mBoolValue)==false){
                 return;
             }
 
         }else{
-            dbgSystem.addMessage("Signal '"+ signalName+ " ' can used only for entities with 'ACTOR' role!");
+
+            dbgSystem.addMessage("Signal '"+ ess.signalName+ " ' can used only for entities with 'ACTOR' role!");
             return;
         }
 
     }
 
+    if(_signalSetter.mSignal==nullptr &&_setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + ess.signalName + "' error! The signal is unknown or not available for setting it!");
+    }
+
 }
+*/
+
+
+
+void Entity::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage)
+{
+
+
+    //EntitySignalStrings ess;
+
+
+    //if(ess.parse(_path)==false){
+    //    return;
+    //}
+
+
+
+    //---
+    if(_psp.signalNamePartAt(0)=="ENGINE"){
+        //signals stored in engine
+
+        MovementEngine *behaviorEngine = _obtainEngineForSignal(_psp.signalNamePartAt(1), _psp.signalFullName());
+        if(behaviorEngine==nullptr){
+            return;
+        }
+        behaviorEngine->obtainSignal_signalQuery(_signalQuery, _psp, _setErrorMessage);
+
+        return;
+    }
+
+    if(_psp.signalNamePartAt(0)=="TASK"){
+        //signals stored in task engine
+
+        TaskEngine *taskEngine = _obtainTaskEngineForSignal(_psp.signalNamePartAt(1), _psp.signalFullName());
+        if(taskEngine==nullptr){
+            return;
+        }
+        taskEngine->obtainSignal_signalQuery(_signalQuery, _psp, _setErrorMessage);
+
+        return;
+    }
+
+    // signals stored in entity
+
+    if(_psp.signalNamePartAt(0)=="MOVABLE_OBJECT"){
+        if(mSigMovableObject){
+            _psp.obtainValue(_signalQuery, mSigMovableObject, &gMovableObjectNamedValues_query);
+
+            //_signalQuery.mSignal = mSigMovableObject;
+
+            //_signalQuery.mIntValue = GetMovableObjectFromString_signalQuery(ess.signalValue);
+            //if(_signalQuery.mIntValue == MovableObject::UNKNOWN){
+            //    dbgSystem.addMessage("Unknown movable object value '" + ess.signalValue +" ' !");
+            //    return;
+            //}
+
+
+        }else{
+            dbgSystem.addMessage("Signal '"+ _psp.signalFullName() + " ' can used only for entities with 'ACTOR' role!");
+            return;
+        }
+
+    }else if(_psp.signalNamePartAt(0)=="BLOCKED_DIRECTION"){
+         if(mSigBlockedDirection){
+             _psp.obtainValue(_signalQuery, mSigBlockedDirection, &gDirectionNamedValues);
+
+             //_signalQuery.mSignal = mSigBlockedDirection;
+
+             //_signalQuery.mIntValue = static_cast<int>(GetDirectionFromString(ess.signalValue));
+             //if(_signalQuery.mIntValue == static_cast<int>(Direction::NONE)){
+             //    dbgSystem.addMessage("Unknown direction value '" + ess.signalValue +" ' !");
+             //    return;
+             //}
+
+         }else{
+             dbgSystem.addMessage("Signal '"+ _psp.signalFullName()+ " ' can used only for entities with dynamic body (actor, movable object) !");
+             return;
+         }
+
+    }
+
+
+    if(_signalQuery.mSignal==nullptr &&_setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
+    }
+}
+
+
+void Entity::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage)
+{
+
+    //EntitySignalStrings ess;
+    //if(ess.parse(_path)==false){
+    //    return;
+    //}
+
+    //---
+    if(_psp.signalNamePartAt(0)=="ENGINE"){
+
+        //signals stored in behavior engine
+        MovementEngine *behaviorEngine = _obtainEngineForSignal(_psp.signalNamePartAt(1), _psp.signalFullName());
+        if(behaviorEngine==nullptr){
+            return;
+        }
+        behaviorEngine->obtainSignal_signalSetter(_signalSetter, _psp, _setErrorMessage);
+
+        return;
+    }
+
+    if(_psp.signalNamePartAt(0)=="TASK"){
+
+        //signals stored in task engine
+        TaskEngine *taskEngine = _obtainTaskEngineForSignal(_psp.signalNamePartAt(1), _psp.signalFullName());
+        if(taskEngine==nullptr){
+            return;
+        }
+        taskEngine->obtainSignal_signalSetter(_signalSetter, _psp, _setErrorMessage);
+
+        return;
+    }
+
+
+    // signals stroed in entity
+    if(_psp.signalNamePartAt(0)=="MOVABLE_OBJECT"){
+        if(mSigMovableObject){
+            _psp.obtainValue(_signalSetter, mSigMovableObject, &gMovableObjectNamedValues_setter);
+
+            //_signalSetter.mSignal = mSigMovableObject;
+
+            //_signalSetter.mIntValue = GetMovableObjectFromString_signalSetter(ess.signalValue);
+            //if(_signalSetter.mIntValue == MovableObject::UNKNOWN){
+            //    dbgSystem.addMessage("Unknown movable object value '" + ess.signalValue +" ' !");
+            //    return;
+            //}
+
+            //if(ess.getBoolValue(_signalSetter.mBoolValue)==false){
+            //    return;
+            //}
+
+        }else{
+
+            dbgSystem.addMessage("Signal '"+ _psp.signalFullName() + " ' can used only for entities with 'ACTOR' role!");
+            return;
+        }
+
+    }
+
+    if(_signalSetter.mSignal==nullptr &&_setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting it!");
+    }
+
+}
+
+
+
 
 
 MovementEngine* Entity::_obtainEngineForSignal(const std::string &engineCfgName, const std::string &signalName)

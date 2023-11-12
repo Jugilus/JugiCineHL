@@ -3,11 +3,14 @@
 #include <sstream>
 #include "pugixml/pugixml.hpp"
 #include "jmSystem.h"
-#include "jmGuiBar.h"
-#include "jmGuiTextInput.h"
 #include "jmCommonFunctions.h"
-#include "actions/jpTransition.h"
-#include "actions/jpCommands_Logic.h"
+#include "logic/jpTransition.h"
+//#include "actions/jpCommands.h"
+
+#include "gui/widgets/jpGuiButton.h"
+#include "gui/jpGuiSystem.h"
+
+#include "jpCompound.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
 #include "jpComponentsCommon.h"
@@ -25,23 +28,51 @@ Component::~Component()
     //}
 }
 
+bool Component::startCloseTransition()
+{
+
+    if(mParentCompound){
+        mParentCompound->startOutTransition();
+    }
+
+    return true;
+}
+
+
+void Component::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage)
+{
+
+    if(_setErrorMessage){
+        dbgSystem.addMessage("Signal obtaining function for component '" + mName + "' has not been defined!");
+    }
+
+}
+
+
+void Component::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_path, bool _setErrorMessage)
+{
+
+    if(_setErrorMessage){
+        dbgSystem.addMessage("Signal obtaining function for component '" + mName + "' has not been defined!");
+    }
+}
+
+
+/*
 
 
 bool OverlayComponent::startOpenTransition()
 {
 
-    if(mAOpenTransition==nullptr){
-        mState = State::NORMAL;
-        return false;
+    if(mParentCompound){
+        if(mParentCompound->state()==Compound::State::TRANSITION_IN){
+            mState = State::TRANSITION_IN;
+            return true;
+        }else{
+            mState = State::NORMAL;
+            return false;
+        }
     }
-
-    mAOpenTransition->execute();
-    mParentPlayerScene->addLongRunningAction(mAOpenTransition);     // make scene aware that a long action is running
-    if(mModal){
-        mParentPlayerScene->widgetManager()->addModalBlockLevelToUsedWidgets();   // mark current used widgets as modal blocked!
-    }
-    mParentPlayerScene->widgetManager()->appendToUsedWidgets(mUsedWidgets);
-    mState = State::TRANSITION_IN;
 
     return true;
 }
@@ -50,14 +81,17 @@ bool OverlayComponent::startOpenTransition()
 bool OverlayComponent::startCloseTransition()
 {
 
-    if(mACloseTransition==nullptr){
-        mState = State::CLOSED;
-        return false;
-    }
+    if(mParentCompound){
+        mParentCompound->startOutTransition();
 
-    mACloseTransition->execute();
-    mParentPlayerScene->addLongRunningAction(mACloseTransition);     // make scene aware that a long action is running
-    mState = State::TRANSITION_OUT;
+        if(mParentCompound->state()==Compound::State::TRANSITION_OUT){
+            mState = State::TRANSITION_OUT;
+            return true;
+        }else{
+            mState = State::CLOSED;
+            return false;
+        }
+    }
 
     return true;
 }
@@ -66,41 +100,11 @@ bool OverlayComponent::startCloseTransition()
 void OverlayComponent::update(UpdateMode _updateMode)
 {
 
-    if(mState==State::TRANSITION_IN){
-
-        mAOpenTransition->update(_updateMode);
-
-        if(mAOpenTransition->status()==ActionStatus::IDLE){
-            mState = State::NORMAL;
-            mParentPlayerScene->removeLongRunningAction(mAOpenTransition);
-        }
-
-
-    }else if(mState==State::NORMAL){
-
-        // managed in extended classes
-
-
-    }else if(mState==State::TRANSITION_OUT){
-
-        mACloseTransition->update(_updateMode);
-
-        if(mACloseTransition->status()==ActionStatus::IDLE){
-            mState = State::CLOSED;
-            mParentPlayerScene->removeLongRunningAction(mACloseTransition);
-            mParentPlayerScene->widgetManager()->removeFromUsedWidgets(mUsedWidgets);
-            if(mModal){
-                mParentPlayerScene->widgetManager()->removeModalBlockLevelToUsedWidgets();   // mark current used widgets as modal blocked!
-            }
-
-            //---
-            mTrigger_Closed->doSetTriggered();
-            mParentPlayerScene->activatedTriggersUpdater().addTrigger(mTrigger_Closed);
-
-            //---
-            mParentPlayerScene->endOverlayComponent(this);
-        }
+    if(mParentCompound){
+        mState = State::NORMAL;
+        return;         // transitions are handled in compound
     }
+
 
 }
 
@@ -113,14 +117,44 @@ void OverlayComponent::setTransitions(ADoTransition *_openTransition, ADoTransit
 }
 
 
+*/
 
 //---------------------------------------------------------------------------
+
+
+ComponentsGroup::~ComponentsGroup()
+{
+
+    for(Component* c : mComponents){
+        delete c;
+    }
+
+}
+
+
+bool ComponentsGroup::buildObjects(PlayedScene *_scene)
+{
+
+    dbgSystem.addMessage("Build components...");
+
+
+    for(Component* c : mComponents){
+        if(c->buildObjects(_scene)==false){
+            return false;
+        }
+    }
+
+
+    //---
+    dbgSystem.removeLastMessage();
+    return true;
+}
 
 
 bool ComponentsGroup::initConnections(PlayedScene* _scene)
 {
 
-    dbgSystem.addMessage("init components");
+    dbgSystem.addMessage("Initialize components...");
 
 
     for(Component* c : mComponents){

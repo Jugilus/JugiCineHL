@@ -8,6 +8,7 @@
 #include "jmCommon.h"
 #include "jmAnimationCommon.h"
 
+#include "jpGlobal.h"
 #include "jpEntityCommon.h"
 
 
@@ -24,7 +25,7 @@ class StandardSprite;
 class SpriteLayer;
 
 class EntitySystem;
-class EntityController;
+class LogicState;
 class Body;
 struct SourceEntityCfg;
 class SourceEntity;
@@ -83,7 +84,7 @@ private:
 
 
 
-class Entity
+class Entity : public BaseObject
 {
 public:
     friend class AppConfigurationLoader_xml;
@@ -110,12 +111,12 @@ public:
     void preUpdate_resolveContacts();
     void preUpdate_resolveContacts_part2();
 
-    void preUpdate(UpdateMode _updateMode);
+    void preUpdate(UpdateMode &_updateMode);
     void preUpdate_CheckActorGrouping();
 
-    void update_Controller(UpdateMode _updateMode);
-    void update_Movement(UpdateMode _updateMode);
-    void postUpdate(UpdateMode _updateMode);
+    void update_Controller(UpdateMode &_updateMode);
+    void update_Movement(UpdateMode &_updateMode);
+    void postUpdate(UpdateMode &_updateMode);
 
     void updateSpriteTransform();
 
@@ -146,7 +147,7 @@ public:
 
 
     AnimationPlayer & animationPlayer() { return mAnimationPlayer; }
-    EntityController* entityController() const { return mEntityController.get(); }
+    LogicState* entityController() const { return mEntityController.get(); }
 
     std::vector<MovementEngine*> & movementEngines() { return mMovementEngines; }
     MovementEngine* currentEngine(){ return mCurrentEngine; }
@@ -190,8 +191,11 @@ public:
     //Signal *getSignal(SignalID _signalID);
 
 
-    void obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_path, const std::string &stateMovementEngineCfg, bool _setErrorMessage=true);
-    void obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_path, const std::string &stateMovementEngineCfg, bool _setErrorMessage=true);
+    //void obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_path, const std::string &stateMovementEngineCfg, bool _setErrorMessage=true);
+    //void obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_path, const std::string &stateMovementEngineCfg, bool _setErrorMessage=true);
+
+    void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true);
+    void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage=true);
 
 
 
@@ -208,12 +212,12 @@ private:
     //---
     std::vector<MovementEngine*>mMovementEngines;                        // OWNED
     MovementEngine * mCurrentEngine = nullptr;                      // LINK
-    std::unique_ptr<EntityController>mEntityController;
+    std::unique_ptr<LogicState>mEntityController;
 
     //---
     std::vector<TaskEngine*>mTasks;
     TaskEngine* mCurrentTaskEngine = nullptr;
-    std::unique_ptr<EntityController>mTaskController;
+    std::unique_ptr<LogicState>mTaskController;
 
     //Decider *mDecider = nullptr;
 
@@ -242,8 +246,8 @@ private:
     //--- SIGNALS
     std::vector<Signal*>mSignals;                            // LINKS
 
-    IntBitsSignal *mSigMovableObject = nullptr;             // LINK
-    IntBitsSignal *mSigBlockedDirection = nullptr;
+    BitsetSignal *mSigMovableObject = nullptr;             // LINK
+    BitsetSignal *mSigBlockedDirection = nullptr;
 
     //IntSignal *mDirectionSignal = nullptr;                  // LINK
 

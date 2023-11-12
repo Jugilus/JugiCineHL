@@ -1,6 +1,6 @@
 
 #include "jmCommonFunctions.h"
-#include "gui/jmGuiText.h"
+#include "jmText.h"
 
 #include "jmSpriteModifiers.h"
 

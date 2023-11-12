@@ -3,6 +3,10 @@
 
 
 #include <memory>
+
+#include "jmSignal.h"
+
+#include "jpQueries.h"
 #include "jpComponentsCommon.h"
 #include "jpVariables.h"
 
@@ -19,7 +23,7 @@ class GuiTextField;
 class PlayedScene;
 
 
-class ConfirmPanel : public OverlayComponent
+class ConfirmPanel : public Component
 {
 public:
 
@@ -34,7 +38,7 @@ public:
     bool initConnections(PlayedScene *_scene) override;
 
     void start() override;
-    void update(UpdateMode _updateMode) override;
+    void update(UpdateMode &_updateMode) override;
     void onStateEnded() override;
 
 private:
@@ -47,6 +51,10 @@ private:
     TriggerVariable *mResult_No;
 
 
+    SignalQuery mQConfirmsYes;
+    SignalQuery mQConfirmsNo;
+
+
     Mode mMode = Mode::NOT_DEFINED;
 
 
@@ -56,7 +64,12 @@ private:
         std::string mTextField;
         std::string mYesButton;
         std::string mNoButton;
+
+        std::string mSigConfirmsYes;
+        std::string mSigConfirmsNo;
+
     };
+
     std::unique_ptr<Cfg>mCfg;
 
 };

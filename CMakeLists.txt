@@ -13,18 +13,16 @@ jugimap
 jugimap/map
 jugimap/source
 jugimap/animation
-jugimap/gui
 jugicineHL
-jugicineHL/actions
-jugicineHL/widgets
+jugicineHL/logic
 jugicineHL/items
 jugicineHL/components
 jugicineHL/gfxObjects
 jugicineHL/systems
-jugicineHL/movements
 jugicineHL/ai
 jugicineHL/scripting
 jugicineHL/entitySystem
+jugicineHL/gui
 )
 
 

@@ -2,16 +2,16 @@
 #include "ncine/IGfxDevice.h"
 #include "pugixml/pugixml.hpp"
 #include "jmSystem.h"
-#include "jmGuiCommon.h"
-#include "jmGuiText.h"
-#include "jmGuiBar.h"
+//#include "jmGuiCommon.h"
+//#include "jmGuiText.h"
+//#include "jmGuiBar.h"
 #include "jmAnimationCommon.h"
 #include "jmSpriteLayer.h"
 #include "jmCompositeSprite.h"
 #include "jmUtilities.h"
 #include "jmGlobal.h"
 #include "jmStreams.h"
-#include "jpItemsTable.h"
+//#include "jpItemsTable.h"
 #include "jpPlayedApp.h"
 #include "jpUser.h"
 #include "jpSystemVarious.h"
@@ -87,6 +87,7 @@ bool DelayedTaskManager::containsDelayedTask(DelayedTask::Task _task)
 
 //-----------------------------------------------------------------------------
 
+/*
 
 bool ExtWidgetManager::createWidgets(Map *_map)
 {
@@ -124,7 +125,7 @@ bool ExtWidgetManager::createWidgets(Map *_map)
 
 }
 
-
+*/
 
 
 }

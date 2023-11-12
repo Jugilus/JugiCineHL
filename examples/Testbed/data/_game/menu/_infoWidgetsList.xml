@@ -2,51 +2,14 @@
 <info scene="Menu">
 	<map sceneMap="menuMap">
 		<tables>
-			<table name="sceneSelector" />
 			<table name="userSelector" />
-			<table name="inputButtonsEditor" />
-			<table name="inputDeviceSelector" />
 		</tables>
-		<buttons>
-			<button name="quit" />
-			<button name="about" />
-			<button name="settings" />
-			<button name="playScene" />
-			<button name="openUsersDialog" />
-			<button name="closeUsersDialog" />
-			<button name="deleteUser" />
-			<button name="addNewUser" />
-			<button name="mainMenu" />
-			<button name="languageSettings" />
-			<button name="inputSettings" />
-			<button name="audioSettings" />
-			<button name="graphicsSettings" />
-			<button name="fullScreen" />
-			<button name="speechActive" />
-			<button name="sfxActive" />
-			<button name="musicActive" />
-			<button name="defaultInputAssignment" />
-			<button name="languageButton" />
-			<button name="aboutPanel_mainMenuButton" />
-			<button name="confirmPanel_Yes" />
-			<button name="confirmPanel_No" />
-			<button name="messagePanel_Ok" />
-			<button name="newUserDialog_Cancel" />
-			<button name="newUserDialog_Ok" />
-		</buttons>
-		<sliders>
-			<slider name="speechVolume" />
-			<slider name="sfxVolume" />
-			<slider name="musicVolume" />
-		</sliders>
 		<textInputs>
 			<textInput name="newUserDialog_textInput" />
 		</textInputs>
 		<textFields>
 			<textField name="__annonymous" />
 			<textField name="aboutPanel_textField" />
-			<textField name="confirmPanel_textField" />
-			<textField name="messagePanel_textField" />
 		</textFields>
 	</map>
 </info>

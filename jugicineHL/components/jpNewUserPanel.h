@@ -13,13 +13,14 @@ class xml_node;
 
 namespace jugimap{
 
+class TextSprite;
 class GTextSprite;
 class GuiButton;
 class GuiTextInput;
 class PlayedScene;
 
 
-class NewUserPanel : public OverlayComponent
+class NewUserPanel : public Component
 {
 public:
 
@@ -27,7 +28,7 @@ public:
     bool initConnections(PlayedScene *_scene) override;
 
     void start() override;
-    void update(UpdateMode _updateMode) override;
+    void update(UpdateMode &_updateMode) override;
     void onStateEnded() override;
 
 private:
@@ -37,6 +38,7 @@ private:
     GuiButton *mCancelButton = nullptr;                 // LINK
     StringVar *mVarNewUserName = nullptr;               // LINK
     GTextSprite *mTSActiveUserName = nullptr;           // LINK
+    TextSprite *mTActiveUserName = nullptr;
 
     bool mAddingFirstUser = true;
 

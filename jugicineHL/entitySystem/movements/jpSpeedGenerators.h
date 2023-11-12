@@ -17,7 +17,6 @@ namespace jugimap{
 
 class PlayedScene;
 class Animation;
-class BoolSignal;
 struct GroundMovementCfg;
 
 

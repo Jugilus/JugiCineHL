@@ -48,6 +48,16 @@ JumpMovementState GetJumpMovementStateFromString(const std::string &state)
 }
 
 
+std::vector<NamedValue>gJumpMovementStateNamedValues
+{
+    {"TAKING_OFF", static_cast<int>(JumpMovementState::TAKING_OFF) },
+    {"ASCENDING", static_cast<int>(JumpMovementState::ASCENDING) },
+    {"DESCENDING", static_cast<int>(JumpMovementState::DESCENDING) },
+    {"LANDING", static_cast<int>(JumpMovementState::LANDING) },
+    {"LANDED", static_cast<int>(JumpMovementState::LANDED) }
+
+};
+
 
 //------------------------------------------------------------------------------------------
 
@@ -622,7 +632,7 @@ bool JumpMovementEngine::start(MovementEngineData *_data)
 
     mCurrentData = static_cast<JumpMovementData*>(_data);
 
-    if(mCurrentData->sigDisabled.active()){
+    if(mCurrentData->sigDisabled.active(true)){
         return false;
     }
 
@@ -907,7 +917,7 @@ b2Vec2 JumpMovementEngine::update(EngineUpdateParameters &eup)
 
     }
 
-    mDirectionSignal._setOnNextFrame(static_cast<int>(mDirection));
+    mDirectionSignal.setValue_onNextFrame(static_cast<int>(mDirection));
 
     //---
     updateAnimationPlayer();
@@ -922,7 +932,7 @@ void JumpMovementEngine::manageApproachingCeiling()
 
     EntityContactSignal *ect = mParentEntity->contactTrigger().findEntityContactSignalWithEntityRoleA(EntityRole::CEILING_SENSOR);
 
-    if(ect && ect->activeStarted()){
+    if(ect && ect->activeStarted(true)){
         if(mJumpMovement.jumpSpeedGenerator().distToCeiling()==0.0f){    // not yet set
 
             bool notBlockableCeiling = false;
@@ -976,31 +986,33 @@ MovementEngineData* JumpMovementEngine::getMovementEngineData(const std::string 
 }
 
 
-void JumpMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage)
+void JumpMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage)
 {
 
-    if(_data.empty()==false){
+    const std::string & engineCfgName = _psp.signalNamePartAt(1);
+    const std::string & signalName = _psp.signalNamePartAt(2);
+
+    if(engineCfgName.empty()==false){
         for(JumpMovementData &d : mJumpMovementDatas){
-            if(d.cfg->name == _data){
+            if(d.cfg->name == engineCfgName){
 
-                if(_signalName=="START_JUMP"){
-                    _signalQuery.mSignal = d.startJump.mSignal;
+                if(signalName=="START_JUMP"){
+                    //_signalQuery.mSignal = d.startJump.mSignal;
+                    _psp.obtainValue(_signalQuery, d.startJump.mSignal);
 
-                }else if(_signalName=="MOVE_LEFT"){
-                    _signalQuery.mSignal = d.moveLeft.mSignal;
+                }else if(signalName=="MOVE_LEFT"){
+                    //_signalQuery.mSignal = d.moveLeft.mSignal;
+                    _psp.obtainValue(_signalQuery, d.moveLeft.mSignal);
 
-                }else if(_signalName=="MOVE_RIGHT"){
-                    _signalQuery.mSignal = d.moveRight.mSignal;
+                }else if(signalName=="MOVE_RIGHT"){
+                    //_signalQuery.mSignal = d.moveRight.mSignal;
+                    _psp.obtainValue(_signalQuery, d.moveRight.mSignal);
 
-                }else if(_signalName=="DISABLED"){
-                    _signalQuery.mSignal = &d.sigDisabled;
+                }else if(signalName=="DISABLED"){
+                    //_signalQuery.mSignal = &d.sigDisabled;
+                    _psp.obtainValue(_signalQuery, &d.sigDisabled);
                 }
 
-                //if(_setErrorMessage){
-                //    dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown!");
-                //}
-
-                //return;
                 break;
             }
         }
@@ -1008,66 +1020,62 @@ void JumpMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, con
         if(_signalQuery.mSignal){
             return;
         }
-
-        //if(_setErrorMessage){
-        //    dbgSystem.addMessage("Get signal '" + _signalName + "' error!  The jump engine data with name '" + _data + "' not found !");
-        //}
-        //return;
-
     }
 
-    if(_signalName=="STATE"){
+
+    if(signalName=="STATE"){
+        _psp.obtainValue(_signalQuery, &mSigState, &gJumpMovementStateNamedValues);
+
+        /*
         _signalQuery.mSignal = &mSigState;
-        _signalQuery.mIntValue =  static_cast<int>(GetJumpMovementStateFromString(_signalValue));
+        _signalQuery.mIntValue =  static_cast<int>(GetJumpMovementStateFromString(_psp.signalValue));
+
+        if(_signalQuery.mIntValue == static_cast<int>(JumpMovementState::LANDED)){
+            DummyFunction();
+        }
 
         if(_signalQuery.mIntValue == static_cast<int>(JumpMovementState::UNKNOWN)){
-            dbgSystem.addMessage("Unknown signal value '" + _signalValue + " ' !");
+            dbgSystem.addMessage("Unknown signal value '" + _psp.signalValue + " ' !");
         }
         return;
+        */
     }
 
-    if(_setErrorMessage){
-        dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown!");
+    if(_signalQuery.mSignal==nullptr &&_setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
 }
 
 
-void JumpMovementEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage )
+void JumpMovementEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage )
 {
 
-    if(_data.empty()==false){
+    const std::string & engineCfgName = _psp.signalNamePartAt(1);
+    const std::string & signalName = _psp.signalNamePartAt(2);
+
+    //if(_ess.engineCfgName.empty()==false){
+    if(engineCfgName != ""){
         for(JumpMovementData &d : mJumpMovementDatas){
-            if(d.cfg->name == _data){
-                if(_signalName=="DISABLED"){
-                    _signalSetter.mSignal = &d.sigDisabled;
+            if(d.cfg->name == engineCfgName){
+
+                if(signalName=="DISABLED"){
+                    //_signalSetter.mSignal = &d.sigDisabled;
+                    _psp.obtainValue(_signalSetter, &d.sigDisabled);
                 }
 
-                //if(_setErrorMessage){
-                //    dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown or not available for setting it!");
-                //}
-                //return;
                 break;
             }
+
         }
-
-        //if(_setErrorMessage){
-        //    dbgSystem.addMessage("Get signal '" + _signalName + "' error!  The jump engine data with name '" + _data + "' not found !");
-        //}
-        //return;
-
-        if(_signalSetter.mSignal){
-            return;
-        }
-
     }
 
-    if(_setErrorMessage){
-        dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown or not available for setting it!");
+
+    if(_signalSetter.mSignal==nullptr &&_setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting it!");
     }
 
 }
-
 
 
 //=============================================================================================================

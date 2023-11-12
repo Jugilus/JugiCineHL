@@ -13,21 +13,11 @@ namespace jugimap {
 
 class ShapeDrawer;
 class SceneMap;
-class GuiWidget;
-//class CustomScene;
+//class GuiWidget;
 class Map;
 class LayerNode;
-class WidgetManager;
-//class SourceGraphics;
-//class EngineScene;
+//class WidgetManager;
 class App;
-
-
-
-
-
-
-
 
 
 
@@ -52,7 +42,7 @@ public:
 
 
     virtual bool init(){ return true; }
-    virtual void start();
+    virtual void start(){};
     virtual bool startingPhaseUpdate(){ return false; }
     virtual void update(){}
     virtual void preUpdate();
@@ -86,11 +76,8 @@ public:
     void _setParentApp(App *_app){ mParentApplication = _app; }
     void _setName(const std::string &_name){ mName = _name; }
 
-    //void setCustomScene(CustomScene *_customScene);
 
-    //CustomScene* customScene(){ return mCustomScene; }
-
-    WidgetManager* widgetManager(){ return mWidgetManager; }
+    //WidgetManager* widgetManager(){ return mWidgetManager; }
 
 
     void scaleToScreenSize();
@@ -114,46 +101,17 @@ protected:
     LayerNode *mNode = nullptr;                      // owned
 
     std::string mName;
-
     App* mParentApplication = nullptr;
-    //bool mInitialized = false;
-    //int tag = 0;
 
     bool mBuilt = false;
 
-
-    //CustomScene* mCustomScene = nullptr;                  // OWNED
     std::vector<SceneMap*>mSceneMaps;                       // owned
-    WidgetManager* mWidgetManager = nullptr;                // OWNED
-
+    //WidgetManager* mWidgetManager = nullptr;                // OWNED
 
     Map* getMapWithRelativeFilePath(const std::string &_relativeFilePath);
 
 
 };
-
-
-/*
-class CustomScene
-{
-public:
-
-    virtual ~CustomScene(){}
-
-    virtual bool Init(){return true;}
-    virtual void Start(){}
-    virtual void Update(){}
-    virtual void drawShapes(jugimap::ShapeDrawer &drawer){}
-
-    virtual void unbuild(){}
-
-    Scene* scene(){ return mScene; }
-
-
-    Scene * mScene = nullptr;       // LINK
-};
-
-*/
 
 
 

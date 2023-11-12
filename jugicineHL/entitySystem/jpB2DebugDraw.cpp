@@ -16,11 +16,9 @@
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
-#include "jpActionsCommon.h"
+//#include "jpActionsCommon.h"
 
-#include "scripting/jpBehavior.h"
 #include "jpB2World.h"
 #include "jpB2DebugDraw.h"
 

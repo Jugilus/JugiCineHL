@@ -7,7 +7,6 @@
 #include "jmCamera.h"
 #include "jmSceneLayout.h"
 #include "jmCommonFunctions.h"
-#include "jmGuiText.h"
 #include "jmSpriteLayer.h"
 #include "jmStandardSprite.h"
 #include "jmCompositeSprite.h"
@@ -20,9 +19,8 @@
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
-#include "jpActionsCommon.h"
+//#include "jpActionsCommon.h"
 #include "jpGlobal.h"
 #include "gfxObjects/jpAnimationObjects.h"
 
@@ -42,8 +40,7 @@
 #include "movements/jpPathMovement.h"
 #include "movements/jpPathPtPMovement.h"
 #include "movements/jpAnimatedBehavior.h"
-#include "scripting/jpBehavior.h"
-#include "scripting/jpBehCfg.h"
+#include "jpEntityLogicState.h"
 #include "task/jpTaskBase.h"
 #include "task/jpTaskCommon.h"
 #include "task/jpTransporter.h"
@@ -62,17 +59,12 @@ EntitySystem::EntitySystem()
 
     mName = "entitySystem";
 
-    //mSourceEntitiesGroup.reset((new SourceEntitiesGroup()));
-    //mSourceEntitiesCfgsGroup.reset(new SourceEntitiesCfgsGroup());
-    //mEnginesCfgsGroup.reset(new EnginesCfgsGroup());
     mSourceEntitiesGroup.reset(new SourceEntitiesGroup());
-    mEnginesControllersCfgsGroup.reset(new EnginesControllersCfgsGroup());
 
-    //mTasksCfgsGroup.reset(new TasksCfgsGroup());
-    mTaskControllerCfgsGroup.reset(new EnginesControllersCfgsGroup());
+    //mEnginesControllersCfgsGroup.reset(new EnginesControllersCfgsGroup());
+    //mTaskControllerCfgsGroup.reset(new EnginesControllersCfgsGroup());
 
     mExtraGroundTypesCfgsGroup.reset(new ExtraGroundTypesCfgsGroup());
-    //mFixtureUserDataGroup.reset(new FixtureUserDataGroup());
 
     mB2World.reset(new b2World({0.0f, -10.0f}));
     mDebugDraw.reset(new DebugDraw());
@@ -81,7 +73,6 @@ EntitySystem::EntitySystem()
     mEntityContactListener.reset(new EntityContactListener());
     mEntityContactFilter.reset(new EntityContactFilter());
 
-    //mAnimationManager.reset(new AnimationManager());
 
     mMovementEnginesManager.reset(new MovementEnginesManager());
     mTaskEngineManager.reset(new TaskEngineManager());
@@ -97,8 +88,8 @@ EntitySystem::EntitySystem()
     mTaskEngineManager->addTaskEngineFactory(new TransporterFactory("transporter", TaskType::POINT_TO_POINT_TRANSPORTER));
 
     //---
-    mEntitySignalsParser.reset(new EntitySignalsParser({"ENTITY"}));
-    app->signalParserManager()->addSignalParser(mEntitySignalsParser.get());
+    mEntitySignalsParser = new EntitySignalsParser({"ENTITY"});
+    app->signalParserManager()->addAndStoreSignalParser(mEntitySignalsParser);
 
 }
 
@@ -192,7 +183,7 @@ bool EntitySystem::initCfg(PlayedScene *playerScene, const pugi::xml_node &_node
 
                 if(childNodeName=="behaviorController"){
                     std::string controllerName = nChild.attribute("name").as_string("");
-                    EntityControllerCfg * controllercCfg = mEnginesControllersCfgsGroup->addEnginesControllerCfg(controllerName);
+                    LogicStateCfg * controllercCfg = mEnginesControllersCfgsStorage.addObject(new EntityLogicStateCfg(controllerName));
                     if(controllercCfg->initCfg(nChild)==false){
                         return false;
                     }
@@ -208,7 +199,7 @@ bool EntitySystem::initCfg(PlayedScene *playerScene, const pugi::xml_node &_node
 
                 if(childNodeName=="taskController"){
                     std::string controllerName = nChild.attribute("name").as_string("");
-                    EntityControllerCfg * controllerCfg = mTaskControllerCfgsGroup->addEnginesControllerCfg(controllerName);
+                    LogicStateCfg * controllerCfg = mTaskControllerCfgsStorage.addObject(new EntityLogicStateCfg(controllerName));
                     if(controllerCfg->initCfg(nChild)==false){
                         return false;
                     }
@@ -605,6 +596,9 @@ bool EntitySystem::createMapEntities(PlayedScene *_scene)
 bool EntitySystem::initConnections(PlayedScene *_scene)
 {
 
+    if(mInitialized) return true;
+
+
     dbgSystem.addMessage("Initializing entity system ... ");
 
     mParentPlayerScene = _scene;
@@ -662,6 +656,8 @@ bool EntitySystem::initConnections(PlayedScene *_scene)
     //    return false;
     //}
 
+    //---
+    mInitialized = true;
 
     //---
     dbgSystem.removeLastMessage();
@@ -671,13 +667,14 @@ bool EntitySystem::initConnections(PlayedScene *_scene)
 
 void EntitySystem::start()
 {
+    /*
     for(Entity *a : mActors){
         if(a->sourceEntity()->sourceEntityCfg()->name=="hero"){
             DummyFunction();
         }
         a->start();
     }
-
+    */
 }
 
 
@@ -717,32 +714,38 @@ bool EntitySystem::startingPhaseUpdate()
 }
 
 
-void EntitySystem::update(UpdateMode _updateMode)
+void EntitySystem::update(UpdateMode &_updateMode)
 {
 
-    if(_updateMode==UpdateMode::MODAL_OVERLAY){
+    if(_updateMode.modalOverlay){
         return;
     }
 
 
     //--- PRE UPDATE
     for(Entity *a : mActors){
+
+        // First manage contact signals as they are used in later steps !
+        a->contactTrigger().preUpdate_postBox2dStep();
+
+        //---
         if(a->sourceEntity()->sourceEntityCfg()->category->mB2BodyType==b2BodyType::b2_dynamicBody){
             a->preUpdate_resolveContacts();
         }
     }
 
+    mFilteredContactTriggersGroup.preUpdate_postContactSignalsPreUpdate();
+
+
     for(Entity *a : mActors){
         a->preUpdate(_updateMode);
     }
-    mFilteredContactTriggersGroup.preUpdate_postContactTriggePreUpdate();
 
     for(Entity *a : mActors){
         if(a->mainShapeRole()==EntityRole::ACTOR){
             a->preUpdate_CheckActorGrouping();
         }
     }
-
 
     for(Entity *a : mActors){
         if(a->entityMovingGroup()) continue;
@@ -790,7 +793,7 @@ void EntitySystem::update(UpdateMode _updateMode)
 }
 
 
-void EntitySystem::_update(UpdateMode _updateMode, std::vector<Entity *> &_entities)
+void EntitySystem::_update(UpdateMode &_updateMode, std::vector<Entity *> &_entities)
 {
 
 

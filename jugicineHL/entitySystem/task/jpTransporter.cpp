@@ -31,10 +31,11 @@ int GetTransporterStatusFromString(const std::string &_type)
 {
 
 
-    if(_type=="OPERATING"){
-        return TransporterStatus::OPERATING;
+    //if(_type=="OPERATING"){
+    //    return TransporterStatus::OPERATING;
 
-    }else if(_type=="MOVING"){
+   // }else
+    if(_type=="MOVING"){
         return TransporterStatus::MOVING;
 
     }else if(_type=="DIRECTION_FORWARD"){
@@ -59,7 +60,18 @@ int GetTransporterStatusFromString(const std::string &_type)
 }
 
 
+std::vector<NamedValue>gTransporterStatusNamedValues
+{
+    { "MOVING", static_cast<int>(TransporterStatus::MOVING) },
+    { "DIRECTION_FORWARD", static_cast<int>(TransporterStatus::DIRECTION_FORWARD) },
+    { "DIRECTION_BACKWARD", static_cast<int>(TransporterStatus::DIRECTION_BACKWARD) },
+    { "NO_PASSENGER", static_cast<int>(TransporterStatus::NO_PASSENGER) },
+    { "PASSENGER_PARTLY_ON", static_cast<int>(TransporterStatus::PASSENGER_PARTLY_ON) },
+    { "PASSENGER_FULLY_ON", static_cast<int>(TransporterStatus::PASSENGER_FULLY_ON) }
+};
 
+
+/*
 int GetTransporterStatusFromString_signalSetter(const std::string &_type)
 {
 
@@ -72,7 +84,7 @@ int GetTransporterStatusFromString_signalSetter(const std::string &_type)
 
 
 }
-
+*/
 
 bool TETransporterCfg::initCfg(const pugi::xml_node &_node)
 {
@@ -285,9 +297,12 @@ bool TETransporter::start(TaskEngineData *_data)
     */
 
     //if(mCurrentData->cfg->operatingOnStart){
-    if(mCurrentData->disabled==false){
-        mSigStatus._setFlag(TransporterStatus::OPERATING);
-    }
+    //if(mCurrentData->disabled==false){
+        //mSigStatus.setFlags_onNextFrame(TransporterStatus::OPERATING, true);
+    //}
+
+    //mEnabled = !mCurrentData->disabled;
+    mSigEnabled.reset(!mCurrentData->disabled);
 
     mFirstMove = true;
 
@@ -353,9 +368,12 @@ void TETransporter::update(TaskUpdateParameters _tup)
     VectorShape *path = engData->vectorShape;
 
     mStatusFlags = 0;
-    if(mSigStatus.active(TransporterStatus::OPERATING)){        // OPERATING bit is set from outside
-        mStatusFlags |= TransporterStatus::OPERATING;
-    }
+    //if(mSigStatus.active(TransporterStatus::OPERATING)){        // OPERATING bit is set from outside
+    //    mStatusFlags |= TransporterStatus::OPERATING;
+    //}
+
+    //mEnabled = mSigEnabled.active();
+
 
     if(direction==Direction::FORWARD){
         mStatusFlags |= TransporterStatus::DIRECTION_FORWARD;
@@ -379,7 +397,7 @@ void TETransporter::update(TaskUpdateParameters _tup)
 
 
     //----
-    mSigStatus._setFullValue(mStatusFlags);
+    mSigStatus.setValue_onNextFrame(mStatusFlags);
 
 
     /*
@@ -409,7 +427,8 @@ void TETransporter::update(TaskUpdateParameters _tup)
 void TETransporter::update_OFF(TaskUpdateParameters _tup)
 {
 
-    if(mSigStatus.active(TransporterStatus::OPERATING)){
+    //if(mSigStatus.active(TransporterStatus::OPERATING)){
+    if(mSigEnabled.active(true)){
         mState = TransporterState::ON;
         mStateEllapsedTimeS = 0.0f;
     }
@@ -421,7 +440,7 @@ void TETransporter::update_ON(TaskUpdateParameters _tup)
 {
 
 
-    if(mSigStatus.notActive(TransporterStatus::OPERATING)){
+    if(mSigEnabled.active(true)==false){
         if(mSigStatus.notActive(TransporterStatus::MOVING)){
             mState = TransporterState::OFF;
             mStateEllapsedTimeS = 0.0f;
@@ -451,57 +470,6 @@ void TETransporter::update_ON(TaskUpdateParameters _tup)
 
 
         }else if(mCurrentData->cfg->movingMode==MovingMode::AUTOMATIC_WITH_PASSENGER){
-
-            //bool standingStillTimerAdvanced = false;
-
-
-            /*
-
-            for(EntityContactTrigger & ect : mActor->contactTrigger().contactedEntitiesTriggers()){
-                assert(ect.mTwoEntitiesContact.entityShapeA().entity == mActor);
-                if(ect.mTwoEntitiesContact.entityShapeB().category->shapeRole != EntityCategory::ShapeRole::MAIN_SHAPE){
-                    continue;
-                }
-
-                passenger = ect.mTwoEntitiesContact.entityShapeB().entity;
-                if(passenger->lift() != mActor){
-                    continue;
-                }
-
-                // ensure the passenger is whoole on the transporter !
-                b2Vec2 passengerPos = passenger->body()->B2Body()->GetPosition();
-                float passengerLeft = passenger->body()->sourceBody()->centerToLeftDistance();
-                float passengerRight = passenger->body()->sourceBody()->centerToRightDistance();
-                b2Vec2 transporterPos = mActor->body()->B2Body()->GetPosition();
-                float transporterLeft = mActor->body()->sourceBody()->centerToLeftDistance();
-                float transporterRight = mActor->body()->sourceBody()->centerToRightDistance();
-
-                if(passengerPos.x-passengerLeft < transporterPos.x-transporterLeft || passengerPos.x+passengerRight > transporterPos.x+transporterRight){
-                    mStatusFlags |= TransporterStatus::PASSENGER_PARTLY_ON;
-                    continue;
-                }
-
-                mStatusFlags &= ~TransporterStatus::PASSENGER_PARTLY_ON;
-                mStatusFlags |= TransporterStatus::PASSENGER_FULLY_ON;
-
-
-                if(passenger->movementEngineType()==BehaviorEngineType::GROUND_MOVEMENT){
-                    GroundMovementEngine *gme = static_cast<GroundMovementEngine*>(passenger->currentEngine());
-                    if(gme->state()==GroundMovementState::STANDING || gme->state()==GroundMovementState::IDLE){
-                        mStandStillTimer +=_tup.timeStep;
-                        if(mStandStillTimer >= mStartDelay){
-                            mDoMoveInput = true;
-                        }
-                        standingStillTimerAdvanced = true;
-                    }
-                }
-
-            }
-
-            if(standingStillTimerAdvanced==false){
-                mStandStillTimer = 0.0f;
-            }
-            */
 
             //--- re-enable movement of possible current passenger
             if(mCurrentData->cfg->disablePassengerMovement && mPassengers.empty()==false){
@@ -599,7 +567,7 @@ void TETransporter::update_ON(TaskUpdateParameters _tup)
     if(engine->angularVelocityGenerator().isActive()){
 
         if(engine->rotationState()==PathPTPRotationState::STANDING_STILL){
-            engData->sigRotateCWObj._Set(true);
+            engData->sigRotateCWObj.setValue(true);
 
         }else if(engine->rotationState()==PathPTPRotationState::MOVING){
 
@@ -628,9 +596,9 @@ void TETransporter::doComputerControlledMovement()
     if(engine->velocityGenerator().usingPathSegment()==false && path->isClosed()){
 
         if(direction==Direction::FORWARD){
-            engData->sigMoveForwardObj._Set(true);
+            engData->sigMoveForwardObj.setValue(true);
          }else if(direction==Direction::BACKWARD){
-            engData->sigMoveBackwardObj._Set(true);
+            engData->sigMoveBackwardObj.setValue(true);
         }
 
     }else{
@@ -640,17 +608,17 @@ void TETransporter::doComputerControlledMovement()
         if(direction==Direction::FORWARD){
             //if(currentIndex < path->pathPoints().size()-1){
             if(currentIndex < engine->velocityGenerator().endIndex()){
-                engData->sigMoveForwardObj._Set(true);
+                engData->sigMoveForwardObj.setValue(true);
             }else{
-                engData->sigMoveBackwardObj._Set(true);
+                engData->sigMoveBackwardObj.setValue(true);
             }
 
         }else if(direction==Direction::BACKWARD){
             //if(currentIndex > 0 ){
             if(currentIndex >  engine->velocityGenerator().startIndex()){
-                engData->sigMoveBackwardObj._Set(true);
+                engData->sigMoveBackwardObj.setValue(true);
             }else{
-                engData->sigMoveForwardObj._Set(true);
+                engData->sigMoveForwardObj.setValue(true);
             }
         }
     }
@@ -672,13 +640,13 @@ void TETransporter::doManualMovemenent()
     if(mCurrentData->moveForward.active()){
 
         if(currentIndex < engine->velocityGenerator().endIndex()){
-            engData->sigMoveForwardObj._Set(true);
+            engData->sigMoveForwardObj.setValue(true);
         }
 
     }else if(mCurrentData->moveBackward.active()){
 
         if(currentIndex >  engine->velocityGenerator().startIndex()){
-            engData->sigMoveBackwardObj._Set(true);
+            engData->sigMoveBackwardObj.setValue(true);
         }
     }
 
@@ -694,13 +662,13 @@ void TETransporter::getPendingPassengers(EntityCategory::ShapeRole _shapeRole, b
 
     //Entity *passenger = nullptr;
 
-    for(EntityContactSignal & ect : mParentEntity->contactTrigger().contactedEntitiesTriggers()){
-        assert(ect.mTwoEntitiesContact.entityShapeA().entity == mParentEntity);
-        if(ect.mTwoEntitiesContact.entityShapeB().category->shapeRole != _shapeRole){
+    for(EntityContactSignal *ect : mParentEntity->contactTrigger().contactedEntitiesTriggers()){
+        assert(ect->mTwoEntitiesContact.entityShapeA().entity == mParentEntity);
+        if(ect->mTwoEntitiesContact.entityShapeB().category->shapeRole != _shapeRole){
             continue;
         }
 
-        Entity *possiblePassenger = ect.mTwoEntitiesContact.entityShapeB().entity;
+        Entity *possiblePassenger = ect->mTwoEntitiesContact.entityShapeB().entity;
         if(possiblePassenger->lift() != mParentEntity){
             continue;
         }
@@ -786,35 +754,37 @@ TETransporterData* TETransporter::getDataObject(const std::string &_name, bool _
 }
 
 
-
-void TETransporter::obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_dataName, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage)
+void TETransporter::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage)
 {
+
+    const std::string & taskCfgName = _psp.signalNamePartAt(1);
+    const std::string & signalName = _psp.signalNamePartAt(2);
 
     TETransporterData *engineData = nullptr;
 
-    if(_dataName.empty()==false){
+    if(taskCfgName.empty()==false){
         for(TETransporterData &d : mDataObjects){
-            if(d.cfg->name == _dataName){
+            if(d.cfg->name == taskCfgName){
 
                 engineData = &d;
 
-                if(_signalName=="MOVE_FORWARD"){
-                    _signalQuery.mSignal = d.moveForward.mSignal;
+                if(signalName=="MOVE_FORWARD"){
+                    _psp.obtainValue(_signalQuery, d.moveForward.mSignal);
 
-                }else if(_signalName=="MOVE_BACKWARD"){
-                    _signalQuery.mSignal = d.moveBackward.mSignal;
+                }else if(signalName=="MOVE_BACKWARD"){
+                    _psp.obtainValue(_signalQuery, d.moveBackward.mSignal);
 
-                }else if(_signalName=="MOVE_LEFT"){
-                    _signalQuery.mSignal = d.moveLeft.mSignal;
+                }else if(signalName=="MOVE_LEFT"){
+                    _psp.obtainValue(_signalQuery, d.moveLeft.mSignal);
 
-                }else if(_signalName=="MOVE_RIGHT"){
-                    _signalQuery.mSignal = d.moveRight.mSignal;
+                }else if(signalName=="MOVE_RIGHT"){
+                    _psp.obtainValue(_signalQuery, d.moveRight.mSignal);
 
-                }else if(_signalName=="MOVE_UP"){
-                    _signalQuery.mSignal = d.moveUp.mSignal;
+                }else if(signalName=="MOVE_UP"){
+                    _psp.obtainValue(_signalQuery, d.moveUp.mSignal);
 
-                }else if(_signalName=="MOVE_DOWN"){
-                    _signalQuery.mSignal = d.moveDown.mSignal;
+                }else if(signalName=="MOVE_DOWN"){
+                    _psp.obtainValue(_signalQuery, d.moveDown.mSignal);
 
                 }
                 break;
@@ -826,37 +796,46 @@ void TETransporter::obtainSignal_signalQuery(SignalQuery &_signalQuery, const st
         }
     }
 
-    if(_signalName=="STATUS"){
+    if(signalName=="STATUS"){
+        _psp.obtainValue(_signalQuery, &mSigStatus, &gTransporterStatusNamedValues);
+
+        /*
         _signalQuery.mSignal = &mSigStatus;
-        _signalQuery.mIntValue = GetTransporterStatusFromString(_signalValue);
+        _signalQuery.mIntValue = GetTransporterStatusFromString(_psp.signalValue);
 
         if(_signalQuery.mIntValue == TransporterStatus::UNKNOWN){
-            dbgSystem.addMessage("Unknown signal value '" + _signalValue +" ' !");
+            dbgSystem.addMessage("Unknown signal flag value '" + _psp.signalValue +" ' !");
+            return;
         }
-        return;
+        */
+
+    }else if(signalName=="ENABLED"){
+        //_signalQuery.mSignal = &mSigEnabled;
+        _psp.obtainValue(_signalQuery, &mSigEnabled);
+
     }
 
 
-    if(_setErrorMessage){
-        dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown!");
+    if(_signalQuery.mSignal==nullptr && _setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
 }
 
 
-
-void TETransporter::obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_dataName, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage )
+void TETransporter::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage )
 {
+
+
+    const std::string & taskCfgName = _psp.signalNamePartAt(1);
+    const std::string & signalName = _psp.signalNamePartAt(2);
 
     TETransporterData *engineData = nullptr;
 
-    if(_dataName.empty()==false){
+    if(taskCfgName.empty()==false){
         for(TETransporterData &d : mDataObjects){
-            if(d.cfg->name == _dataName){
-
-
+            if(d.cfg->name == taskCfgName){
                 engineData = &d;
-
                 break;
             }
         }
@@ -865,23 +844,22 @@ void TETransporter::obtainSignal_signalSetter(SignalSetter &_signalSetter, const
         }
     }
 
+    if(signalName=="ENABLED"){
+        //_signalSetter.mSignal = &mSigEnabled;
 
-    if(_signalName=="STATUS"){
-        _signalSetter.mSignal = &mSigStatus;
-        _signalSetter.mIntValue = GetTransporterStatusFromString_signalSetter(_signalValue);
-
-        if(_signalSetter.mIntValue == TransporterStatus::UNKNOWN){
-            dbgSystem.addMessage("Unknown signal value '" + _signalValue +" ' !");
-        }
-        return;
+        //if(_psp.getBoolValue(_signalSetter.mBoolValue)==false){
+        //    return;
+        //}
+        _psp.obtainValue(_signalSetter, &mSigEnabled);
     }
 
 
-    if(_setErrorMessage){
-        dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown or not available for setting!");
+    if(_signalSetter.mSignal==nullptr && _setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting!");
     }
 
 }
+
 
 
 

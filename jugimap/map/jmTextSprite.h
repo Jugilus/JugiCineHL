@@ -9,7 +9,6 @@
 #include "../jugi/general/tpixmap.h"
 #endif
 
-//#include "jmSourceSprite.h"
 #include "jmCommon.h"
 #include "jmParameter.h"
 #include "jmColor.h"
@@ -26,22 +25,10 @@ class TEObject;
 namespace jugimap {
 
 
-//class JugiMapBinaryLoader;
-//class ESourceImage;
-//class Layer;
-//class ESpriteLayer;
-//class ESourceObject;
-//class ComposedSprite;
 class StandardSprite;
 class TextSprite;
 class TextBook;
 class TextModifier;
-//class Collider;
-//struct AnimatedProperties;
-//class Font;
-//struct SourceSpriteReplacements;
-
-
 
 
 

@@ -18,7 +18,6 @@ class WorldMapCamera;
 class PlayedScene;
 class SourceSprite;
 class SourceBody;
-struct EntityControllerCfg;
 
 class Entity;
 class Entity;

@@ -16,13 +16,11 @@
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
-#include "jpActionsCommon.h"
+//#include "jpActionsCommon.h"
 
 #include "movements/jpMovementCommon.h"
 #include "jpEntitySystem.h"
-#include "scripting/jpBehavior.h"
 #include "jpSourceEntity.h"
 #include "jpB2Fixture.h"
 

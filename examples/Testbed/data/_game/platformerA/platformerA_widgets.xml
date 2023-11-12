@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<scene name="PlatformerA">
+
+
+    <guiSystem>
+
+        <widgets>
+            <!--
+            <button name="testButton">
+                <parameters checkable="TRUE" initialState="NORMAL" statesTransitionDuration="0.3" />
+   
+                <style sprite="ROOT_SPRITE" property="ALPHA" statesTransitionDelta="1.0">
+                    <state_CHECKED_PRESSED def="1.0" min="0.0" max="1.0" duration="0.5" mode="REVERSE" />
+
+                </style>
+            </button>
+            -->
+
+            <!--
+            <table name="inventory">
+                <parameters scrollingLayout="horizontal" numRows="1" numColumns="4" spacingColumns="0" spacingRows="0" />
+                <slot rootSprite="inventory">
+                    <component sprite="item" />
+                    <component textSprite="count"/>
+                    <component textField="description" layer="text"/>
+                </slot>
+            </table>
+            -->
+
+        </widgets>
+        
+
+
+
+        
+
+
+    </guiSystem>
+
+
+
+</scene>

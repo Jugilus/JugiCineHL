@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <composedSprite name="sliderA" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="2" nTilesY="1">
     <layer content="Free sprites" name="Layer 1">
-        <sprite type="Standard" name="sliderA_line" x="25" y="25" handleSource="true"/>
+        <sprite type="Standard" name="sliderA_line" nameID="slidingLine" x="25" y="25" handleSource="true"/>
     </layer>
     <layer content="Free sprites" name="Layer 2">
-        <sprite type="Standard" name="sliderA_highlightMarker" x="25" y="25"/>
-        <sprite type="Standard" name="sliderA_slidingButton" x="75" y="25"/>
+        <sprite type="Standard" name="sliderA_highlightMarker" nameID="highlightMarker" x="25" y="25"/>
+        <sprite type="Standard" name="sliderA_slidingButton" nameID="slidingButton" x="75" y="25"/>
     </layer>
     <parameter name="wName" value="value" type="string"/>
-    <constantParameter name="widget" value="slider" type="string"/>
-    <constantParameter name="wValueRange" value="0.0, 1.0" type="string"/>
+    <parameter name="widgetNew" value="parameterSlider" type="string"/>
 </composedSprite>

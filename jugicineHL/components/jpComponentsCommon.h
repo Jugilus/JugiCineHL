@@ -15,12 +15,18 @@ class xml_node;
 namespace jugimap{
 
 
+class GuiWidget;
 class PlayedScene;
 class ADoTransition;
 class ComponentData;
 class TextSegment;
 class Sprite;
 class ShapeDrawer;
+class Compound;
+struct SignalQuery;
+struct SignalSetter;
+
+class ParsedSignalPath;
 
 
 
@@ -28,17 +34,24 @@ class Component : public BaseObject
 {
 public:
 
-    Component(){ mType = BaseObjectType::COMPONENT; }
+    Component(){ mBaseType = BaseObjectType::COMPONENT; }
     virtual ~Component();
 
     virtual bool initCfg(PlayedScene *, const pugi::xml_node &){ return true; }
+    virtual bool buildObjects(PlayedScene *_scene){ return true; }
     virtual bool initConnections(PlayedScene* _scene){ return true; }
 
     virtual void start(){}
-    virtual bool startingPhaseUpdate(){ return false; }
-    virtual void update(UpdateMode _updateMode){}
+    virtual bool startingPhaseUpdate(){ start();  return false; }
+
+    virtual void preUpdate(UpdateMode &_updateMode){}
+    virtual void update(UpdateMode &_updateMode){}
+    virtual void postUpdate(UpdateMode &_updateMode){}
+
     virtual void drawShapes(ShapeDrawer &drawer, int _flags=0){}
     virtual void onStateEnded(){}
+
+    bool startCloseTransition();
 
     const std::string &name(){ return mName; }
 
@@ -47,57 +60,32 @@ public:
     void setData(ComponentData *_data){ mData = _data; }
     ComponentData *data(){ return mData; }
 
+    std::vector<GuiWidget*>& usedWidgets(){return mUsedWidgets;}
+
+    bool isInitialized(){ return mInitialized; }
+    PlayedScene* parentPlayerScene(){ return mParentPlayerScene; }
+
+    void setParentCompound(Compound* _compound){ mParentCompound = _compound; }
+    Compound* parentCompound(){ return mParentCompound;}
+
+    virtual void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true);
+    virtual void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_path, bool _setErrorMessage=true);
+
+
 
 protected:
     std::string mName;
+    PlayedScene *mParentPlayerScene = nullptr;          // LINK
+
     VariableManager mVariables;
     ComponentData *mData = nullptr;             // LINK ?
 
-};
-
-
-class OverlayComponent : public Component
-{
-public:
-
-    enum class State
-    {
-        TRANSITION_IN,
-        NORMAL,
-        TRANSITION_OUT,
-        CLOSED
-
-    };
-
-
-    OverlayComponent(){ mType = BaseObjectType::OVERLAY_COMPONENT; }
-    virtual ~OverlayComponent(){}
-
-    virtual void update(UpdateMode _updateMode) override;
-
-    bool startOpenTransition();
-    bool startCloseTransition();
-
-
-    State state(){ return mState; }
-    bool isClosed(){ return mState==State::CLOSED; }
-
-    void _setModal(bool _modal) { mModal = _modal; }
-    bool modal(){ return mModal; }
-
-    void setTransitions(ADoTransition *_openTransition, ADoTransition *_closeTransition);
-
-
-protected:
-    PlayedScene *mParentPlayerScene = nullptr;          // LINK
-    bool mModal = false;
-
-    ADoTransition *mAOpenTransition = nullptr;          // LINK
-    ADoTransition *mACloseTransition = nullptr;         // LINK
-
-    State mState = State::NORMAL;
-
     std::vector<GuiWidget*>mUsedWidgets;
+
+    bool mInitialized = false;
+
+    Compound* mParentCompound = nullptr;              // link
+
 
     //--- triggers
     TriggerVariable *mTrigger_Closed = nullptr;          // LINK
@@ -105,10 +93,13 @@ protected:
 };
 
 
+
 class ComponentsGroup
 {
 public:
 
+    ~ComponentsGroup();
+    bool buildObjects(PlayedScene* _scene);
     bool initConnections(PlayedScene* _scene);
 
 

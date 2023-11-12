@@ -21,7 +21,7 @@
 #include "jmInput.h"
 #include "jmSystemSourceObjects.h"
 #include "jmCamera.h"
-#include "jmGuiCommon.h"
+//#include "jmGuiCommon.h"
 #include "jmLayerElement.h"
 #include "jmApp.h"
 
@@ -91,7 +91,7 @@ App::~App()
     sourceLibrary.deleteContent();
     fontsLibrary.deleteContent();
     textColorsLibrary.deleteContent();
-    DeleteGuiSupportingObjects();
+    //DeleteGuiSupportingObjects();
     DeleteInputSupportingObjects();
     systemSourceObjects.deleteContent();
 

@@ -8,7 +8,6 @@
 #include "jmFont.h"
 #include "jmInput.h"
 #include "jmCamera.h"
-#include "jmGuiCommon.h"
 #include "jmVectorShapeDrawing.h"
 #include "jmSceneLayout.h"
 

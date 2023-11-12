@@ -20,7 +20,8 @@ namespace jugimap{
 
 
 class PlayedScene;
-class BehaviorState;
+class LogicState;
+//class BehaviorState;
 struct SignalAccessor;
 struct MovementEngineData;
 struct TaskEngineData;
@@ -34,6 +35,24 @@ MovementEngineData* ObtainMovementEngineData(Entity* _entity, const std::string 
 TaskEngineData* ObtainTaskEngineData(Entity* _entity, const std::string &name, bool throwError=true);
 
 
+/*
+struct EntitySignalStrings
+{
+    std::string engineCfgName;
+    std::string taskCfgName;
+    std::string signalName;
+    std::string signalValue;
+    std::string signalValueState;
+
+    bool parse(const std::string &_path);
+
+    bool getBoolValue(bool &_state, bool _setErrorMessage=true) const;
+    bool getIntValue(int &_value) const;
+
+};
+
+*/
+
 
 class EntitySignalsParser : public SignalParser
 {
@@ -41,11 +60,11 @@ public:
 
     EntitySignalsParser(std::vector<std::string> _keyWords) : SignalParser(_keyWords){}
 
-    void parseSignalAccessor(PlayedScene *scene, const std::string &_path, SignalAccessor &_signalAccessor, void* obj1=nullptr, void* obj2=nullptr, void* obj3=nullptr) override;
+    void parseSignalAccessor(PlayedScene *_scene, const std::string &_path, SignalAccessor &_signalAccessor, BaseObject *obj1=nullptr, BaseObject *obj2=nullptr) override;
 
 private:
-    void parse_signalQuery(Entity *_entity, BehaviorState *_state, const std::string &_path, SignalQuery &_signalQuery);
-    void parse_signalSetter(Entity *_entity, BehaviorState *_state, const std::string &_path, SignalSetter &_signalSetter);
+    void parse_signalQuery(PlayedScene *_scene, Entity *_entity, LogicState *_state, const std::string &_signalNameAndValue, SignalQuery &_signalQuery);
+    void parse_signalSetter(PlayedScene *_scene, Entity *_entity, LogicState *_state, const std::string &_signalNameAndValue, SignalSetter &_signalSetter);
 
 };
 

@@ -6,5 +6,4 @@
     <layer content="Free sprites" name="Layer 2">
         <sprite type="Text" name="controlerName" nameID="itemName" x="0" y="0" text="controlerName"/>
     </layer>
-    <constantParameter name="wFirstSlot" value="true" type="bool"/>
 </composedSprite>

@@ -4,8 +4,8 @@
     <designResolution width="1400" height="900"/>
 
     <scenes>
-        <scene name="Menu" />
-        <scene name="PlatformerA" startingScene="true" />
+        <scene name="Menu" startingScene="true" />
+        <scene name="PlatformerA"  />
     </scenes>
 
     <!-- 

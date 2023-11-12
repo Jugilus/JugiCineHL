@@ -13,7 +13,6 @@
 #include "jpPlayedScene.h"
 #include "jpPlayedApp.h"
 
-#include "scripting/jpBehavior.h"
 #include "jpSourceEntity.h"
 #include "jpEntity.h"
 #include "jpEntityUtilities.h"
@@ -51,6 +50,15 @@ PathMovementState GetPathMovementStateFromString(const std::string &state)
 
 }
 
+
+std::vector<NamedValue>gPathMovementStateNamedValues
+{
+    {"STANDING", static_cast<int>(PathMovementState::STANDING) },
+    {"IDLE", static_cast<int>(PathMovementState::IDLE) },
+    {"TURNING_AROUND", static_cast<int>(PathMovementState::TURNING_AROUND) },
+    {"MOVING", static_cast<int>(PathMovementState::MOVING) }
+
+};
 
 //------------------------------------------------------------------------------
 
@@ -367,7 +375,7 @@ bool PathMovementData::initConnections(PlayedScene *_scene, Entity *_actor)
 //==========================================================================
 
 
-PathwayAccessedSignal::PathwayAccessedSignal(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathMovementEngine) : CustomEntityBoolSignal(),
+PathwayAccessedSignal::PathwayAccessedSignal(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathMovementEngine) : UpdatedBoolSignal(),
     mActor(_actor),
     mPathMovementData(_pathMovementData),
     mPathMovementEngine(_pathMovementEngine)
@@ -380,15 +388,15 @@ void PathwayAccessedSignal::update()
 
     // check commands for accessing pathway
     if(mPathMovementData->moveForward.active()==false && mPathMovementData->moveBackward.active()==false){
-        _unsetOnNextFrame();
+        setValue_onNextFrame(false);
         return;
     }
 
      Direction direction = (mPathMovementData->moveForward.active()==true)? Direction::FORWARD : Direction::BACKWARD;
 
-    for(EntityContactSignal& ect : mActor->contactTrigger().contactedEntitiesTriggers()){
-        assert(mActor == ect.mTwoEntitiesContact.entityShapeA().entity);
-        Entity* pathway = ect.mTwoEntitiesContact.entityShapeB().entity;
+    for(EntityContactSignal *ect : mActor->contactTrigger().contactedEntitiesTriggers()){
+        assert(mActor == ect->mTwoEntitiesContact.entityShapeA().entity);
+        Entity* pathway = ect->mTwoEntitiesContact.entityShapeB().entity;
 
         if(pathway->mainShapeRole()!=EntityRole::PATHWAY) continue;
         if(StdVector::contains(mPathMovementData->pathwayCategories, pathway->sourceEntity()->sourceEntityCfg()->category)==false){
@@ -424,7 +432,7 @@ void PathwayAccessedSignal::update()
 
 
         if(mPathMovementEngine->preStartIfPathwayAccessed(mPathMovementData, direction, &mActor->animationPlayer())){
-            _setOnNextFrame();
+            setValue_onNextFrame(true);
             return;
         }
     }
@@ -432,7 +440,7 @@ void PathwayAccessedSignal::update()
     mPathMovementData->vectorShape = nullptr;    // ! ('vectorShape' is used as flag that pathwayMovementEngine is ready to be used)
     mPathMovementData->pathway = nullptr;
 
-    _unsetOnNextFrame();
+    setValue_onNextFrame(false);
     return;
 
 }
@@ -442,7 +450,7 @@ void PathwayAccessedSignal::update()
 //==========================================================================
 
 
-PathwayLeftSignal::PathwayLeftSignal(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathwayEngine, MovementEngineData *_targetEngineData) : CustomEntityBoolSignal(),
+PathwayLeftSignal::PathwayLeftSignal(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathwayEngine, MovementEngineData *_targetEngineData) : UpdatedBoolSignal(),
     mActor(_actor),
     mPathMovementData(_pathMovementData),
     mPathwayEngine(_pathwayEngine),
@@ -464,19 +472,19 @@ void PathwayLeftSignal::update()
         bool activeGroundMoveCommand = (groundMovementDataBase->moveLeft.active() || groundMovementDataBase->moveRight.active());
 
         if(mPathwayEngine->isPathwayFinished(activeGroundMoveCommand)){
-            _setOnNextFrame();
+            setValue_onNextFrame(true);
             return;
         }
 
         if(mPathMovementData->moveBackward.active() && (mActor->blockedDirectionsRef() & static_cast<int>(Direction::DOWN))){
-            _setOnNextFrame();
+            setValue_onNextFrame(true);
             return;
         }
 
     }
 
 
-   _unsetOnNextFrame();
+   setValue_onNextFrame(false);
 
 }
 
@@ -904,7 +912,7 @@ bool PathMovementEngine::preStartIfPathwayAccessed(PathMovementData *_data, Dire
     mAnimationPlayer = _animationPlayer;
 
 
-    if(mCurrentData->sigDisabled.active()){
+    if(mCurrentData->sigDisabled.active(true)){
         return false;
     }
 
@@ -1188,7 +1196,7 @@ b2Vec2 PathMovementEngine::update(EngineUpdateParameters &eup)
 
 
     //---
-    mDirectionSignal._setOnNextFrame(static_cast<int>(mDirection));
+    mDirectionSignal.setValue_onNextFrame(static_cast<int>(mDirection));
 
     //---
     updateAnimationPlayer();
@@ -1478,124 +1486,109 @@ bool PathMovementEngine::isPathwayAccessed(PathMovementData *_data, b2Vec2 _acto
 
 
 
-void PathMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_dataName, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage)
+void PathMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage)
 {
+
+
+    const std::string & engineCfgName = _psp.signalNamePartAt(1);
+    const std::string & signalName = _psp.signalNamePartAt(2);
 
     PathMovementData *engineData = nullptr;
 
-    if(_dataName.empty()==false){
+    if(engineCfgName.empty()==false){
         for(PathMovementData &d : mPathMovementDatas){
-            if(d.cfg->name == _dataName){
+            if(d.cfg->name == engineCfgName){
 
                 engineData = &d;
 
-                if(_signalName=="MOVE_FORWARD"){
-                    _signalQuery.mSignal = d.moveForward.mSignal;
+                if(signalName=="MOVE_FORWARD"){
+                    //_signalQuery.mSignal = d.moveForward.mSignal;
+                    _psp.obtainValue(_signalQuery, d.moveForward.mSignal);
+                    return;
 
-                }else if(_signalName=="MOVE_BACKWARD"){
-                    _signalQuery.mSignal = d.moveBackward.mSignal;
+                }else if(signalName=="MOVE_BACKWARD"){
+                    //_signalQuery.mSignal = d.moveBackward.mSignal;
+                    _psp.obtainValue(_signalQuery, d.moveBackward.mSignal);
+                    return;
                 }
-
-                //if(_setErrorMessage){
-                //    dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown!");
-                //}
-
-                //return;
-                break;
             }
         }
-
-        if(_signalQuery.mSignal){
-            return;
-        }
-
-        //if(_setErrorMessage){
-        //    dbgSystem.addMessage("Get signal '" + _signalName + "' error!  The jump engine data with name '" + _data + "' not found !");
-        //}
-        //return;
-
     }
 
-    if(_signalName=="STATE"){
+
+    if(signalName=="STATE"){
+
+        /*
         _signalQuery.mSignal = &mSigState;
-        _signalQuery.mIntValue =  static_cast<int>(GetPathMovementStateFromString(_signalValue));
+        _signalQuery.mIntValue =  static_cast<int>(GetPathMovementStateFromString(_psp.signalValue));
 
         if(_signalQuery.mIntValue == static_cast<int>(PathMovementState::UNKNOWN)){
-            dbgSystem.addMessage("Unknown signal value '" + _signalValue + " ' !");
+            dbgSystem.addMessage("Unknown signal value '" + _psp.signalValue + " ' !");
         }
+        */
+        _psp.obtainValue(_signalQuery, &mSigState, &gPathMovementStateNamedValues);
+
         return;
     }
 
 
     //---- CUSTOM ENTITY SIGNALS (Created signals will be stored in controller states !)
 
-    if(_signalName=="PATWAY_ACCESSED"){
+    if(signalName=="PATWAY_ACCESSED"){
+
+        assert(engineData);  assert(mParentEntity);
+        PathwayAccessedSignal * signal = new PathwayAccessedSignal(mParentEntity, engineData, this);
+        _psp.obtainValue(_signalQuery, signal);
+
+
+    }else if(signalName=="PATHWAY_LEFT"){
+
         assert(engineData); assert(mParentEntity);
-        _signalQuery.mSignal = new PathwayAccessedSignal(mParentEntity, engineData, this);
 
-    }else if(_signalName=="PATHWAY_LEFT"){
+        //target engine
+        const std::string & targetEngineCfgName = _psp.signalNamePartAt(3);
 
-        assert(engineData); assert(mParentEntity);
-
-        //target engine name
-        MovementEngineData *targetEngineData = mParentEntity->getMovementEngineData(_signalValue);
+        MovementEngineData *targetEngineData = mParentEntity->getMovementEngineData(targetEngineCfgName);
         if(targetEngineData==nullptr){
-            dbgSystem.addMessage("Movement engine '" + _signalValue + " ' not found!");
+            dbgSystem.addMessage("Movement engine '" + targetEngineCfgName + " ' not found!");
             return;
         }
-        _signalQuery.mSignal = new PathwayLeftSignal(mParentEntity, engineData, this, targetEngineData);
+
+        PathwayLeftSignal * signal = new PathwayLeftSignal(mParentEntity, engineData, this, targetEngineData);
+        _psp.obtainValue(_signalQuery, signal);
     }
 
 
-    if(_setErrorMessage){
-        dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown!");
+    if(_signalQuery.mSignal==nullptr && _setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
 }
 
 
-void PathMovementEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_dataName, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage )
+void PathMovementEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage )
 {
+
+    const std::string & engineCfgName = _psp.signalNamePartAt(1);
+    const std::string & signalName = _psp.signalNamePartAt(2);
 
     PathMovementData *data = nullptr;
 
-    if(_dataName.empty()==false){
+    if(engineCfgName.empty()==false){
         for(PathMovementData &d : mPathMovementDatas){
-            if(d.cfg->name == _dataName){
+            if(d.cfg->name == engineCfgName){
 
                 data = &d;
-
-                //if(_setErrorMessage){
-                //    dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown or not available for setting it!");
-                //}
-                //return;
             }
         }
-
-        //if(_setErrorMessage){
-        //    dbgSystem.addMessage("Get signal '" + _signalName + "' error!  The jump engine data with name '" + _dataName + "' not found !");
-        //}
-        //return;
-        if(_signalSetter.mSignal){
-            return;
-        }
-
-    }
-
-    //---- CUSTOM ENTITY SIGNALS (Signals will be stored in controller states !)
-    mFactory->obtainCustomSignal_signalSetter(_signalSetter, _signalName, _signalValue);
-    if(_signalSetter.mSignal){
-        return;
     }
 
 
-    if(_setErrorMessage){
-        dbgSystem.addMessage("Get signal '" + _signalName + "' error! The signal is unknown or not available for setting it!");
+    if(_signalSetter.mSignal==nullptr && _setErrorMessage){
+        dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting it!");
     }
 
 }
-
-
 
 
 
@@ -1651,7 +1644,7 @@ PathMovementEngine* PathMovementFactory::createMovementEngine()
 }
 
 
-
+/*
 void PathMovementFactory::obtainCustomSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_signalName, const std::string &_signalValue)
 {
 
@@ -1660,6 +1653,7 @@ void PathMovementFactory::obtainCustomSignal_signalQuery(SignalQuery &_signalQue
     //}
 
 }
+*/
 
 
 }

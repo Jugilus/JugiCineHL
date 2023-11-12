@@ -3,15 +3,19 @@
 #include <sstream>
 #include "pugixml/pugixml.hpp"
 #include "jmSystem.h"
-#include "jmGuiButton.h"
 #include "jmCommonFunctions.h"
-#include "jmGuiText.h"
 #include "jmTextSprite.h"
 #include "jmUtilities.h"
+#include "jmText.h"
+
+#include "gui/jpGuiSystem.h"
+#include "gui/widgets/jpGuiButton.h"
+#include "gui/widgets/jpGuiTable.h"
+
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
-#include "jpItemsTable.h"
+
 #include "jpUtilities.h"
 #include "jpLanguageSelector.h"
 
@@ -57,12 +61,15 @@ LanguageSelector::~LanguageSelector()
 bool LanguageSelector::initConnections(PlayedScene *_scene)
 {
 
+    if(mInitialized) return true;
+
+
     dbgSystem.addMessage("init component '" + mName + "'");
 
     mParentPlayerScene = _scene;
 
     //---
-    GuiButton* mFirstButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mLanguageButton, GuiWidgetKind::BUTTON));
+    GuiButton* mFirstButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mLanguageButton, WidgetType::BUTTON));
     if(mFirstButton==nullptr){
         return false;
     }
@@ -97,8 +104,8 @@ bool LanguageSelector::initConnections(PlayedScene *_scene)
             Sprite *buttonSprite = mFirstButton->GetSprite()->makeActiveCopy();
             buttonSprite->setPosition(Vec2f(mFirstButton->GetSprite()->position().x,
                                             mFirstButton->GetSprite()->position().y - i*spacing));
-            button = new GuiButton(buttonSprite);
-            if(button->init()==false){
+            button = new GuiButton(mFirstButton->cfg(), buttonSprite);
+            if(button->initConnections(_scene->guiSystem())==false){
                 assert(true);
             }
             mExtraButtons.push_back(button);
@@ -120,6 +127,10 @@ bool LanguageSelector::initConnections(PlayedScene *_scene)
     //--- inform system settings that 'language' should also be stored in the .ini file
     app->systemSettings()->appendToUsedSystemParameters(SystemParameter::LANGUAGE);
 
+
+    //---
+    mInitialized = true;
+
     //---
     dbgSystem.removeLastMessage();
     return true;
@@ -128,14 +139,17 @@ bool LanguageSelector::initConnections(PlayedScene *_scene)
 
 void LanguageSelector::start()
 {
-    mParentPlayerScene->widgetManager()->appendToUsedWidgets(mUsedWidgets);
+    mParentPlayerScene->guiSystem()->appendToUsedWidgets(mUsedWidgets);
+    //GuiSystem *guiSystem = dynamic_cast<GuiSystem *>(mParentPlayerScene->componentsGroup()->getComponent("guiSystem", false));  assert(guiSystem);
+    //guiSystem->appendToUsedWidgets(mUsedWidgets);
+
 }
 
 
-void LanguageSelector::update(UpdateMode _updateMode)
+void LanguageSelector::update(UpdateMode &_updateMode)
 {
 
-    if(_updateMode==UpdateMode::MODAL_OVERLAY){
+    if(_updateMode.modalOverlay){
         return;
     }
 
@@ -143,7 +157,7 @@ void LanguageSelector::update(UpdateMode _updateMode)
         const std::string &language = lb.first;
         GuiButton *button = lb.second;
 
-        if(button->IsPressed()){
+        if(button->isPressedStarted()){
             app->systemSettings()->setActiveLanguage(language);
             app->systemSettings()->saveSettingsIniFile();
         }
@@ -153,7 +167,10 @@ void LanguageSelector::update(UpdateMode _updateMode)
 
 void LanguageSelector::onStateEnded()
 {
-    mParentPlayerScene->widgetManager()->removeFromUsedWidgets(mUsedWidgets);
+    mParentPlayerScene->guiSystem()->removeFromUsedWidgets(mUsedWidgets);
+    //GuiSystem *guiSystem = dynamic_cast<GuiSystem *>(mParentPlayerScene->componentsGroup()->getComponent("guiSystem", false));  assert(guiSystem);
+    //guiSystem->removeFromUsedWidgets(mUsedWidgets);
+
 }
 
 

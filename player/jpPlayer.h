@@ -43,7 +43,7 @@ private:
     bool mShowEntityShapes = false;
     bool mPaused = false;
 
-    bool updateActiveSceneLogic();
+    //bool updateActiveSceneLogic();
     void showErrorMessage();
     void showMessage(const std::string &_text);
     void drawDebugOverlay();

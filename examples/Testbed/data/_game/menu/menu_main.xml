@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene name="Menu">
+    <sceneMaps>
+        <sceneMap name="menuMap" mapFile="data/maps/menu_main-10.jma" mapType="Screen">
+            <viewport xMinRel="0" xMinAbs="0" xMaxRel="100" xMaxAbs="0" yMinRel="0" yMinAbs="0" yMaxRel="100" yMaxAbs="0"/>
+        </sceneMap>
+    </sceneMaps>
+
+    
+    <gfxObjects>
+        <textSpriteObject name="activeUserName" textSprite="activeUserName" sourceMap="menuMap" />
+    </gfxObjects>
+
+
+    <!-- TRANSITION definitions  -->
+    <!-- Transitions provide automated way to show and hide graphics on screen maps -->
+    
+    <!-- 
+    <transitions>
+        <transition name="mainMenu_settingsMenu" >
+            <member spritesObject="mainMenu">
+                <translateIntoScreen direction="fromLeft" duration="0.6" />
+                <translateOutOfScreen direction="toLeft" duration="0.6" />
+                <alphaFadeIn duration="1.0" />
+                <alphaFadeOut duration="1.0" />
+            </member>    
+            <member spritesObject="settingsMenu">
+                <translateIntoScreen direction="fromRight" duration="0.6" />
+                <translateOutOfScreen direction="toRight" duration="0.6" />
+                <alphaFadeIn duration="1.0" />
+                <alphaFadeOut duration="1.0" />
+            </member>
+        </transition>
+
+        <transition name="mainMenu_aboutPanel" >
+            <member spritesObject="mainMenu">
+                <translateIntoScreen direction="fromLeft" duration="0.5" />
+                <translateOutOfScreen direction="toLeft" duration="0.5" />
+                <alphaFadeIn duration="1.0" />
+                <alphaFadeOut duration="1.0" />
+            </member>    
+            <member spritesObject="aboutPanel">
+                <translateIntoScreen direction="fromRight" duration="0.5" />
+                <translateOutOfScreen direction="toRight" duration="0.5" />
+                <alphaFadeIn duration="1.0" />
+                <alphaFadeOut duration="1.0" />
+            </member>
+        </transition>
+
+        <transition name="mainMenu_usersDialog" >
+            <member spritesObject="mainMenu">
+                <alphaFadeIn alphaMin="0.6" duration="0.25" />
+                <alphaFadeOut alphaMin="0.6" duration="0.25" />
+            </member>    
+            <member spritesObject="usersDialog">
+                <scaleIn xScaleMin="1.0"  duration="0.4" />
+                <scaleOut xScaleMin="1.0" duration="0.4" />
+                <alphaFadeIn duration="0.4" />
+                <alphaFadeOut duration="0.4" />
+            </member>  
+        </transition>
+
+        <transition name="usersDialog_newUserDialog" >
+            <member spritesObject="usersDialog" />
+            <member spritesObject="newUserDialog" />
+        </transition>
+
+        <transition name="newUserPanel" >
+            <member spritesObject="mainMenu">
+                <alphaFadeIn alphaMin="0.6" duration="0.25" />
+                <alphaFadeOut alphaMin="0.6" duration="0.25" />
+            </member> 
+            <member spritesObject="newUserDialog">
+                <scaleIn xScaleMin="1.0"  duration="0.4" />
+                <scaleOut xScaleMin="1.0" duration="0.4" />
+                <alphaFadeIn duration="0.4" />
+                <alphaFadeOut duration="0.4" />
+            </member>
+        </transition>
+
+        <transition name="mainMenu_messagePanel" >
+            <member spritesObject="mainMenu">
+                <alphaFadeIn alphaMin="0.6" duration="0.25" />
+                <alphaFadeOut alphaMin="0.6" duration="0.25" />
+            </member>  
+            <member spritesObject="messageBox">
+                <scaleIn xScaleMin="1.0"  duration="0.4" />
+                <scaleOut xScaleMin="1.0" duration="0.4" />
+                <alphaFadeIn duration="0.4" />
+                <alphaFadeOut duration="0.4" />
+            </member>
+        </transition>
+
+        <transition name="usersDialog_confirmPanel" >
+
+            <member spritesObject="usersDialog" />
+            <member spritesObject="confirmDialog" />
+        </transition>
+
+        <transition name="settingsSubmenus">
+            <member spritesObject="graphicsMenu" />
+            <member spritesObject="audioMenu" />
+            <member spritesObject="inputMenu" />
+            <member spritesObject="languageMenu" />
+        </transition>
+    </transitions>
+    -->
+
+
+    <!-- COMPONENTS - specialized blocks of game functionality -->
+    <!-- 
+    <overlayComponents>
+        <newUserPanel>    
+            <useWidgets textInput="newUserDialog_textInput" OkButton="newUserDialog_Ok" CancelButton="newUserDialog_Cancel" />
+        </newUserPanel>
+
+        <confirmPanel>
+            <useWidgets YesButton="confirmPanel_Yes" NoButton="confirmPanel_No" textField="confirmPanel_textField" />
+        </confirmPanel>
+
+        <messagePanel>
+            <useWidgets OkButton="messagePanel_Ok" textField="messagePanel_textField" />
+        </messagePanel>
+    </overlayComponents>
+-->
+
+
+    <messagePanel>
+        <useWidgets OkButton="messagePanel_Ok" textField="messagePanel_textField" />
+        <signals close="[BUTTON:messagePanel_Ok/PRESSED/START , INPUT:KEYBOARD/RETURN]" />
+    </messagePanel>
+
+<!-- 
+    <userSelector>
+        <selectUser table="userSelector" deleteUserButton="deleteUser" addNewUserButton="addNewUser" />
+        <addNewUser compound="newUserPanel" triggers="BUTTON:addNewUser/PRESSED" />
+        <confirmDeleteUser compound="confirmPanel" triggers="BUTTON:deleteUser/PRESSED" textSegment="gui/43" />    
+        <close triggers="BUTTON:closeUsersDialog/PRESSED" />
+    </userSelector>
+-->
+
+
+    <components>
+
+        <!-- 
+        <messagePanel>
+            <useWidgets OkButton="messagePanel_Ok" textField="messagePanel_textField" />
+            <signals close="BUTTON:messagePanel_Ok/PRESSED" />
+        </messagePanel>
+
+    -->
+
+        <confirmPanel>
+            <useWidgets YesButton="confirmPanel_Yes" NoButton="confirmPanel_No" textField="confirmPanel_textField" />
+            <signals confirmYes="BUTTON:confirmPanel_Yes/PRESSED" ConfirmNo="BUTTON:confirmPanel_No/PRESSED" />
+        </confirmPanel>
+
+
+        <userSelector>
+            <useWidgets usersTable="userSelector" deleteUserButton="deleteUser" addNewUserButton="addNewUser" />
+            <!-- <useComponent1 newUserPanelComponent="newUserPanel" transition="usersDialog_newUserDialog" show="newUserDialog" />-->
+            <useComponent1 newUserPanelCompound="newUserPanel" />
+            <!--<useComponent2 confirmDeleteUserComponent="confirmPanel" transition="usersDialog_confirmPanel" show="confirmDialog">-->
+            <useComponent2 confirmDeleteUserCompound="confirmPanel" >    
+                <data textSegment="gui/43" />
+            </useComponent2>
+        </userSelector>
+
+        <inputCustomizer>
+            <useWidgets inputDevicesTable="inputDeviceSelector" inputButtonsTable="inputButtonsEditor" restoreDefaultButton="defaultInputAssignment" />
+        </inputCustomizer>
+
+        <languageSelector>
+            <useWidgets languageButton="languageButton" languageTextSprite="language" spacingFactor="1.1" />
+        </languageSelector>
+
+        <newUserPanel>    
+            <useWidgets textInput="newUserDialog_textInput" OkButton="newUserDialog_Ok" CancelButton="newUserDialog_Cancel" />
+        </newUserPanel>
+
+    </components>
+
+    <compounds>
+
+        <compound name="mainMenu">
+            <parameters />
+            <gfxObject spriteLayer="main menu" map="menuMap" />
+            <widgets button="playScene, settings, about, quit, openUsersDialog"  slider="" textField="" table="sceneSelector" />
+
+            <transition otherCompound="settingsMenu">
+                <translateIntoScreen direction="fromLeft" duration="0.6" />
+                <translateOutOfScreen direction="toLeft" duration="0.6" />
+                <alphaFadeIn duration="1.0" />
+                <alphaFadeOut duration="1.0" />
+            </transition>
+            <transition otherCompound="aboutPanel">
+                <translateIntoScreen direction="fromLeft" duration="0.6" />
+                <translateOutOfScreen direction="toLeft" duration="0.6" />
+                <alphaFadeIn duration="1.0" />
+                <alphaFadeOut duration="1.0" />
+            </transition>
+            <transition otherCompound="usersDialog">
+                <alphaFadeIn alphaMin="0.6" duration="0.25" />
+                <alphaFadeOut alphaMin="0.6" duration="0.25" />
+            </transition>
+            <transition otherCompound="messagePanel">
+                <alphaFadeIn alphaMin="0.6" duration="0.25" />
+                <alphaFadeOut alphaMin="0.6" duration="0.25" />
+            </transition>
+        </compound>
+
+        <compound name="settingsMenu">
+            <parameters />
+            <gfxObject spriteLayer="settings menu" map="menuMap" />
+            <widgets button="mainMenu, graphicsSettings, audioSettings, inputSettings, languageSettings" />
+
+            <transition otherCompound="mainMenu">
+                <translateIntoScreen direction="fromRight" duration="0.6" />
+                <translateOutOfScreen direction="toRight" duration="0.6" />
+                <alphaFadeIn duration="1.0" />
+                <alphaFadeOut duration="1.0" />
+            </transition>
+        </compound>
+
+        <compound name="aboutPanel">
+            <parameters />
+            <gfxObject spriteLayer="about panel" map="menuMap" />
+            <widgets button="aboutPanel_mainMenuButton" textField="aboutPanel_textField"  />
+
+            <transition otherCompound="mainMenu">
+                <translateIntoScreen direction="fromRight" duration="0.6" />
+                <translateOutOfScreen direction="toRight" duration="0.6" />
+                <alphaFadeIn duration="1.0" />
+                <alphaFadeOut duration="1.0" />
+            </transition>
+        </compound>
+
+
+        <compound name="messagePanel">
+            <parameters overlay="TRUE" modal="TRUE" />
+            <gfxObject spriteLayer="message box" map="menuMap" />
+            <logicObjects component="messagePanel" />
+
+            <transition otherCompound="mainMenu">
+                <scaleIn xScaleMin="1.0"  duration="0.4" />
+                <scaleOut xScaleMin="1.0" duration="0.4" />
+                <alphaFadeIn duration="0.4" />
+                <alphaFadeOut duration="0.4" />
+            </transition>
+        </compound>
+
+        <compound name="confirmPanel">
+            <parameters overlay="TRUE" modal="TRUE" />
+            <gfxObject spriteLayer="confirm dialog" map="menuMap" />
+            <logicObjects component="confirmPanel" />
+        </compound>
+
+        <compound name="newUserPanel">
+            <parameters overlay="TRUE" modal="TRUE" />
+            <gfxObject spriteLayer="user name" map="menuMap" />
+            <logicObjects component="newUserPanel" />
+
+            <!-- 
+            <transition otherCompound="usersDialog">
+                <scaleIn xScaleMin="1.0"  duration="0.2" delay="0.2" />
+                <scaleOut xScaleMin="1.0" duration="0.2" />
+                <alphaFadeIn duration="0.2" delay="0.2" />
+                <alphaFadeOut duration="0.2"/>
+            </transition>
+        -->
+        
+        </compound>
+
+        <compound name="usersDialog">
+            <parameters overlay="FALSE" />
+            <gfxObject spriteLayer="change user" map="menuMap" />
+            <logicObjects component="userSelector"  />
+            <widgets button="closeUsersDialog" />
+            
+            <transition otherCompound="mainMenu">
+                <scaleIn xScaleMin="1.0"  duration="0.4" />
+                <scaleOut xScaleMin="1.0" duration="0.4" />
+                <alphaFadeIn duration="0.4" />
+                <alphaFadeOut duration="0.4" />
+            </transition>
+
+            <!--
+            <transition otherCompound="newUserPanel">
+                <scaleIn xScaleMin="1.0"  duration="0.2" delay="0.2" />
+                <scaleOut xScaleMin="1.0" duration="0.2" />
+                <alphaFadeIn duration="0.2" delay="0.2" />
+                <alphaFadeOut duration="0.2" />
+            </transition>  
+        -->
+        
+        </compound>
+
+        <compound name="graphicsMenu">
+            <gfxObject spriteLayer="graphics" map="menuMap" />
+            <widgets button="fullScreen"  />
+
+            <!-- 
+            <defaultTransition>
+                <alphaFadeIn duration="0.5" />
+                <alphaFadeOut duration="0.5" />
+            </defaultTransition>
+            -->
+        </compound>
+
+        <compound name="audioMenu">
+            <gfxObject spriteLayer="audio" map="menuMap" />
+            <widgets button="musicActive, sfxActive, speechActive" slider="musicVolume, sfxVolume, speechVolume" />
+        </compound>
+
+        <compound name="inputMenu">
+            <gfxObject spriteLayer="input" map="menuMap" />
+            <logicObjects component="inputCustomizer" />
+        </compound>
+
+        <compound name="languageMenu">
+            <gfxObject spriteLayer="language" map="menuMap" />
+            <logicObjects component="languageSelector" />
+        </compound>
+
+
+    </compounds>
+
+    <!-- INIT ACTIONS - set objects into correct initial state -->
+    <init>
+
+
+        <a doSetTableItemsGroup="sceneSelector, sceneNames" />
+        <a doSetSignal="GFX:activeUserName/TEXT = SIGNAL/USERS/ACTIVE_USER" />
+        <!--<a doSetSignal="GFX:activeUserName/TEXT:Test User" />-->
+
+        <a doSetSignal="BUTTON:graphicsSettings/CHECKED = TRUE" />
+        <a doSetSignal="BUTTON:musicActive/CHECKED = SIGNAL/SETTINGS/musicActive" />
+        <a doSetSignal="BUTTON:sfxActive/CHECKED = SIGNAL/SETTINGS/sfxActive" />
+        <a doSetSignal="BUTTON:speechActive/CHECKED = SIGNAL/SETTINGS/speechActive" />
+        <a doSetSignal="SLIDER:musicVolume/VALUE = SIGNAL/SETTINGS/musicVolume" />
+        <a doSetSignal="SLIDER:sfxVolume/VALUE = SIGNAL/SETTINGS/sfxVolume" />
+        <a doSetSignal="SLIDER:speechVolume/VALUE = SIGNAL/SETTINGS/speechVolume" />
+
+        <a doSetState="sceneLogic" />
+        <a doSetState="sceneLogic:mainMenu" />
+        <a doSetState="sceneLogic:settingsMenu:graphicsMenu" />
+    </init>
+    
+
+    <start>
+        <!-- it seems nothing need to be done here (maybe some initialization stuff would better fit here) -->
+    </start>
+
+
+    <update>
+        <state name="sceneLogic" component="guiSystem" >   <!-- a root logic state is required -->
+            <!-- <use components="guiSystem" />-->
+
+            <state name="mainMenu" compound="mainMenu">
+
+                <a onSignal="messagePanel/close/START" doDbgPrint="Message panel closed." />
+
+                <a onSignals="STATES/THIS/START , USERS/ACTIVE_USER=''" doShowOverlayCompound="newUserPanel" />
+                <a onSignal="BUTTON:openUsersDialog/PRESSED=TRUE" doSetState="usersDialog" />
+                <a onSignal="BUTTON:settings/PRESSED=TRUE" doSetState="settingsMenu" />
+                <a onSignal="BUTTON:playScene/PRESSED/START" doShowOverlayCompound="messagePanel/TEXT_SEGMENT:gui:44" dbgId="showMessage" />
+                <a onSignal="BUTTON:about/PRESSED" doSetState="aboutPanel" />
+                <a onSignal="BUTTON:quit/PRESSED/START" doQuitGame="" />
+
+                <a onSignal="INPUT:KEYBOARD/P/CHANGED" doDbgPrint="Key P pressed!" />
+
+            </state>
+
+    
+            <state name="settingsMenu" compound="settingsMenu">
+                <a onSignal="BUTTON:mainMenu/PRESSED" doSetState="mainMenu" />
+
+                <a onSignal="BUTTON:graphicsSettings/PRESSED" doSetState="settingsMenu:graphicsMenu" />
+                <a onSignal="BUTTON:audioSettings/PRESSED" doSetState="settingsMenu:audioMenu" />
+                <a onSignal="BUTTON:inputSettings/PRESSED" doSetState="settingsMenu:inputMenu" />
+                <a onSignal="BUTTON:languageSettings/PRESSED" doSetState="settingsMenu:languageMenu" />
+                
+
+                <state name="graphicsMenu" compound="graphicsMenu">
+                    <a onSignal="BUTTON:fullScreen/PRESSED/START" doSetSignal="SETTINGS/fullScreen = SIGNAL/BUTTON:fullScreen/CHECKED" />
+                </state>
+
+                <state name="audioMenu" compound="audioMenu">
+                    <a onSignal="BUTTON:musicActive/PRESSED/START" doSetSignal="SETTINGS/musicActive = SIGNAL/BUTTON:musicActive/CHECKED" />
+                    <a onSignal="BUTTON:sfxActive/PRESSED/START" doSetSignal="SETTINGS/sfxActive = SIGNAL/BUTTON:sfxActive/CHECKED" />
+                    <a onSignal="BUTTON:speechActive/PRESSED/START" doSetSignal="SETTINGS/speechActive = SIGNAL/BUTTON:speechActive/CHECKED" />
+                    <a onSignal="SLIDER:musicVolume/VALUE=ANY/CHANGED" doSetSignal="SETTINGS/musicVolume = SIGNAL/SLIDER:musicVolume/VALUE" />
+                    <a onSignal="SLIDER:sfxVolume/VALUE=ANY/CHANGED" doSetSignal="SETTINGS/sfxVolume = SIGNAL/SLIDER:sfxVolume/VALUE" />
+                    <a onSignal="SLIDER:speechVolume/VALUE=ANY/CHANGED" doSetSignal="SETTINGS/speechVolume = SIGNAL/SLIDER:speechVolume/VALUE" />
+                </state>
+
+                <state name="inputMenu" compound="inputMenu">
+                </state>
+
+                <state name="languageMenu" compound="languageMenu">
+                </state>
+            </state>
+
+            <state name="aboutPanel" compound="aboutPanel">
+                <a onSignal="BUTTON:aboutPanel_mainMenuButton/PRESSED" doSetState="mainMenu" />
+            </state>
+    
+    
+            <state name="usersDialog" compound="usersDialog" >
+                <a onSignal="BUTTON:closeUsersDialog/PRESSED" doSetState="mainMenu" />
+            </state>
+
+        </state>
+    </update>
+ 
+ 
+</scene>

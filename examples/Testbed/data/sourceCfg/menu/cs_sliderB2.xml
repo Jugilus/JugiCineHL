@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <composedSprite name="sliderB2" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="4">
     <layer content="Free sprites" name="Layer 1">
-        <sprite type="Standard" name="sliderB_incrementButton" x="0" y="26"/>
-        <sprite type="Standard" name="sliderB2_line" x="0" y="100" handleSource="true"/>
-        <sprite type="Standard" name="sliderB_decrementButton" x="0" y="174"/>
+        <sprite type="Standard" name="sliderB_incrementButton" nameID="incrementButton" x="0" y="26"/>
+        <sprite type="Standard" name="sliderB2_line" nameID="slidingLine" x="0" y="100" handleSource="true"/>
+        <sprite type="Standard" name="sliderB_decrementButton" nameID="decrementButton" x="0" y="174"/>
     </layer>
     <layer content="Free sprites" name="Layer 2">
-        <sprite type="Standard" name="sliderB_slidingButton" x="0" y="145"/>
+        <sprite type="Standard" name="sliderB_slidingButton" nameID="slidingButton" x="0" y="145"/>
     </layer>
     <vectorLayer name="Vector Layer 1">
         <singlePoint points="(0,145)" nameID="min"/>
         <singlePoint points="(0,54)" nameID="max"/>
     </vectorLayer>
-    <constantParameter name="wValueRange" value="0.0, 1.0" type="string"/>
-    <constantParameter name="wSlider" value="true" type="bool"/>
 </composedSprite>

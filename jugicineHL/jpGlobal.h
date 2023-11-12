@@ -76,7 +76,11 @@ enum class BaseObjectType : unsigned char
     COMPONENT,
     OVERLAY_COMPONENT,
 
-    BEH_ENGINES_CONTROLLER
+    OVERLAY_STATE,
+
+    BEH_ENGINES_CONTROLLER,
+
+    COMPOUND
 
 };
 
@@ -85,20 +89,27 @@ class BaseObject
 {
 public:
     virtual ~BaseObject(){}
-    BaseObjectType type(){ return mType; }
+    BaseObjectType baseType(){ return mBaseType; }
 
 protected:
-    BaseObjectType mType = BaseObjectType::NOT_DEFINED;
+    BaseObjectType mBaseType = BaseObjectType::NOT_DEFINED;
 };
 
 
 //------------------------------------------------------------------------------------
 
-
+/*
 enum class UpdateMode : int
 {
     NORMAL = 0,
     MODAL_OVERLAY = 1
+};
+*/
+
+struct UpdateMode
+{
+    bool modalOverlay = false;
+    bool loopAllStateActions = false;
 };
 
 
@@ -133,27 +144,15 @@ GfxObjectType GetGfxObjectTypeFromString(const std::string &objectType);
 
 GfxObjectType VerifyIfObjectTypeIsAllowed(GfxObjectType objectType, const std::vector<GfxObjectType> &allowedTypes);
 
-
 //------------------------------------------------------------------------------------
 
-
-enum class SystemParameter : int
+enum class TransitionType
 {
-    NOT_DEFINED = 0,
-    FULL_SCREEN = 1,
-    PIXEL_ZOOM = 2,
-    MUSIC_ACTIVE = 4,
-    SFX_ACTIVE = 8,
-    SPEECH_ACTIVE = 16,
-    MUSIC_VOLUME = 32,
-    SFX_VOLUME = 64,
-    SPEECH_VOLUME = 128,
-    LANGUAGE = 256
-
+    IN,
+    OUT,
+    NOT_DEFINED
 };
 
-
-SystemParameter GetSystemParameterFromString(const std::string &parameter);
 
 
 //---------------------------------------------------------------------------------------
@@ -184,6 +183,22 @@ struct DebugDrawFlags
 };
 
 
+//------------------------------------------------------------------------------------
+
+enum class SignalID : unsigned char
+{
+    UNKNOWN = 0,
+    ENTITY_CONTACT_TRIGGER = 1,
+    CONTACT_TRIGGER = 2,
+    FILTERED_CONTACT_TRIGGER = 3,
+    TRANSPORTER_STATUS = 4,
+    MOVABLE_OBJECT = 5,
+    DIRECTION = 6,
+    PASSENGER = 7,
+    OPERATING = 8,
+    CUSTOM_ENTITY_SIGNAL = 9
+
+};
 
 
 }

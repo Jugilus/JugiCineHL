@@ -1,11 +1,14 @@
 #ifndef PLAYER__SYSTEM__SETTINGS_H
 #define PLAYER__SYSTEM__SETTINGS_H
 
-
+#include <memory>
 #include <string>
 #include <vector>
+#include <functional>
 
-#include "jmGuiCommon.h"
+#include "jmStorage.h"
+
+#include "jmSignal.h"
 #include "jpVariables.h"
 #include "jpGlobal.h"
 
@@ -16,10 +19,39 @@ namespace jugimap{
 
 class PlayedApp;
 
+struct SignalQuery;
+struct SignalSetter;
+class ParsedSignalPath;
 
 
 
-class SystemSettings
+
+//------------------------------------------------------------------------------------
+
+
+struct SystemParameter
+{
+    static const int NOT_DEFINED = 0;
+    static const int FULL_SCREEN = 1;
+    static const int PIXEL_ZOOM = 2;
+    static const int MUSIC_ACTIVE = 3;
+    static const int SFX_ACTIVE = 4;
+    static const int SPEECH_ACTIVE = 5;
+    static const int MUSIC_VOLUME = 6;
+    static const int SFX_VOLUME = 7;
+    static const int SPEECH_VOLUME = 8;
+    static const int LANGUAGE = 9;
+
+};
+
+
+int GetSystemParameterFromString(const std::string &parameter);
+
+
+//------------------------------------------------------------------------------------
+
+
+class SystemSettings : public SignalCallback
 {
 public:
 
@@ -27,6 +59,14 @@ public:
 
     //bool init();
 
+    //void update();
+
+    SimpleStorage<Signal*> & signalsStorage(){ return mAllSignals; }
+
+
+     //void onSetBySignalSetter(Signal* _signal) override;
+
+     bool onSignalSet(Signal *_signal) override;
 
     void setFullScreen(bool _fullScreen);
     bool isFullScreen();
@@ -48,15 +88,15 @@ public:
     bool isSpeechActive();
 
 
-    void setMusicVolume(int _musicVolume);
+    void setMusicVolume(float _musicVolume);
     int  musicVolume();
 
 
-    void setSfxVolume(int _sfxVolume);
+    void setSfxVolume(float _sfxVolume);
     int  sfxVolume();
 
 
-    void setSpeechVolume(int _speechVolume);
+    void setSpeechVolume(float _speechVolume);
     int  speechVolume();
 
 
@@ -64,28 +104,59 @@ public:
     void setActiveLanguage(const std::string &_language);
 
 
-    int usedSystemParameters(){ return mUsedSystemParameters; }
+    //int usedSystemParameters(){ return mUsedSystemParameters; }
 
-    void appendToUsedSystemParameters(SystemParameter sp){ mUsedSystemParameters |= static_cast<int>(sp); }
+    void appendToUsedSystemParameters(int sp);
 
     bool saveSettingsIniFile();
-
     bool loadSettingsFromIniFile();
 
+
+    void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true);
+    void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage=true);
 
 
 private:
     PlayedApp* mParentPlayerApp = nullptr;
 
-    int mUsedSystemParameters = 0;
+    //int mUsedSystemParameters = 0;
 
 
     //language
 
-    VariableManager mVariables;
+   // VariableManager mVariables;
+
+
+    SimpleStorage<Signal*>mAllSignals{"SystemSettingSignals"};
+
+    //std::vector<Signal*>mSignals;                   // OWNED
+
+    std::vector<Signal*>mUsedSignals;               // LINKS
+
+
+
+    //std::unique_ptr<SignalCallback>mSignalCallback;
 
 };
 
+
+/*
+
+class SettingsSignalCallback : public SignalCallback
+{
+public:
+
+
+    //void onSetBySignalSetter(BoolSignal *_signal, bool _newValue) override;
+    //void onSetBySignalSetter(IntSignal *_signal, int _newValue) override;
+    //void onSetBySignalSetter(FloatSignal *_signal, float _newValue) override;
+    //void onSetBySignalSetter(StringSignal *_signal, const std::string &_newValue) override;
+
+    void onSetBySignalSetter(Signal* _signal) override;
+
+};
+
+*/
 
 
 

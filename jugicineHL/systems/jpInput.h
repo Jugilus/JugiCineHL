@@ -8,7 +8,8 @@
 #include <ncine/InputEvents.h>
 
 
-
+#include "jmSignal.h"
+#include "jmInput.h"
 #include "jpSettings.h"
 
 
@@ -60,6 +61,7 @@ public:
 
     //---
     void reset();
+    void setSignalValues(bool _active, bool _activeStarted, bool _activeEnded);
 
     float xAxis(){ return mXAxis; }
     float yAxis(){ return mYAxis; }
@@ -234,7 +236,7 @@ public:
 
     bool initConnections();
 
-    void update();
+    void preUpdate();
 
     //--- device profiles
     //bool addKeyboardProfile(const std::string &_name);

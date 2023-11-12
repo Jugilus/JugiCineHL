@@ -22,7 +22,7 @@
     </vectorLayer>
     <parameter name="entity" value="doorA2" type="string"/>
     <parameter name="eLinkedGroupID" value="0" type="int"/>
-	    <timelineAnimation name="opening" loopCount="0">
+    <timelineAnimation name="opening" loopCount="0">
         <animationMember/>
         <animationMember childNameID="mainPart">
             <animationTrack kind="Scaling">
@@ -52,5 +52,4 @@
             </animationTrack>
         </animationMember>
     </timelineAnimation>
-
 </composedSprite>

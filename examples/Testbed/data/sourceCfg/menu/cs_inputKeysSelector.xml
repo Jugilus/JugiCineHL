@@ -2,19 +2,15 @@
 <composedSprite name="inputKeysSelector" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="13" nTilesY="8">
     <layer content="Free sprites" name="Layer 1">
         <sprite type="Standard" name="tilesA,9" x="625" y="25"/>
-        <sprite type="Composite" name="sliderB" x="618" y="206">
-            <parameter name="wName" value="slider" type="string"/>
-        </sprite>
+        <sprite type="Composite" name="sliderB" nameID="slider" x="618" y="206"/>
         <sprite type="Standard" name="tilesA,9" x="25" y="375"/>
     </layer>
     <layer content="Free sprites" name="Layer 2">
-        <sprite type="Composite" name="slotInputKey" x="30" y="350"/>
+        <sprite type="Composite" name="slotInputKey" nameID="slot" x="30" y="350"/>
     </layer>
     <vectorLayer name="Vector Layer 1">
         <singlePoint points="(30,350)" nameID="firstSlot"/>
     </vectorLayer>
     <parameter name="wName" value="inputButtonsEditor" type="string"/>
-    <constantParameter name="widget" value="table" type="string"/>
-    <constantParameter name="wNumSlotsVertical" value="9" type="int"/>
-    <constantParameter name="wSlotsSpacingVertical" value="5" type="int"/>
+    <parameter name="widgetNew" value="inputButtonsEditor" type="string"/>
 </composedSprite>

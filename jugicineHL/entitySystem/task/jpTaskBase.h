@@ -18,7 +18,7 @@ namespace jugimap{
 class PlayedScene;
 class Entity;
 class TaskEngineFactory;
-
+struct EntitySignalStrings;
 
 
 
@@ -70,12 +70,12 @@ public:
 
     virtual void update(TaskUpdateParameters _tup) = 0;
 
-    virtual void obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage=true);
-    virtual void obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage=true);
+    virtual void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true);
+    virtual void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage=true);
 
 
-    void preUpdateSignals(){ Signal::preUpdateSignals(mSignals); }
-    void postUpdateSignals(){ Signal::postUpdateSignals(mSignals); }
+    //void preUpdateSignals(){ Signal::preUpdateSignals(mSignals); }
+    //void postUpdateSignals(){ Signal::postUpdateSignals(mSignals); }
     std::vector<Signal*> &signals(){ return mSignals; }
 
 
@@ -131,8 +131,8 @@ public:
     virtual TaskEngineCfg* createTaskEngineCfg(const std::string &_name) = 0;
     virtual TaskEngine* createTaskEngine() = 0;
 
-    virtual void obtainCustomSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_signalName, const std::string &_signalValue){}
-    virtual void obtainCustomSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_signalName, const std::string &_signalValue){}
+    virtual void obtainCustomSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp){}
+    virtual void obtainCustomSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp){}
 
 
 protected:

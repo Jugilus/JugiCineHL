@@ -169,13 +169,19 @@ struct EntityContactSignal : public BoolSignal
 
     //---
     bool storedSignalValues = false;
-    bool activeStored = false;
-    bool activeStartedStored = false;
-    bool activeEndedStored = false;
+   // bool activeStored = false;
+    //bool activeStartedStored = false;
+    //bool activeEndedStored = false;
+    bool valueStored = false;
+    bool previousValueStored = false;
+    bool valueChangedStored = false;
+
     //---
 
     b2Vec2 contactNormalBtoA{0.0f, 0.0f};
     b2Vec2 contactPosition{0.0f, 0.0f};
+
+    std::string dbgName;
 
 
 };
@@ -203,7 +209,7 @@ struct ContactTrigger : public BoolSignal
     EntityContactSignal *findEntityContactTriggerWithEntityB(Entity* _entityB);
     EntityContactSignal *findEntityContactTriggerWithEntityRoleB(EntityRole _entityRoleB);
     EntityContactSignal *findEntityContactSignalWithEntityRoleA(EntityRole _entityRoleA);
-    std::vector<EntityContactSignal> &contactedEntitiesTriggers(){ return mContactedEntitiesTriggers; }
+    std::vector<EntityContactSignal*> &contactedEntitiesTriggers(){ return mContactedEntitiesTriggers; }
 
 
 
@@ -211,17 +217,17 @@ struct ContactTrigger : public BoolSignal
 
 private:
     //---
-    std::vector<EntityContactSignal>mContactedEntitiesTriggers;
+    std::vector<EntityContactSignal*>mContactedEntitiesTriggers;
     int mNumContacted = 0;
 
 };
 
 
 
-struct FilteredContactTrigger : public BoolSignal
+struct FilteredContactSignal : public BoolSignal
 {
 
-    FilteredContactTrigger(ContactTrigger* _contactTrigger);
+    FilteredContactSignal(ContactTrigger* _contactTrigger);
 
     void setCategoriesBits(unsigned int _bits){ categoriesBits = _bits;}
     void addSourceEntity(SourceEntity *_sourceEntity){ sourceEntities.push_back(_sourceEntity); }
@@ -250,15 +256,9 @@ private:
 
 
 
-class CustomEntityBoolSignal : public BoolSignal
-{
-public:
 
-    CustomEntityBoolSignal() : BoolSignal(static_cast<unsigned char>(SignalID::CUSTOM_ENTITY_SIGNAL)){}
-    virtual void update() = 0;
 
-};
-
+/*
 
 class CustomEntityIntSignal : public IntSignal
 {
@@ -276,11 +276,11 @@ public:
 
 
 
-class CustomEntityIntBitsSignal : public IntBitsSignal
+class CustomEntityIntBitsSignal : public BitsetSignal
 {
 public:
 
-    CustomEntityIntBitsSignal() : IntBitsSignal(static_cast<unsigned char>(SignalID::CUSTOM_ENTITY_SIGNAL)){}
+    CustomEntityIntBitsSignal() : BitsetSignal(static_cast<unsigned char>(SignalID::CUSTOM_ENTITY_SIGNAL)){}
     virtual void update() = 0;
 
     int value(const std::string &valueName);
@@ -290,28 +290,27 @@ public:
 
 };
 
+*/
 
 //==========================================================================
 
 
 
-class FilteredContactTriggersGroup
+class FilteredContactSignalsStorage
 {
 public:
 
 
-    ~FilteredContactTriggersGroup();
-    FilteredContactTrigger* getNewFilteredContactTrigger(ContactTrigger* _contactTrigger);
-    //PathwayAccessedSignal* getNewPathwayAccessedSignal();
+    ~FilteredContactSignalsStorage();
+    FilteredContactSignal* getNewFilteredContactSignal(ContactTrigger* _contactTrigger);
 
-    void preUpdate_postContactTriggePreUpdate();
+    void preUpdate_postContactSignalsPreUpdate();
     void postUpdate();
 
 
 private:
 
-    std::vector<FilteredContactTrigger*>mFilteredContactTriggers;
-    //std::vector<PathwayAccessedSignal*>mPathwayAccessedSignals;
+    std::vector<FilteredContactSignal*>mFilteredContactSignals;
 
 
 };
@@ -355,7 +354,7 @@ public:
     std::vector<Entity*>& members(){ return mMembers;}
 
     //virtual void preUpdate(UpdateMode _updateMode){}
-    virtual void update_Movement(UpdateMode _updateMode) = 0;
+    virtual void update_Movement(UpdateMode &_updateMode) = 0;
     //virtual void postUpdate(UpdateMode _updateMode);
 
     bool membersCollision(){ return mMembersCollision;}

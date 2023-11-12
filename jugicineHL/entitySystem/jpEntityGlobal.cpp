@@ -17,7 +17,7 @@
 #include "jpB2Body.h"
 #include "jpB2Fixture.h"
 #include "jpB2World.h"
-#include "scripting/jpBehavior.h"
+#include "jpEntityLogicState.h"
 #include "jpSourceEntity.h"
 #include "jpEntity.h"
 #include "jpEntitySystem.h"
@@ -166,6 +166,20 @@ Direction GetDirectionFromString(const std::string &direction)
     return Direction::NONE;
 }
 
+std::vector<NamedValue>gDirectionNamedValues
+{
+    { "LEFT", static_cast<int>(Direction::LEFT) },
+    { "RIGHT", static_cast<int>(Direction::RIGHT) },
+    { "UP", static_cast<int>(Direction::UP) },
+    { "DOWN", static_cast<int>(Direction::DOWN) },
+    { "LEFT_UP", static_cast<int>(Direction::LEFT_UP) },
+    { "LEFT_DOWN", static_cast<int>(Direction::LEFT_DOWN) },
+    { "RIGHT_UP", static_cast<int>(Direction::RIGHT_UP) },
+    { "RIGHT_DOWN", static_cast<int>(Direction::RIGHT_DOWN) },
+    { "FORWARD", static_cast<int>(Direction::FORWARD) },
+    { "BACKWARD", static_cast<int>(Direction::BACKWARD) }
+
+};
 
 
 std::string GetDirectionString(Direction direction)

@@ -20,10 +20,8 @@ namespace jugimap{
 
 class PlayedScene;
 class Animation;
-class BoolSignal;
 class VectorShape;
 class Entity;
-//class PathPTPMovementEngine;
 struct EntityCategory;
 
 
@@ -34,21 +32,21 @@ struct EntityCategory;
 struct TransporterStatus
 {
     static const int UNKNOWN = 0;
-    static const int OPERATING =             1 << 0;
-    static const int MOVING =                1 << 1;
-    static const int DIRECTION_FORWARD =     1 << 2;
-    static const int DIRECTION_BACKWARD =    1 << 3;
-    static const int NO_PASSENGER =          1 << 4;
-    static const int PASSENGER_PARTLY_ON =   1 << 5;
-    static const int PASSENGER_FULLY_ON =    1 << 6;
+    //static const int OPERATING =             1 << 0;
+    static const int MOVING =                1 << 0;
+    static const int DIRECTION_FORWARD =     1 << 1;
+    static const int DIRECTION_BACKWARD =    1 << 2;
+    static const int NO_PASSENGER =          1 << 3;
+    static const int PASSENGER_PARTLY_ON =   1 << 4;
+    static const int PASSENGER_FULLY_ON =    1 << 5;
 
 };
 
 int GetTransporterStatusFromString(const std::string &_type);
 
-int GetTransporterStatusFromString_signalSetter(const std::string &_type);
+//int GetTransporterStatusFromString_signalSetter(const std::string &_type);
 
-
+extern std::vector<NamedValue>gTransporterStatusNamedValues;
 
 //------------------------------------------------------------------------------------
 
@@ -196,8 +194,8 @@ public:
     //std::vector<PointToPointMovementTaskData>& dataObjects(){ return mDataObjects; }
     TETransporterData* getDataObject(const std::string &_name, bool _setErrorMessage = true);
 
-    void obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_dataName, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage=true) override;
-    void obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_dataName, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage = true) override;
+    void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true) override;
+    void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage = true) override;
 
 
 private:
@@ -225,9 +223,11 @@ private:
     //b2Vec2 mPstart;
     //b2Vec2 mPend;
 
-    IntBitsSignal mSigStatus;
+    BitsetSignal mSigStatus;
+    BoolSignal mSigEnabled;
 
     int mStatusFlags = 0;
+    //bool mEnabled = true;
 
 
     TransporterState mState = TransporterState::OFF;

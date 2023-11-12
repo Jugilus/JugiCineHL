@@ -1,6 +1,6 @@
 #include <ncine/Application.h>
 #include <ncine/FileSystem.h>
-#include "jmGuiText.h"
+//#include "jmGuiText.h"
 #include "jmSourceContainers.h"
 #include "jmFont.h"
 #include "jmSourceObjectsLoader_xml.h"
@@ -8,11 +8,14 @@
 #include "jmStreams.h"
 #include "jmVectorShapeDrawing.h"
 #include "components/jpComponentsCommon.h"
+#include "components/jpMessagePanel.h"
 #include "jpGameObjectsLoader_xml.h"
 #include "jpUser.h"
 #include "jpInput.h"
 #include "jpQueries.h"
 #include "jpSystemVarious.h"
+#include "gui/jpGuiCommon.h"
+#include "gui/jpGuiSystem.h"
 #include "jpEntitySystem.h"
 #include "jpPlayedScene.h"
 #include "jpPlayedApp.h"
@@ -30,6 +33,7 @@ PlayedApp::PlayedApp()
 PlayedApp::~PlayedApp()
 {
 
+    DeleteGuiSupportingObjects();
 }
 
 
@@ -145,12 +149,13 @@ void PlayedApp::init()
 
     mCustomComponentFactoryManager.reset(new CustomComponentFactoryManager());
     mCustomComponentFactoryManager->addFactory(new EntitySystemFactory("entitySystem"));
+    mCustomComponentFactoryManager->addFactory(new GuiSystemFactory("guiSystem"));
+    mCustomComponentFactoryManager->addFactory(new MessagePanelFactory("messagePanel"));
+
 
     mSignalParserManager.reset(new SignalParserManager());
-    mSignalParserManager->addSignalParser(new CoreSignalsParser({"INPUT_COMMAND", "ANIMATED_OBJECT"}));
-
-
-
+    mSignalParserManager->addAndStoreSignalParser(new CoreSignalsParser(
+    {"STATES", "USERS", "INPUT_COMMAND", "INPUT", "SETTINGS", "ANIMATED_OBJECT", "GFX"}));
 
 
     if(appConfigurationLoader_xml.loadApplicationGlobalData(this)==false){
@@ -311,9 +316,9 @@ void PlayedApp::update(float _framePeriod)
         //----
         //mActiveScene->start();
 
-        //mState = AppState::STARTING_SCENE;
+        mState = AppState::STARTING_SCENE;
 
-
+        /*
         while(true){
             if(mActiveScene->startingPhaseUpdate()==false){
                 break;
@@ -322,16 +327,30 @@ void PlayedApp::update(float _framePeriod)
         mState = AppState::SCENE_FADE_IN;
 
         mMessage += " 4";
+        */
 
     }else if(mState==AppState::STARTING_SCENE){
 
-        if(mActiveScene->isBuilt()==false) return;
+        //if(mActiveScene->isBuilt()==false) return;
 
-        ManageSuspendedTime(_framePeriod*1000);
-        //---
-        if(mActiveScene->startingPhaseUpdate()==false){
-            mState = AppState::SCENE_FADE_IN;
-        }
+         //ManageSuspendedTime(_framePeriod*1000);
+
+         //---
+         gSignalUpdater.preUpdateSignals();
+
+         //---
+
+         while(true){
+             if(mActiveScene->startingPhaseUpdate()==false){
+                 break;
+             }
+         }
+
+         //if(mActiveScene->startingPhaseUpdate()==false){
+             mState = AppState::SCENE_FADE_IN;
+         //}
+
+         gSignalUpdater.postUpdateSignals();
 
 
     }else if(mState==AppState::SCENE_FADE_IN){
@@ -348,15 +367,20 @@ void PlayedApp::update(float _framePeriod)
         }
 
         ManageSuspendedTime(_framePeriod*1000);
+
         //---
+        gSignalUpdater.preUpdateSignals();
+
         mActiveScene->preUpdate();
-        mInputSystem->update();
+        mInputSystem->preUpdate();
 
         mActiveScene->update();
 
         mActiveScene->postUpdate();
 
         mDelayedTaskManager->update();
+
+        gSignalUpdater.postUpdateSignals();
 
         mMessage += " 2";
 

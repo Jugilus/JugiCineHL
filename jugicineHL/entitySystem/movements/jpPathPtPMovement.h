@@ -22,7 +22,6 @@ namespace jugimap{
 class Entity;
 class PlayedScene;
 class Animation;
-class BoolSignal;
 class VectorShape;
 
 
@@ -303,7 +302,7 @@ private:
     void setState(PathPTPMovementState _state)
     {
         mState = _state;
-        mSigState._setOnNextFrame(static_cast<int>(mState));
+        mSigState.setValue_onNextFrame(static_cast<int>(mState));
     }
 
 

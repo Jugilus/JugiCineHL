@@ -19,7 +19,6 @@
 #include "jpPlayedScene.h"
 
 #include "jpEntitySystem.h"
-#include "scripting/jpBehavior.h"
 #include "jpSourceEntity.h"
 #include "jpEntity.h"
 #include "jpEntityUtilities.h"

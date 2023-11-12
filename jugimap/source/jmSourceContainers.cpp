@@ -6,7 +6,7 @@
 #include "jmCommonFunctions.h"
 #include "jmMap.h"
 #include "jmCompositeSprite.h"
-#include "jmGuiText.h"
+#include "jmText.h"
 #include "jmLayer.h"
 #include "jmFont.h"
 #include "jmSourceItem.h"

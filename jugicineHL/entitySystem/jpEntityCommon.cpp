@@ -7,17 +7,15 @@
 #include "jmCamera.h"
 #include "jmSceneLayout.h"
 #include "jmCommonFunctions.h"
-#include "jmGuiText.h"
 #include "jmStandardSprite.h"
 #include "jmUtilities.h"
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
-#include "jpActionsCommon.h"
+//#include "jpActionsCommon.h"
 
-#include "scripting/jpBehavior.h"
+#include "jpEntityLogicState.h"
 #include "jpB2Body.h"
 #include "jpEntitySystem.h"
 #include "jpSourceEntity.h"
@@ -206,8 +204,10 @@ EntityContactSignal::EntityContactSignal(const EntityShape &_entityShapeA, const
     mTwoEntitiesContact(_entityShapeA, _entityShapeB)
 {
     setId(static_cast<unsigned int>(SignalID::ENTITY_CONTACT_TRIGGER));
-}
 
+    dbgName = _entityShapeA.entity->sourceEntity()->sourceEntityCfg()->name + "  -  " + _entityShapeB.entity->sourceEntity()->sourceEntityCfg()->name;
+
+}
 
 
 ContactTrigger::ContactTrigger()
@@ -216,171 +216,65 @@ ContactTrigger::ContactTrigger()
 }
 
 
-
 void ContactTrigger::onBeginContact(const EntityShape &_entityShapeA, b2Fixture *_fixtureA, int _childIndexA, const EntityShape &_entityShapeB, b2Fixture *_fixtureB, int _childIndexB)
 {
 
-    for(EntityContactSignal &ect : mContactedEntitiesTriggers){
+    for(EntityContactSignal *ect : mContactedEntitiesTriggers){
 
-        if(ect.mTwoEntitiesContact.entityShapeA()==_entityShapeA && ect.mTwoEntitiesContact.entityShapeB()==_entityShapeB){
-            ect.mTwoEntitiesContact.onBeginContact(_fixtureA, _childIndexA, _fixtureB, _childIndexB);
-            //ect.mDeleteThis = false;        // Required as there may be contacts ended and began between the same fixtures within the the one frame!
+        if(ect->mTwoEntitiesContact.entityShapeA()==_entityShapeA && ect->mTwoEntitiesContact.entityShapeB()==_entityShapeB){
+            ect->mTwoEntitiesContact.onBeginContact(_fixtureA, _childIndexA, _fixtureB, _childIndexB);
 
-            if(ect.storedSignalValues)      // Possible as there may be contacts ended and began between the same fixtures within the the one frame!
+            if(ect->storedSignalValues)      // Possible as there may be contacts ended and began between the same fixtures within the the one frame!
             {
-                ect._setActive(ect.activeStored);
-                ect._setActiveStarted(ect.activeStartedStored);
-                ect._setActiveEnded(ect.activeEndedStored);
-                ect.storedSignalValues = false;
-            }
+                //ect->_setValue(ect->activeStored);
+                //ect->_setActiveStarted(ect->activeStartedStored);
+                //ect->_setActiveEnded(ect->activeEndedStored);
 
+                ect->_setValue(ect->valueStored);
+                ect->_setPreviousValue(ect->previousValueStored);
+                ect->_setValueChanged(ect->valueChangedStored);
+                ect->storedSignalValues = false;
+
+                ect->setValue(true);
+            }
             return;
         }
     }
 
-    mContactedEntitiesTriggers.push_back(EntityContactSignal(_entityShapeA, _entityShapeB));
-    mContactedEntitiesTriggers.back().mTwoEntitiesContact.onBeginContact(_fixtureA, _childIndexA, _fixtureB, _childIndexB);
+    EntityContactSignal *ect = new EntityContactSignal(_entityShapeA, _entityShapeB);
+    ect->mTwoEntitiesContact.onBeginContact(_fixtureA, _childIndexA, _fixtureB, _childIndexB);
+    //ect->setValue(true);
+    mContactedEntitiesTriggers.push_back(ect);
 
-    // trigger flags are set on preUpdate and postUpdate
 }
-
-
 
 
 void ContactTrigger::onEndConctact(const EntityShape &_entityShapeA, b2Fixture* _fixtureA, int _childIndexA, const EntityShape &_entityShapeB, b2Fixture *_fixtureB, int _childIndexB)
 {
 
-    for(EntityContactSignal &ect : mContactedEntitiesTriggers){
+    for(EntityContactSignal *ect : mContactedEntitiesTriggers){
 
-        if(ect.mTwoEntitiesContact.entityShapeA()==_entityShapeA && ect.mTwoEntitiesContact.entityShapeB()==_entityShapeB){
-            ect.mTwoEntitiesContact.onEndContact(_fixtureA, _childIndexA, _fixtureB, _childIndexB);
+        if(ect->mTwoEntitiesContact.entityShapeA()==_entityShapeA && ect->mTwoEntitiesContact.entityShapeB()==_entityShapeB){
+            ect->mTwoEntitiesContact.onEndContact(_fixtureA, _childIndexA, _fixtureB, _childIndexB);
 
-            if(ect.mTwoEntitiesContact.dualFixtures().empty()){
+            if(ect->mTwoEntitiesContact.dualFixtures().empty()){
 
                 // Storing the signal values in case the same contact will began again within the same frame !!
-                ect.activeStored = ect.active();
-                ect.activeStartedStored = ect.activeStarted();
-                ect.activeEndedStored = ect.activeEnded();
-                ect.storedSignalValues = true;
+                //ect->activeStored = ect->active();
+                //ect->activeStartedStored = ect->activeStarted();
+                //ect->activeEndedStored = ect->activeEnded();
+                ect->valueStored = ect->value();
+                ect->previousValueStored = ect->previousValue();
+                ect->valueChangedStored = ect->valueChanged();
+                ect->storedSignalValues = true;
 
-                ect._Set(false);                    // EntityContactTrigger will be deleted on postUpdate !
-                //ect.mDeleteThis = true;
+                ect->setValue(false);                    // EntityContactTrigger will be deleted on postUpdate !
             }
         }
     }
 
 }
 
-
-/*
-void ContactTrigger::preUpdate_postBox2dStep()
-{
-
-    if(mContactedEntitiesTriggers.empty()){
-        return;
-    }
-
-
-    // set cumulative trigger for activeStarted
-
-    int nActive = 0;
-    int nActiveStarted = 0;
-    int nActiveEnded = 0;
-
-    int nPENDING = 0;
-    int nACTIVE = 0;
-
-
-    for(EntityContactTrigger &ect : mContactedEntitiesTriggers){
-
-        Entity * contactedEntity = ect.mTwoEntitiesContact.entityShapeA().entity;
-        Entity * contactingEntity = ect.mTwoEntitiesContact.entityShapeB().entity;
-        Margin & margin = contactedEntity->sourceEntity()->sourceEntityCfg()->centeringMargin;
-
-        bool insideMargin = true;
-
-        if(margin.xMarginActive){
-            b2Vec2 contactedEntityPos = contactedEntity->body()->B2Body()->GetPosition();
-            b2Vec2 contactingEntityPos = contactingEntity->body()->B2Body()->GetPosition();
-            if(contactingEntityPos.x < contactedEntityPos.x - margin.left  || contactingEntityPos.x > contactedEntityPos.x + margin.right){
-                insideMargin = false;
-            }
-        }
-        if(margin.yMarginActive){
-            b2Vec2 contactedEntityPos = contactedEntity->body()->B2Body()->GetPosition();
-            b2Vec2 contactingEntityPos = contactingEntity->body()->B2Body()->GetPosition();
-            if(contactingEntityPos.y < contactedEntityPos.y - margin.bottom  || contactingEntityPos.y > contactedEntityPos.y + margin.top){
-                insideMargin = false;
-            }
-        }
-
-        if(insideMargin){
-
-            //if(ect.mActiveStarted==false && ect.mActive==false && ect.mActiveEnded==false){     // not yet set !
-            if(ect.mStatus==EntityContactTrigger::Status::PENDING){
-                ect._Set(true);
-                ect.mStatus = EntityContactTrigger::Status::ACTIVE;
-
-                print("Inside margin contact with entityA '" + ect.mTwoEntitiesContact.entityShapeA().entity->sourceEntity()->name() +
-                      "' (cat = " + ect.mTwoEntitiesContact.entityShapeA().category->name+
-                      ") and  entityB '" + ect.mTwoEntitiesContact.entityShapeB().entity->sourceEntity()->name() +
-                      "' (cat = " + ect.mTwoEntitiesContact.entityShapeB().category->name + ") !");
-
-                //if(mContactedEntitiesTriggers.size()==1){
-                //    setActiveStarted = true;
-                //}
-
-            }
-
-        }else{
-            if(ect.mStatus==EntityContactTrigger::Status::ACTIVE){
-                ect._Set(false);
-                ect.mStatus = EntityContactTrigger::Status::PENDING;
-
-                print("Out of margin contact with entityA '" + ect.mTwoEntitiesContact.entityShapeA().entity->sourceEntity()->name() +
-                      "' (cat = " + ect.mTwoEntitiesContact.entityShapeA().category->name+
-                      ") and  entityB '" + ect.mTwoEntitiesContact.entityShapeB().entity->sourceEntity()->name() +
-                      "' (cat = " + ect.mTwoEntitiesContact.entityShapeB().category->name + ") !");
-
-                //if(mContactedEntitiesTriggers.size()==1){
-                //    setActiveStarted = true;
-                //}
-
-            }
-
-        }
-
-        //---
-        if(ect.mActive) nActive++;
-        if(ect.mActiveStarted) nActiveStarted++;
-        if(ect.mActiveEnded) nActiveEnded++;
-
-        if(ect.mStatus==EntityContactTrigger::Status::PENDING) nPENDING ++;
-        if(ect.mStatus==EntityContactTrigger::Status::ACTIVE) nACTIVE ++;
-
-
-    }
-
-
-    // set cumulative trigger
-
-    if(nActiveStarted>0 && nActive==nActiveStarted && nActiveEnded==0){
-        _Set(true);
-
-    }else if(nActiveEnded>0 && nActive==0){
-        _Set(false);
-
-    }
-
-
-
-
-
-
-
-}
-
-*/
 
 
 void ContactTrigger::preUpdate_postBox2dStep()
@@ -390,13 +284,32 @@ void ContactTrigger::preUpdate_postBox2dStep()
         return;
     }
 
+
+    //----  delete contacts without contacted fixtures
+    for(int i = int(mContactedEntitiesTriggers.size())-1; i>=0; i-- ){
+        EntityContactSignal *ect = mContactedEntitiesTriggers[i];
+        if(ect->mTwoEntitiesContact.dualFixtures().empty()){
+            assert(ect->active(true)==false);
+
+            print("Ending contact between entityA '" + ect->mTwoEntitiesContact.entityShapeA().entity->sourceEntity()->name() +
+                  "' (cat = " + ect->mTwoEntitiesContact.entityShapeA().category->name+
+                  ") and  entityB '" + ect->mTwoEntitiesContact.entityShapeB().entity->sourceEntity()->name() +
+                  "' (cat = " + ect->mTwoEntitiesContact.entityShapeB().category->name + ") !");
+
+            mContactedEntitiesTriggers.erase(mContactedEntitiesTriggers.begin()+i);
+            delete ect;
+        }
+    }
+
+
+    //---
 
     mNumContacted = 0;
 
-    for(EntityContactSignal &ect : mContactedEntitiesTriggers){
+    for(EntityContactSignal *ect : mContactedEntitiesTriggers){
 
-        Entity * entityA = ect.mTwoEntitiesContact.entityShapeA().entity;
-        Entity * entityB = ect.mTwoEntitiesContact.entityShapeB().entity;
+        Entity * entityA = ect->mTwoEntitiesContact.entityShapeA().entity;
+        Entity * entityB = ect->mTwoEntitiesContact.entityShapeB().entity;
         Margin & marginA = entityA->sourceEntity()->sourceEntityCfg()->centeringMargin;
         Margin & marginB = entityB->sourceEntity()->sourceEntityCfg()->centeringMargin;
 
@@ -454,86 +367,38 @@ void ContactTrigger::preUpdate_postBox2dStep()
 
         if(insideMargin){
 
-            if(ect.activeStarted()==false && ect.active()==false && ect.activeEnded()==false){     // not yet set !
-                ect._Set(true);
+            if(ect->activeStarted(true)==false && ect->active(true)==false && ect->activeEnded(true)==false){     // not yet set !
+                ect->setValue(true);
 
-                print("Inside margin contact with entityA '" + ect.mTwoEntitiesContact.entityShapeA().entity->sourceEntity()->name() +
-                      "' (cat = " + ect.mTwoEntitiesContact.entityShapeA().category->name+
-                      ") and  entityB '" + ect.mTwoEntitiesContact.entityShapeB().entity->sourceEntity()->name() +
-                      "' (cat = " + ect.mTwoEntitiesContact.entityShapeB().category->name + ") !");
+                print("Inside margin contact with entityA '" + ect->mTwoEntitiesContact.entityShapeA().entity->sourceEntity()->name() +
+                      "' (cat = " + ect->mTwoEntitiesContact.entityShapeA().category->name+
+                      ") and  entityB '" + ect->mTwoEntitiesContact.entityShapeB().entity->sourceEntity()->name() +
+                      "' (cat = " + ect->mTwoEntitiesContact.entityShapeB().category->name + ") !");
 
             }
 
         }else{
-            if(ect.active()){
-                ect._Set(false);
+            if(ect->active(true)){
+                ect->setValue(false);
 
-                print("Out of margin contact with entityA '" + ect.mTwoEntitiesContact.entityShapeA().entity->sourceEntity()->name() +
-                      "' (cat = " + ect.mTwoEntitiesContact.entityShapeA().category->name+
-                      ") and  entityB '" + ect.mTwoEntitiesContact.entityShapeB().entity->sourceEntity()->name() +
-                      "' (cat = " + ect.mTwoEntitiesContact.entityShapeB().category->name + ") !");
+                print("Out of margin contact with entityA '" + ect->mTwoEntitiesContact.entityShapeA().entity->sourceEntity()->name() +
+                      "' (cat = " + ect->mTwoEntitiesContact.entityShapeA().category->name+
+                      ") and  entityB '" + ect->mTwoEntitiesContact.entityShapeB().entity->sourceEntity()->name() +
+                      "' (cat = " + ect->mTwoEntitiesContact.entityShapeB().category->name + ") !");
 
             }
         }
 
-        if(ect.active()){
+        if(ect->active(true)){
             mNumContacted ++;
         }
     }
 
 
-    //---
-    //if(mNumContacted>0){
-    //    _Set(true);
-
-    //}else{
-    //    _Set(false);
-    //}
-
-    _Set(mNumContacted>0);
-
-
-    // set cumulative trigger
-
-    /*
-    if(nActiveStarted>0 && nActive==nActiveStarted && nActiveEnded==0){
-        _Set(true);
-
-    }else if(nActiveEnded>0 && nActive==0){
-        _Set(false);
-
-    }
-
-
-
-    if(setActiveStarted){
-        _Set(true);
-
-        return;
-    }
-
-
-    // set cumulative trigger
-
-
-
-
-    bool setActiveEnded = true;
-    for(EntityContactTrigger &ect : mContactedEntitiesTriggers){
-        if(ect.mActiveEnded==false){
-            setActiveEnded = false;
-            break;
-        }
-    }
-    if(setActiveEnded){
-        _Set(false);
-    }
-
-    */
-
-
+    setValue(mNumContacted>0);
 
 }
+
 
 void ContactTrigger::postUpdateSignals()
 {
@@ -543,38 +408,37 @@ void ContactTrigger::postUpdateSignals()
     }
 
 
+    /*
     //---- delete ended contacts
     for(int i = int(mContactedEntitiesTriggers.size())-1; i>=0; i-- ){
-        EntityContactSignal &ect = mContactedEntitiesTriggers[i];
-        //if(ect.mDeleteThis){
-        if(ect.mTwoEntitiesContact.dualFixtures().empty()){
-            assert(ect.active()==false);
+        EntityContactSignal *ect = mContactedEntitiesTriggers[i];
+        //if(ect->mDeleteThis){
+        if(ect->mTwoEntitiesContact.dualFixtures().empty()){
+            assert(ect->active()==false);
 
-            print("Ending contact between entityA '" + ect.mTwoEntitiesContact.entityShapeA().entity->sourceEntity()->name() +
-                  "' (cat = " + ect.mTwoEntitiesContact.entityShapeA().category->name+
-                  ") and  entityB '" + ect.mTwoEntitiesContact.entityShapeB().entity->sourceEntity()->name() +
-                  "' (cat = " + ect.mTwoEntitiesContact.entityShapeB().category->name + ") !");
+            print("Ending contact between entityA '" + ect->mTwoEntitiesContact.entityShapeA().entity->sourceEntity()->name() +
+                  "' (cat = " + ect->mTwoEntitiesContact.entityShapeA().category->name+
+                  ") and  entityB '" + ect->mTwoEntitiesContact.entityShapeB().entity->sourceEntity()->name() +
+                  "' (cat = " + ect->mTwoEntitiesContact.entityShapeB().category->name + ") !");
 
             mContactedEntitiesTriggers.erase(mContactedEntitiesTriggers.begin()+i);
+            delete ect;
         }
     }
-
+    */
 
     //----
-    postUpdate();
-    for(EntityContactSignal &ect : mContactedEntitiesTriggers){
-        ect.contactNormalBtoA.SetZero();
-        ect.contactPosition.SetZero();
-        ect.postUpdate();
+    //postUpdate();
+    for(EntityContactSignal *ect : mContactedEntitiesTriggers){
+        ect->contactNormalBtoA.SetZero();
+        ect->contactPosition.SetZero();
+        //ect->postUpdate();
     }
 
     //----
-    //if(mContactedEntitiesTriggers.empty()){
-    //    Reset();
+    //if(mNumContacted==0){
+    //    reset();
     //}
-    if(mNumContacted==0){
-        reset();
-    }
 
 
 }
@@ -583,9 +447,9 @@ void ContactTrigger::postUpdateSignals()
 EntityContactSignal * ContactTrigger::findEntityContactTriggerWithEntityB(Entity *_entityB)
 {
 
-    for(EntityContactSignal &ect : mContactedEntitiesTriggers){
-        if(ect.mTwoEntitiesContact.entityShapeB().entity== _entityB){
-            return &ect;
+    for(EntityContactSignal *ect : mContactedEntitiesTriggers){
+        if(ect->mTwoEntitiesContact.entityShapeB().entity== _entityB){
+            return ect;
         }
     }
 
@@ -597,9 +461,9 @@ EntityContactSignal * ContactTrigger::findEntityContactTriggerWithEntityB(Entity
 EntityContactSignal * ContactTrigger::findEntityContactSignalWithEntityRoleA(EntityRole _entityRoleA)
 {
 
-    for(EntityContactSignal &ect : mContactedEntitiesTriggers){
-        if(ect.mTwoEntitiesContact.entityShapeA().category->role == _entityRoleA){
-            return &ect;
+    for(EntityContactSignal *ect : mContactedEntitiesTriggers){
+        if(ect->mTwoEntitiesContact.entityShapeA().category->role == _entityRoleA){
+            return ect;
         }
     }
 
@@ -607,10 +471,11 @@ EntityContactSignal * ContactTrigger::findEntityContactSignalWithEntityRoleA(Ent
 
 }
 
+
 //--------------------------------------------------------------------------------------------
 
 
-FilteredContactTrigger::FilteredContactTrigger(ContactTrigger* _contactTrigger) : mContactTrigger(_contactTrigger)
+FilteredContactSignal::FilteredContactSignal(ContactTrigger* _contactTrigger) : mContactTrigger(_contactTrigger)
 {
     setId(static_cast<unsigned int>(SignalID::FILTERED_CONTACT_TRIGGER));
     categoriesBits = std::numeric_limits< unsigned int>::max();
@@ -618,13 +483,12 @@ FilteredContactTrigger::FilteredContactTrigger(ContactTrigger* _contactTrigger) 
 }
 
 
-
-void FilteredContactTrigger::preUpdate_postContactTriggerUpdate()
+void FilteredContactSignal::preUpdate_postContactTriggerUpdate()
 {
 
     EntityContactSignal *filteredEntityContactTrigger = nullptr;
 
-    for(EntityContactSignal &ect : mContactTrigger->contactedEntitiesTriggers()){
+    for(EntityContactSignal *ect : mContactTrigger->contactedEntitiesTriggers()){
 
         //unsigned int bits = contactedEntity->sourceEntity()->sourceEntityCfg()->category->contactBits;
         //if((bits & categoriesBits)==0){
@@ -632,10 +496,10 @@ void FilteredContactTrigger::preUpdate_postContactTriggerUpdate()
         //}
         if(categoriesBits != 0){
             bool categoryFound = false;
-            if(ect.mTwoEntitiesContact.dualFixtures().size()==2){
+            if(ect->mTwoEntitiesContact.dualFixtures().size()==2){
                 DummyFunction();
             }
-            for(TwoEntitiesContact::DualFixture &df : ect.mTwoEntitiesContact.dualFixtures()){
+            for(TwoEntitiesContact::DualFixture &df : ect->mTwoEntitiesContact.dualFixtures()){
 
                 b2Fixture * contactedFixture = df.fixtureB;
                 FixtureUserData *fud = reinterpret_cast<FixtureUserData *>(contactedFixture->GetUserData().pointer);
@@ -649,7 +513,7 @@ void FilteredContactTrigger::preUpdate_postContactTriggerUpdate()
             }
         }
 
-        Entity * contactedEntity = ect.mTwoEntitiesContact.entityShapeB().entity;
+        Entity * contactedEntity = ect->mTwoEntitiesContact.entityShapeB().entity;
 
         if(sourceEntities.empty()==false){
             bool sourceEntityFound = false;
@@ -677,17 +541,16 @@ void FilteredContactTrigger::preUpdate_postContactTriggerUpdate()
             }
         }
 
-        filteredEntityContactTrigger = &ect;
+        filteredEntityContactTrigger = ect;
         break;
     }
 
     //---
     if(filteredEntityContactTrigger){
-        //_setAll(filteredEntityContactTrigger->active(), filteredEntityContactTrigger->activeStarted(), filteredEntityContactTrigger->activeEnded());
-        _setActive(filteredEntityContactTrigger->active());
-        _setActiveStarted(filteredEntityContactTrigger->activeStarted());
-        _setActiveEnded(filteredEntityContactTrigger->activeEnded());
-
+        //_setActive(filteredEntityContactTrigger->active());
+        //_setActiveStarted(filteredEntityContactTrigger->activeStarted());
+        //_setActiveEnded(filteredEntityContactTrigger->activeEnded());
+        setValue(filteredEntityContactTrigger->active(true));
 
     }else{
         reset();
@@ -696,8 +559,7 @@ void FilteredContactTrigger::preUpdate_postContactTriggerUpdate()
 }
 
 
-
-void FilteredContactTrigger::postUpdateSignals()
+void FilteredContactSignal::postUpdateSignals()
 {
 
     postUpdate();
@@ -711,49 +573,40 @@ void FilteredContactTrigger::postUpdateSignals()
 
 
 
-FilteredContactTriggersGroup::~FilteredContactTriggersGroup()
+FilteredContactSignalsStorage::~FilteredContactSignalsStorage()
 {
 
-    for(FilteredContactTrigger* fct : mFilteredContactTriggers){
+    for(FilteredContactSignal* fct : mFilteredContactSignals){
         delete fct;
     }
 }
 
 
 
-FilteredContactTrigger* FilteredContactTriggersGroup::getNewFilteredContactTrigger(ContactTrigger* _contactTrigger)
+FilteredContactSignal* FilteredContactSignalsStorage::getNewFilteredContactSignal(ContactTrigger* _contactTrigger)
 {
 
-    mFilteredContactTriggers.push_back(new FilteredContactTrigger(_contactTrigger));
-    return mFilteredContactTriggers.back();
+    mFilteredContactSignals.push_back(new FilteredContactSignal(_contactTrigger));
+    return mFilteredContactSignals.back();
 
 }
 
-/*
-PathwayAccessedSignal* FilteredContactTriggersGroup::getNewPathwayAccessedSignal()
+
+
+void FilteredContactSignalsStorage::preUpdate_postContactSignalsPreUpdate()
 {
 
-    mPathwayAccessedSignals.push_back(new PathwayAccessedSignal());
-    return mPathwayAccessedSignals.back();
-
-}
-*/
-
-
-void FilteredContactTriggersGroup::preUpdate_postContactTriggePreUpdate()
-{
-
-    for(FilteredContactTrigger* fct : mFilteredContactTriggers){
+    for(FilteredContactSignal* fct : mFilteredContactSignals){
         fct->preUpdate_postContactTriggerUpdate();
     }
 
 }
 
 
-void FilteredContactTriggersGroup::postUpdate()
+void FilteredContactSignalsStorage::postUpdate()
 {
 
-    for(FilteredContactTrigger* fct : mFilteredContactTriggers){
+    for(FilteredContactSignal* fct : mFilteredContactSignals){
         fct->postUpdateSignals();
     }
 

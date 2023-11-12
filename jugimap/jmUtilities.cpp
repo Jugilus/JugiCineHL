@@ -15,7 +15,7 @@
 #include "jmCompositeSprite.h"
 #include "jmStandardSprite.h"
 #include "jmVectorShape.h"
-#include "jmGuiCommon.h"
+//#include "jmGuiCommon.h"
 #include "jmUtilities.h"
 
 
@@ -602,6 +602,29 @@ void CollectVectorShapesWithParameter(SpriteLayer *spriteLayer, std::vector<Vect
 }
 
 
+void CollectVectorShapesWithName(Map *map, std::vector<VectorShape*>&collectedShapes, const std::string &name, ShapeKind kind)
+{
+
+    for(Layer *l : map->layers()){
+        if(l->kind()==LayerKind::VECTOR_LAYER){
+            VectorLayer * vl = static_cast<VectorLayer*>(l);
+            CollectVectorShapesWithName(vl->shapes(), collectedShapes, name, kind);
+
+        }else if(l->kind()==LayerKind::SPRITE_LAYER){
+            SpriteLayer * sl = static_cast<SpriteLayer*>(l);
+            for(Sprite *s : sl->sprites()){
+                if(s->type()==SpriteType::COMPOSITE){
+                    CompositeSprite *cs = static_cast<CompositeSprite*>(s);
+                    CollectVectorShapesWithName(cs->map(), collectedShapes, name, kind);
+                }
+            }
+        }
+    }
+
+}
+
+
+
 
 VectorShape* FindVectorShapeWithProperties(Map *map, int dataFlags, bool compareDataFlagsAsBitmask, ShapeKind kind)
 {
@@ -670,6 +693,22 @@ void CollectVectorShapesWithParameter(std::vector<VectorShape*>&vectorShapes, st
             continue;
         }
         if(vs->parameters().exists(pName, pValue)){
+            collectedShapes.push_back(vs);
+        }
+    }
+
+}
+
+
+void CollectVectorShapesWithName(std::vector<VectorShape*>&vectorShapes, std::vector<VectorShape*>&collectedShapes,  const std::string &name, ShapeKind kind)
+{
+
+    for(VectorShape * vs : vectorShapes){
+
+        if(kind!=ShapeKind::NOT_DEFINED && vs->kind()!=kind){
+            continue;
+        }
+        if(vs->name()==name){
             collectedShapes.push_back(vs);
         }
     }
@@ -981,7 +1020,7 @@ void GatherSpritesWithSetNameID(CompositeSprite *_compositSprite, std::vector<st
 
 //
 
-
+/*
 GuiWidget* FindGuiWidgetWithName(std::vector<GuiWidget*> &widgets, const std::string &name,  GuiWidgetKind widgetKind)
 {
 
@@ -994,6 +1033,6 @@ GuiWidget* FindGuiWidgetWithName(std::vector<GuiWidget*> &widgets, const std::st
     return nullptr;
 
 }
-
+*/
 
 }

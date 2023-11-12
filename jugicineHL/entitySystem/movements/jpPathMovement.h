@@ -7,6 +7,7 @@
 #include "box2d.h"
 #include "jmTimer.h"
 #include "jpGlobal.h"
+#include "jpQueries.h"
 
 #include "jpSpeedGenerators.h"
 #include "jpMovementBase.h"
@@ -24,7 +25,6 @@ class Entity;
 class PlayedScene;
 class AnimationInstance;
 class AnimationPlayer;
-class BoolSignal;
 class VectorShape;
 class PathMovementEngine;
 
@@ -46,6 +46,8 @@ enum class PathMovementState
 
 PathMovementState GetPathMovementStateFromString(const std::string &state);
 
+
+extern std::vector<NamedValue>gPathMovementStateNamedValues;
 
 //------------------------------------------------------------------------------------
 
@@ -130,7 +132,7 @@ struct PathMovementData : public MovementEngineData
 //------------------------------------------------------------------------------------------
 
 
-class PathwayAccessedSignal : public CustomEntityBoolSignal
+class PathwayAccessedSignal : public UpdatedBoolSignal
 {
 public:
 
@@ -149,7 +151,7 @@ private:
 //------------------------------------------------------------------------------------------
 
 
-class PathwayLeftSignal : public CustomEntityBoolSignal
+class PathwayLeftSignal : public UpdatedBoolSignal
 {
 public:
 
@@ -257,8 +259,8 @@ public:
     void stop() override;
 
     MovementEngineData* getMovementEngineData(const std::string &_name, bool _setErrorMessage) override;
-    void obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_dataName, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage=true) override;
-    void obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_dataName, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage = true) override;
+    void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true) override;
+    void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage = true) override;
 
 
     PathMovementState state(){ return mState; }
@@ -292,7 +294,7 @@ private:
     void setState(PathMovementState _state)
     {
         mState = _state;
-        mSigState._setOnNextFrame(static_cast<int>(mState));
+        mSigState.setValue_onNextFrame(static_cast<int>(mState));
     }
 
 
@@ -317,7 +319,7 @@ public:
     PathMovementCfg* createMovementEngineCfg(const std::string &_name) override;
     PathMovementEngine* createMovementEngine() override;
 
-    void obtainCustomSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_signalName, const std::string &_signalValue) override;
+    //void obtainCustomSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_signalName, const std::string &_signalValue) override;
 
 
 

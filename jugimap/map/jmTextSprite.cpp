@@ -15,7 +15,7 @@
 #include "jmVectorLayer.h"
 #include "jmFont.h"
 #include "jmColor.h"
-#include "jmGuiText.h"
+#include "jmText.h"
 #include "jmTextSprite.h"
 
 

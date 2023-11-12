@@ -24,8 +24,10 @@ class AnimationInstance;
 class AnimationPlayer;
 class PlayedScene;
 class Animation;
+
 struct SignalQuery;
 struct SignalSetter;
+class ParsedSignalPath;
 
 
 
@@ -52,8 +54,8 @@ public:
 
     AnimationPlayer & animationPlayer(){ return mAnimationPlayer; }
 
-    void obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_path, bool _setErrorMessage=true);
-    void obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_path, bool _setErrorMessage=true);
+    void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true);
+    void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage=true);
 
 
 
@@ -62,7 +64,8 @@ private:
     AnimationInstance *mAnimationInstance = nullptr;    // OWNED
     AnimationPlayer mAnimationPlayer;
 
-    BoolSignal mSigDisabled;
+    BoolSignal mSigEnabled;
+    bool mPaused = false;
 
     //
     Sprite *mSprite = nullptr;
@@ -97,10 +100,21 @@ private:
 
 };
 
+/*
+struct AnimationObjectSignalStrings
+{
 
+    std::string animationObject;
+    std::string signalName;
+    std::string signalValue;
+    std::string signalValueState;
 
+    bool parse(const std::string &_path);
+    bool getBoolValue(bool &_state, bool _setErrorMessage=true) const;
 
+};
 
+*/
 
 
 }

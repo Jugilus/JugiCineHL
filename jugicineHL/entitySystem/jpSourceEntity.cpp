@@ -19,8 +19,7 @@
 #include "jpUtilities.h"
 
 #include "movements/jpMovementBase.h"
-#include "scripting/jpBehavior.h"
-#include "scripting/jpBehCfg.h"
+#include "jpEntityLogicState.h"
 #include "jpEntitySystem.h"
 #include "jpB2Body.h"
 #include "jpB2Fixture.h"
@@ -128,7 +127,7 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
 
                 if(attributeName=="use"){
                     std::string sEnginesControllerCfg = a.as_string("");
-                    enginesControllerCfg = entitySystem->enginesControllersCfsGroup()->getEnginesControllerCfg(sEnginesControllerCfg);
+                    enginesControllerCfg = entitySystem->enginesControllersCfsStorage().getObject(sEnginesControllerCfg);
                     if(enginesControllerCfg==nullptr){
                         return false;
                     }
@@ -144,12 +143,12 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
             }
 
             if(enginesControllerCfg==nullptr){
-                enginesControllerCfg = entitySystem->enginesControllersCfsGroup()->addEnginesControllerCfg(name + " controller");
+                enginesControllerCfg = entitySystem->enginesControllersCfsStorage().addObject(new EntityLogicStateCfg(name + " controller"));
                 if(enginesControllerCfg->initCfg(nChild)==false){
                     return false;
                 }
 
-                if(enginesControllerCfg->statesCfgs.empty()){
+                if(enginesControllerCfg->childStatesCfgs().empty()){
                     dbgSystem.addMessage("Entity '" + name + "' has no defined behavior controller states!");
                     return false;
                 }
@@ -164,7 +163,7 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
                 if(attributeName=="use"){
                     std::string taskController = a.as_string("");
                     if(taskController.empty()==false){
-                        taskControllerCfg = entitySystem->taskControllersCfgsGroup()->getEnginesControllerCfg(taskController);
+                        taskControllerCfg = entitySystem->taskControllersCfgsStorage().getObject(taskController);
                         if(taskControllerCfg==nullptr){
                             return false;
                         }
@@ -182,12 +181,12 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
             }
 
             if(taskControllerCfg==nullptr){
-                taskControllerCfg = entitySystem->taskControllersCfgsGroup()->addEnginesControllerCfg(name + " controller");
+                taskControllerCfg = entitySystem->taskControllersCfgsStorage().addObject(new EntityLogicStateCfg(name + " controller"));
                 if(taskControllerCfg->initCfg(nChild)==false){
                     return false;
                 }
 
-                if(taskControllerCfg->statesCfgs.empty()){
+                if(taskControllerCfg->childStatesCfgs().empty()){
                     dbgSystem.addMessage("Entity '" + name + "' has no defined task controller states!");
                     return false;
                 }
@@ -211,9 +210,11 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
 
         bool hasGroundMovement = false;
         bool addCeilingSensor = false;
-        for(BehaviorStateCfg& stateCfg : enginesControllerCfg->statesCfgs){
-            if(stateCfg.movementEngine.empty()==false){
-                MovementEngineCfg* cfg = mem->getMovementEngineCfg(stateCfg.movementEngine);
+        for(LogicStateCfg* _stateCfg : enginesControllerCfg->childStatesCfgs()){
+            EntityLogicStateCfg *stateCfg = static_cast<EntityLogicStateCfg*>(_stateCfg);
+
+            if(stateCfg->movementEngine.empty()==false){
+                MovementEngineCfg* cfg = mem->getMovementEngineCfg(stateCfg->movementEngine);
                 assert(cfg);
                 if(cfg->factory->type()==MovementEngineType::GROUND_MOVEMENT){
                     hasGroundMovement = true;
@@ -377,6 +378,9 @@ bool SourceEntity::createSourceBody(PlayedScene *_scene, SourceSprite *_sourceSp
 
     dbgSystem.addMessage("Initializing source entity '" + mSourceEntityCfg->name+"' ...");
 
+    if(mSourceEntityCfg->name == "box"){
+        DummyFunction();
+    }
     //if(mMovementConfigurations->initConnections(_scene)==false){
     //    return false;
     //}

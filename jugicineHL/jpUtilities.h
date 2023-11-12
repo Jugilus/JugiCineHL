@@ -17,6 +17,7 @@ class AnimationInstance;
 class FrameAnimationInstance;
 class StandardSprite;
 
+class Sprite;
 class SourceSprite;
 class TextSegment;
 class SceneWidget;
@@ -25,7 +26,7 @@ class ItemsGroup;
 class PlayedScene;
 class GuiButton;
 class Layer;
-class ActionTrigger;
+//class ActionTrigger;
 class ActionCommand;
 class Action;
 class LogicState;
@@ -33,9 +34,9 @@ class Scene;
 class Variable;
 class TriggerVariable;
 class Entity;
-class BehaviorState;
+//class BehaviorState;
 class VectorShape;
-struct FilteredContactTrigger;
+struct FilteredContactSignal;
 struct SignalAccessor;
 struct MovementEngineData;
 struct TaskEngineData;
@@ -46,13 +47,22 @@ struct TaskEngineData;
 PlayedScene* ObtainPlayerSceneOfGameAction(Action *sourceAction);
 
 
-LogicState* ObtainLogicStateFromPath(PlayedScene* scene, jugimap::Action *sourceAction, const std::string &statePath);
+//LogicState* ObtainLogicStateFromPath(PlayedScene* scene, jugimap::Action *sourceAction, const std::string &statePath);
 
 
-Action* ObtainActionFromPath(PlayedScene* scene, Action *sourceAction, const std::string &actionPath);
+LogicState* ObtainLogicStateFromPath2(PlayedScene* scene, LogicState* _currentState, const std::string &statePath);
 
 
-GuiWidget* ObtainGuiWidget(PlayedScene* scene, const std::string &widgetName, GuiWidgetKind guiWidgetKind);
+LogicState* ObtainLogicStateFromPath(PlayedScene* _scene, LogicState* _currentState, const std::string &_statePath);
+
+
+LogicState* ObtainLogicStateFromPath_SeekFromRootState(PlayedScene* _scene, LogicState* _rootState, const std::string &_statePath);
+
+
+//Action* ObtainActionFromPath(PlayedScene* scene, Action *sourceAction, const std::string &actionPath);
+
+
+GuiWidget* ObtainGuiWidget(PlayedScene* scene, const std::string &widgetName, WidgetType guiWidgetKind);
 
 
 ItemsGroup* ObtainItemsGroup(PlayedScene* scene, const std::string &itemsGroupName);
@@ -67,10 +77,13 @@ bool collectObjects(std::vector<void*>&objects, PlayedScene *scene, GfxObjectTyp
 TextSegment* ObtainTextSegment(const std::string &textSegmentPath);
 
 
+TextSegment* ObtainTextSegment2(const std::string &textSegmentPath);
+
+
 bool ObtainPlainText(const std::string &textPath, std::string &text);
 
 
-TriggerVariable* ObtainTrigger(Action *sourceAction, const std::string &triggerName);
+//TriggerVariable* ObtainTrigger(Action *sourceAction, const std::string &triggerName);
 
 
 SourceSprite* ObtainSourceSpriteWithConstantParameter(const std::vector<SourceSprite*> &sourceSprites, const std::string &pName, const std::string &pValue);

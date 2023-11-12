@@ -7,6 +7,7 @@
 
 #include "main.h"
 #include "jmStreams.h"
+#include "jmSignal.h"
 #include "jpObjectFactory.h"
 #include "jpInput.h"
 #include "jpPlayedApp.h"
@@ -28,6 +29,10 @@ nctl::UniquePtr<ncine::IAppEventHandler> createAppEventHandler()
 
 void MyEventHandler::onPreInit(ncine::AppConfiguration &config)
 {
+
+
+    //gSignalTest.test();
+    //return;
 
 
 #if defined(__ANDROID__)
@@ -77,6 +82,12 @@ void MyEventHandler::onPreInit(ncine::AppConfiguration &config)
 void MyEventHandler::onInit()
 {
 
+    //if(gSignalTest.mRunning){
+    //    return;
+    //}
+
+
+    //----
     ncine::theApplication().setAutoSuspension(true);
 
     ncine::theApplication().screenViewport().setClearColor(190/255.0f, 190/255.0f, 190/255.0f, 255/255.0f);
@@ -95,6 +106,12 @@ void MyEventHandler::onInit()
 void MyEventHandler::onFrameStart()
 {
 
+    //if(gSignalTest.mRunning){
+    //    ncine::theApplication().quit();
+    //    return;
+    //}
+
+
     jugimap::player->update(ncine::theApplication().interval());
 
 }
@@ -103,6 +120,11 @@ void MyEventHandler::onFrameStart()
 
 void MyEventHandler::onPostUpdate()
 {
+
+    //if(gSignalTest.mRunning){
+    //    return;
+    //}
+
     //jugiApp::application->PostUpdate(ncine::theApplication().interval());
 
     //jugiApp::application->drawShapes();
@@ -417,5 +439,382 @@ void MyEventHandler::onShutdown()
     delete jugimap::player;
 
 }
+
+
+//================================================================================================
+
+
+void SignalTest::test()
+{
+
+    test_BitsetSignal_2();
+
+    //test_IntSignal_2();
+
+}
+
+
+void SignalTest::test_BitsetSignal_1()
+{
+
+    jugimap::BitsetSignal sigBitset;
+
+    sigBitset.setDefaultValue(value3 | value5);
+    sigBitset.reset();
+
+    dbgPrint_BitsetSignal(sigBitset);
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setValue(value0 | value4);
+    sigBitset.setValue(value4);
+    sigBitset.setValue(value6 | value7);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setValue(value0 | value6);
+    //sigBitset.setFlags(value1, true);
+    //sigBitset.setFlags(value4, false);
+    //sigBitset.setFlags(value0, false);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setFlags(value4, false);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setFlags(value2, true);
+    sigBitset.setValue(value1 | value3 | value5);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.reset(value2 | value5);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.reset();
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setFlags( value1 | value2 | value7, true);
+    sigBitset.setFlags(value3, false);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+}
+
+
+
+void SignalTest::test_BitsetSignal_2()
+{
+
+    jugimap::BitsetSignal sigBitset;
+
+    sigBitset.setDefaultValue(value3 | value5);
+    sigBitset.reset();
+
+    dbgPrint_BitsetSignal(sigBitset);
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setValue_onNextFrame(value0 | value4);
+    sigBitset.setValue_onNextFrame(value4);
+    sigBitset.setValue_onNextFrame(value6 | value7);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setValue_onNextFrame(value0 | value6);
+    //sigBitset.setFlags(value1, true);
+    //sigBitset.setFlags(value4, false);
+    //sigBitset.setFlags(value0, false);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setFlags_onNextFrame(value4, false);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setFlags_onNextFrame(value2, true);
+    sigBitset.setValue_onNextFrame(value1 | value3 | value5);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+   // sigBitset.reset(value2 | value5);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.reset();
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigBitset.setFlags_onNextFrame( value1 | value2 | value7, true);
+    sigBitset.setFlags_onNextFrame(value3, false);
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_BitsetSignal(sigBitset);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+}
+
+
+void SignalTest::dbgPrint_BitsetSignal(jugimap::BitsetSignal sigBitField, unsigned int nBits)
+{
+
+    std::string sValue;
+
+    for(unsigned int i=0; i<nBits; i++){
+        unsigned int bitValue = (unsigned int)1 << i;
+        sValue = "Value" + std::to_string(i);
+        sValue += " active:" + std::to_string(int(sigBitField.active(bitValue)));
+        sValue += " start:" + std::to_string(int(sigBitField.activeStarted(bitValue)));
+        sValue += " end:" + std::to_string(int(sigBitField.activeEnded(bitValue)));
+        sValue += " changed:" + std::to_string(int(sigBitField.activeChanged(bitValue)));
+        sValue += " notActive:" + std::to_string(int(sigBitField.notActive(bitValue)));
+
+        jugimap::print(sValue);
+     }
+
+    jugimap::print("");
+
+}
+
+
+void SignalTest::test_IntSignal_1()
+{
+
+    jugimap::IntSignal sigInt{"", intValue2};
+
+    dbgPrint_IntSignal(sigInt);
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigInt.setValue(intValue0);
+    sigInt.setValue(intValue4);
+    sigInt.setValue(intValue6);
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigInt.setValue(intValue1);
+    sigInt.setValue(intValue6);
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigInt.setValue(intValue4);
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigInt.reset(intValue5);
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+}
+
+
+void SignalTest::test_IntSignal_2()
+{
+
+    jugimap::IntSignal sigInt{"", intValue2};
+
+    dbgPrint_IntSignal(sigInt);
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigInt.setValue_onNextFrame(intValue0);
+    sigInt.setValue_onNextFrame(intValue4);
+    sigInt.setValue_onNextFrame(intValue6);
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigInt.setValue_onNextFrame(intValue1);
+    sigInt.setValue_onNextFrame(intValue6);
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigInt.setValue_onNextFrame(intValue4);
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    sigInt.reset(intValue5);
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+    //--- preUpdate
+    jugimap::gSignalUpdater.preUpdateSignals();
+    //--- update
+    dbgPrint_IntSignal(sigInt);
+    jugimap::gSignalUpdater.postUpdateSignals();
+
+
+}
+
+
+
+void SignalTest::dbgPrint_IntSignal(jugimap::IntSignal sigInt, unsigned int nValues)
+{
+
+    std::string sValue;
+
+    for(unsigned int i=0; i<nValues; i++){
+        sValue = "Value" + std::to_string(i);
+        sValue += " active:" + std::to_string(int(sigInt.active(i)));
+        sValue += " start:" + std::to_string(int(sigInt.activeStarted(i)));
+        sValue += " end:" + std::to_string(int(sigInt.activeEnded(i)));
+        sValue += " changed:" + std::to_string(int(sigInt.activeChanged(i)));
+        sValue += " notActive:" + std::to_string(int(sigInt.notActive(i)));
+
+        jugimap::print(sValue);
+     }
+
+    jugimap::print("");
+
+}
+
+
+
+SignalTest gSignalTest;
+
 
 

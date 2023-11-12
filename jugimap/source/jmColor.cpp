@@ -52,6 +52,12 @@ ColorRGBA ColorRGBA::ParseFromHexString(std::string _hexColor)
 
     StdString::removeStringWhiteSpacesOnStartAndEnd(_hexColor);
 
+    if(_hexColor.length()>0){
+        if(_hexColor.substr(0,1)=="#"){
+            _hexColor = _hexColor.substr(1);
+        }
+    }
+
     std::string hexR = "FF";
     std::string hexG = "FF";
     std::string hexB = "FF";

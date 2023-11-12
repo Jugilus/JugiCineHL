@@ -367,7 +367,7 @@ struct AnimationPlayerFlags
 
 
 /// The kinds of widget. Used as identifier for GuiWidget objects.
-enum class GuiWidgetKind
+enum class WidgetType
 {
     NOT_DEFINED,
     BUTTON,                 ///< Button - GuiButton object.
@@ -380,8 +380,8 @@ enum class GuiWidgetKind
 };
 
 
-GuiWidgetKind GetGuiWidgetKindFromString(const std::string &_kind);
-std::string GetGuiWidgetKindString(GuiWidgetKind _kind);
+WidgetType GetGuiWidgetKindFromString(const std::string &_kind);
+std::string GetGuiWidgetKindString(WidgetType _kind);
 
 
 /// Predefined handles for TextSprite objects.

@@ -20,6 +20,7 @@ class GuiButton;
 class ItemsGroup;
 class PlayedScene;
 class ADoTransition;
+class Compound;
 
 
 class UserSelector : public Component
@@ -31,7 +32,7 @@ public:
     bool initConnections(PlayedScene *_scene) override;
 
     void start() override;
-    void update(UpdateMode _updateMode) override;
+    void update(UpdateMode &_updateMode) override;
     void onStateEnded() override;
 
 
@@ -44,30 +45,34 @@ private:
         CONFIRM_DELETE_PANEL
     };
 
-    PlayedScene *mParentPlayerScene = nullptr;
+    //PlayedScene *mParentPlayerScene = nullptr;
     State mState = State::SELECTOR;
 
     GuiTable *mUsersTable = nullptr;                        // LINK
     GuiButton *mAddNewUserButton = nullptr;                 // LINK
     GuiButton *mBDeleteUserButton = nullptr;                  // LINK
-    std::vector<GuiWidget*>mSelectorWidgets;
+    //std::vector<GuiWidget*>mSelectorWidgets;
 
     //---
-    OverlayComponent* mNewUserPanelComponent = nullptr;         // LINK
-    std::unique_ptr<ADoTransition>mAOpenNewUserPanel;
-    std::unique_ptr<ADoTransition>mACloseNewUserPanel;
+    //OverlayComponent* mNewUserPanelComponent = nullptr;         // LINK
+    //std::unique_ptr<ADoTransition>mAOpenNewUserPanel;
+    //std::unique_ptr<ADoTransition>mACloseNewUserPanel;
+
+    Compound* mNewUserPanelCompound = nullptr;
 
     //---
-    OverlayComponent* mConfirmDeleteUserComponent = nullptr;         // LINK
+    //OverlayComponent* mConfirmDeleteUserComponent = nullptr;         // LINK
+    Compound* mConfirmDeleteUserCompound = nullptr;
     std::unique_ptr<ComponentData> mConfirmDeleteUserComponentData;
-    std::unique_ptr<ADoTransition>mAOpenConfirmDeletePanel;
-    std::unique_ptr<ADoTransition>mACloseConfirmDeletePanel;
+    //std::unique_ptr<ADoTransition>mAOpenConfirmDeletePanel;
+    //std::unique_ptr<ADoTransition>mACloseConfirmDeletePanel;
+
     TriggerVariable *mConfirmPanel_resultYes = nullptr;             // LINK
     TriggerVariable *mConfirmPanel_resultNo = nullptr;             // LINK
 
 
     //---
-    StringVar *mVarNewUserName = nullptr;                       // LINK
+    //StringVar *mVarNewUserName = nullptr;                       // LINK
     GTextSprite *mTSActiveUserName = nullptr;               //LINK
     ItemsGroup* mUsersNamesItems = nullptr;                 // LINK
 
@@ -79,13 +84,15 @@ private:
         std::string mAddNewUserButton;
         std::string mBDeleteUserButton;
 
-        std::string mNewUserPanelComponent;
-        std::string mNewUserPanelComponentTransition;
-        std::string mNewUserPanelComponentTransitionShow;
+        //std::string mNewUserPanelComponent;
+        //std::string mNewUserPanelComponentTransition;
+        //std::string mNewUserPanelComponentTransitionShow;
+        std::string mNewUserPanelCompound;
 
-        std::string mConfirmDeleteUserComponent;
-        std::string mConfirmDeleteUserComponentTransition;
-        std::string mConfirmDeleteUserComponentTransitionShow;
+        //std::string mConfirmDeleteUserComponent;
+        //std::string mConfirmDeleteUserComponentTransition;
+        //std::string mConfirmDeleteUserComponentTransitionShow;
+        std::string mConfirmDeleteUserCompound;
         //---data for mConfirmDeleteUserComponent
         std::string mConfirmDeleteTextSegment;
     };

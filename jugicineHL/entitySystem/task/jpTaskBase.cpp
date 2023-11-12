@@ -7,6 +7,7 @@
 
 #include "jpSourceEntity.h"
 #include "jpEntity.h"
+#include "jpEntityUtilities.h"
 #include "jpTaskBase.h"
 
 
@@ -21,21 +22,23 @@ TaskType TaskEngine::type() const
 
 }
 
-void TaskEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage)
+
+void TaskEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage)
 {
 
     if(_setErrorMessage){
-        dbgSystem.addMessage("There is no signal with name '" + _signalName + "' inside the task engine '" + mFactory->typeSignature()+"' !");
+        dbgSystem.addMessage("There is no signal with name '" + _psp.signalFullName() + "' inside the task engine '" + mFactory->typeSignature()+"' !");
     }
 
 }
 
-void TaskEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage)
+void TaskEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage)
 {
     if(_setErrorMessage){
-        dbgSystem.addMessage("There is no signal with name '" + _signalName + "' inside the task engine '" + mFactory->typeSignature()+"' !");
+        dbgSystem.addMessage("There is no signal with name '" + _psp.signalFullName() + "' inside the task engine '" + mFactory->typeSignature()+"' !");
     }
 }
+
 
 
 

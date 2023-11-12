@@ -10,11 +10,11 @@
         <rectangle points="(-11,-99);(12,-99);(12,99);(-11,99)"/>
     </subimage>
     <subimage name="doorA__bottomPart" handlePoint="11,0"/>
+    <subimage name="doorB__bottomPart" handlePoint="11,0"/>
     <subimage name="doorB__blueDoor" handlePoint="11,195"/>
     <subimage name="doorB__yellowDoor" handlePoint="11,195"/>
     <subimage name="doorB__greenDoor" handlePoint="11,195"/>
     <subimage name="doorB__topPart" handlePoint="11,45"/>
-    <subimage name="doorB__bottomPart" handlePoint="11,0"/>
     <subimage name="fancyPlatformA__body" handlePoint="75,48">
         <rectangle points="(-71,-18);(71,-18);(71,20);(-71,20)"/>
     </subimage>

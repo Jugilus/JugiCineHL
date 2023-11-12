@@ -38,15 +38,18 @@
         <sprite type="Composite" name="buttonA" x="277" y="34">
             <parameter name="changeChildText" value="label, gui, 15" type="string"/>
             <parameter name="wName" value="newUserDialog_Cancel" type="string"/>
+            <parameter name="widgetNew" value="panelButton" type="string"/>
         </sprite>
         <sprite type="Composite" name="buttonA" x="122" y="34">
             <parameter name="changeChildText" value="label,gui, 14" type="string"/>
             <parameter name="wName" value="newUserDialog_Ok" type="string"/>
+            <parameter name="widgetNew" value="panelButton" type="string"/>
         </sprite>
         <sprite type="Composite" name="inputBoxA" x="0" y="66">
             <parameter name="wName" value="newUserDialog_textInput" type="string"/>
+            <parameter name="widgetNew" value="textInput" type="string"/>
         </sprite>
         <sprite type="Standard" name="tilesA,9" x="200" y="100" handleSource="true"/>
-        <sprite type="Text" name="Window Title" x="20" y="168" text="User Name " book="gui" segment="13"/>
+        <sprite type="Text" name="Window Title" x="20" y="168" text="New User " book="gui" segment="13"/>
     </layer>
 </composedSprite>

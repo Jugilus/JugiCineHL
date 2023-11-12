@@ -6,6 +6,7 @@
 #include "jmSystem.h"
 #include "jmVectorShapeDrawing.h"
 
+#include "gui/jpGuiCommon.h"
 #include "jpGameObjectsLoader_xml.h"
 #include "jpPlayedScene.h"
 #include "jpPlayedScene.h"
@@ -176,7 +177,7 @@ void Player::update(float _framePeriod)
 }
 
 
-
+/*
 bool Player::updateActiveSceneLogic()
 {
 
@@ -196,7 +197,7 @@ bool Player::updateActiveSceneLogic()
         return false;
     }
 
-    if(activePlayerScene->initActionTasksAndEvents()==false){
+    if(activePlayerScene->initConnections()==false){
         mState = State::ERROR;
         return false;
     }
@@ -205,7 +206,7 @@ bool Player::updateActiveSceneLogic()
     return true;
 
 }
-
+*/
 
 void Player::showErrorMessage()
 {

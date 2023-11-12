@@ -19,12 +19,14 @@
 #include "jmSourceSprite.h"
 #include "jmMap.h"
 #include "jmSpriteLayer.h"
-#include "jmGuiBar.h"
-#include "jmGuiText.h"
-#include "jmGuiTextInput.h"
-#include "jpItemsTable.h"
+#include "jmText.h"
+
+#include "gui/widgets/jpGuiBar.h"
+#include "gui/widgets/jpGuiTextInput.h"
+#include "gui/widgets/jpGuiTable.h"
+
 #include "jpObjectFactory.h"
-#include "jpActionsCommon.h"
+#include "jpLogicState.h"
 #include "jpUtilities.h"
 #include "jpItemSlotData.h"
 #include "jpItemsCommon.h"
@@ -50,7 +52,7 @@ ItemsGroup::~ItemsGroup()
 }
 
 
-bool ItemsGroup::initItems(PlayedScene *_scene)
+bool ItemsGroup::initConnections(PlayedScene *_scene)
 {
 
     dbgSystem.addMessage("init items in group '" + mName + "'");
@@ -179,7 +181,7 @@ ItemsLibrary::~ItemsLibrary()
 }
 
 
-bool ItemsLibrary::initItems(PlayedScene *_scene)
+bool ItemsLibrary::initConnections(PlayedScene *_scene)
 {
 
     //--- collect all source sprites intended for items, so we can retrieve them faster
@@ -189,7 +191,7 @@ bool ItemsLibrary::initItems(PlayedScene *_scene)
 
     //---
     for(ItemsGroup *ig : mItemsGroups){
-        if(ig->initItems(_scene)==false){
+        if(ig->initConnections(_scene)==false){
             return false;
         }
     }
@@ -217,7 +219,7 @@ ItemsGroup* ItemsLibrary::getItemsGroup(const std::string & _name)
 GameItem::GameItem(const std::string &_name, ItemsGroup *_parentItemsGroup) : mName(_name), mParentItemsGroup(_parentItemsGroup)
 {
 
-    mType = BaseObjectType::ITEM;
+    mBaseType = BaseObjectType::ITEM;
 
 
 }

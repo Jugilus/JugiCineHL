@@ -15,10 +15,8 @@
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
-#include "jpActionsCommon.h"
-#include "scripting/jpBehavior.h"
+#include "jpEntityLogicState.h"
 #include "jpEntity.h"
 #include "jpSourceEntity.h"
 #include "jpEntitySystem.h"
@@ -93,7 +91,9 @@ bool SourceBody::initBody(SourceEntityCfg *_sourceEntityCfg, b2Vec2 _bodyCenterP
 
         //--- extra shapes fixtures
         if(_sourceEntityCfg->mCustomSensorSourceEntityCfgs.empty()==false){
-            addSensorsFixtures(_sourceEntityCfg->mCustomSensorSourceEntityCfgs);
+            if(addSensorsFixtures(_sourceEntityCfg->mCustomSensorSourceEntityCfgs)==false){
+                return false;
+            }
         }
 
 
@@ -167,6 +167,7 @@ bool SourceBody::addStandardSpriteMainShapeFixture(SourceEntityCfg *_sourceEntit
 
         if(mCategory->role==EntityRole::TRANSPORTER){
             sf.createChainLoop = true;                    // needed to be tested
+            DummyFunction();
         }
 
         Vec2f sprPos =  -anchorPointP;
@@ -251,7 +252,7 @@ bool SourceBody::addVectorShapeBodyFixture(SourceEntityCfg *_sourceEntityCfg)
 bool SourceBody::addSensorsFixtures(std::vector<CustomSensorSourceEntityCfg> &_sensorCfgs)
 {
 
-    if(mCategory->role != EntityRole::ACTOR){
+    if(mCategory->role != EntityRole::ACTOR && mCategory->role != EntityRole::MOVABLE_OBJECT){
         dbgSystem.addMessage( "Using add-on sensors is possible only with '"+ GetEntityRoleString(EntityRole::ACTOR) + "'!");
         return false;
     }
@@ -437,6 +438,7 @@ bool SourceBody::addSpriteLayerMainShapeFixtures(SourceEntityCfg *_sourceEntityC
 
             if(mCategory->role==EntityRole::TRANSPORTER){
                 sf.createChainLoop = true;                    // needed to be tested
+                DummyFunction();
             }
             //---
             Vec2f spritePos = stdSprite->position() - _anchorPoint;

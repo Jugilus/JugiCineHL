@@ -13,7 +13,6 @@
 #include "jpPlayedScene.h"
 #include "jpPlayedApp.h"
 
-#include "scripting/jpBehavior.h"
 #include "jpEntity.h"
 #include "jpEntityUtilities.h"
 #include "jpSourceEntity.h"
@@ -297,7 +296,7 @@ bool PathPTPMovementData::initConnections(PlayedScene *_scene, Entity *_actor)
         if(moveBackward.isValid()==false){
             return false;
         }
-        if(moveForward.mSignal->type()!=ValueStateType::BOOL){
+        if(moveForward.mSignal->type()!=SignalType::BOOL){
             dbgSystem.addMessage("'move forward' trigger is not a boolean! ");
             return false;
         }
@@ -1160,7 +1159,7 @@ bool PathPTPMovementEngine::start(MovementEngineData *_data)
 
     mCurrentData = static_cast<PathPTPMovementData*>(_data);
 
-    if(mCurrentData->sigDisabled.active()){
+    if(mCurrentData->sigDisabled.active(true)){
         return false;
     }
 
@@ -1205,7 +1204,7 @@ b2Vec2 PathPTPMovementEngine::update(EngineUpdateParameters &eup)
     }
 
 
-    mDirectionSignal._setOnNextFrame(static_cast<int>(mDirection));
+    mDirectionSignal.setValue_onNextFrame(static_cast<int>(mDirection));
 
     return mVelocity;
 

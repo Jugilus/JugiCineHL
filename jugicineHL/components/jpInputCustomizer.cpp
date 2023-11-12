@@ -5,13 +5,16 @@
 #include <ncine/Application.h>
 #include "pugixml/pugixml.hpp"
 #include "jmSystem.h"
-#include "jmGuiButton.h"
+
+#include "gui/jpGuiSystem.h"
+#include "gui/widgets/jpGuiButton.h"
+#include "gui/widgets/jpGuiTable.h"
+
 #include "items/jpItemsCommon.h"
 #include "jpItemSlotData.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
 #include "jpUser.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
 #include "jpInput.h"
 #include "jpInputCustomizer.h"
@@ -52,26 +55,29 @@ InputCustomizer::InputCustomizer(const pugi::xml_node &_node)
 bool InputCustomizer::initConnections(PlayedScene *_scene)
 {
 
+    if(mInitialized) return true;
+
+
     dbgSystem.addMessage("init cfg '" + mName + "'");
 
     mParentPlayerScene = _scene;
 
     //---
-    mDevicesTable = dynamic_cast<GuiTable*>(ObtainGuiWidget(_scene, mCfg->mDevicesTable, GuiWidgetKind::TABLE));
+    mDevicesTable = dynamic_cast<GuiTable*>(ObtainGuiWidget(_scene, mCfg->mDevicesTable, WidgetType::TABLE));
     if(mDevicesTable==nullptr){
         return false;
     }
     mUsedWidgets.push_back(mDevicesTable);
 
     //---
-    mButtonsTable = dynamic_cast<GuiTable*>(ObtainGuiWidget(_scene, mCfg->mButtonsTable, GuiWidgetKind::TABLE));
+    mButtonsTable = dynamic_cast<GuiTable*>(ObtainGuiWidget(_scene, mCfg->mButtonsTable, WidgetType::TABLE));
     if(mButtonsTable==nullptr){
         return false;
     }
     mUsedWidgets.push_back(mButtonsTable);
 
     //---
-    mBRestoreDefaultButtons = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mBRestoreDefaultButtons, GuiWidgetKind::BUTTON));
+    mBRestoreDefaultButtons = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mBRestoreDefaultButtons, WidgetType::BUTTON));
     if(mBRestoreDefaultButtons==nullptr){
         return false;
     }
@@ -86,6 +92,9 @@ bool InputCustomizer::initConnections(PlayedScene *_scene)
 
 
     //---
+    mInitialized = true;
+
+    //---
     dbgSystem.removeLastMessage();
     return true;
 }
@@ -96,7 +105,9 @@ void InputCustomizer::start()
 
     print("InputCustomizer::start()");
 
-    mParentPlayerScene->widgetManager()->appendToUsedWidgets(mUsedWidgets);
+    GuiSystem *guiSystem = static_cast<GuiSystem *>(mParentPlayerScene->componentsGroup()->getComponent("guiSystem", false));
+    guiSystem->appendToUsedWidgets(mUsedWidgets);
+    //mParentPlayerScene->widgetManager()->appendToUsedWidgets(mUsedWidgets);
 
     if(hasInputDevicesChanged()){
         rebuildItems();
@@ -108,15 +119,15 @@ void InputCustomizer::start()
 }
 
 
-void InputCustomizer::update(UpdateMode _updateMode)
+void InputCustomizer::update(UpdateMode &_updateMode)
 {
 
-    if(_updateMode==UpdateMode::MODAL_OVERLAY){
+    if(_updateMode.modalOverlay){
         return;
     }
 
 
-    if(mDevicesTable->IsValueChanged()){
+    if(mDevicesTable->isValueChanged()){
         InputDeviceItem * i = dynamic_cast<InputDeviceItem*>(mDevicesTable->selectedItem());
         if(i){
             mButtonsTable->setItemsGroup(i->buttonsItems());
@@ -148,7 +159,7 @@ void InputCustomizer::update(UpdateMode _updateMode)
             }
 
             //---- set default key codes
-            if(mBRestoreDefaultButtons->IsPressed()){
+            if(mBRestoreDefaultButtons->isPressedStarted()){
                 for(GameItem *i : selectedInputDeviceItem->buttonsItems()->items()){
                     KeyboardInputCommandItem *ki = static_cast<KeyboardInputCommandItem*>(i);
                     if(ki->keyboardInputCommand()->mKeyCode != ki->keyboardInputCommand()->mGameInputCommand->defaultKeyboardKey()){
@@ -199,7 +210,7 @@ void InputCustomizer::update(UpdateMode _updateMode)
             }
 
              //----
-             if(mBRestoreDefaultButtons->IsPressed()){
+             if(mBRestoreDefaultButtons->isPressedStarted()){
                  for(GameItem *i : selectedInputDeviceItem->buttonsItems()->items()){
                      JoystickInputCommandItem *ji = static_cast<JoystickInputCommandItem*>(i);
                      if(ji->joystickInputCommand()->mJoystickControl != ji->joystickInputCommand()->mGameInputCommand->defaultJoystickCommand()){
@@ -221,6 +232,8 @@ void InputCustomizer::onStateEnded()
     if(mChanged){
         app->usersDatabase()->saveUser(app->usersDatabase()->activeUser());
     }
+
+    mParentPlayerScene->guiSystem()->removeFromUsedWidgets(mUsedWidgets);
 
     print("InputCustomizer::onStateEnded()");
 

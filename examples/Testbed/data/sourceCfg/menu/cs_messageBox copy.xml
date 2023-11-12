@@ -51,6 +51,7 @@
         <sprite type="Composite" name="buttonA" x="225" y="33">
             <parameter name="changeChildText" value="label,gui, 14" type="string"/>
             <parameter name="wName" value="messagePanel_Ok" type="string"/>
+            <parameter name="widgetNew" value="panelButton" type="string"/>
         </sprite>
         <sprite type="Standard" name="tilesA,9" x="200" y="100" handleSource="true"/>
     </layer>

@@ -3,17 +3,23 @@
 #include <sstream>
 #include "pugixml/pugixml.hpp"
 #include "jmSystem.h"
-#include "jmGuiButton.h"
+
 #include "jmCommonFunctions.h"
 #include "jmTextSprite.h"
-#include "jmGuiText.h"
+#include "jmText.h"
+
+#include "gui/jpGuiSystem.h"
+#include "gui/widgets/jpGuiButton.h"
+#include "gui/widgets/jpGuiTable.h"
+
 #include "items/jpItemsCommon.h"
-#include "actions/jpCommands_Logic.h"
+//#include "actions/jpCommands_Logic.h"
+
+#include "jpCompound.h"
 #include "jpGfxObjectsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
 #include "jpUser.h"
-#include "jpItemsTable.h"
 #include "jpUtilities.h"
 #include "jpUserSelector.h"
 
@@ -43,14 +49,16 @@ UserSelector::UserSelector(const pugi::xml_node &_node)
             mCfg->mBDeleteUserButton = n.attribute("deleteUserButton").as_string("");
 
         }else if(nodeName=="useComponent1"){
-            mCfg->mNewUserPanelComponent =  n.attribute("newUserPanelComponent").as_string("");
-            mCfg->mNewUserPanelComponentTransition = n.attribute("transition").as_string("");
-            mCfg->mNewUserPanelComponentTransitionShow = n.attribute("show").as_string("");
+            //mCfg->mNewUserPanelComponent =  n.attribute("newUserPanelComponent").as_string("");
+           // mCfg->mNewUserPanelComponentTransition = n.attribute("transition").as_string("");
+           // mCfg->mNewUserPanelComponentTransitionShow = n.attribute("show").as_string("");
+            mCfg->mNewUserPanelCompound = n.attribute("newUserPanelCompound").as_string("");
 
         }else if(nodeName=="useComponent2"){
-            mCfg->mConfirmDeleteUserComponent = n.attribute("confirmDeleteUserComponent").as_string("");
-            mCfg->mConfirmDeleteUserComponentTransition = n.attribute("transition").as_string("");
-            mCfg->mConfirmDeleteUserComponentTransitionShow = n.attribute("show").as_string("");
+           // mCfg->mConfirmDeleteUserComponent = n.attribute("confirmDeleteUserComponent").as_string("");
+           // mCfg->mConfirmDeleteUserComponentTransition = n.attribute("transition").as_string("");
+           // mCfg->mConfirmDeleteUserComponentTransitionShow = n.attribute("show").as_string("");
+            mCfg->mConfirmDeleteUserCompound = n.attribute("confirmDeleteUserCompound").as_string("");
 
             for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
 
@@ -67,38 +75,40 @@ UserSelector::UserSelector(const pugi::xml_node &_node)
 }
 
 
-
-
 bool UserSelector::initConnections(PlayedScene *_scene)
 {
 
-    dbgSystem.addMessage("init component 'userSelector'");
+    if(mInitialized) return true;
+
+
+    dbgSystem.addMessage("Initializing component '" + mName + "' ...");
 
     mParentPlayerScene = _scene;
 
     //---
-    mUsersTable = dynamic_cast<GuiTable*>(ObtainGuiWidget(_scene, mCfg->mUsersTable, GuiWidgetKind::TABLE));
+    mUsersTable = dynamic_cast<GuiTable*>(ObtainGuiWidget(_scene, mCfg->mUsersTable, WidgetType::TABLE));
     if(mUsersTable==nullptr){
         return false;
     }
-    mSelectorWidgets.push_back(mUsersTable);
+    mUsedWidgets.push_back(mUsersTable);
 
     //---
-    mAddNewUserButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mAddNewUserButton, GuiWidgetKind::BUTTON));
+    mAddNewUserButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mAddNewUserButton, WidgetType::BUTTON));
     if(mAddNewUserButton==nullptr){
         return false;
     }
-    mSelectorWidgets.push_back(mAddNewUserButton);
+    mUsedWidgets.push_back(mAddNewUserButton);
 
     //---
-    mBDeleteUserButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mBDeleteUserButton, GuiWidgetKind::BUTTON));
+    mBDeleteUserButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mBDeleteUserButton, WidgetType::BUTTON));
     if(mBDeleteUserButton==nullptr){
         return false;
     }
-    mSelectorWidgets.push_back(mBDeleteUserButton);
+    mUsedWidgets.push_back(mBDeleteUserButton);
 
 
     //----
+    /*
     mNewUserPanelComponent = dynamic_cast<OverlayComponent*>(_scene->overlayComponentsGroup()->getComponent(mCfg->mNewUserPanelComponent));
     if(mNewUserPanelComponent==nullptr){
         return false;
@@ -113,13 +123,20 @@ bool UserSelector::initConnections(PlayedScene *_scene)
     if(mACloseNewUserPanel->initConnections(_scene)==false){
         return false;
     }
+    */
+
+    mNewUserPanelCompound = _scene->compoundStorage()->getCompund(mCfg->mNewUserPanelCompound);
+    if(mNewUserPanelCompound==nullptr){
+        return false;
+    }
+
 
     //----
+    /*
     mConfirmDeleteUserComponent = dynamic_cast<OverlayComponent*>(_scene->overlayComponentsGroup()->getComponent(mCfg->mConfirmDeleteUserComponent));
     if(mConfirmDeleteUserComponent==nullptr){
         return false;
     }
-
 
     mAOpenConfirmDeletePanel.reset(new ADoTransition(mCfg->mConfirmDeleteUserComponentTransition, mCfg->mConfirmDeleteUserComponentTransitionShow, ""));
     mACloseConfirmDeletePanel.reset(new ADoTransition(mCfg->mConfirmDeleteUserComponentTransition, "", mCfg->mConfirmDeleteUserComponentTransitionShow));
@@ -130,6 +147,12 @@ bool UserSelector::initConnections(PlayedScene *_scene)
     if(mACloseConfirmDeletePanel->initConnections(_scene)==false){
         return false;
     }
+    */
+    mConfirmDeleteUserCompound = _scene->compoundStorage()->getCompund(mCfg->mConfirmDeleteUserCompound);
+    if(mConfirmDeleteUserCompound==nullptr){
+        return false;
+    }
+
 
     mConfirmPanel_resultYes = mParentPlayerScene->triggers().getTrigger("confirmPanel_resultYes");
     if(mConfirmPanel_resultYes==nullptr){
@@ -155,10 +178,10 @@ bool UserSelector::initConnections(PlayedScene *_scene)
         return false;
     }
 
-    mVarNewUserName = dynamic_cast<StringVar*>(mNewUserPanelComponent->variables().getVariable("newUserName"));
-    if(mVarNewUserName==nullptr){
-        return false;
-    }
+    //mVarNewUserName = dynamic_cast<StringVar*>(mNewUserPanelCompound->component()->variables().getVariable("newUserName"));
+    //if(mVarNewUserName==nullptr){
+    //    return false;
+    //}
 
 
     //--- set users items stuff
@@ -171,9 +194,13 @@ bool UserSelector::initConnections(PlayedScene *_scene)
     }
 
 
+
+    //---
+    mInitialized = true;
+
+
     //---
     dbgSystem.removeLastMessage();
-
     return true;
 }
 
@@ -182,17 +209,17 @@ void UserSelector::start()
 {
 
     mState = State::SELECTOR;
-    mParentPlayerScene->widgetManager()->appendToUsedWidgets(mSelectorWidgets);
+    mParentPlayerScene->guiSystem()->appendToUsedWidgets(mUsedWidgets);
 
     //---
-    mBDeleteUserButton->SetDisabled(app->usersDatabase()->users().size()<=1);
+    mBDeleteUserButton->setDisabled(app->usersDatabase()->users().size()<=1);
 }
 
 
-void UserSelector::update(UpdateMode _updateMode)
+void UserSelector::update(UpdateMode &_updateMode)
 {
 
-    if(_updateMode==UpdateMode::MODAL_OVERLAY){
+    if(_updateMode.modalOverlay){
         CheckConfirmPanelTriggers();
         return;
     }
@@ -201,7 +228,7 @@ void UserSelector::update(UpdateMode _updateMode)
     if(mState==State::SELECTOR){
 
         //--- CHANGE ACTIVE USER
-        if(mUsersTable->IsValueChanged()){
+        if(mUsersTable->isValueChanged()){
             GameItem* item = mUsersTable->selectedItem();
             if(item){
                 app->usersDatabase()->setActiveUser(item->name());
@@ -214,30 +241,36 @@ void UserSelector::update(UpdateMode _updateMode)
         }
 
         //--- ADD NEW USER - OPEN NEW USER PANEL
-        if(mAddNewUserButton->IsPressed()){
+        if(mAddNewUserButton->isPressedStarted()){
 
-            mNewUserPanelComponent->setTransitions(mAOpenNewUserPanel.get(), mACloseNewUserPanel.get());
-            mNewUserPanelComponent->_setModal(true);
-            mParentPlayerScene->startOverlayComponent(mNewUserPanelComponent);
+            //mNewUserPanelComponent->setTransitions(mAOpenNewUserPanel.get(), mACloseNewUserPanel.get());
+            //mNewUserPanelComponent->_setModal(true);
+            //mParentPlayerScene->startOverlayComponent(mNewUserPanelComponent);
+
+            mParentPlayerScene->startOverlayCompound(mParentCompound, mNewUserPanelCompound);
 
             mState = State::NEW_USER_PANEL;
 
 
         //--- DELETE USER
-        }else if(mBDeleteUserButton->IsPressed()){
+        }else if(mBDeleteUserButton->isPressedStarted()){
 
             GameItem *item = mUsersTable->selectedItem();
             if(item){
                 //--- CONFIRM DELETE - OPEN CONFIRM DELETE PANEL
-                mConfirmDeleteUserComponent->setTransitions(mAOpenConfirmDeletePanel.get(), mACloseConfirmDeletePanel.get());
-                mConfirmDeleteUserComponent->_setModal(true);
+
+                //mConfirmDeleteUserComponent->setTransitions(mAOpenConfirmDeletePanel.get(), mACloseConfirmDeletePanel.get());
+                //mConfirmDeleteUserComponent->_setModal(true);
 
                 //replace
                 TextSegment *ts = mConfirmDeleteUserComponentData.get()->mTextSegments.front();
                 ts->Replace("userName", item->name());
 
-                mConfirmDeleteUserComponent->setData(mConfirmDeleteUserComponentData.get());
-                mParentPlayerScene->startOverlayComponent(mConfirmDeleteUserComponent);
+                //mConfirmDeleteUserComponent->setData(mConfirmDeleteUserComponentData.get());
+                //mParentPlayerScene->startOverlayComponent(mConfirmDeleteUserComponent);
+
+                mConfirmDeleteUserCompound->component()->setData(mConfirmDeleteUserComponentData.get());
+                 mParentPlayerScene->startOverlayCompound(mParentCompound, mConfirmDeleteUserCompound);
 
                 mState = State::CONFIRM_DELETE_PANEL;
 
@@ -261,14 +294,16 @@ void UserSelector::update(UpdateMode _updateMode)
 
     }else if(mState==State::NEW_USER_PANEL){
 
-        if(mNewUserPanelComponent->isClosed()){
-            mBDeleteUserButton->SetDisabled(app->usersDatabase()->users().size()<=1);
+        //if(mNewUserPanelComponent->isClosed()){
+        if(mNewUserPanelCompound->state()==Compound::State::CLOSED){
+            mBDeleteUserButton->setDisabled(app->usersDatabase()->users().size()<=1);
             mState = State::SELECTOR;
         }
 
     }else if(mState==State::CONFIRM_DELETE_PANEL){
 
-        if(mConfirmDeleteUserComponent->isClosed()){
+        //if(mConfirmDeleteUserComponent->isClosed()){
+        if(mConfirmDeleteUserCompound->state()==Compound::State::CLOSED){
             mState = State::SELECTOR;
         }
 
@@ -290,7 +325,7 @@ void UserSelector::CheckConfirmPanelTriggers()
                     mTSActiveUserName->textSprite()->setText(app->usersDatabase()->activeUser()->name());
                 }
                 //---
-                mBDeleteUserButton->SetDisabled(app->usersDatabase()->users().size()<=1);
+                mBDeleteUserButton->setDisabled(app->usersDatabase()->users().size()<=1);
             }
         }
     }
@@ -301,7 +336,7 @@ void UserSelector::CheckConfirmPanelTriggers()
 void UserSelector::onStateEnded()
 {
 
-    mParentPlayerScene->widgetManager()->removeFromUsedWidgets(mSelectorWidgets);
+    mParentPlayerScene->guiSystem()->removeFromUsedWidgets(mUsedWidgets);
 }
 
 

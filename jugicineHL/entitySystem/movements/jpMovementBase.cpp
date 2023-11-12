@@ -7,6 +7,7 @@
 #include "jmSystem.h"
 
 #include "jpB2World.h"
+#include "jpEntityUtilities.h"
 #include "jpMovementBase.h"
 
 
@@ -25,19 +26,19 @@ MovementEngineType MovementEngine::type()
 }
 
 
-void MovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage)
+void MovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp,  bool _setErrorMessage)
 {
 
     if(_setErrorMessage){
-        dbgSystem.addMessage("There is no signal with name '" + _signalName + "' inside the movement engine '" + mFactory->typeSignature()+"' !");
+        dbgSystem.addMessage("There is no signal with name '" + _psp.signalFullName() + "' inside the movement engine '" + mFactory->typeSignature()+"' !");
     }
 
 }
 
-void MovementEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage)
+void MovementEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage)
 {
     if(_setErrorMessage){
-        dbgSystem.addMessage("There is no signal with name '" + _signalName + "' inside the movement engine '" + mFactory->typeSignature()+"' !");
+        dbgSystem.addMessage("There is no signal with name '" + _psp.signalFullName() + "' inside the movement engine '" + mFactory->typeSignature()+"' !");
     }
 }
 

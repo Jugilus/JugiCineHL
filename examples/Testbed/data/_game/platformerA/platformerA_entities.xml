@@ -45,7 +45,7 @@
 
             <groundMovement name="heroRunning" >
                 <movement maxSpeedP="250" accDistanceP="25" maxSlope="50.0" jumpXSpeedInheritFactor="0.5" animationSpeedFactor="1.0" steepSlopeSpeedP="400"/>
-                <triggers moveLeft="INPUT_COMMAND/moveLeft" moveRight="INPUT_COMMAND/moveRight" />
+                <triggers moveLeft="INPUT:COMMAND/moveLeft" moveRight="INPUT:COMMAND/moveRight" />
                 <baseStates>
                     <standing animationLeft="standingLeft" animationRight="standingRight" />
                     <turning animationLeft="turningToLeft" animationRight="turningToRight" />
@@ -53,7 +53,7 @@
                     <moving animationLeft="walkingLeft" animationRight="walkingRight" />
                     <steepSlopeStaggering animationLeft="staggeringLeft" animationRight="staggeringRight" />
                 </baseStates>
-                <customState name="turnWallSwitch" baseState="STANDING" trigger="INPUT_COMMAND/fire" animationLeft="turnWallSwitchLeft" animationRight="turnWallSwitchRight">
+                <customState name="turnWallSwitch" baseState="STANDING" trigger="INPUT:COMMAND/fire" animationLeft="turnWallSwitchLeft" animationRight="turnWallSwitchRight">
                     <context onSignal="ENTITY:THIS/CONTACT:CATEGORY:wallSwitch" />
                     <customSensor extraShapeCategory="heroHandSensor" vectorShapeData="1" activeOnAnimationKeyData="1" />
                 </customState>
@@ -61,7 +61,7 @@
 
             <groundMovement name="heroMovingMovableObjectOnRight" >
                 <movement maxSpeedP="100" accDistanceP="25" maxSlope="50.0"/>
-                <triggers moveLeft="INPUT_COMMAND/moveLeft" moveRight="INPUT_COMMAND/moveRight" />
+                <triggers moveLeft="INPUT:COMMAND/moveLeft" moveRight="INPUT:COMMAND/moveRight" />
                 <baseStates>
                     <standing animationLeft="standingToRightObject" bodyOrientationLeft="RIGHT" animationRight="standingToRightObject" />
                     <moving animationLeft="pullingRightObject" bodyOrientationLeft="RIGHT" animationRight="pushingRightObject" />
@@ -70,7 +70,7 @@
 
             <groundMovement name="heroMovingMovableObjectOnLeft" >
                 <movement maxSpeedP="100" accDistanceP="25" maxSlope="50.0"/>
-                <triggers moveLeft="INPUT_COMMAND/moveLeft" moveRight="INPUT_COMMAND/moveRight" />
+                <triggers moveLeft="INPUT:COMMAND/moveLeft" moveRight="INPUT:COMMAND/moveRight" />
                 <baseStates>
                     <standing animationLeft="standingToLeftObject" animationRight="standingToLeftObject" bodyOrientationRight="LEFT" />
                     <moving animationLeft="pushingLeftObject" animationRight="pullingLeftObject" bodyOrientationRight="LEFT"/>
@@ -86,7 +86,7 @@
                 <yMovement maxHeightP="150" pushOffSpeedP="500" intermediateHeightRatio="0.75" intermediateSpeedRatio="0.9"/> 
                 <xMovement xMaxSpeedP="150" xAccDistanceP="25" xGroundSpeedInheritFactor="0.5" />
                 <otherParameters maxSlope = "60.0" pushImpulseSpeedFactor="1.0f" addCeilingSensor="TRUE" />
-                <triggers startJump="INPUT_COMMAND/jump" moveLeft="INPUT_COMMAND/moveLeft" moveRight="INPUT_COMMAND/moveRight" />
+                <triggers startJump="INPUT:COMMAND/jump" moveLeft="INPUT:COMMAND/moveLeft" moveRight="INPUT:COMMAND/moveRight" />
                 <baseStates>
                     <!-- <takeOff animationLeft="jumpingTakeOffLeft" animationRight="jumpingTakeOffRight" /> -->
                     <ascending animationLeft="jumpingAscendingLeft" animationRight="jumpingAscendingRight" />
@@ -105,7 +105,7 @@
 
             <pathMovement name="heroClimbingLadder" >
                 <parameters maxSpeedP="200" accDistanceP="25" pathways="ladder" />
-                <triggers moveForward="INPUT_COMMAND/moveUp" moveBackward="INPUT_COMMAND/moveDown" />
+                <triggers moveForward="INPUT:COMMAND/moveUp" moveBackward="INPUT:COMMAND/moveDown" />
                 <baseStates>
                     <standing animationForward="standingOnLadder" animationBackward="standingOnLadder" />
                     <!--
@@ -139,24 +139,24 @@
                     <a onSignal="ENTITY:THIS/ENGINE:heroJumping:START_JUMP" doSetState="jumping" />
                     <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
                     <a onSignal="ENTITY:THIS/ENGINE:heroClimbingLadder:PATWAY_ACCESSED" doSetState="climbingLadder" />
-                    <a onSignals="ENTITY:THIS/MOVABLE_OBJECT:ON_RIGHT, INPUT_COMMAND/fire" doSetState="movingMovableObjectOnRight" />
-                    <a onSignals="ENTITY:THIS/MOVABLE_OBJECT:ON_LEFT, INPUT_COMMAND/fire" doSetState="movingMovableObjectOnLeft" />
+                    <a onSignals="ENTITY:THIS/MOVABLE_OBJECT:ON_RIGHT, INPUT:COMMAND/fire" doSetState="movingMovableObjectOnRight" />
+                    <a onSignals="ENTITY:THIS/MOVABLE_OBJECT:ON_LEFT, INPUT:COMMAND/fire" doSetState="movingMovableObjectOnLeft" />
                 </state>
 
                 <state name="movingMovableObjectOnRight" movementEngine="heroMovingMovableObjectOnRight">
-                    <a onSignal="ENTITY:THIS/STATE:THIS/START" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED/SET" />
-                    <a onSignals="[INPUT_COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED/UNSET" doSetState="groundMovement" />
+                    <a onSignal="ENTITY:THIS/STATE:THIS/START" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED=TRUE" />
+                    <a onSignals="[INPUT:COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED=FALSE" doSetState="groundMovement" />
                     <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
                 </state>
 
                 <state name="movingMovableObjectOnLeft" movementEngine="heroMovingMovableObjectOnLeft">
-                    <a onSignal="ENTITY:THIS/STATE:THIS/START" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED/SET" />
-                    <a onSignals="[INPUT_COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED/UNSET" doSetState="groundMovement" />
+                    <a onSignal="ENTITY:THIS/STATE:THIS/START" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED=TRUE" />
+                    <a onSignals="[INPUT:COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED=FALSE" doSetState="groundMovement" />
                     <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
                 </state>
         
                 <state name="jumping" movementEngine="heroJumping">
-                    <a onSignals="ENTITY:THIS/ENGINE:heroJumping:STATE:LANDED" doSetState="groundMovement" />
+                    <a onSignals="ENTITY:THIS/ENGINE:heroJumping:STATE=LANDED" doSetState="groundMovement" />
                 </state>
 
                 <state name="climbingLadder" movementEngine="heroClimbingLadder">
@@ -171,7 +171,7 @@
                     <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="falling" />
                 </state>
                 <state name="falling" movementEngine="objectFalling">
-                    <a onSignals="ENTITY:THIS/ENGINE:objectFalling:STATE:LANDED" doSetState="groundMovement" />
+                    <a onSignals="ENTITY:THIS/ENGINE:objectFalling:STATE=LANDED" doSetState="groundMovement" />
                 </state>
             </behaviorController>
         
@@ -196,7 +196,7 @@
             
             <transporter name="tFancyPlatformA" >
                 <parameters waitingDurationAtPoints="1.0" movingMode="AUTOMATIC_WITH_PASSENGER" disablePassengerMovement="TRUE" />
-                <inputCommands moveForward="INPUT_COMMAND/moveUp" moveBackward="INPUT_COMMAND/moveDown" />
+                <inputCommands moveForward="INPUT:COMMAND/moveUp" moveBackward="INPUT:COMMAND/moveDown" />
             </transporter>
         
         </taskEngines>
@@ -297,19 +297,22 @@
             <entity name="fancyPlatformA_light" mainCategory="entityWithoutShape" >
                 <behaviorController>
                     <state name="off">
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/ACTIVE" doSetState="standBy" />
+                        <!--<a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/ACTIVE" doSetState="standBy" />-->
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/ACTIVE" doSetState="standBy" />
                     </state>
                     <state name="standBy">
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE" doSetState="off" />
+                        <!--<a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE" doSetState="off" />-->
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/NOT_ACTIVE" doSetState="off" />
                         <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_PARTLY_ON" doSetState="blinking" />
                     </state>
                     <state name="blinking">
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE" doSetState="off" />
+                        <!--<a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE" doSetState="off" />-->
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/NOT_ACTIVE" doSetState="off" />
                         <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:NO_PASSENGER" doSetState="standBy" />
                         <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_FULLY_ON" doSetState="on" />
                     </state>
                     <state name="on">
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE,  
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/NOT_ACTIVE,  
                                     ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:MOVING/NOT_ACTIVE" 
                                     doSetState="off"/>
                         <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_PARTLY_ON" doSetState="blinking" />
@@ -323,11 +326,11 @@
                 <parameters centerMarginP="25" />
                 <behaviorController>
                     <state name="off">
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING" doSetState="on" />
-                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/SET" doSetState="on" />
+                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/ACTIVE" doSetState="on" />
+                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED=TRUE" doSetState="on" />
                     </state> 
                     <state name="on">
-                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/UNSET" doSetState="off" />
+                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED=FALSE" doSetState="off" />
                     </state>
                 </behaviorController>  
             </entity>
@@ -343,7 +346,7 @@
                         <a onSignals= "ENTITY:groundSwitch_platformA_v2:1/STATE:on , 
                                         ENTITY:groundSwitch_platformA_v2:2/STATE:off ,
                                         ENTITY:groundSwitch_platformA_v2:3/STATE:on "
-                                doSetSignal="ENTITY:THIS/TASK:tPlatformA:STATUS:OPERATING/SET" 
+                                doSetSignal="ENTITY:THIS/TASK:tPlatformA:ENABLED=TRUE" 
                                 doSetState="enabled" >
                         </a>
                     </state>
@@ -351,7 +354,7 @@
                         <a onSignals= "[ENTITY:groundSwitch_platformA_v2:1/STATE:on / NOT_ACTIVE , 
                                          ENTITY:groundSwitch_platformA_v2:2/STATE:off/ NOT_ACTIVE ,
                                          ENTITY:groundSwitch_platformA_v2:3/STATE:on / NOT_ACTIVE ]"
-                                doSetSignal="ENTITY:THIS/TASK:tPlatformA:STATUS:OPERATING/UNSET"                         
+                                doSetSignal="ENTITY:THIS/TASK:tPlatformA:ENABLED=FALSE"                         
                                 doSetState="disabled" >
                         </a>
                     </state>
@@ -507,11 +510,11 @@
                 <parameters centerMarginP="25" />
                 <behaviorController>
                     <state name="off">
-                        <a onSignals="ANIMATED_OBJECT:rotatingWheelA/DISABLED/NOT_ACTIVE" doSetState="on" />
-                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ANIMATED_OBJECT:rotatingWheelA/DISABLED/UNSET" doSetState="on" />
+                        <a onSignals="ANIMATED_OBJECT:rotatingWheelA/ENABLED" doSetState="on" />
+                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ANIMATED_OBJECT:rotatingWheelA/ENABLED=TRUE" doSetState="on" />
                     </state> 
                     <state name="on">
-                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ANIMATED_OBJECT:rotatingWheelA/DISABLED/SET" doSetState="off" />
+                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ANIMATED_OBJECT:rotatingWheelA/ENABLED=FALSE" doSetState="off" />
                     </state>
                 </behaviorController>  
             </entity>

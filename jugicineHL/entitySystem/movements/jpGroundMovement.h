@@ -24,7 +24,6 @@ class FrameAnimationInstance;
 class AnimationPlayer;
 class PlayedScene;
 class Animation;
-class BoolSignal;
 struct FixtureUserData;
 struct SourceFixture;
 
@@ -349,7 +348,7 @@ private:
     void setState(GroundMovementState _state)
     {
         mState = _state;
-        mSigState._setOnNextFrame(static_cast<int>(mState));
+        mSigState.setValue_onNextFrame(static_cast<int>(mState));
     }
 
 

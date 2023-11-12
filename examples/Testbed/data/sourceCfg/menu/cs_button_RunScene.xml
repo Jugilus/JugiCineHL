@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="button_RunScene" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="1">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="missingSourceSpriteDummy" x="0" y="0"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Standard" name="missingSourceSpriteDummy" x="0" y="0"/>
+    </layer>
+</composedSprite>

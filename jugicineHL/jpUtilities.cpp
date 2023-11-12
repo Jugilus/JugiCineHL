@@ -1,7 +1,4 @@
 #include "pugixml/pugixml.hpp"
-#include "jmGuiCommon.h"
-#include "jmGuiText.h"
-#include "jmGuiBar.h"
 #include "map/jmMap.h"
 #include "map/jmSpriteLayer.h"
 #include "jmFrameAnimation.h"
@@ -16,13 +13,16 @@
 #include "jmGlobal.h"
 #include "jmApp.h"
 #include "jmSystem.h"
+#include "jmText.h"
 
-#include "jpItemsTable.h"
+#include "gui/jpGuiCommon.h"
+#include "gui/jpGuiSystem.h"
+#include "gui/widgets/jpGuiTable.h"
 #include "jpInput.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
 #include "jpItemsCommon.h"
-#include "actions/jpActionsCommon.h"
+#include "jpLogicState.h"
 
 
 #include "jpUtilities.h"
@@ -40,11 +40,11 @@ PlayedScene* ObtainPlayerSceneOfGameAction(Action *sourceAction)
     {
         BaseObject* parent = sourceAction->parentObject();      assert(parent);
 
-        if(parent->type()==BaseObjectType::LOGIC_STATE){
+        if(parent->baseType()==BaseObjectType::LOGIC_STATE){
             LogicState* state = static_cast<LogicState*>(parent);
             parent = state->parentObject();
 
-        }else if(parent->type()==BaseObjectType::PLAYER_SCENE){
+        }else if(parent->baseType()==BaseObjectType::PLAYER_SCENE){
             PlayedScene* scene = static_cast<PlayedScene*>(parent);
             return  scene;
 
@@ -57,6 +57,7 @@ PlayedScene* ObtainPlayerSceneOfGameAction(Action *sourceAction)
     return nullptr;
 }
 
+/*
 
 LogicState* ObtainLogicStateFromPath(PlayedScene *scene, Action *sourceAction, const std::string &statePath)
 {
@@ -66,7 +67,7 @@ LogicState* ObtainLogicStateFromPath(PlayedScene *scene, Action *sourceAction, c
 
         // empty statePath indicates that we use state parent of the sourceAction
 
-        if(sourceAction->parentObject()->type()==BaseObjectType::LOGIC_STATE){
+        if(sourceAction->parentObject()->baseType()==BaseObjectType::LOGIC_STATE){
             LogicState *parentState = static_cast<LogicState*>(sourceAction->parentObject());
             return parentState;
         }else{
@@ -84,7 +85,7 @@ LogicState* ObtainLogicStateFromPath(PlayedScene *scene, Action *sourceAction, c
 
         const std::string &stateName = statePathParts.front();
 
-        if(sourceAction->parentObject()->type()==BaseObjectType::LOGIC_STATE){
+        if(sourceAction->parentObject()->baseType()==BaseObjectType::LOGIC_STATE){
             LogicState *parentState = static_cast<LogicState*>(sourceAction->parentObject());
             for(LogicState* gs : parentState->childStates()){
                 if(gs->name() == stateName){
@@ -152,8 +153,187 @@ LogicState* ObtainLogicStateFromPath(PlayedScene *scene, Action *sourceAction, c
     return nullptr;
 
 }
+*/
 
 
+
+LogicState* ObtainLogicStateFromPath2(PlayedScene *scene, LogicState *_currentState, const std::string &statePath)
+{
+
+    assert(_currentState->parentObject());
+
+
+    std::vector<std::string>statePathParts = StdString::splitString(statePath, ":");
+
+
+
+    if(statePathParts.size()==1){
+
+        const std::string &stateName = statePathParts[0];
+
+
+        // only name of the state -> we seek among the children of the parent logic state
+
+        if(_currentState->parentObject()->baseType()==BaseObjectType::LOGIC_STATE){
+            LogicState *parentState = static_cast<LogicState*>(_currentState->parentObject());
+
+            for(LogicState* gs : parentState->childStates()){
+                if(gs->name() == stateName){
+                    return gs;
+                }
+            }
+        }
+
+
+        // If the state was not found among the children of the parent, it is also possibility it is a child state of the root logic state!
+        LogicState *rootLogicState = _currentState->rootLogicState();
+        for(LogicState* gs : rootLogicState->childStates()){
+            if(gs->name() == stateName){
+                return gs;
+            }
+        }
+
+        // Check out also within scene update root logic state !
+        for(LogicState* gs : scene->updateState()->childStates()){
+            if(gs->name() == stateName){
+                return gs;
+            }
+        }
+
+
+        dbgSystem.addMessage("State of name '" + statePath + "' not found! Make sure to use full name path for states which are not in the same scope as the action!");
+        return nullptr;
+
+
+
+    }else if(statePathParts.size()>1){
+
+        // full 'path' of the state -> every part is a name of subsequential state parent
+
+        /*
+        LogicState *state = _currentState->rootLogicState();
+
+        bool errorInPath = false;
+        int i=0;
+
+        while(i<statePathParts.size()){
+
+            const std::string &stateName = statePathParts.at(i);
+            bool stateFound = false;
+            for(LogicState* s : state->childStates()){
+                if(s->name() == stateName){
+                    state = s;
+                    stateFound = true;
+                    break;
+                }
+            }
+
+            if(stateFound==false){
+                errorInPath = true;
+                break;
+            }
+
+            i++;
+        }
+
+        if(errorInPath){
+            dbgSystem.addMessage("State of name '" + statePath + "' not found!");
+            return nullptr;
+        }
+        */
+
+        //---
+        LogicState *rootState = _currentState->rootLogicState();
+
+        LogicState *state = rootState->findChildStateViaPath(statePathParts);
+        if(state){
+            return state;
+        }
+
+        //---
+        state = scene->updateState()->findChildStateViaPath(statePathParts);
+        if(state){
+            return state;
+        }
+
+        dbgSystem.addMessage("State of name '" + statePath + "' not found!");
+        return nullptr;
+
+    }
+
+
+    //dbgSystem.addMessage("Path is an empty string!");
+
+    return nullptr;
+
+}
+
+
+LogicState* ObtainLogicStateFromPath(PlayedScene *_scene, LogicState *_currentState, const std::string &_statePath)
+{
+
+    std::vector<std::string>statePathParts = StdString::splitString(_statePath, ":");
+
+    LogicState * state = nullptr;
+
+    // seek first from the parent state
+    if(_currentState->parentObject()->baseType() == BaseObjectType::LOGIC_STATE){
+        LogicState * parentState = static_cast<LogicState*>(_currentState->parentObject());
+        state = parentState->findChildStateViaPath(statePathParts);
+        if(state){
+            return state;
+        }
+    }
+
+
+    // seek next from the root state
+    LogicState * rootState = _currentState->rootLogicState();
+    state = rootState->findChildStateViaPath(statePathParts);
+    if(state){
+        return state;
+    }
+
+
+    // seek next from the scene root
+    state = _scene->updateState()->findChildStateViaPath(statePathParts);
+    if(state){
+        return state;
+    }
+
+
+    dbgSystem.addMessage("State with path '" + _statePath + "' not found!");
+
+    return state;
+
+}
+
+
+LogicState* ObtainLogicStateFromPath_SeekFromRootState(PlayedScene* _scene, LogicState* _rootState, const std::string &_statePath)
+{
+
+    std::vector<std::string>statePathParts = StdString::splitString(_statePath, ":");
+
+    LogicState * state = nullptr;
+
+
+    state = _rootState->findChildStateViaPath(statePathParts);
+    if(state){
+        return state;
+    }
+
+    // seek next from the scene root
+    state = _scene->updateState()->findChildStateViaPath(statePathParts);
+    if(state){
+        return state;
+    }
+
+
+    dbgSystem.addMessage("State with path '" + _statePath + "' not found!");
+    return state;
+}
+
+
+/*
 Action* ObtainActionFromPath(PlayedScene* scene, Action *sourceAction, const std::string &actionPath)
 {
 
@@ -165,7 +345,7 @@ Action* ObtainActionFromPath(PlayedScene* scene, Action *sourceAction, const std
 
         const std::string &actionName = actionPathParts.front();
 
-        if(sourceAction->parentObject()->type()==BaseObjectType::LOGIC_STATE){
+        if(sourceAction->parentObject()->baseType()==BaseObjectType::LOGIC_STATE){
             LogicState *parentState = static_cast<LogicState*>(sourceAction->parentObject());
             for(Action* a : parentState->actions()){
                 if(a->name() == actionName){
@@ -226,12 +406,18 @@ Action* ObtainActionFromPath(PlayedScene* scene, Action *sourceAction, const std
 
 }
 
+*/
 
 
-GuiWidget* ObtainGuiWidget(PlayedScene* scene, const std::string &widgetName, GuiWidgetKind guiWidgetKind)
+
+GuiWidget* ObtainGuiWidget(PlayedScene* scene, const std::string &widgetName, WidgetType guiWidgetKind)
 {
 
-    GuiWidget *w = scene->widgetManager()->findWidget(widgetName);
+    GuiWidget *w = scene->guiSystem()->findWidget(widgetName, guiWidgetKind);
+
+    return w;
+
+    /*
     if(w){
         if(w->GetKind()==guiWidgetKind || guiWidgetKind==GuiWidgetKind::NOT_DEFINED){
             return w;
@@ -245,6 +431,7 @@ GuiWidget* ObtainGuiWidget(PlayedScene* scene, const std::string &widgetName, Gu
 
 
     return nullptr;
+    */
 
 }
 
@@ -448,6 +635,44 @@ TextSegment* ObtainTextSegment(const std::string &textSegmentPath)
 }
 
 
+
+TextSegment* ObtainTextSegment2(const std::string &textSegmentPath)
+{
+
+    std::vector<std::string>textSegmentParts = StdString::splitString(textSegmentPath, ":");
+
+    if(textSegmentParts.size()==2){
+
+        const std::string &bookName = textSegmentParts[0];
+        int segmentID = StdString::stringToInt(textSegmentParts[1], 0);
+
+        TextBook *book = textLibrary.FindBook(bookName);
+        if(book==nullptr){
+            dbgSystem.addMessage("Text book with name '" + bookName + "' not found!");
+            return nullptr;
+        }
+        if(book->isExternalDataLoaded()==false){
+            book->loadExternalData();
+        }
+
+        if(segmentID<0 || segmentID>=book->textSegments().size()){
+            dbgSystem.addMessage("Text segment with index '"+ std::to_string(segmentID) + "' in the book '" + bookName + "'  is out of bounds!");
+            return nullptr;
+
+        }
+
+        TextSegment *ts = book->textSegments()[segmentID];
+        return ts;
+    }
+
+
+    dbgSystem.addMessage("Parsing string '" +textSegmentPath + "' error!");
+    return nullptr;
+
+}
+
+
+
 bool ObtainPlainText(const std::string &textPath, std::string &text)
 {
 
@@ -480,12 +705,12 @@ bool ObtainPlainText(const std::string &textPath, std::string &text)
 }
 
 
-
+/*
 TriggerVariable* ObtainTrigger(Action *sourceAction, const std::string &triggerName)
 {
 
 
-    if(sourceAction->parentObject()->type()==BaseObjectType::LOGIC_STATE){
+    if(sourceAction->parentObject()->baseType()==BaseObjectType::LOGIC_STATE){
 
         LogicState *state = static_cast<LogicState*>(sourceAction->parentObject());
 
@@ -503,10 +728,10 @@ TriggerVariable* ObtainTrigger(Action *sourceAction, const std::string &triggerN
             if(state->parentObject()==nullptr){
                 break;
 
-            }else if(state->parentObject()->type()==BaseObjectType::LOGIC_STATE){
+            }else if(state->parentObject()->baseType()==BaseObjectType::LOGIC_STATE){
                 state = static_cast<LogicState*>(state->parentObject());
 
-            }else if(state->parentObject()->type()==BaseObjectType::PLAYER_SCENE){
+            }else if(state->parentObject()->baseType()==BaseObjectType::PLAYER_SCENE){
                 PlayedScene* scene = static_cast<PlayedScene*>(state->parentObject());
                 TriggerVariable *t = scene->triggers().getTrigger(triggerName, false);
                 if(t){
@@ -524,7 +749,7 @@ TriggerVariable* ObtainTrigger(Action *sourceAction, const std::string &triggerN
 
     return nullptr;
 }
-
+*/
 
 
 SourceSprite* ObtainSourceSpriteWithConstantParameter(const std::vector<SourceSprite*> &sourceSprites, const std::string &pName, const std::string &pValue)
@@ -777,7 +1002,7 @@ Variable* ObtainVariableFromPath(const std::string &path, PlayedScene *scene, st
 
             if(originObject=="table"){
 
-                widget = ObtainGuiWidget(scene, objectName, GuiWidgetKind::TABLE);
+                widget = ObtainGuiWidget(scene, objectName, WidgetType::TABLE);
 
                 if(widget==nullptr){
                     return nullptr;
@@ -791,7 +1016,7 @@ Variable* ObtainVariableFromPath(const std::string &path, PlayedScene *scene, st
             const std::string &varName = pathParts[i+1];
 
             if(widget){
-                if(widget->GetKind()==GuiWidgetKind::TABLE){
+                if(widget->type()==WidgetType::TABLE){
                     GuiTable *table = static_cast<GuiTable*>(widget);
 
                     //Variable *var = table->variables()->getVariable(varName);

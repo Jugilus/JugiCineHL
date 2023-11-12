@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-
+#include "jmSignal.h"
 #include "jpSettings.h"
 
 
@@ -78,6 +78,8 @@ public:
 
     ItemsGroup* userNamesItems(){ return mUsersNamesItems.get(); }
 
+    StringSignal* activeUserSignal(){ return &mSigActiveUser; }
+
 
 private:
     PlayedApp* mParentPlayerApp = nullptr;         // LINK
@@ -87,7 +89,8 @@ private:
     int mUserIdCounter = 1;
 
     UserProfile* mActiveUser = nullptr;         // LINK
-    StringVar* mActiveUserName = nullptr;       // LINK
+    //StringVar* mActiveUserName = nullptr;       // LINK
+    StringSignal mSigActiveUser;
 
     std::unique_ptr<UserProfile>mDefaultUser;
 

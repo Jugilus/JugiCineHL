@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <composedSprite name="inputDeviceSelectorSlider" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="10" nTilesY="1">
     <layer content="Free sprites" name="Layer 1">
-        <sprite type="Standard" name="buttonArrowRightA" x="455" y="0"/>
-        <sprite type="Standard" name="buttonArrowLeftA" x="45" y="0"/>
+        <sprite type="Standard" name="buttonArrowRightA" nameID="incrementButton" x="455" y="0"/>
+        <sprite type="Standard" name="buttonArrowLeftA" nameID="decrementButton" x="45" y="0"/>
         <sprite type="Standard" name="inputDeviceSelectorDummySlot" x="250" y="0" handleSource="true"/>
     </layer>
-    <constantParameter name="wSlider" value="true" type="bool"/>
 </composedSprite>

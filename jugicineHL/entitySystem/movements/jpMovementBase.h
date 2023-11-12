@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "jmSignal.h"
+
 #include "jpEntityGlobal.h"
 
 
@@ -25,10 +26,11 @@ class MovementEngine;
 struct SignalQuery;
 struct SignalSetter;
 class Signal;
+class ParsedSignalPath;
+//struct EntitySignalStrings;
 
 struct SlidingGroundCfg;
 struct ConveyorGroundCfg;
-
 
 
 struct CustomSensorCfg
@@ -105,8 +107,8 @@ public:
     virtual MovementEngineData* getMovementEngineData(const std::string &_name, bool _setErrorMessage) = 0;
     virtual MovementEngineData* currentData() = 0;
 
-    virtual void obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage=true);
-    virtual void obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_data, const std::string &_signalName, const std::string &_signalValue, bool _setErrorMessage=true);
+    virtual void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true);
+    virtual void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage=true);
 
 
 
@@ -129,8 +131,8 @@ public:
     void updateAnimationPlayer();
     bool isCurrentAnimationStalled();
 
-    void preUpdateSignals(){ Signal::preUpdateSignals(mSignals); }
-    void postUpdateSignals(){ Signal::postUpdateSignals(mSignals); }
+    //void preUpdateSignals(){ Signal::preUpdateSignals(mSignals); }
+    //void postUpdateSignals(){ Signal::postUpdateSignals(mSignals); }
     void resetSignals(){ Signal::resetSignals(mSignals); }
 
     std::vector<Signal*> &signals(){ return mSignals; }
@@ -256,8 +258,8 @@ public:
     virtual MovementEngineCfg* createMovementEngineCfg(const std::string &_name) = 0;
     virtual MovementEngine* createMovementEngine() = 0;
 
-    virtual void obtainCustomSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_signalName, const std::string &_signalValue){}
-    virtual void obtainCustomSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_signalName, const std::string &_signalValue){}
+    //virtual void obtainCustomSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_signalName, const std::string &_signalValue){}
+    //virtual void obtainCustomSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_signalName, const std::string &_signalValue){}
 
 
 protected:

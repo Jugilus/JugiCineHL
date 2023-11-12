@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "jmGuiCommon.h"
 #include "jpVariables.h"
 #include "jpGlobal.h"
 
@@ -64,7 +63,7 @@ private:
 //--------------------------------------------------------------
 
 
-
+/*
 class ExtWidgetManager : public WidgetManager
 {
 
@@ -73,7 +72,7 @@ class ExtWidgetManager : public WidgetManager
 
 };
 
-
+*/
 
 
 

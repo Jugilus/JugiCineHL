@@ -22,6 +22,7 @@
         <sprite type="Composite" name="buttonA" x="616" y="26">
             <parameter name="changeChildText" value="label, gui, 7" type="string"/>
             <parameter name="wName" value="openUsersDialog" type="string"/>
+            <parameter name="widgetNew" value="panelButton" type="string"/>
         </sprite>
     </layer>
 </composedSprite>

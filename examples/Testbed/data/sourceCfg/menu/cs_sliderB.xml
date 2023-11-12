@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <composedSprite name="sliderB" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="8">
     <layer content="Free sprites" name="Layer 1">
-        <sprite type="Standard" name="sliderB_line" x="0" y="199" handleSource="true"/>
+        <sprite type="Standard" name="sliderB_line" nameID="slidingLine" x="0" y="199" handleSource="true"/>
     </layer>
     <layer content="Free sprites" name="Layer 2">
-        <sprite type="Standard" name="sliderB_incrementButton" x="0" y="35"/>
-        <sprite type="Standard" name="sliderB_slidingButton" x="0" y="262"/>
-        <sprite type="Standard" name="sliderB_decrementButton" x="0" y="363"/>
+        <sprite type="Standard" name="sliderB_incrementButton" nameID="incrementButton" x="0" y="35"/>
+        <sprite type="Standard" name="sliderB_slidingButton" nameID="slidingButton" x="0" y="262"/>
+        <sprite type="Standard" name="sliderB_decrementButton" nameID="decrementButton" x="0" y="363"/>
     </layer>
-    <parameter name="wName" value="slider" type="string"/>
-    <constantParameter name="wValueRange" value="0.0, 1.0" type="string"/>
-    <constantParameter name="wSlider" value="true" type="bool"/>
 </composedSprite>

@@ -6,7 +6,7 @@
 #include "jmSystem.h"
 #include "jpPlayedApp.h"
 #include "jpItemsCommon.h"
-#include "jpItemsTable.h"
+#include "gui/widgets/jpGuiTable.h"
 #include "jmUtilities.h"
 #include "jpInput.h"
 #include "jpUser.h"
@@ -25,7 +25,7 @@ UserProfile::UserProfile(const std::string &_name, int _id)
     mName = _name;
     mId = _id;
 
-    mType = BaseObjectType::USER_PROFILE;
+    mBaseType = BaseObjectType::USER_PROFILE;
 
     //mInputProfiles = app->inputSystem()->buildInputProfiles();
     //mInputProfiles = new InputProfiles();
@@ -101,11 +101,11 @@ bool UserProfile::isInputProfilesStructureOK()
 UserManager::UserManager(PlayedApp *_parentApp)
 {
 
-    mType = BaseObjectType::USERS_DATABASE;
+    mBaseType = BaseObjectType::USERS_DATABASE;
     mParentPlayerApp = _parentApp;
 
     //---
-    mActiveUserName = static_cast<StringVar*>(_parentApp->systemVariables()->addVariable(new StringVar("activeUserName", "")));
+    //mActiveUserName = static_cast<StringVar*>(_parentApp->systemVariables()->addVariable(new StringVar("activeUserName", "")));
     mUsersNamesItems.reset(new ItemsGroup("userNames", this));
 
 }
@@ -212,7 +212,8 @@ bool UserManager::deleteUser(const std::string &_name)
     }
 
     if(mActiveUser){
-        mActiveUserName->setValue(mActiveUser->name());
+        //mActiveUserName->setValue(mActiveUser->name());
+        mSigActiveUser.setValue(mActiveUser->name());
 
         //---
         GameItem * item = mUsersNamesItems->getItem(mActiveUser->name());
@@ -250,7 +251,8 @@ UserProfile *UserManager::setActiveUser(const std::string &_name)
     for(UserProfile* u : mUsers){
         if(u->name()==_name){
             mActiveUser = u;
-            mActiveUserName->setValue(mActiveUser->name());
+            //mActiveUserName->setValue(mActiveUser->name());
+            mSigActiveUser.setValue(mActiveUser->name());
             saveActiveUserIdentification();
             //---
             app->inputSystem()->setActiveUserProfiles(mActiveUser->inputProfiles());
@@ -360,7 +362,8 @@ bool UserManager::loadUsers()
 
     }else{
         mActiveUser = mUsers.back();
-        mActiveUserName->setValue(mActiveUser->name());
+        //mActiveUserName->setValue(mActiveUser->name());
+        mSigActiveUser.setValue(mActiveUser->name());
         saveActiveUserIdentification();
     }
 
@@ -434,7 +437,8 @@ bool UserManager::loadActiveUserIdentification()
 
         mActiveUser = getUser(currentUserName, false);
         if(mActiveUser){
-            mActiveUserName->setValue(mActiveUser->name());
+            //mActiveUserName->setValue(mActiveUser->name());
+            mSigActiveUser.setValue(mActiveUser->name());
             return true;
         }
     }

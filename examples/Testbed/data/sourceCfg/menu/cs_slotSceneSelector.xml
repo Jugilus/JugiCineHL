@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <composedSprite name="slotSceneSelector" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="2">
     <layer content="Free sprites" name="Layer 1">
-        <sprite type="Standard" name="slotItemA_background" x="0" y="0" handleSource="true"/>
+        <sprite type="Standard" name="slotItemA_background" nameID="slotButton" x="0" y="0" handleSource="true"/>
     </layer>
     <layer content="Free sprites" name="text">
         <sprite type="Text" name="sceneName" nameID="sceneName" x="15" y="53" text="sceneName"/>
     </layer>
     <vectorLayer name="Vector Layer 1">
-        <rectangle points="(17,15);(598,15);(598,40);(17,40)">
+        <rectangle points="(17,15);(598,15);(598,40);(17,40)" nameID="textArea">
             <parameter name="wLayer" value="text" type="string"/>
             <parameter name="wSlotTextField" value="sceneDescription" type="string"/>
         </rectangle>
         <singlePoint points="(0,0)"/>
         <singlePoint points="(0,0)"/>
     </vectorLayer>
-    <constantParameter name="wFirstSlot" value="true" type="bool"/>
 </composedSprite>

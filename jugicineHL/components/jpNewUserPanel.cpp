@@ -3,10 +3,14 @@
 #include <sstream>
 #include "pugixml/pugixml.hpp"
 #include "jmSystem.h"
-#include "jmGuiButton.h"
-#include "jmGuiTextInput.h"
 #include "jmCommonFunctions.h"
 #include "jmTextSprite.h"
+
+#include "gui/jpGuiSystem.h"
+#include "gui/widgets/jpGuiButton.h"
+#include "gui/widgets/jpGuiTextInput.h"
+
+#include "jpCompound.h"
 #include "jpGfxObjectsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
@@ -25,7 +29,7 @@ NewUserPanel::NewUserPanel(const pugi::xml_node &_node)
     mName = "newUserPanel";
 
     mCfg.reset(new Cfg());
-    mModal = _node.attribute("modal").as_bool("true");
+    //mModal = _node.attribute("modal").as_bool("true");
 
     //---
     for(pugi::xml_node n = _node.first_child(); n; n = n.next_sibling()){
@@ -47,26 +51,29 @@ NewUserPanel::NewUserPanel(const pugi::xml_node &_node)
 bool NewUserPanel::initConnections(PlayedScene *_scene)
 {
 
+    if(mInitialized) return true;
+
+
     dbgSystem.addMessage("init component 'newUserPanel'");
 
     mParentPlayerScene = _scene;
 
     //---
-    mOkButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mOkButton, GuiWidgetKind::BUTTON));
+    mOkButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mOkButton, WidgetType::BUTTON));
     if(mOkButton==nullptr){
         return false;
     }
     mUsedWidgets.push_back(mOkButton);
 
     //---
-    mCancelButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mCancelButton, GuiWidgetKind::BUTTON));
+    mCancelButton = dynamic_cast<GuiButton*>(ObtainGuiWidget(_scene, mCfg->mCancelButton, WidgetType::BUTTON));
     if(mCancelButton==nullptr){
         return false;
     }
     mUsedWidgets.push_back(mCancelButton);
 
     //---
-    mTextInput = dynamic_cast<GuiTextInput*>(ObtainGuiWidget(_scene, mCfg->mTextInput, GuiWidgetKind::TEXT_INPUT));
+    mTextInput = dynamic_cast<GuiTextInput*>(ObtainGuiWidget(_scene, mCfg->mTextInput, WidgetType::TEXT_INPUT));
     if(mTextInput==nullptr){
         return false;
     }
@@ -83,8 +90,13 @@ bool NewUserPanel::initConnections(PlayedScene *_scene)
         return false;
     }
 
-    dbgSystem.removeLastMessage();
 
+    //---
+    mInitialized = true;
+
+
+    //---
+    dbgSystem.removeLastMessage();
     return true;
 }
 
@@ -92,39 +104,39 @@ bool NewUserPanel::initConnections(PlayedScene *_scene)
 void NewUserPanel::start()
 {
 
-    startOpenTransition();                  // must call this!
+    //startOpenTransition();                  // must call this!
 
     //---
     mAddingFirstUser = app->usersDatabase()->users().empty();
-    mCancelButton->SetDisabled(mAddingFirstUser);
+    mCancelButton->setDisabled(mAddingFirstUser);
     mVarNewUserName->setValue("");
     mTextInput->start("");
 
 }
 
 
-void NewUserPanel::update(UpdateMode _updateMode)
+void NewUserPanel::update(UpdateMode &_updateMode)
 {
 
-    OverlayComponent::update(_updateMode);     // // must call parent class which manages transitions!
+    //OverlayComponent::update(_updateMode);     // // must call parent class which manages transitions!
 
-    if(mState==State::NORMAL){
+    //if(mState==State::NORMAL){
 
-        mOkButton->SetDisabled(mAddingFirstUser && mTextInput->text().empty());
+        mOkButton->setDisabled(mAddingFirstUser && mTextInput->text().empty());
 
-        if(mOkButton->IsPressed()){
+        if(mOkButton->isPressedStarted()){
             mVarNewUserName->setValue(mTextInput->text());
             finishNewUserPanel();
 
-        }else if(mCancelButton->IsPressed()){
+        }else if(mCancelButton->isPressedStarted()){
             mVarNewUserName->setValue("");
             finishNewUserPanel();
 
-        }else if(mTextInput->IsValueChanged()){
+        }else if(mTextInput->isValueChanged()){
             mVarNewUserName->setValue(mTextInput->text());
             finishNewUserPanel();
         }
-    }
+    //}
 
 }
 
@@ -148,14 +160,16 @@ void NewUserPanel::finishNewUserPanel()
     }
 
     // close the panel
+
     startCloseTransition();
+
 
 }
 
 
 void NewUserPanel::onStateEnded()
 {
-    mCancelButton->SetDisabled(false);
+    mCancelButton->setDisabled(false);
 }
 
 
