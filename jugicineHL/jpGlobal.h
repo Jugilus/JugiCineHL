@@ -11,7 +11,9 @@
 namespace jugimap {
 
 
-class Entity;
+//class Entity;
+class SignalStorage;
+class Item;
 
 
 enum class AppState : int
@@ -63,6 +65,7 @@ enum class BaseObjectType : unsigned char
     ACTION_COMMAND,
     TRIGGER_VARIABLE,
     ITEM,
+    DATA,
     USER_PROFILE,
     USERS_DATABASE,
 
@@ -77,8 +80,10 @@ enum class BaseObjectType : unsigned char
     OVERLAY_COMPONENT,
 
     OVERLAY_STATE,
-
     BEH_ENGINES_CONTROLLER,
+
+    ITEM_DATA_ACTION,
+    LOGIC_FUNCTION,
 
     COMPOUND
 
@@ -91,8 +96,30 @@ public:
     virtual ~BaseObject(){}
     BaseObjectType baseType(){ return mBaseType; }
 
+    virtual SignalStorage* signalStorage(){ return nullptr; }
+
+    virtual Item* item(){ return nullptr; }
+
+    virtual Vec2f position(){ return Vec2f(); }
+
+
 protected:
     BaseObjectType mBaseType = BaseObjectType::NOT_DEFINED;
+};
+
+
+//------------------------------------------------------------------------------------
+
+
+class OriginObjectObtainer
+{
+public:
+
+    virtual ~OriginObjectObtainer(){}
+    virtual BaseObject* findOriginObject() = 0;
+    virtual OriginObjectObtainer *copy() = 0;
+
+
 };
 
 
@@ -129,20 +156,22 @@ enum class ActionStatus : int
 //------------------------------------------------------------------------------------
 
 
-enum class GfxObjectType
+enum class GSpritesObjectType
 {
+    NOT_DEFINED,
     SPRITE,
     SPRITE_GROUP,
     SPRITE_LAYER,
     MAP,
-    NOT_DEFINED,
-    NOT_ALLOWED
+    TEXT_SPRITE,
+    ANIMATED_SPRITE
+
 };
 
 
-GfxObjectType GetGfxObjectTypeFromString(const std::string &objectType);
+GSpritesObjectType GetGfxObjectTypeFromString(const std::string &objectType);
 
-GfxObjectType VerifyIfObjectTypeIsAllowed(GfxObjectType objectType, const std::vector<GfxObjectType> &allowedTypes);
+GSpritesObjectType VerifyIfObjectTypeIsAllowed(GSpritesObjectType objectType, const std::vector<GSpritesObjectType> &allowedTypes);
 
 //------------------------------------------------------------------------------------
 
@@ -152,6 +181,60 @@ enum class TransitionType
     OUT,
     NOT_DEFINED
 };
+
+
+//------------------------------------------------------------------------------------
+
+
+enum class Direction
+{
+
+    NONE = 0,
+    LEFT =          1 << 0,
+    RIGHT =         1 << 1,
+    UP =            1 << 2,
+    DOWN =          1 << 3,
+    LEFT_UP =       1 << 4,
+    LEFT_DOWN =     1 << 5,
+    RIGHT_UP =      1 << 6,
+    RIGHT_DOWN =    1 << 7,
+
+    FORWARD =       1 << 8,
+    BACKWARD =      1 << 9,
+
+    ANGLE_BASED =   1 << 10,
+
+    INHERITED =     1 << 11
+
+};
+
+
+Direction GetDirectionFromString(const std::string &direction);
+std::string GetDirectionString(Direction direction);
+
+
+extern std::vector<std::pair<std::string, unsigned int>>gDirectionNamedValues;
+
+
+enum class DirectionMode
+{
+    CARDINAL,
+    PATH,
+    ANGLE_BASED
+};
+
+
+enum class RotationDirection
+{
+    NONE,
+    CW,
+    CCW,
+};
+
+
+RotationDirection GetRotationDirectionFromString(const std::string &direction);
+
+
 
 
 
@@ -182,23 +265,6 @@ struct DebugDrawFlags
 
 };
 
-
-//------------------------------------------------------------------------------------
-
-enum class SignalID : unsigned char
-{
-    UNKNOWN = 0,
-    ENTITY_CONTACT_TRIGGER = 1,
-    CONTACT_TRIGGER = 2,
-    FILTERED_CONTACT_TRIGGER = 3,
-    TRANSPORTER_STATUS = 4,
-    MOVABLE_OBJECT = 5,
-    DIRECTION = 6,
-    PASSENGER = 7,
-    OPERATING = 8,
-    CUSTOM_ENTITY_SIGNAL = 9
-
-};
 
 
 }

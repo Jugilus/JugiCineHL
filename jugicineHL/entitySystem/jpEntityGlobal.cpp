@@ -62,6 +62,15 @@ EntityRole GetEntityRoleFromString(const std::string &type)
     }else if(type=="PATHWAY"){
         return EntityRole::PATHWAY;
 
+    }else if(type=="BULLET"){
+        return EntityRole::BULLET;
+
+    }else if(type=="SOLID_BULLET"){
+        return EntityRole::SOLID_BULLET;
+
+    }else if(type=="SOLID_BULLET_SENSOR"){
+        return EntityRole::SOLID_BULLET_SENSOR;
+
     }else if(type=="GROUND_SENSOR"){
         return EntityRole::GROUND_SENSOR;
 
@@ -108,6 +117,15 @@ std::string  GetEntityRoleString(EntityRole type)
     }else if(type==EntityRole::PATHWAY){
         return "PATHWAY";
 
+    }else if(type==EntityRole::BULLET){
+        return "BULLET";
+
+    }else if(type==EntityRole::SOLID_BULLET){
+        return "SOLID_BULLET";
+
+    }else if(type==EntityRole::SOLID_BULLET_SENSOR){
+        return "SOLID_BULLET_SENSOR";
+
     }else if(type==EntityRole::GROUND_SENSOR){
         return "GROUND_SENSOR";
 
@@ -127,113 +145,6 @@ std::string  GetEntityRoleString(EntityRole type)
 }
 
 
-
-
-Direction GetDirectionFromString(const std::string &direction)
-{
-
-    if(direction == "LEFT"){
-        return Direction::LEFT;
-
-    }else if(direction == "RIGHT"){
-        return Direction::RIGHT;
-
-    }else if(direction == "UP"){
-        return Direction::UP;
-
-    }else if(direction == "DOWN"){
-        return Direction::DOWN;
-
-    }else if(direction == "LEFT_UP"){
-        return Direction::LEFT_UP;
-
-    }else if(direction == "LEFT_DOWN"){
-        return Direction::LEFT_DOWN;
-
-    }else if(direction == "RIGHT_UP"){
-        return Direction::RIGHT_UP;
-
-    }else if(direction == "RIGHT_DOWN"){
-        return Direction::RIGHT_DOWN;
-
-    }else if(direction == "FORWARD"){
-        return Direction::FORWARD;
-
-    }else if(direction == "BACKWARD"){
-        return Direction::BACKWARD;
-    }
-
-    return Direction::NONE;
-}
-
-std::vector<NamedValue>gDirectionNamedValues
-{
-    { "LEFT", static_cast<int>(Direction::LEFT) },
-    { "RIGHT", static_cast<int>(Direction::RIGHT) },
-    { "UP", static_cast<int>(Direction::UP) },
-    { "DOWN", static_cast<int>(Direction::DOWN) },
-    { "LEFT_UP", static_cast<int>(Direction::LEFT_UP) },
-    { "LEFT_DOWN", static_cast<int>(Direction::LEFT_DOWN) },
-    { "RIGHT_UP", static_cast<int>(Direction::RIGHT_UP) },
-    { "RIGHT_DOWN", static_cast<int>(Direction::RIGHT_DOWN) },
-    { "FORWARD", static_cast<int>(Direction::FORWARD) },
-    { "BACKWARD", static_cast<int>(Direction::BACKWARD) }
-
-};
-
-
-std::string GetDirectionString(Direction direction)
-{
-
-    if(direction == Direction::LEFT){
-        return "LEFT";
-
-    }else if(direction == Direction::RIGHT){
-        return "RIGHT";
-
-    }else if(direction == Direction::UP){
-        return "UP";
-
-    }else if(direction == Direction::DOWN){
-        return "DOWN";
-
-    }else if(direction == Direction::LEFT_UP){
-        return "LEFT_UP";
-
-    }else if(direction == Direction::LEFT_DOWN){
-        return "LEFT_DOWN";
-
-    }else if(direction == Direction::RIGHT_UP){
-        return "RIGHT_UP";
-
-    }else if(direction == Direction::RIGHT_DOWN){
-        return "RIGHT_DOWN";
-
-    }else if(direction == Direction::FORWARD){
-        return "FORWARD";
-
-    }else if(direction == Direction::BACKWARD){
-        return "BACKWARD";
-    }
-
-    return "NONE";
-}
-//------------------------------------------------------------------------------------------
-
-
-RotationDirection GetRotationDirectionFromString(const std::string &direction)
-{
-
-    if(direction == "CW"){
-        return RotationDirection::CW;
-
-    }else if(direction == "CCW"){
-        return RotationDirection::CCW;
-    }
-
-    return RotationDirection::NONE;
-
-}
 
 
 //------------------------------------------------------------------------------------------

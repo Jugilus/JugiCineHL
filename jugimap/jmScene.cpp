@@ -497,13 +497,17 @@ void Scene::hideInvisibleDummies()
 
 
 
-SceneMap* Scene::getSceneMap(const std::string &_name)
+SceneMap* Scene::getSceneMap(const std::string &_name, bool _setErrorMessage)
 {
 
     for(SceneMap* sm : mSceneMaps){
         if(sm->info.name == _name){
             return sm;
         }
+    }
+
+    if(_setErrorMessage){
+        dbgSystem.addMessage("Scene map '" + _name + "' not found!");
     }
 
     return nullptr;

@@ -1,1 +1,1 @@
-spritesA,tilesA,spritesB
+spritesA,tilesA,spritesB,textSprites

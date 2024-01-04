@@ -45,8 +45,8 @@ public:
     bool initConnections(PlayedScene *_scene);
 
 
-    GuiSlot* slot(){ return mSlot; }
-    void setSlot(GuiSlot * _slot){ mSlot = _slot; }
+    //GuiSlot* slot(){ return mSlot; }
+    //void setSlot(GuiSlot * _slot){ mSlot = _slot; }
 
     GameItem* parentItem(){ return mParentItem; }
     std::vector<GuiSlotDataComponent*>& components(){ return mComponents; }
@@ -61,7 +61,7 @@ private:
     GameItem *mParentItem = nullptr;                // LINK
     std::vector<GuiSlotDataComponent*> mComponents;     // OWNED
     //---
-    GuiSlot* mSlot = nullptr;                       // LINK  slot where this item is stored, or nullptr if it's not stored in any slot
+    //GuiSlot* mSlot = nullptr;                       // LINK  slot where this item is stored, or nullptr if it's not stored in any slot
 
 };
 

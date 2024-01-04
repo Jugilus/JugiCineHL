@@ -59,6 +59,16 @@ public:
 
 
 
+enum class TweenState
+{
+    NEVER_INITIALIZED,
+    IDLE,
+    PLAYING,
+    PAUSED
+
+};
+
+
 /// \brief The Tween class defines transition between two values over time.
 class Tween
 {
@@ -86,6 +96,8 @@ public:
     void Init(float _valueStart, float _valueEnd, float _durationS, EasingKind _easingKind);
 
 
+    void Play(float _valueStart, float _valueEnd);
+
     /// \brief Start running this tween.
     void Play();
 
@@ -97,7 +109,8 @@ public:
 
 
     /// \brief Returns true if this tween is not running; otherwise return false.
-    bool IsIdle() { return state==stateIDLE || state == stateNEVER_INITIALIZED; }
+    //bool IsIdle() { return state==stateIDLE || state == stateNEVER_INITIALIZED; }
+    bool IsIdle() { return mState==TweenState::IDLE || mState == TweenState::NEVER_INITIALIZED; }
 
 
     /// \brief Stop running the tween.
@@ -124,6 +137,8 @@ public:
     void SetMode(Mode _mode) { mode = _mode;}
 
 
+    float GetValue(){ return value; }
+
     /// \brief Returns the starting value of this tween;
     float GetStartValue(){ return valueStart;}
 
@@ -132,6 +147,10 @@ public:
     float GetEndValue(){ return valueEnd;}
 
 
+    float DurationS(){ return durationMS*1000;}
+
+
+    TweenState state(){ return mState; }
 
 
 private:
@@ -143,17 +162,21 @@ private:
     int durationMS = 0;
     Easing easing;
 
+    TweenState mState = TweenState::NEVER_INITIALIZED;
+    /*
     int state = stateNEVER_INITIALIZED;
     static const int stateNEVER_INITIALIZED = -1;
     static const int stateIDLE = 0;
     static const int statePLAYING = 1;
     static const int statePAUSED = 3;
+    */
 
 
     Mode mode = Mode::NORMAL;
     bool reverse = false;
 
-    int stateStored = 0;
+    //int stateStored = 0;
+    TweenState mStateStored = TweenState::IDLE;
     int msTimeStored = 0;
 
 

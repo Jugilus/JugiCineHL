@@ -19,8 +19,8 @@ namespace jugimap{
 
 class PlayedApp;
 
-struct SignalQuery;
-struct SignalSetter;
+class SignalQuery;
+class SignalSetter;
 class ParsedSignalPath;
 
 

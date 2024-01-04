@@ -1,34 +1,6 @@
 <?xml version="1.0"?>
 <info scene="Menu">
 	<map sceneMap="menuMap">
-		<tables>
-			<table name="userSelector">
-				<rootSprite sourceSprite="userSelector">
-					<constantParameter widget="table" />
-					<constantParameter wNumSlotsHorizontal="1" />
-					<constantParameter wNumSlotsVertical="5" />
-					<constantParameter wSlotsSpacingVertical="2" />
-					<parameter wName="userSelector" />
-				</rootSprite>
-			</table>
-		</tables>
-		<textInputs>
-			<textInput name="newUserDialog_textInput">
-				<rootSprite sourceSprite="inputBoxA">
-					<constantParameter widget="textInput" />
-					<parameter wName="newUserDialog_textInput" />
-				</rootSprite>
-				<childSprite sourceSprite="inputBoxA_background">
-					<constantParameter wTextInputBox="true" />
-				</childSprite>
-				<childSprite sourceSprite="inputBoxA_text">
-					<constantParameter wText="true" />
-				</childSprite>
-				<childSprite sourceSprite="inputBoxA_cursor">
-					<constantParameter wCursor="true" />
-				</childSprite>
-			</textInput>
-		</textInputs>
 		<textFields>
 			<textField name="__annonymous">
 				<vectorShape>

@@ -338,7 +338,7 @@ void FrameAnimationInstance::Update(AnimationFrame *_animationFrame)
 {
 
     //assert(activeAnimationFrame);
-    assert(_animationFrame);
+    //assert(_animationFrame);
 
     if(_animationFrame==nullptr){
         ap.Reset();
@@ -410,6 +410,13 @@ void FrameAnimationInstance::ResetAnimatedProperties()
 }
 
 
+int FrameAnimationInstance::currentFrameIntData()
+{
+
+    std::vector<AnimationFrame*>&frames = static_cast<FrameAnimation*>(animation)->GetFrames();
+    return frames[activeFrameIndex]->dataFlags;
+
+}
 
 
 

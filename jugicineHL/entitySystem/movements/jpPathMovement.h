@@ -47,7 +47,7 @@ enum class PathMovementState
 PathMovementState GetPathMovementStateFromString(const std::string &state);
 
 
-extern std::vector<NamedValue>gPathMovementStateNamedValues;
+extern std::vector<std::pair<std::string, int>>gPathMovementStateNamedValues;
 
 //------------------------------------------------------------------------------------
 
@@ -136,9 +136,14 @@ class PathwayAccessedSignal : public UpdatedBoolSignal
 {
 public:
 
+    PathwayAccessedSignal();
+
+    void set(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine* _pathMovementEngine);
     PathwayAccessedSignal(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine* _pathMovementEngine);
 
     void update() override;
+
+    void updateNEW(Entity * _Actor, PathMovementData *_pathMovementData, PathMovementEngine *_PathMovementEngine);
 
 private:
     Entity * mActor = nullptr;
@@ -154,8 +159,10 @@ private:
 class PathwayLeftSignal : public UpdatedBoolSignal
 {
 public:
-
+    PathwayLeftSignal();
     PathwayLeftSignal(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine* _pathwayEngine, MovementEngineData* _targetEngineData);
+
+     void set(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine* _pathMovementEngine);
 
     void update() override;
 
@@ -166,6 +173,45 @@ private:
     MovementEngineData *mTargetEngineData = nullptr;
 
 };
+
+
+//------------------------------------------------------------------------------------------
+
+
+class PathwayPositionAtEndSignal : public UpdatedBoolSignal
+{
+public:
+    PathwayPositionAtEndSignal();
+    void set(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine* _pathMovementEngine);
+
+    void update() override;
+
+private:
+    Entity * mActor = nullptr;
+    PathMovementData *mPathMovementData = nullptr;
+    PathMovementEngine *mPathwayEngine = nullptr;
+
+};
+
+
+//------------------------------------------------------------------------------------------
+
+
+class PathwayPositionAtExitPointSignal : public UpdatedBoolSignal
+{
+public:
+    PathwayPositionAtExitPointSignal();
+    void set(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine* _pathMovementEngine);
+
+    void update() override;
+
+private:
+    Entity * mActor = nullptr;
+    PathMovementData *mPathMovementData = nullptr;
+    PathMovementEngine *mPathwayEngine = nullptr;
+
+};
+
 
 
 //------------------------------------------------------------------------------------------
@@ -249,6 +295,7 @@ public:
 
     bool initDataObjectsConnections(PlayedScene *_scene, Entity *_actor) override;
     void createDataObjects(std::vector<MovementEngineCfg*> &_cfgs) override;
+    void collectSignalsForLUT(SignalStorage &_storage) override;
 
     bool init(Entity *_entity) override;
     //void init(PathMovementData *_data, Direction _direction, b2Vec2 _actorPosM);
@@ -266,6 +313,7 @@ public:
     PathMovementState state(){ return mState; }
 
     MovementEngineData* currentData() override { return mCurrentData; }
+    MovementEngineCfg* currentCfg() override { return mCurrentData->cfg; }
    // std::vector<PathMovementData> & pathMovementDatas(){ return mPathMovementDatas; }
     //PathMovementData* getPathMovementData(const std::string &_name, bool _setErrorMessage = true);
 
@@ -275,6 +323,8 @@ public:
 
     bool isPathwayFinished(bool _activeGroundMoveCommand);
     //bool isPathwayAccessed(PathMovementData *_data, b2Vec2 _actorPosM);
+
+    VGPathMovement & velocityGenerator(){ return mVelocityGenerator; }
 
 
 
@@ -288,7 +338,10 @@ private:
 
     //----
     IntSignal mSigState;
-
+    PathwayAccessedSignal mSigPathwayAccessed;
+    //PathwayLeftSignal mSigPathwayLeft;
+    PathwayPositionAtEndSignal mSigPathwayPositionAtEnd;
+    PathwayPositionAtExitPointSignal mSigPathwayPositionAtExitPoint;
 
 
     void setState(PathMovementState _state)

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <composedSprite name="greenDoorB" set="spritesA" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="6">
     <layer content="Free sprites" name="Layer 1">
+        <parameter name="eMainShape" value="true" type="bool"/>
         <sprite type="Standard" name="doorB_greenDoor" nameID="mainPart" x="0" y="250"/>
     </layer>
     <layer content="Free sprites" name="Layer 3">
@@ -10,4 +11,26 @@
     <layer content="Free sprites" name="Layer 2">
         <sprite type="Standard" name="doorB_partAbove" x="0" y="250" handleSource="true"/>
     </layer>
+    <parameter name="entity" value="greenDoor" type="string"/>
+    <timelineAnimation name="opening" loopCount="0">
+        <animationMember/>
+        <animationMember childNameID="mainPart">
+            <animationTrack kind="Scaling">
+                <key time="0" easing="Linear" xScale="1" yScale="1"/>
+                <key time="300" easing="Linear" xScale="1" yScale="0"/>
+            </animationTrack>
+        </animationMember>
+        <animationMember childNameID="bottomPart">
+            <animationTrack kind="Translation">
+                <key time="0" easing="Linear" dx="0" dy="0"/>
+                <key time="300" easing="Linear" dx="0" dy="198"/>
+            </animationTrack>
+        </animationMember>
+        <animationMember childNameID="topPart">
+            <animationTrack kind="Translation">
+                <key time="0" easing="Linear" dx="0" dy="0"/>
+                <key time="50" easing="Linear" dx="0" dy="35"/>
+            </animationTrack>
+        </animationMember>
+    </timelineAnimation>
 </composedSprite>

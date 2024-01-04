@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="inventoryAndCoins" set="spritesB" tileWidth="50" tileHeight="50" nTilesX="7" nTilesY="1">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Composite" name="coinsCounter" x="310" y="0">
+            <parameter name="widget" value="coinsSlot" type="string"/>
+            <parameter name="wName" value="coinsSlot" type="string"/>
+        </sprite>
+        <sprite type="Composite" name="inventoryTable" x="0" y="0">
+            <parameter name="widget" value="inventoryTable" type="string"/>
+            <parameter name="wName" value="inventory" type="string"/>
+        </sprite>
+    </layer>
+    <layer content="Free sprites" name="Layer 2">
+        <sprite type="Standard" name="markerA" x="125" y="0" handleSource="true"/>
+    </layer>
+</composedSprite>

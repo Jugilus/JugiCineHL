@@ -4,29 +4,29 @@
         <sprite type="Text" name="Window Title" x="65" y="12" text="SPEECH"/>
         <sprite type="Composite" name="sliderA" x="325" y="25">
             <parameter name="wName" value="speechVolume" type="string"/>
-            <parameter name="widgetNew" value="parameterSlider" type="string"/>
+            <parameter name="widget" value="parameterSlider" type="string"/>
         </sprite>
         <sprite type="Standard" name="checkBoxA" x="25" y="25">
             <parameter name="wName" value="speechActive" type="string"/>
-            <parameter name="widgetNew" value="checkBoxA" type="string"/>
+            <parameter name="widget" value="checkBoxA" type="string"/>
         </sprite>
         <sprite type="Text" name="Window Title" x="65" y="62" text="SFX"/>
         <sprite type="Composite" name="sliderA" x="325" y="75">
             <parameter name="wName" value="sfxVolume" type="string"/>
-            <parameter name="widgetNew" value="parameterSlider" type="string"/>
+            <parameter name="widget" value="parameterSlider" type="string"/>
         </sprite>
         <sprite type="Standard" name="checkBoxA" x="25" y="75">
             <parameter name="wName" value="sfxActive" type="string"/>
-            <parameter name="widgetNew" value="checkBoxA" type="string"/>
+            <parameter name="widget" value="checkBoxA" type="string"/>
         </sprite>
         <sprite type="Text" name="Window Title" x="65" y="112" text="MUSIC"/>
         <sprite type="Composite" name="sliderA" x="325" y="125">
             <parameter name="wName" value="musicVolume" type="string"/>
-            <parameter name="widgetNew" value="parameterSlider" type="string"/>
+            <parameter name="widget" value="parameterSlider" type="string"/>
         </sprite>
         <sprite type="Standard" name="checkBoxA" x="25" y="125">
             <parameter name="wName" value="musicActive" type="string"/>
-            <parameter name="widgetNew" value="checkBoxA" type="string"/>
+            <parameter name="widget" value="checkBoxA" type="string"/>
         </sprite>
     </layer>
 </composedSprite>

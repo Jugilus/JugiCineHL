@@ -8,7 +8,9 @@
 #include "jmCommon.h"
 #include "jmAnimationCommon.h"
 
+#include "jmStorage.h"
 #include "jpGlobal.h"
+#include "data/jpDataUtilities.h"
 #include "jpEntityCommon.h"
 
 
@@ -24,6 +26,7 @@ class Sprite;
 class StandardSprite;
 class SpriteLayer;
 
+class Item;
 class EntitySystem;
 class LogicState;
 class Body;
@@ -38,6 +41,10 @@ class TaskEngine;
 class TaskEngineData;
 class TaskEngineFactory;
 
+class AttributeSet;
+class EntityPhasesHandler;
+
+class GORelativeMover;
 
 
 
@@ -52,6 +59,9 @@ public:
         VECTOR_SHAPE
     };
 
+
+    ~EntityMapElement();
+
     void init(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer* _spriteLayer);
 
     Type type(){ return mType;}
@@ -61,6 +71,11 @@ public:
 
     void setPositionFromBody(Vec2f _pos);
     void setRotationFromBody(float _rotation);
+
+    void setVisible(bool _visible);
+    void setAlpha(float _alpha);
+    void removeFromMap();
+    void addToMap();
 
     Sprite * sprite() const { return mSprite; }
     VectorShape * vectorShape() { return mVectorShape; }
@@ -76,6 +91,8 @@ private:
 
     CompositeSprite* mRootCompositeSprite = nullptr;
 
+    bool mOwnedSprite = false;
+
 };
 
 
@@ -90,14 +107,19 @@ public:
     friend class AppConfigurationLoader_xml;
 
 
-    Entity(SourceEntity *_sourceEntity);
-
-    bool build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spriteLayer);
-    bool initConnections(PlayedScene *_scene);
+    Entity();
     ~Entity();
 
-    EntityRole mainShapeRole() const;
+    bool build(PlayedScene *_scene, SourceEntity *_sourceEntity, Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spriteLayer);
 
+    bool initConnections1(PlayedScene *_scene);
+    bool initConnections2(PlayedScene *_scene);
+    bool initConnections(PlayedScene *_scene);
+
+    void addToWorld();
+    void removeFromWorld();
+
+    EntityRole mainShapeRole() const;
     SourceEntity * sourceEntity() const { return mSourceEntity; }
     EntitySystem * parentEntitySystem();
 
@@ -119,8 +141,15 @@ public:
     void postUpdate(UpdateMode &_updateMode);
 
     void updateSpriteTransform();
+    void spawnEntity(SourceEntity *_sourceEntity);
 
     //----
+    SignalStorage * signalStorage() override { return &mSignalStorage;}
+    std::vector<Signal*> & updateSignals(){ return mUpdateSignals; }
+    //ItemDataLUT * itemDataLUT() override { return &mItemDataLUT; }
+    //EntityPhasesHandler * entityPhasesHandler(){ return mEntityPhasesHandler.get(); }
+
+
     EntityMapElement & mapElement(){ return mMapElement; }
     Sprite * sprite() const { return mMapElement.sprite(); }
     VectorShape * vectorShape() { return mMapElement.vectorShape(); }
@@ -157,6 +186,7 @@ public:
 
     bool startMovementEngine(MovementEngineData *_movementEngineData);
 
+    GORelativeMover* relativeMover(){ return mRelativeMover.get(); }
     //PointToPointMovementTask* pointToPointMovemenTask() const;
 
     std::vector<TaskEngine*> & tasks(){ return mTasks; }
@@ -166,15 +196,16 @@ public:
     //Decider* decider() const { return mDecider; }
     bool startTaskEngine(TaskEngineData *_taskEngineData);
 
+    Item* item() override { return mItem; }
 
+    Vec2f position() override { return mMapElement.position(); }
+
+    bool initialized(){ return mInitialized; }
 
     std::vector<ContactPointInfo> & contactPoints(){ return mContactPoints; }
     int & contactPointsCounterRef(){ return mContactPointsCount; }
 
     int & blockedDirectionsRef() { return mBlockedDirections; }
-
-
-
 
 
     //void doPointToPointMovementTask(PointToPointMovementTaskData *_data);
@@ -188,8 +219,21 @@ public:
 
     std::vector<Signal*> & signals(){ return mSignals; }
 
+    IntSignal &customActSignal(){ return mSigCustomAct; }
+    int addCustomActName(const std::string &_name);
+
+    BoolSignal * itemPickableSignal(){ return mSigItemPickable; }
+
     //Signal *getSignal(SignalID _signalID);
 
+    PoolObjectPos & poolPos(){ return mPoolPos; }
+
+    AnimationInstance* currentAnimationInstance(){ return mCurrentAnimationInstance; }
+    void setCurrentAnimationInstance(AnimationInstance* _animationInstance){ mCurrentAnimationInstance = _animationInstance; }
+
+
+    ObjectSignal & spawnEntitySignal(){ return  mSigSpawnEntity; }
+    ObjectSignal & spawnedSingleEntitySignal(){ return mSigSpawnedSingleEntity; }
 
     //void obtainSignal_signalQuery(SignalQuery &_signalQuery, const std::string &_path, const std::string &stateMovementEngineCfg, bool _setErrorMessage=true);
     //void obtainSignal_signalSetter(SignalSetter &_signalSetter, const std::string &_path, const std::string &stateMovementEngineCfg, bool _setErrorMessage=true);
@@ -220,6 +264,15 @@ private:
     std::unique_ptr<LogicState>mTaskController;
 
     //Decider *mDecider = nullptr;
+    //---
+    std::unique_ptr<AttributeSet>mAttributeSet;
+    std::unique_ptr<LogicState>mAttributeController;
+
+    //std::unique_ptr<EntityPhasesHandler>mEntityPhasesHandler;
+
+    //std::unique_ptr<Item>mItem;
+
+    Item * mItem = nullptr;                 // LINK - ACQUIRED
 
     //---
     AnimationPlayer mAnimationPlayer;
@@ -236,6 +289,10 @@ private:
     std::vector<ContactPointInfo>mContactPoints;
     int mContactPointsCount = 0;
 
+
+    //---
+    //ItemDataLUT mItemDataLUT;
+
     //---
     ContactTrigger mContactTrigger;
 
@@ -245,12 +302,25 @@ private:
 
     //--- SIGNALS
     std::vector<Signal*>mSignals;                            // LINKS
+    SignalStorage mSignalStorage;
+    std::vector<Signal*>mUpdateSignals;
 
-    BitsetSignal *mSigMovableObject = nullptr;             // LINK
-    BitsetSignal *mSigBlockedDirection = nullptr;
+    BitsetSignal *mSigMovableObject = nullptr;              // OWNED
+    BitsetSignal *mSigBlockedDirection = nullptr;           // OWNED
+    BoolSignal *mSigItemPickable = nullptr;                 // OWNED
+
+    ObjectSignal mSigSpawnEntity;
+    ObjectSignal mSigSpawnedSingleEntity;
+    IntSignal mSigCustomAct;
+    std::vector<std::pair<std::string, int>>mCustomActs;
+
+
 
     //IntSignal *mDirectionSignal = nullptr;                  // LINK
+    std::unique_ptr<GORelativeMover>mRelativeMover;
 
+    //---
+    bool mInitialized = false;
 
     EngineUpdateParameters mEup;
 
@@ -263,6 +333,8 @@ private:
     b2Vec2 mRelVelocity{0.0f, 0.0f};
     float mAngularVelocity = 0.0f;
 
+    //---
+    PoolObjectPos mPoolPos;
 
     MovementEngine* _obtainEngineForSignal(const std::string & engineCfgName, const std::string & signalName);
     TaskEngine* _obtainTaskEngineForSignal(const std::string & engineCfgName, const std::string & signalName);
@@ -271,15 +343,6 @@ private:
     void checkGroundContactViaContactSignal();
 
 };
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,12 +1,6 @@
 <?xml version="1.0"?>
 <info scene="Menu">
 	<map sceneMap="menuMap">
-		<tables>
-			<table name="userSelector" />
-		</tables>
-		<textInputs>
-			<textInput name="newUserDialog_textInput" />
-		</textInputs>
 		<textFields>
 			<textField name="__annonymous" />
 			<textField name="aboutPanel_textField" />

@@ -63,7 +63,7 @@ public:
 
     std::vector<SceneMap*>& sceneMaps(){ return mSceneMaps; }
 
-    SceneMap* getSceneMap(const std::string &_name);
+    SceneMap* getSceneMap(const std::string &_name, bool _setErrorMessage = true);
     Map* getMap(const std::string &_sceneMapName);
 
 

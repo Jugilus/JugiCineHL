@@ -9,8 +9,9 @@
 #include <jmInput.h>
 
 #include "jpQueries.h"
+#include "data/jpDataUtilities.h"
 #include "jpSettings.h"
-#include "jpLogicState.h"
+#include "jpLogicAction.h"
 
 
 namespace pugi{
@@ -64,6 +65,7 @@ public:
 
     ACOnSignal(Action *_parentAction, const std::string &_value);
 
+
     bool initConnections(PlayedScene *scene) override;
 
     //---
@@ -73,8 +75,32 @@ public:
 private:
     SignalQuery mSignalQuery;
 
+};
+
+
+//==============================================================
+
+
+class ACOnSignalNEW : public ActionCondition
+{
+public:
+    static std::string type;
+
+    ACOnSignalNEW(Action *_parentAction, const std::string &_value);
+    ACOnSignalNEW(ActionTrigger *_parentAction, const std::string &_value);
+
+    bool initConnections(PlayedScene *scene) override;
+
+    //---
+    bool isTrue() override;
+
+
+private:
+    SignalQuery mSignalQuery;
+    SignalParsingInfo mSignalParsingInfo;
 
 };
+
 
 //==============================================================
 
@@ -101,8 +127,107 @@ private:
 
 };
 
+//==============================================================
 
 
+
+
+class ACOnSignalsNEW : public ActionCondition
+{
+public:
+    static std::string type;
+
+
+    ACOnSignalsNEW(Action *_parentAction, const std::string &_value);
+    ACOnSignalsNEW(ActionTrigger *_parentAction, const std::string &_value);
+
+    bool initConnections(PlayedScene *_scene) override;
+
+    //---
+    bool isTrue() override;
+
+
+private:
+
+    CompositeQuery mCompositeQuery;
+
+};
+
+
+//==============================================================
+
+/*
+
+class ACOnData : public ActionCondition
+{
+public:
+    static std::string type;
+
+    ACOnData(Action *_parentAction, const std::string &_value);
+
+    bool initConnections(PlayedScene *scene) override;
+
+    //---
+    bool isTrue() override;
+
+
+private:
+    DataQuery mDataQuery;
+
+
+
+};
+
+*/
+
+//==============================================================
+
+
+class ACOnDataNEW : public ActionCondition
+{
+public:
+    static std::string type;
+
+    ACOnDataNEW(Action *_parentAction, const std::string &_value);
+    ACOnDataNEW(ActionTrigger *_parentAction, const std::string &_value);
+
+    bool initConnections(PlayedScene *scene) override;
+
+    //---
+    bool isTrue() override;
+
+
+private:
+    DataQuery mDataQuery;
+
+
+
+};
+
+
+//==============================================================
+
+
+class ACOnItem : public ActionCondition
+{
+public:
+    static std::string type;
+
+    ACOnItem(Action *_parentAction, const std::string &_value);
+    ACOnItem(ActionTrigger *_parentAction, const std::string &_value);
+
+    bool initConnections(PlayedScene *scene) override;
+
+    //---
+    bool isTrue() override;
+
+
+private:
+    ItemQuery mItemQuery;
+
+
+
+};
 
 
 }

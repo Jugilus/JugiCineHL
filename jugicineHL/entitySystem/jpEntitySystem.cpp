@@ -15,6 +15,7 @@
 #include "jmSprite.h"
 #include "jmSourceSprite.h"
 #include "jmUtilities.h"
+#include "jmStorage.h"
 
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
@@ -23,6 +24,7 @@
 //#include "jpActionsCommon.h"
 #include "jpGlobal.h"
 #include "gfxObjects/jpAnimationObjects.h"
+#include "jpAttribute.h"
 
 #include "jpB2Body.h"
 #include "jpB2Utilities.h"
@@ -88,7 +90,7 @@ EntitySystem::EntitySystem()
     mTaskEngineManager->addTaskEngineFactory(new TransporterFactory("transporter", TaskType::POINT_TO_POINT_TRANSPORTER));
 
     //---
-    mEntitySignalsParser = new EntitySignalsParser({"ENTITY"});
+    mEntitySignalsParser = new EntitySignalsParser({"ENTITY", "ENTITY_MANAGER", "SOURCE_ENTITY"});
     app->signalParserManager()->addAndStoreSignalParser(mEntitySignalsParser);
 
 }
@@ -207,6 +209,38 @@ bool EntitySystem::initCfg(PlayedScene *playerScene, const pugi::xml_node &_node
             }
 
 
+        //------
+        }else if(nodeName=="attributeSets"){
+
+            for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
+                std::string childNodeName = std::string(nChild.name());
+
+                if(childNodeName=="attributeSet"){
+                    std::string setName = nChild.attribute("name").as_string("");
+                    AttributeSetCfg * attributeSetCfg = mAttributeSetsStorage.addObject(new AttributeSetCfg(setName));
+                    if(attributeSetCfg->initCfg(nChild)==false){
+                        return false;
+                    }
+                }
+            }
+
+        //------
+            /*
+        }else if(nodeName=="entityPhaseHandlers"){
+
+            for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
+                std::string childNodeName = std::string(nChild.name());
+
+                if(childNodeName=="entityPhaseHandler"){
+                    std::string handlerName = nChild.attribute("name").as_string("");
+                    EntityPhasesHandlerCfg * entityPhasesHandlerCfg = mEntityPhasesHandlerCfgStorage.addObject(handlerName);
+                    if(entityPhasesHandlerCfg->initCfg(nChild)==false){
+                        return false;
+                    }
+                }
+            }
+        */
+
         }else if(nodeName=="entities"){
 
             for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
@@ -253,152 +287,6 @@ bool EntitySystem::createMapEntities(PlayedScene *_scene)
 
     dbgSystem.addMessage("Creating map entitites ...");
 
-    //SourceEntitiesGroup *seg = _scene->sourceEntitiesGroup();
-
-    /*
-    for(SourceEntity &se :  seg->sourceEntities()){
-
-        const std::string &sourceEntityName = se.sourceEntityCfg()->name;
-        const std::string &entityType = GetEntityTypeString(se.type());
-
-
-        if(se.type()==EntityType::ACTOR){
-
-            std::vector<Sprite*>sprites;
-            for(SceneMap *sm : _scene->sceneMaps()){
-                CollectSpritesWithParameter(sm->map(), sprites, GetEntityTypeString(EntityType::ACTOR), sourceEntityName);
-            }
-
-            for(Sprite *s : sprites){
-                if(s->type()!=SpriteType::STANDARD){
-                    continue;
-                }
-                StandardSprite *stdSprite = static_cast<StandardSprite*>(s);
-                //assert(s->sourceSprite()==se.sourceSprite());
-                if(s->sourceSprite() != se.sourceSprite()){
-                    dbgSystem.addMessage("Actor '" + se.sourceEntityCfg()->name +"' source sprite error !");
-                    dbgSystem.addMessage("Different source sprites can not have assigned the same 'actor' entity !");
-                    return false;
-                }
-
-                Actor *a = new Actor(&se);
-
-                if(a->build(stdSprite)==false){
-                    return false;
-                }
-                mActors.push_back(a);
-            }
-
-        }else if(se.type()==EntityType::KINEMATIC_TRANSPORTER){
-
-            std::vector<Sprite*>sprites;
-            for(SceneMap *sm : _scene->sceneMaps()){
-                CollectSpritesWithParameter(sm->map(), sprites, GetEntityTypeString(EntityType::KINEMATIC_TRANSPORTER), sourceEntityName);
-            }
-
-            for(Sprite *s : sprites){
-                //if(s->type()!=SpriteType::STANDARD){
-                //    continue;
-                //}
-                if(s->type()!=SpriteType::STANDARD && s->type()!=SpriteType::COMPOSITE){
-                    continue;
-                }
-                //StandardSprite *stdSprite = static_cast<StandardSprite*>(s);
-                //assert(s->sourceSprite()==se.sourceSprite());
-                if(s->sourceSprite() != se.sourceSprite()){
-                    dbgSystem.addMessage("Transporter '" + se.sourceEntityCfg()->name +"' source sprite error !");
-                    dbgSystem.addMessage("Different source sprites can not have assigned the same 'transporter' entity !");
-                    return false;
-                }
-
-                Actor *a = new Actor(&se);
-
-                if(a->build(s)==false){
-                    return false;
-                }
-                mActors.push_back(a);
-            }
-
-
-        }else if(se.type()==EntityType::BLOCKING_ENVIRONMENT){
-
-            if(se.sourceSprite()==nullptr){         // sprite layer
-
-                std::vector<Layer*>spriteLayers;
-                for(SceneMap *sm : _scene->sceneMaps()){
-                    CollectLayersWithParameter(sm->map(), spriteLayers, GetEntityTypeString(EntityType::BLOCKING_ENVIRONMENT),
-                                               se.name(), LayerKind::SPRITE_LAYER);
-                }
-
-                for(Layer *l : spriteLayers){
-                    SpriteLayer *sl = static_cast<SpriteLayer*>(l);
-
-                    EStaticTerrain *terrainEntity = new EStaticTerrain(&se);
-                    if(terrainEntity->build()==false){
-                        return false;
-                    }
-
-                    mTerrainEntities.push_back(terrainEntity);
-                }
-            }
-
-
-        }else if(se.type()==EntityType::PATHWAY){
-
-            assert(se.sourceSprite()==nullptr);
-
-            std::vector<VectorShape*>collectedShapes;
-
-            for(SceneMap *sm : _scene->sceneMaps()){
-                CollectVectorShapesWithParameter(sm->map(), collectedShapes, GetEntityTypeString(EntityType::PATHWAY), se.name());
-            }
-
-            for(VectorShape* vs : collectedShapes){
-
-                EPathway *pathwayEntity = new EPathway(&se, vs);
-                if(pathwayEntity->build()==false){
-                    return false;
-                }
-                mPathways.push_back(pathwayEntity);
-            }
-
-            // connect pathways
-            for(EPathway* pathway1 : mPathways){
-                for(EPathway* pathway2 : mPathways){
-                    if(pathway1==pathway2) continue;
-                    PathwayOrientation orientation1 = pathway1->sourceEntity()->sourceEntityCfg()->mPathwaySourceEntityCfg->orientation;
-                    PathwayOrientation orientation2 = pathway2->sourceEntity()->sourceEntityCfg()->mPathwaySourceEntityCfg->orientation;
-                    if(orientation1 != orientation2) continue;
-
-                    std::vector<PathPoint> &path1 = pathway1->vectorShape()->pathPoints();
-                    std::vector<PathPoint> &path2 = pathway2->vectorShape()->pathPoints();
-
-                    if(orientation1==PathwayOrientation::VERTICAL){
-                        if(path1.back().y > path1.front().y != path2.back().y > path2.front().y) continue;  // shapes must be created into the same direction
-
-                    }else if(orientation1==PathwayOrientation::HORIZONTAL){
-                        if(path1.back().x > path1.front().x != path2.back().x > path2.front().x) continue;  // shapes must be created into the same direction
-
-                    }
-
-                    float dist = DistanceTwoPoints(path1.back(), path2.front());
-                    if(dist == 0.0f){
-                        pathway1->_setConnectedPathwayNext(pathway2);
-                        continue;
-                    }
-                    dist = DistanceTwoPoints(path1.front(), path2.back());
-                    if(dist == 0.0f){
-                        pathway1->_setConnectedPathwayPrev(pathway2);
-                        continue;
-                    }
-
-                }
-            }
-
-        }
-    }
-    */
-
 
     for(SourceEntity &se : mSourceEntitiesGroup->sourceEntities()){
 
@@ -427,12 +315,13 @@ bool EntitySystem::createMapEntities(PlayedScene *_scene)
                     return false;
                 }
 
-                Entity *a = new Entity(&se);
+                //Entity *a = new Entity();
+                Entity *a = se.entityPool().acquireObject();
 
-                if(a->build(s, nullptr, nullptr)==false){
+                if(a->build(_scene, &se, s, nullptr, nullptr)==false){
                     return false;
                 }
-                mActors.push_back(a);
+                mEntities.push_back(a);
             }
 
 
@@ -449,12 +338,13 @@ bool EntitySystem::createMapEntities(PlayedScene *_scene)
                 for(Layer *l : spriteLayers){
                     SpriteLayer *sl = static_cast<SpriteLayer*>(l);
 
-                    Entity *terrainEntity = new Entity(&se);
-                    if(terrainEntity->build(nullptr, nullptr, sl)==false){
+                    //Entity *terrainEntity = new Entity();
+                    Entity *terrainEntity = se.entityPool().acquireObject();
+                    if(terrainEntity->build(_scene, &se, nullptr, nullptr, sl)==false){
                         return false;
                     }
 
-                    mActors.push_back(terrainEntity);
+                    mEntities.push_back(terrainEntity);
                 }
             //}
 
@@ -472,11 +362,14 @@ bool EntitySystem::createMapEntities(PlayedScene *_scene)
 
             for(VectorShape* vs : collectedShapes){
 
-                Entity *pathwayEntity = new Entity(&se);
-                if(pathwayEntity->build(vs->parentLayer()->parentCompositeSprite(), vs, nullptr)==false){
+                //Entity *pathwayEntity = new Entity();
+
+                Entity *pathwayEntity = se.entityPool().acquireObject();
+
+                if(pathwayEntity->build(_scene, &se, vs->parentLayer()->parentCompositeSprite(), vs, nullptr)==false){
                     return false;
                 }
-                mActors.push_back(pathwayEntity);
+                mEntities.push_back(pathwayEntity);
             }
 
             // connect pathways
@@ -546,9 +439,13 @@ bool EntitySystem::createMapEntities(PlayedScene *_scene)
     }
 
 
-    std::sort(mActors.begin(), mActors.end(),
+    std::sort(mEntities.begin(), mEntities.end(),
               [](const Entity* e1, const Entity* e2) -> bool
                 { return e1->sourceEntity()->sourceEntityCfg()->category->updateOrder < e2->sourceEntity()->sourceEntityCfg()->category->updateOrder; });
+
+
+
+
 
 
     /*
@@ -587,7 +484,13 @@ bool EntitySystem::createMapEntities(PlayedScene *_scene)
     }
     */
 
-    //---
+    //----
+    mSignalStorage.setIdentifiers(&mSignalIdentifiers);
+    mSignalStorage.addSignal_setter(&mSigRemoveEntity, "REMOVE");
+    //mSignalStorage.addSignal_setter(&mSigSpawnEntity, "SPAWN");
+
+
+    //----
     dbgSystem.removeLastMessage();
     return true;
 }
@@ -604,6 +507,22 @@ bool EntitySystem::initConnections(PlayedScene *_scene)
     mParentPlayerScene = _scene;
 
 
+    /*
+    for(EntityPhasesHandlerCfg &cfg : mEntityPhasesHandlerCfgStorage.objects()){
+       EntityPhasesHandler *eph = mEntityPhasesHandlerStorage.addObject();
+       if(eph->build(_scene, &cfg)==false){
+           return false;
+       }
+    }
+
+    for(EntityPhasesHandler &eph : mEntityPhasesHandlerStorage.objects()){
+       if(eph.initConnections(_scene)==false){
+           return false;
+       }
+    }
+    */
+
+    //----
     if(mSourceEntitiesGroup->create(_scene)==false){
         return false;
     }
@@ -631,7 +550,19 @@ bool EntitySystem::initConnections(PlayedScene *_scene)
     //createMapEntities(_scene);
 
 
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
+        if(a->initConnections1(_scene)==false){
+            return false;
+        }
+    }
+
+    for(Entity *a : mEntities){
+        if(a->initConnections2(_scene)==false){
+            return false;
+        }
+    }
+
+    for(Entity *a : mEntities){
         if(a->initConnections(_scene)==false){
             return false;
         }
@@ -688,7 +619,7 @@ bool EntitySystem::startingPhaseUpdate()
     //    a->preUpdate(UpdateMode::NORMAL);
     //}
 
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
         if(a->sourceEntity()->sourceEntityCfg()->name=="hero"){
             DummyFunction();
         }
@@ -704,7 +635,7 @@ bool EntitySystem::startingPhaseUpdate()
     mB2World->Step(mTimeStepS, mVelocityIterations, mPositionIterations);
 
 
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
         a->updateSpriteTransform();
     }
 
@@ -721,9 +652,42 @@ void EntitySystem::update(UpdateMode &_updateMode)
         return;
     }
 
+    if(mSigRemoveEntity.value()){
+        DummyFunction();
+
+        Entity* e = dynamic_cast<Entity*>(mSigRemoveEntity.value());
+        if(e){
+           // removeEntity(e);
+            mEntityLifespanHandler.addEntityForErase(e);
+        }
+
+        mSigRemoveEntity.reset();
+    }
+
+    if(mSigSpawnEntity.value()){
+        DummyFunction();
+
+        SpawnerAndSpawned* sas = dynamic_cast<SpawnerAndSpawned*>(mSigSpawnEntity.value());
+        if(sas){
+           // removeEntity(e);
+            mEntityLifespanHandler.addSourceEntityForSpawning(sas);
+        }
+
+        mSigSpawnEntity.reset();
+    }
+
+
+    mEntityLifespanHandler.update();
+
+    //----
+    for(Entity *e : mSpawnedEntities){
+        mEntities.push_back(e);
+    }
+    mSpawnedEntities.clear();
+
 
     //--- PRE UPDATE
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
 
         // First manage contact signals as they are used in later steps !
         a->contactTrigger().preUpdate_postBox2dStep();
@@ -736,18 +700,21 @@ void EntitySystem::update(UpdateMode &_updateMode)
 
     mFilteredContactTriggersGroup.preUpdate_postContactSignalsPreUpdate();
 
-
-    for(Entity *a : mActors){
+    int i=0;
+    for(Entity *a : mEntities){
         a->preUpdate(_updateMode);
+        i++;
     }
 
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
         if(a->mainShapeRole()==EntityRole::ACTOR){
             a->preUpdate_CheckActorGrouping();
         }
     }
 
-    for(Entity *a : mActors){
+
+    //--- UPDATE
+    for(Entity *a : mEntities){
         if(a->entityMovingGroup()) continue;
         a->update_Movement(_updateMode);
     }
@@ -756,14 +723,14 @@ void EntitySystem::update(UpdateMode &_updateMode)
     }
 
 
-    //--- UPDATE
-    for(Entity *a : mActors){
+
+    for(Entity *a : mEntities){
         a->update_Controller(_updateMode);
     }
 
 
     //--- POST UPDATE
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
         a->postUpdate(_updateMode);
     }
     mFilteredContactTriggersGroup.postUpdate();
@@ -775,7 +742,7 @@ void EntitySystem::update(UpdateMode &_updateMode)
 
 
     //----
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
         a->updateSpriteTransform();
     }
 
@@ -858,7 +825,7 @@ void EntitySystem::onStateEnded()
 Entity* EntitySystem::getActor(const std::string &_name, bool _setErrorMessage)
 {
 
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
         if(a->sourceEntity()->name()==_name){
             return a;
         }
@@ -875,7 +842,7 @@ Entity* EntitySystem::getActor(const std::string &_name, bool _setErrorMessage)
 Entity* EntitySystem::getActor(const std::string &_name, int _linkedGroupID, int _linkedEntityID, CompositeSprite *_rootCompositeSprite, bool _setErrorMessage)
 {
 
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
         if(a->sourceEntity()->name()==_name){
             if(_rootCompositeSprite){
                 // entities with the same root composite sprite are automatically grouped without need for '_linkedGroupID' paramater
@@ -905,18 +872,47 @@ Entity* EntitySystem::getActor(const std::string &_name, int _linkedGroupID, int
 }
 
 
+/*
+void EntitySystem::spawnEntity(SourceEntity* _sourceEntity)
+{
+
+    Entity *entity = _sourceEntity->entityPool().acquireObject();
+    entity->addToWorld();
+    mEntities.push_back(entity);
+
+}
+*/
+
+/*
+void EntitySystem::removeEntity(Entity* _entity)
+{
+
+    StdVector::removeElement(mEntities, _entity);
+    _entity->removeFromWorld();
+    _entity->contactTrigger().clearContacts();
+    _entity->mapElement().setVisible(false);
+
+    _entity->sourceEntity()->entityPool().releaseObject(_entity);
+
+}
+*/
+
+
+
+/*
+
 void EntitySystem::collectActorsViaLinkedGroupID(std::vector<Entity *> &_collectedActors, const std::string &_name, int _linkedGroupID)
 {
 
 
-    for(Entity *a : mActors){
+    for(Entity *a : mEntities){
         if(a->sourceEntity()->name()==_name && a->linkedGroupID()==_linkedGroupID){
             _collectedActors.push_back(a);
         }
     }
 
 }
-
+*/
 
 
 }

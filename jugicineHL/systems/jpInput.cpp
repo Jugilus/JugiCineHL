@@ -30,10 +30,13 @@ GameInputCommand::GameInputCommand(const pugi::xml_node &_node)
     mCfg->mDefJoystickCommand = _node.attribute("defJoystickCommand").as_string("");
     mCfg->mTrigger = _node.attribute("trigger").as_string("heldDown");
 
+    std::string blockers = _node.attribute("blockingCommands").as_string("");
+    mCfg->mBlockingCommands = StdString::splitString(blockers, ",");
+
 }
 
 
-bool GameInputCommand::init()
+bool GameInputCommand::init(InputSystem *_inputSystem)
 {
 
     dbgSystem.addMessage("init input command '" + mName + "'");
@@ -66,6 +69,13 @@ bool GameInputCommand::init()
     //if(mTrigger==Trigger::NOT_DEFINED){
     //    return false;
     //}
+    for(const std::string &s : mCfg->mBlockingCommands){
+        GameInputCommand *gic = _inputSystem->getGameInputCommand(s);
+        if(gic==nullptr){
+            return false;
+        }
+        mBlockingCommands.push_back(gic);
+    }
 
 
     //---
@@ -107,6 +117,20 @@ void GameInputCommand::setSignalValues(bool _active, bool _activeStarted, bool _
 
 
     mXAxis = mYAxis = mZAxis = 0.0f;
+}
+
+
+void GameInputCommand::manageBlockingCommands()
+{
+
+    for(GameInputCommand *c : mBlockingCommands){
+        if(c->active(true)){
+            _setValue(false);
+            _setPreviousValue(false);
+            _setValueChanged(false);
+            mXAxis = mYAxis = mZAxis = 0.0f;
+        }
+    }
 
 }
 
@@ -185,6 +209,26 @@ void KeyboardProfile::update()
     }
 
 }
+
+
+void KeyboardProfile::getDirectionSignals(bool &right, bool &left, bool &up, bool &down)
+{
+
+    if(keyboard.isKeyDown(KeyCode::RIGHT)){
+        right = true;
+    }
+    if(keyboard.isKeyDown(KeyCode::LEFT)){
+        left = true;
+    }
+    if(keyboard.isKeyDown(KeyCode::UP)){
+        up = true;
+    }
+    if(keyboard.isKeyDown(KeyCode::DOWN)){
+        down = true;
+    }
+
+}
+
 
 
 KeyboardInputCommand* KeyboardProfile::getCommandWithKeyCode(KeyCode _keyCode)
@@ -301,6 +345,28 @@ void JoystickProfile::update()
             }
 
         }
+
+    }
+
+}
+
+
+void JoystickProfile::getDirectionSignals(bool &right, bool &left, bool &up, bool &down)
+{
+
+
+    if(mJoystick->isPOV_XDown(JoystickPOV_X::RIGHT)){
+        right = true;
+
+    }else if(mJoystick->isPOV_XDown(JoystickPOV_X::LEFT)){
+        left = true;
+    }
+
+    if(mJoystick->isPOV_YDown(JoystickPOV_Y::UP)){
+        up = true;
+
+    }else if(mJoystick->isPOV_YDown(JoystickPOV_Y::DOWN)){
+        down = true;
 
     }
 
@@ -506,7 +572,7 @@ bool InputSystem::initConnections()
 
 
     for(GameInputCommand* c : mGameInputCommands){
-        if(c->init()==false){
+        if(c->init(this)==false){
             return false;
         }
     }
@@ -535,7 +601,33 @@ void InputSystem::preUpdate()
         p->update();
     }
 
-    //dbgPrint();
+    //---
+    for(GameInputCommand *c  : mGameInputCommands){
+        c->manageBlockingCommands();
+    }
+
+
+    //----
+    bool dirRight = false;
+    bool dirLeft = false;
+    bool dirUp = false;
+    bool dirDown = false;
+
+    for(KeyboardProfile *p : mActiveInputProfiles->mKeyboardProfiles){
+        p->getDirectionSignals(dirRight, dirLeft, dirUp, dirDown);
+    }
+    for(JoystickProfile *p : mActiveInputProfiles->mJoystickProfiles){
+        p->getDirectionSignals(dirRight, dirLeft, dirUp, dirDown);
+    }
+
+    if(dirRight){
+        DummyFunction();
+    }
+
+    mSigRightDirection.setValue(dirRight);
+    mSigLeftDirection.setValue(dirLeft);
+    mSigUpDirection.setValue(dirUp);
+    mSigDownDirection.setValue(dirDown);
 
 }
 

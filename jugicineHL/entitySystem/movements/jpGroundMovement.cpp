@@ -10,6 +10,7 @@
 
 #include "jpPlayedApp.h"
 #include "jpUtilities.h"
+#include "jpObjectParser.h"
 
 #include "jpEntitySystem.h"
 #include "jpB2Fixture.h"
@@ -74,10 +75,18 @@ std::string GetGroundMovementStateString(GroundMovementState state)
 }
 
 
+std::vector<std::pair<std::string, int>>gGroundMovementStateNamedValues
+{
+    {"STANDING", static_cast<int>(GroundMovementState::STANDING) },
+    {"IDLE", static_cast<int>(GroundMovementState::IDLE) },
+    {"TURNING_AROUND", static_cast<int>(GroundMovementState::TURNING_AROUND) },
+    {"MOVING", static_cast<int>(GroundMovementState::MOVING) },
+    {"STEEP_SLOPE_STUMBLING", static_cast<int>(GroundMovementState::STEEP_SLOPE_STUMBLING) }
+
+};
+
+
 //----------------------------------------------------------------------------
-
-
-
 
 
 
@@ -282,7 +291,7 @@ bool GroundMovementCfg::initCfg(const pugi::xml_node &_node)
             customStates.push_back(CustomStateCfg());
             CustomStateCfg &cs = customStates.back();
 
-            if(cs.initCfg(n)==false){
+            if(cs.initCfg(n, gGroundMovementStateNamedValues)==false){
                 return false;
             }
 
@@ -306,98 +315,6 @@ bool GroundMovementCfg::initCfg(const pugi::xml_node &_node)
 }
 
 
-bool GroundMovementCfg::CustomStateCfg::initCfg(const pugi::xml_node &_node)
-{
-
-
-    for(pugi::xml_attribute a = _node.first_attribute(); a; a = a.next_attribute()){
-        std::string attributeName =std::string(a.name());
-
-        if(attributeName=="name"){
-            name = a.as_string("");
-
-        }else if(attributeName=="baseState"){
-            std::string sBaseState = a.as_string("");
-
-            if(sBaseState=="STANDING"){
-                baseState = BaseState::STANDING;
-
-            }else if(sBaseState=="MOVING"){
-                baseState = BaseState::MOVING;
-
-            }else{
-                dbgSystem.addMessage("Wrong attribute value '" + sBaseState + "'");
-                return false;
-            }
-
-        }else if(attributeName=="trigger"){
-            sigTrigger = a.as_string("");
-
-        }else if(attributeName=="animationLeft"){
-            aniLeft = a.as_string("");
-
-        }else if(attributeName=="animationRight"){
-            aniRight = a.as_string("");
-
-        }else{
-
-            dbgSystem.addMessage("Unknown attribute '" + attributeName + "' in node '" + std::string(_node.name()) +"' !");
-            return false;
-
-        }
-    }
-
-    for(pugi::xml_node nChild = _node.first_child(); nChild; nChild = nChild.next_sibling()){
-        std::string childNodeName = std::string(nChild.name());
-
-        if(childNodeName=="context"){
-
-            for(pugi::xml_attribute a = nChild.first_attribute(); a; a = a.next_attribute()){
-                std::string attributeName =std::string(a.name());
-
-                if(attributeName=="onSignal"){
-                    contextTrigger = a.as_string("");
-
-                }else{
-
-                    dbgSystem.addMessage("Unknown attribute '" + attributeName + "' in node '" + childNodeName +"' !");
-                    return false;
-                }
-            }
-
-        }else if(childNodeName=="customSensor"){
-
-            for(pugi::xml_attribute a = nChild.first_attribute(); a; a = a.next_attribute()){
-                std::string attributeName =std::string(a.name());
-
-                if(attributeName=="extraShapeCategory"){
-                    customSensorCfg.customSensorCategory = a.as_string("");
-
-                }else if(attributeName=="vectorShapeData"){
-                    customSensorCfg.customSensorExtraShapeID = a.as_int(1);
-
-                }else if(attributeName=="activeOnAnimationKeyData"){
-                    customSensorCfg.extraShapeActiveOnAnimationKeyData = a.as_int(1);
-
-                }else{
-
-                    dbgSystem.addMessage("Unknown attribute '" + attributeName + "' in node '" + childNodeName +"' !");
-                    return false;
-                }
-            }
-
-        }else{
-
-            dbgSystem.addMessage("Unknown node '" + childNodeName +"' !");
-            return false;
-        }
-    }
-
-    return true;
-
-}
-
-
 
 void GroundMovementCfg::collectCustomSensors(std::vector<CustomSensorCfg> &_customSensors)
 {
@@ -411,18 +328,6 @@ void GroundMovementCfg::collectCustomSensors(std::vector<CustomSensorCfg> &_cust
 
 
 //------------------------------------------------------------------------------------------
-
-GroundMovementCustomStateData::~GroundMovementCustomStateData()
-{
-    if(aniLeft){
-        delete aniLeft;
-    }
-    if(aniRight){
-        delete aniRight;
-    }
-
-}
-
 
 //------------------------------------------------------------------------------------------
 
@@ -533,24 +438,46 @@ bool GroundMovementData::initConnections(PlayedScene *_scene, Entity *_actor)
 
 
     //---
-    for(GroundMovementCfg::CustomStateCfg & csc : cfg->customStates){
-
+    /*
+    for(CustomStateCfg & csc : cfg->customStates){
         GroundMovementCustomStateData *cs = nullptr;
-        if(csc.baseState==GroundMovementCfg::BaseState::STANDING){
+        if(csc.baseState==CustomStateBaseState::STANDING){
             customStandingStates.emplace_back();
             cs = &customStandingStates.back();
-        }else if(csc.baseState==GroundMovementCfg::BaseState::MOVING){
+        }else if(csc.baseState==CustomStateBaseState::MOVING){
             customMovingStates.emplace_back();
             cs = &customMovingStates.back();
         }
-
         cs->cfg = &csc;
 
+        cs->customActSignalId = _actor->addCustomActName(cs->cfg->name);
+    }
 
-        if(cs->initConnections(_scene, _actor)==false){
+    // separating init from construction phase, to avoid copy constructing animation instances
+    for(GroundMovementCustomStateData &cs : customStandingStates){
+        if(cs.initConnections(_scene, _actor)==false){
             return false;
         }
+    }
 
+    for(GroundMovementCustomStateData &cs : customMovingStates){
+        if(cs.initConnections(_scene, _actor)==false){
+            return false;
+        }
+    }
+    */
+
+    //---
+    customStates.resize(cfg->customStates.size());
+    for(unsigned int i=0; i<cfg->customStates.size(); i++){
+        CustomStateCfg &csCfg = cfg->customStates[i];
+        CustomStateData &cs = customStates[i];
+        cs.cfg = &csCfg;
+        cs.customActSignalId = _actor->addCustomActName(cs.cfg->name);
+
+        if(cs.initConnections(_scene, _actor)==false){
+            return false;
+        }
     }
 
     //---
@@ -604,64 +531,6 @@ GroundMovementData::~GroundMovementData()
 }
 
 
-bool GroundMovementCustomStateData::initConnections(PlayedScene *_scene, Entity *_actor)
-{
-
-    Sprite *sprite = _actor->sprite();
-
-    //ObtainSignalFromPath(cfg->sigTrigger, _scene, _actor, nullptr,trigger);
-    app->signalParserManager()->parseSignalAccessor(_scene, cfg->sigTrigger, trigger, _actor);
-    if(trigger.isValid()==false){
-        return false;
-    }
-
-    if(cfg->aniRight.empty()==false){
-        aniRight = ObtainAnimationInstance(sprite, cfg->aniRight);
-        if(aniRight==nullptr){
-            return false;
-        }
-    }
-    if(cfg->aniLeft.empty()==false){
-        aniLeft = ObtainAnimationInstance(sprite, cfg->aniLeft);
-        if(aniLeft==nullptr){
-            return false;
-        }
-    }
-
-    if(cfg->contextTrigger.empty()==false){
-        //ObtainSignalFromPath(cfg->contextTrigger, _scene, _actor, nullptr, contextTrigger);
-        app->signalParserManager()->parseSignalAccessor(_scene, cfg->contextTrigger, contextTrigger, _actor);
-        if(contextTrigger.isValid()==false){
-            return false;
-        }
-    }
-
-    //---
-    if(cfg->customSensorCfg.customSensorCategory.empty()==false){
-
-        EntityCategory * extraShapeCategory = _actor->parentEntitySystem()->entityCategoriesGroup().getEntityCategory(cfg->customSensorCfg.customSensorCategory);
-        if(extraShapeCategory==nullptr){
-            return false;
-        }
-
-        triggeringExtraShapeSourceFixture = _actor->body()->sourceBody()->getSourceFixture(extraShapeCategory);
-        if(triggeringExtraShapeSourceFixture==nullptr){
-            return false;
-        }
-
-        extraShapeFixtureCreated = (triggeringExtraShapeSourceFixture->temporaryFixture==true)? false : true;
-
-    }
-
-
-    return true;
-
-}
-
-
-
-
-
 //==========================================================================================================
 
 
@@ -689,7 +558,6 @@ void VGGroundMovement::startMovement(GroundMovementCfg &cfg, Direction _directio
     }
 
 }
-
 
 
 b2Vec2 VGGroundMovement::updateVelocity(float _timeStep, Direction _inputDirection, int _blockedDirections, b2Vec2 _slopeNormal)
@@ -965,11 +833,8 @@ void EGroundConveyor::stop()
 }
 
 
-
 b2Vec2 EGroundConveyor::updateVelocity(float _timeStep, int _blockedDirections, b2Vec2 _slopeNormal)
 {
-
-
 
     b2Vec2 unitVelocity = mDirectionUnitVelocity;
     if(_slopeNormal.y != 0.0f){
@@ -997,26 +862,25 @@ b2Vec2 EGroundConveyor::updateVelocity(float _timeStep, int _blockedDirections, 
 }
 
 
-
-
 //----------------------------------------------------------------------------------
 
 
 bool GroundMovementEngine::init(Entity *_entity)
 {
 
-    mParentEntity = _entity;
 
+    mParentEntity = _entity;
     mSignals.push_back(&mSigState);
 
     for(GroundMovementData& d : mGroundMovementDatas){
-        if(d.moveLeft.mSignal == &d.sigMoveLeftObj){
+        if(d.moveLeft.signal() == &d.sigMoveLeftObj){
             mSignals.push_back(&d.sigMoveLeftObj);
         }
-        if(d.moveRight.mSignal == &d.sigMoveRightObj){
+        if(d.moveRight.signal() == &d.sigMoveRightObj){
             mSignals.push_back(&d.sigMoveRightObj);
         }
         mSignals.push_back(&d.sigDisabled);
+
     }
 
     return true;
@@ -1027,8 +891,6 @@ bool GroundMovementEngine::start(MovementEngineData *_data)
 {
 
     assert(_data->factory==mFactory);
-
-
 
 
     if(mParentEntity->statusFlagsRef() & EntityStatusFlags::FORCED_ENTITY_TRANSFORMATION){
@@ -1126,6 +988,8 @@ bool GroundMovementEngine::start(MovementEngineData *_data)
 
     }
 
+    mCustomStateEngine.init(this, &(mCurrentData->customStates));
+
     //---
     //mSlopeSliding.init(*mCurrentData->cfg);
 
@@ -1174,22 +1038,22 @@ b2Vec2 GroundMovementEngine::update(EngineUpdateParameters &eup)
             setState(GroundMovementState::STANDING);
         }
 
-
-        //---
+        //----
         mInputDirection = Direction::NONE;
         if((eup.entity->statusFlagsRef() & EntityStatusFlags::DISABLED_USER_CONTROLLS)==0){
 
             if(mCurrentData->moveLeft.active()){
                 mInputDirection = Direction::LEFT;
 
-
-
             }else if(mCurrentData->moveRight.active()){
                 mInputDirection = Direction::RIGHT;
             }
         }
 
-        //---
+        //----
+        manageCustomStates(eup);
+
+        //----
         if(mState==GroundMovementState::STANDING || mState==GroundMovementState::IDLE){
             update_stateSTANDING(eup);
 
@@ -1201,15 +1065,15 @@ b2Vec2 GroundMovementEngine::update(EngineUpdateParameters &eup)
 
         }
 
-        //---
+        //----
         if(mSlidingGroundCfg != mSlopeSliding.slidingGroundCfg()){
             mSlopeSliding.setActiveSlidingGroundCfg(mSlidingGroundCfg);
         }
         if(mSlopeSliding.isActive()){
             updateSliding(eup);
-
         }
 
+        //----
         if(mConveyorGroundCfg != mGroundConveyor.conveyorGroundCfg()){
             mGroundConveyor.setActiveConveyorCfg(mConveyorGroundCfg);
         }
@@ -1218,9 +1082,6 @@ b2Vec2 GroundMovementEngine::update(EngineUpdateParameters &eup)
         }else{
             DummyFunction();
         }
-
-
-
 
         //if(mGroundNormal.y <= mCurrentData->cfg->maxSlopeNormal.y  && eup.contactsWithDifferentGroundNormals==false){
         //    mGroundMovement.stop();
@@ -1250,14 +1111,15 @@ b2Vec2 GroundMovementEngine::update(EngineUpdateParameters &eup)
     //---
     updateAnimationPlayer();
 
-    if(mState==GroundMovementState::UNKNOWN){
-        DummyFunction();
-    }
 
-    if(mCurrentData->cfg->name=="movingMovableObjectOnRight"){
-        print(GetGroundMovementStateString(mState));
-        print("B movingMovableObjectOnRight velocity x=" + std::to_string(mVelocity.x));
-    }
+    //if(mState==GroundMovementState::UNKNOWN){
+    //    DummyFunction();
+    //}
+
+    //if(mCurrentData->cfg->name=="movingMovableObjectOnRight"){
+    //    print(GetGroundMovementStateString(mState));
+    //    print("B movingMovableObjectOnRight velocity x=" + std::to_string(mVelocity.x));
+    //}
 
     mForwardVelocity = mVelocity;
 
@@ -1278,33 +1140,8 @@ void GroundMovementEngine::updateGroundMovement(EngineUpdateParameters &eup)
 void GroundMovementEngine::update_stateSTANDING(EngineUpdateParameters &eup)
 {
 
-
-    if(mCustomState){
-        updateCustomState(eup);
+    if(mCustomStateEngine.activeCustomState()){
         return;
-    }
-
-
-    for(GroundMovementCustomStateData &cs : mCurrentData->customStandingStates){
-
-        if(cs.contextTrigger.mSignal){
-            if(cs.contextTrigger.active()==false){
-                continue;
-            }
-        }
-
-        if(cs.trigger.active()){
-            mCustomState = &cs;
-            if(mDirection==Direction::LEFT){
-                mActiveAnimationInstance = mCustomState->aniLeft;
-
-            }else if(mDirection==Direction::RIGHT){
-                mActiveAnimationInstance = mCustomState->aniRight;
-
-            }
-            mStateEllapsedTimeS = 0.0f;
-            return;
-        }
     }
 
 
@@ -1312,9 +1149,9 @@ void GroundMovementEngine::update_stateSTANDING(EngineUpdateParameters &eup)
 
         if((static_cast<int>(mDirection) & eup.blockedDirections) == 0){
 
-            if(mCurrentData->cfg->name=="pushingMovableObjectRightMovement"){
-                DummyFunction();
-            }
+            //if(mCurrentData->cfg->name=="pushingMovableObjectRightMovement"){
+            //    DummyFunction();
+            //}
 
             mGroundMovement.startMovement(*mCurrentData->cfg, mInputDirection, 0.0f, mSlopeSliding.slidingGroundCfg());
             //mSlopeSliding.init(*mCurrentData->cfg);
@@ -1334,9 +1171,9 @@ void GroundMovementEngine::update_stateSTANDING(EngineUpdateParameters &eup)
 
         mDirection = mInputDirection;
         if(mDirection==Direction::LEFT){
-            if(mCurrentData->cfg->name=="pushingMovableObjectRightMovement"){
-                DummyFunction();
-            }
+            //if(mCurrentData->cfg->name=="pushingMovableObjectRightMovement"){
+            //    DummyFunction();
+            //}
             if(mCurrentData->aniTurningToLeft){
                  mActiveAnimationInstance = mCurrentData->aniTurningToLeft;
                  setState(GroundMovementState::TURNING_AROUND);
@@ -1347,9 +1184,9 @@ void GroundMovementEngine::update_stateSTANDING(EngineUpdateParameters &eup)
 
 
         }else if(mDirection==Direction::RIGHT){
-            if(mCurrentData->cfg->name=="pushingMovableObjectRightMovement"){
-                DummyFunction();
-            }
+            //if(mCurrentData->cfg->name=="pushingMovableObjectRightMovement"){
+            //    DummyFunction();
+            //}
              if(mCurrentData->aniTurningToRight){
                  mActiveAnimationInstance = mCurrentData->aniTurningToRight;
                  setState(GroundMovementState::TURNING_AROUND);
@@ -1392,23 +1229,26 @@ void GroundMovementEngine::update_stateSTANDING(EngineUpdateParameters &eup)
         }
     }
 
-
-    if(mCurrentData->cfg->name=="pushingMovableObjectRightMovement"){
-        print("update_stateSTANDING pushingMovableObjectRightMovement velcoity x=" + std::to_string(mVelocity.x));
-    }
 }
 
 
 void GroundMovementEngine::update_stateMOVING(EngineUpdateParameters &eup)
 {
 
-    if(mCurrentData->cfg->name=="pushingMovableObjectRightMovement"){
-        DummyFunction();
+
+    if(mCustomStateEngine.activeCustomState()){
+        if(mCustomStateEngine.activeCustomState()->cfg->engineMovementAllowed){
+            mVelocity = mGroundMovement.updateVelocity(eup.timeStep, mInputDirection, eup.blockedDirections, mGroundNormal);
+
+        }else{
+            mInputDirection = Direction::NONE;
+            setState(GroundMovementState::STANDING);
+        }
+        return;
     }
 
-    mVelocity = mGroundMovement.updateVelocity(eup.timeStep, mInputDirection, eup.blockedDirections, mGroundNormal);
 
-    //if(mGroundMovement.state()==SpeedGenerator::State::STANDING_STILL){
+    mVelocity = mGroundMovement.updateVelocity(eup.timeStep, mInputDirection, eup.blockedDirections, mGroundNormal);
 
 
     if(mSlopeSliding.isActive()){
@@ -1445,8 +1285,6 @@ void GroundMovementEngine::update_stateMOVING(EngineUpdateParameters &eup)
 
         }
 
-
-
     }else{
 
         if(mGroundMovement.speed()==0.0f){
@@ -1467,16 +1305,20 @@ void GroundMovementEngine::update_stateMOVING(EngineUpdateParameters &eup)
         }
     }
 
-    if(mCurrentData->cfg->name=="movingMovableObjectOnRight"){
-        print("update_stateMOVING movingMovableObjectOnRight velcoity x=" + std::to_string(mVelocity.x));
-    }
-
+    //if(mCurrentData->cfg->name=="movingMovableObjectOnRight"){
+    //    print("update_stateMOVING movingMovableObjectOnRight velcoity x=" + std::to_string(mVelocity.x));
+    //}
 
 }
 
 
 void GroundMovementEngine::update_stateTURNING_AROUND(EngineUpdateParameters &eup)
 {
+
+    if(mCustomStateEngine.activeCustomState()){
+        return;
+    }
+
 
     if(mAnimationPlayer && mAnimationPlayer->GetState()==AnimationPlayerState::STALLED){
         setState(GroundMovementState::STANDING);
@@ -1493,18 +1335,49 @@ void GroundMovementEngine::update_stateTURNING_AROUND(EngineUpdateParameters &eu
 }
 
 
+/*
+GroundMovementCustomStateData *GroundMovementEngine::checkForCustomState()
+{
+
+    GroundMovementCustomStateData *customState = nullptr;
+
+    for(GroundMovementCustomStateData &cs : mCurrentData->customStandingStates){
+
+        if(cs.contextTrigger.signal()){
+            if(cs.contextTrigger.active()==false){
+                continue;
+            }
+        }
+
+        if(cs.sqTrigger.active()){
+            customState = &cs;
+            if(mDirection==Direction::LEFT){
+                mActiveAnimationInstance = customState->aniLeft;
+
+            }else if(mDirection==Direction::RIGHT){
+                mActiveAnimationInstance = customState->aniRight;
+
+            }
+            mStateEllapsedTimeS = 0.0f;
+
+            if(cs.cfg->activePhaseFrameIntData == -1){
+                mParentEntity->customActSignal().setValue_onNextFrame(cs.customActSignalId);
+            }
+            break;
+        }
+    }
+
+
+    return customState;
+}
+
+
 void GroundMovementEngine::updateCustomState(EngineUpdateParameters &eup)
 {
 
     assert(mCustomState);
 
-    /*
-    if(mActiveAnimationInstance && mActiveAnimationInstance->GetKind()==AnimationKind::TIMELINE_ANIMATION){
-        eup.entity->forceTransformFromSprite();
-        //---
-        eup.entity->statusFlagsRef() |= static_cast<int>(EntityStatusFlags::FORCED_ENTITY_TRANSFORMATION);
-    }
-    */
+
 
     if(mAnimationPlayer){
 
@@ -1534,35 +1407,57 @@ void GroundMovementEngine::updateCustomState(EngineUpdateParameters &eup)
             }
         }
 
-
-        if(mAnimationPlayer && mAnimationPlayer->GetState()==AnimationPlayerState::STALLED){
-            if(mDirection==Direction::LEFT){
-                mActiveAnimationInstance = mCurrentData->aniStandingLeft;
-
-            }else if(mDirection==Direction::RIGHT){
-                mActiveAnimationInstance = mCurrentData->aniStandingRight;
+        //----
+        if(mAnimationPlayer->GetAnimationInstance()->GetKind()==AnimationKind::FRAME_ANIMATION){
+            if(mCustomState->cfg->activePhaseFrameIntData != -1){
+                FrameAnimationInstance *fai = static_cast<FrameAnimationInstance*>(mAnimationPlayer->GetAnimationInstance());
+                int currentFrameIntData = fai->currentFrameIntData();
+                IntSignal &customActSignal = mParentEntity->customActSignal();
+                if(mCustomState->cfg->activePhaseFrameIntData == currentFrameIntData){
+                    if(customActSignal.value() != mCustomState->customActSignalId){
+                        customActSignal.setValue_onNextFrame(mCustomState->customActSignalId);
+                    }
+                }else{
+                    if(customActSignal.value() == mCustomState->customActSignalId){
+                        customActSignal.setValue_onNextFrame(-1);
+                    }
+                }
             }
-            mStateEllapsedTimeS = 0.0f;
-            mCustomState = nullptr;
-            eup.entity->statusFlagsRef() &= ~EntityStatusFlags::FORCED_ENTITY_TRANSFORMATION;
         }
 
-
         if(mAnimationPlayer->GetState()==AnimationPlayerState::STALLED){
-            if(mDirection==Direction::LEFT){
-                mActiveAnimationInstance = mCurrentData->aniStandingLeft;
 
-            }else if(mDirection==Direction::RIGHT){
-                mActiveAnimationInstance = mCurrentData->aniStandingRight;
+            GroundMovementCustomStateData *customState = checkForCustomState();
+            if(customState==nullptr){
+                if(mDirection==Direction::LEFT){
+                    mActiveAnimationInstance = mCurrentData->aniStandingLeft;
+
+                }else if(mDirection==Direction::RIGHT){
+                    mActiveAnimationInstance = mCurrentData->aniStandingRight;
+                }
+                mStateEllapsedTimeS = 0.0f;
+                mCustomState = nullptr;
+                eup.entity->statusFlagsRef() &= ~EntityStatusFlags::FORCED_ENTITY_TRANSFORMATION;
+                mParentEntity->customActSignal().setValue_onNextFrame(-1);
+
+            }else{
+                // immediately start a new (or existing) custom state
+                //if(customState==mCustomState){
+                    mStateEllapsedTimeS = 0.0f;
+                    mAnimationPlayer->Stop();
+                    mAnimationPlayer->Play(mActiveAnimationInstance);
+
+                    mParentEntity->customActSignal().reset(-1);
+                    mParentEntity->customActSignal().setValue_onNextFrame(mCustomState->customActSignalId);
+                //}
+                DummyFunction();
             }
-            mStateEllapsedTimeS = 0.0f;
-            mCustomState = nullptr;
-            eup.entity->statusFlagsRef() &= ~EntityStatusFlags::FORCED_ENTITY_TRANSFORMATION;
+
         }
     }
 
 }
-
+*/
 
 void GroundMovementEngine::updateSteepSlopeSliding(EngineUpdateParameters &eup)
 {
@@ -1655,6 +1550,35 @@ void GroundMovementEngine::updateConveyor(EngineUpdateParameters &eup)
 }
 
 
+void GroundMovementEngine::manageCustomStates(EngineUpdateParameters &eup)
+{
+
+
+    CustomStateStatus status = mCustomStateEngine.update(eup, static_cast<int>(mState));
+
+    if(status==CustomStateStatus::CUSTOM_STATE_ENDED){
+
+        if(mState==GroundMovementState::STANDING){
+            if(mDirection==Direction::LEFT){
+                mActiveAnimationInstance = mCurrentData->aniStandingLeft;
+            }else if(mDirection==Direction::RIGHT){
+                mActiveAnimationInstance = mCurrentData->aniStandingRight;
+            }
+
+        }else if(mState==GroundMovementState::MOVING){
+            if(mDirection==Direction::LEFT){
+                mActiveAnimationInstance = mCurrentData->aniMovingLeft;
+            }else if(mDirection==Direction::RIGHT){
+                mActiveAnimationInstance = mCurrentData->aniMovingRight;
+            }
+        }
+    }
+
+}
+
+
+
+
 void GroundMovementEngine::stop()
 {
     mGroundMovement.stop();
@@ -1707,10 +1631,43 @@ bool GroundMovementEngine::initDataObjectsConnections(PlayedScene *_scene, Entit
         if(d.initConnections(_scene, _actor)==false){
             return false;
         }
+
+        //---
+        /*
+        std::string signalParsingPrefix = d.cfg->getSignalParsingPrefix();
+        _actor->signalStorage()->addSignal_query(d.moveLeft.signal(), signalParsingPrefix + "MOVE_LEFT");
+        _actor->signalStorage()->addSignal_query(d.moveRight.signal(), signalParsingPrefix + "MOVE_RIGHT");
+        _actor->signalStorage()->addSignal_query(&d.sigDisabled, signalParsingPrefix + "DISABLED");
+        SignalIdentifier *si = _actor->signalStorage()->addSignal_query(&mSigState, signalParsingPrefix + "STATE");
+        if(si) si->intValuesIdentifier = &gGroundMovementStateNamedValues;
+
+        // setter signals
+        _actor->signalStorage()->addSignal_setter(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+        */
     }
 
     return true;
 }
+
+
+void GroundMovementEngine::collectSignalsForLUT(SignalStorage &_storage)
+{
+
+    for(GroundMovementData& d : mGroundMovementDatas){
+
+        std::string signalParsingPrefix = d.cfg->getSignalParsingPrefix();
+        _storage.addSignal_query(d.moveLeft.signal(), signalParsingPrefix + "MOVE_LEFT");
+        _storage.addSignal_query(d.moveRight.signal(), signalParsingPrefix + "MOVE_RIGHT");
+        _storage.addSignal_query(&d.sigDisabled, signalParsingPrefix + "DISABLED");
+        SignalIdentifier *si = _storage.addSignal_query(&mSigState, signalParsingPrefix + "STATE");
+        if(si) si->intValuesIdentifier = &gGroundMovementStateNamedValues;
+
+        // setter signals
+        _storage.addSignal_setter(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+    }
+
+}
+
 
 
 MovementEngineData* GroundMovementEngine::getMovementEngineData(const std::string &_name, bool _setErrorMessage)

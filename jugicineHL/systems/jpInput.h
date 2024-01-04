@@ -27,6 +27,7 @@ class KeyboardProfile;
 class JoystickProfile;
 class BinaryStreamWriter;
 class StdBinaryFileStreamReader;
+class InputSystem;
 
 
 //class GameInputCommand : public BaseObject
@@ -49,7 +50,7 @@ public:
 
     GameInputCommand(const pugi::xml_node &_node);
 
-    bool init();
+    bool init(InputSystem *_inputSystem);
 
     //---
     const std::string &name(){ return mName; }
@@ -62,6 +63,7 @@ public:
     //---
     void reset();
     void setSignalValues(bool _active, bool _activeStarted, bool _activeEnded);
+    void manageBlockingCommands();
 
     float xAxis(){ return mXAxis; }
     float yAxis(){ return mYAxis; }
@@ -72,6 +74,8 @@ public:
     JoystickControl defaultJoystickCommand(){ return mDefJoystickCommand; }
 
     const std::string &description(){ return mDescription; }
+
+
 
 
 private:
@@ -92,6 +96,8 @@ private:
     KeyCode mDefKeyboardKey = KeyCode::UNKNOWN;
     JoystickControl mDefJoystickCommand;
 
+    std::vector<GameInputCommand*>mBlockingCommands;
+
 
     struct Cfg
     {
@@ -99,6 +105,7 @@ private:
         std::string mDefKeyboardKey;
         std::string mDefJoystickCommand;
         std::string mTrigger;
+        std::vector<std::string>mBlockingCommands;
     };
 
     //---
@@ -155,6 +162,8 @@ public:
 
     void update() override;
 
+    void getDirectionSignals(bool &right, bool &left, bool &up, bool &down);
+
     std::vector<KeyboardInputCommand> & keyboardInputCommands(){ return mKeyboardInputCommands; }
 
     KeyboardInputCommand* getCommandWithKeyCode(KeyCode _keyCode);
@@ -185,6 +194,8 @@ public:
     JoystickProfile(Joystick * _joystick);
 
     void update() override;
+
+    void getDirectionSignals(bool &right, bool &left, bool &up, bool &down);
 
     std::vector<JoystickInputCommand> & joystickInputCommands(){ return mJoystickInputCommands; }
     Joystick *joystick(){ return mJoystick; }
@@ -252,6 +263,10 @@ public:
     //std::vector<KeyboardProfile*> &keyboardProfiles(){ return mKeyboardProfiles; }
     //std::vector<JoystickProfile*> &joystickProfiles(){ return mJoystickProfiles; }
 
+
+
+
+
     InputProfiles *activeUserProfiles(){ return mActiveInputProfiles; }
     void setActiveUserProfiles(InputProfiles *_inputProfiles);
 
@@ -264,6 +279,11 @@ public:
 
 
     InputProfiles * newDefaultInputProfiles();
+
+    BoolSignal & rightDirection(){ return mSigRightDirection; }
+    BoolSignal & leftDirection(){ return mSigLeftDirection; }
+    BoolSignal & upDirection(){ return mSigUpDirection; }
+    BoolSignal & downDirection(){ return mSigDownDirection; }
 
     //---
     //bool saveProfilesIniFile();
@@ -289,6 +309,11 @@ private:
     InputProfiles *mActiveInputProfiles = nullptr;          // LINK to active users profiles
 
     InputCustomizer* mInputCustomizer = nullptr;            // LINK
+
+    BoolSignal mSigRightDirection;
+    BoolSignal mSigLeftDirection;
+    BoolSignal mSigUpDirection;
+    BoolSignal mSigDownDirection;
 
 
     //--- Cfg

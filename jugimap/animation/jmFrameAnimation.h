@@ -151,6 +151,7 @@ public:
     ///\brief Get a reference to the AnimatedProperties object of this animation instance.
     AnimatedProperties &GetAnimatedProperties(){ return ap; }
 
+    int currentFrameIntData();
 
     int Update(int msTimePoint, int _flags) override;
     void UpdateAnimatedSprites(bool _resetSpriteAnimatedProperties) override;

@@ -31,6 +31,9 @@ struct TaskEngineCfg
 
     virtual bool initCfg(const pugi::xml_node &_node) = 0;
 
+    std::string getSignalParsingPrefix(){ return "TASK:"+name +":";}
+
+
     TaskEngineFactory * factory = nullptr;     // LINK
     std::string name;
 
@@ -65,6 +68,7 @@ public:
     virtual bool start(TaskEngineData *_data) = 0;
     virtual void createDataObjects(std::vector<TaskEngineCfg*> &_cfgs) = 0;
     virtual bool initDataObjectsConnections(PlayedScene *_scene, Entity *_actor) = 0;
+    virtual void collectSignalsForLUT(SignalStorage &_storage){}
     virtual TaskEngineData* getData(const std::string &_name, bool _setErrorMessage) = 0;
     virtual TaskEngineData* currentData() = 0;
 

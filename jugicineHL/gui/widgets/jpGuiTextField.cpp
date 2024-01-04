@@ -257,6 +257,7 @@ bool GuiTextField::initConnections(GuiSystem *_guiSystem)
 
 
     //mMap = mRootSprite->parentLayer()->map();
+    mRootMap = mRootSprite->parentLayer()->rootMap();
 
     mName = mRootSprite->parameters().value("wName");
     if(mName.empty()){

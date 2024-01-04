@@ -7,6 +7,7 @@
 #include "box2d.h"
 #include "jpGlobal.h"
 #include "jpSpeedGenerators.h"
+#include "jpCustomState.h"
 #include "jpMovementBase.h"
 
 
@@ -40,7 +41,7 @@ enum class JumpMovementState : int
 JumpMovementState GetJumpMovementStateFromString(const std::string &state);
 
 
-extern std::vector<NamedValue>gJumpMovementStateNamedValues;
+extern std::vector<std::pair<std::string, int>>gJumpMovementStateNamedValues;
 
 
 //------------------------------------------------------------------------------------
@@ -90,13 +91,16 @@ struct JumpMovementCfg : public JumpMovementCfgBase
     std::string aniLandingLeft;
     std::string aniLandingRight;
 
+    //---
+    std::vector<CustomStateCfg>customStates;
+
 };
 
 
 struct JumpMovementData : public MovementEngineData
 {
 
-
+    JumpMovementData();
     ~JumpMovementData() override;
 
     bool initConnections(PlayedScene *_scene, Entity *_actor);
@@ -113,7 +117,6 @@ struct JumpMovementData : public MovementEngineData
 
     BoolSignal sigDisabled;
 
-
     //----
     AnimationInstance * aniTakeOffLeft = nullptr;           // OWNED
     AnimationInstance * aniTakeOffRight = nullptr;
@@ -125,6 +128,9 @@ struct JumpMovementData : public MovementEngineData
     AnimationInstance * aniDescendingRight = nullptr;
     AnimationInstance * aniLandingLeft = nullptr;
     AnimationInstance * aniLandingRight = nullptr;
+
+    //----
+    std::vector<CustomStateData>customStates;
 
 };
 
@@ -180,6 +186,7 @@ public:
 
     void createDataObjects(std::vector<MovementEngineCfg*> &_cfgs) override;
     bool initDataObjectsConnections(PlayedScene *_scene, Entity *_actor) override;
+    void collectSignalsForLUT(SignalStorage &_storage) override;
 
     bool init(Entity *_entity) override;
     //void start(JumpMovementData *_jumpMovementCfg, Direction _xDirection, AnimationPlayer *_animationPlayer, b2Vec2 _actorVelocity, bool _startWithDescending);
@@ -190,6 +197,7 @@ public:
     void stop() override;
 
     MovementEngineData * currentData() override { return mCurrentData; }
+    MovementEngineCfg* currentCfg() override { return mCurrentData->cfg; }
     MovementEngineData* getMovementEngineData(const std::string &_name, bool _setErrorMessage) override;
     void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true) override;
     void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage = true) override;
@@ -208,6 +216,8 @@ private:
     JumpMovementData *mCurrentData = nullptr;                // LINK
     std::vector<JumpMovementData>mJumpMovementDatas;
 
+    CustomStateEngine mCommonCustomStateEngine;
+
     //----
     IntSignal mSigState;
 
@@ -219,6 +229,7 @@ private:
         mSigState.setValue_onNextFrame(static_cast<int>(mState));
     }
 
+    void manageCustomStates(EngineUpdateParameters &eup);
 
     void manageApproachingCeiling();
 

@@ -9,6 +9,7 @@
 
 #include "jpUtilities.h"
 #include "jpPlayedApp.h"
+#include "jpObjectParser.h"
 
 #include "jpB2Fixture.h"
 #include "jpSourceEntity.h"
@@ -48,7 +49,7 @@ JumpMovementState GetJumpMovementStateFromString(const std::string &state)
 }
 
 
-std::vector<NamedValue>gJumpMovementStateNamedValues
+std::vector<std::pair<std::string, int>>gJumpMovementStateNamedValues
 {
     {"TAKING_OFF", static_cast<int>(JumpMovementState::TAKING_OFF) },
     {"ASCENDING", static_cast<int>(JumpMovementState::ASCENDING) },
@@ -182,7 +183,6 @@ bool JumpMovementCfg::initCfg(const pugi::xml_node &_node)
 
         }else if(nodeName=="baseStates"){
 
-
             for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
                 std::string childNodeName = std::string(nChild.name());
 
@@ -288,6 +288,16 @@ bool JumpMovementCfg::initCfg(const pugi::xml_node &_node)
                 }
             }
 
+
+        }else if(nodeName=="customState"){
+
+            customStates.push_back(CustomStateCfg());
+            CustomStateCfg &cs = customStates.back();
+
+            if(cs.initCfg(n, gJumpMovementStateNamedValues)==false){
+                return false;
+            }
+
         }else{
 
             dbgSystem.addMessage("Unknown node '" + nodeName + "' !");
@@ -302,6 +312,9 @@ bool JumpMovementCfg::initCfg(const pugi::xml_node &_node)
 }
 
 
+JumpMovementData::JumpMovementData()
+{
+}
 
 JumpMovementData::~JumpMovementData()
 {
@@ -348,7 +361,43 @@ bool JumpMovementData::initConnections(PlayedScene *_scene, Entity *_actor)
 {
     dbgSystem.addMessage("Init connections for the data object of '" + cfg->name + "' ...");
 
+    /*
+    SignalIdentifier &si = mParentEntity->signalStorage()->addSignal_query(d.startJump)
 
+
+                if(signalName=="START_JUMP"){
+                    //_signalQuery.mSignal = d.startJump.mSignal;
+                    _psp.obtainValue(_signalQuery, d.startJump.signal());
+
+                }else if(signalName=="MOVE_LEFT"){
+                    //_signalQuery.mSignal = d.moveLeft.mSignal;
+                    _psp.obtainValue(_signalQuery, d.moveLeft.signal());
+
+                }else if(signalName=="MOVE_RIGHT"){
+                    //_signalQuery.mSignal = d.moveRight.mSignal;
+                    _psp.obtainValue(_signalQuery, d.moveRight.signal());
+
+                }else if(signalName=="DISABLED"){
+                    //_signalQuery.mSignal = &d.sigDisabled;
+                    _psp.obtainValue(_signalQuery, &d.sigDisabled);
+                }
+
+                break;
+            }
+        }
+
+        if(_signalQuery.signal()){
+            return;
+        }
+    }
+
+
+
+    if(signalName=="STATE"){
+
+        _psp.obtainValue(_signalQuery, &mSigState);
+
+    */
 
     //--- signals
     if(cfg->sigStartJump.empty()){        // computer controlled actors
@@ -454,6 +503,19 @@ bool JumpMovementData::initConnections(PlayedScene *_scene, Entity *_actor)
     if(cfg->aniLandingLeft.empty()==false){
         aniLandingLeft = ObtainAnimationInstance(sprite, cfg->aniLandingLeft);
         if(aniLandingLeft==nullptr){
+            return false;
+        }
+    }
+
+    //---
+    customStates.resize(cfg->customStates.size());
+    for(unsigned int i=0; i<cfg->customStates.size(); i++){
+        CustomStateCfg &csCfg = cfg->customStates[i];
+        CustomStateData &cs = customStates[i];
+        cs.cfg = &csCfg;
+        cs.customActSignalId = _actor->addCustomActName(cs.cfg->name);
+
+        if(cs.initConnections(_scene, _actor)==false){
             return false;
         }
     }
@@ -575,7 +637,6 @@ JumpMovementEngine::JumpMovementEngine(MovementEngineFactory *_factory) : Moveme
 }
 
 
-
 void JumpMovementEngine::createDataObjects(std::vector<MovementEngineCfg *> &_cfgs)
 {
     mJumpMovementDatas.resize(_cfgs.size());
@@ -594,11 +655,46 @@ bool JumpMovementEngine::initDataObjectsConnections(PlayedScene *_scene, Entity 
         if(d.initConnections(_scene, _actor)==false){
             return false;
         }
+
+        //---
+        /*
+        std::string signalParsingPrefix = d.cfg->getSignalParsingPrefix();
+        _actor->signalStorage()->addSignal_query(d.startJump.signal(), signalParsingPrefix + "START_JUMP");
+        _actor->signalStorage()->addSignal_query(d.moveLeft.signal(), signalParsingPrefix +"MOVE_LEFT");
+        _actor->signalStorage()->addSignal_query(d.moveRight.signal(), signalParsingPrefix +"MOVE_RIGHT");
+        _actor->signalStorage()->addSignal_query(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+        SignalIdentifier *si = _actor->signalStorage()->addSignal_query(&mSigState, signalParsingPrefix + "STATE");
+        if(si) si->intValuesIdentifier = &gJumpMovementStateNamedValues;
+
+        // setter signals
+        _actor->signalStorage()->addSignal_setter(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+        */
     }
 
     return true;
 }
 
+
+void JumpMovementEngine::collectSignalsForLUT(SignalStorage &_storage)
+{
+
+    for(JumpMovementData& d : mJumpMovementDatas){
+
+        std::string signalParsingPrefix = d.cfg->getSignalParsingPrefix();
+        _storage.addSignal_query(d.startJump.signal(), signalParsingPrefix + "START_JUMP");
+        _storage.addSignal_query(d.moveLeft.signal(), signalParsingPrefix +"MOVE_LEFT");
+        _storage.addSignal_query(d.moveRight.signal(), signalParsingPrefix +"MOVE_RIGHT");
+
+        _storage.addSignal_query(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+        SignalIdentifier *si = _storage.addSignal_query(&mSigState, signalParsingPrefix + "STATE");
+        if(si) si->intValuesIdentifier = &gJumpMovementStateNamedValues;
+
+        // setter signals
+        _storage.addSignal_setter(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+    }
+
+
+}
 
 
 bool JumpMovementEngine::init(Entity *_entity)
@@ -610,17 +706,20 @@ bool JumpMovementEngine::init(Entity *_entity)
     mSignals.push_back(&mSigState);
 
     for(JumpMovementData& d : mJumpMovementDatas){
-        if(d.startJump.mSignal == &d.sigStartJumpObj){
+        if(d.startJump.signal() == &d.sigStartJumpObj){
             mSignals.push_back(&d.sigStartJumpObj);
         }
-        if(d.moveLeft.mSignal == &d.sigMoveLeftObj){
+        if(d.moveLeft.signal() == &d.sigMoveLeftObj){
             mSignals.push_back(&d.sigMoveLeftObj);
         }
-        if(d.moveRight.mSignal == &d.sigMoveRightObj){
+        if(d.moveRight.signal() == &d.sigMoveRightObj){
             mSignals.push_back(&d.sigMoveRightObj);
         }
         mSignals.push_back(&d.sigDisabled);
+
     }
+
+    mSigState.createExtraData()->namedValues = &gJumpMovementStateNamedValues;
 
     return true;
 }
@@ -628,6 +727,7 @@ bool JumpMovementEngine::init(Entity *_entity)
 
 bool JumpMovementEngine::start(MovementEngineData *_data)
 {
+
     assert(mFactory==_data->factory);
 
     mCurrentData = static_cast<JumpMovementData*>(_data);
@@ -736,6 +836,8 @@ bool JumpMovementEngine::start(MovementEngineData *_data)
 
     updateAnimationPlayer();
 
+    mCommonCustomStateEngine.init(this, &(mCurrentData->customStates));
+
     return true;
 }
 
@@ -761,6 +863,11 @@ b2Vec2 JumpMovementEngine::update(EngineUpdateParameters &eup)
     }
 
 
+    //----
+    manageCustomStates(eup);
+
+
+    //----
     if(mState==JumpMovementState::TAKING_OFF){
 
         // manage takeoff animation and set state to ASCENDING when the animation finishes
@@ -768,46 +875,27 @@ b2Vec2 JumpMovementEngine::update(EngineUpdateParameters &eup)
             setState(JumpMovementState::ASCENDING);
             mStateEllapsedTimeS = 0.0f;
 
-            if(mDirection==Direction::LEFT){
-                mActiveAnimationInstance = mCurrentData->aniAscendingLeft;
+            if(mCommonCustomStateEngine.activeCustomState()==nullptr){
+                if(mDirection==Direction::LEFT){
+                    mActiveAnimationInstance = mCurrentData->aniAscendingLeft;
 
-            }else if(mDirection==Direction::RIGHT){
-                mActiveAnimationInstance = mCurrentData->aniAscendingRight;
+                }else if(mDirection==Direction::RIGHT){
+                    mActiveAnimationInstance = mCurrentData->aniAscendingRight;
+                }
             }
         }
 
 
     }else if(mState==JumpMovementState::ASCENDING){
 
-
         int blockedDirections = eup.blockedDirections;
 
-        //if(mJumpMovement.jumpSpeedGenerator().distance()==0.0){
         if(mJumpMovement.velocity().y >= 0.0f){
             blockedDirections = blockedDirections & (~static_cast<int>(Direction::DOWN));   // ! clear blocked down direction when on ground so the jumping can start
         }
 
         mVelocity = mJumpMovement.updateVelocity(eup.timeStep, inputXDirection, blockedDirections);
 
-        /*
-        if(mJumpMovement.state() == JumpSpeedGenerator::State::AT_MAX_HEIGHT ||
-           mJumpMovement.state() == JumpSpeedGenerator::State::DESCENDING_HIGH_SPEED        // set on blocked ascending
-           )
-        {
-
-            setState(JumpMovementState::DESCENDING;
-
-           if(mJumpMovement.xDirection() != mDirection){
-               mDirection = mJumpMovement.xDirection();
-
-               if(mDirection==Direction::RIGHT && mCurrentData->aniDescendingRight){
-                   // start aniDescendingRight
-
-               }else if(mDirection==Direction::LEFT && mCurrentData->aniDescendingLeft){
-                   // start aniDescendingLeft
-               }
-            }
-        */
 
         if(mJumpMovement.state() == JumpSpeedGenerator::State::AT_MAX_HEIGHT){
 
@@ -817,25 +905,26 @@ b2Vec2 JumpMovementEngine::update(EngineUpdateParameters &eup)
                mDirection = mJumpMovement.xDirection();
            }
 
-           if(mDirection==Direction::RIGHT){
+           if(mCommonCustomStateEngine.activeCustomState()==nullptr){
+               if(mDirection==Direction::RIGHT){
 
-               if(mCurrentData->aniAtMaxHeightRight){
-                   mActiveAnimationInstance = mCurrentData->aniAtMaxHeightRight;
+                   if(mCurrentData->aniAtMaxHeightRight){
+                       mActiveAnimationInstance = mCurrentData->aniAtMaxHeightRight;
 
-               }else{
-                  mActiveAnimationInstance = mCurrentData->aniDescendingRight;
-               }
+                   }else{
+                      mActiveAnimationInstance = mCurrentData->aniDescendingRight;
+                   }
 
-           }else if(mDirection==Direction::LEFT){
+               }else if(mDirection==Direction::LEFT){
 
-               if(mCurrentData->aniAtMaxHeightLeft){
-                   mActiveAnimationInstance = mCurrentData->aniAtMaxHeightLeft;
+                   if(mCurrentData->aniAtMaxHeightLeft){
+                       mActiveAnimationInstance = mCurrentData->aniAtMaxHeightLeft;
 
-               }else{
-                  mActiveAnimationInstance = mCurrentData->aniDescendingLeft;
+                   }else{
+                      mActiveAnimationInstance = mCurrentData->aniDescendingLeft;
+                   }
                }
            }
-
 
         }else if(mJumpMovement.state() == JumpSpeedGenerator::State::DESCENDING_HIGH_SPEED ||
                  mJumpMovement.state() == JumpSpeedGenerator::State::DESCENDING_LOW_SPEED){        // Set on blocked ascending !
@@ -846,22 +935,26 @@ b2Vec2 JumpMovementEngine::update(EngineUpdateParameters &eup)
                 mDirection = mJumpMovement.xDirection();
             }
 
-            if(mDirection==Direction::RIGHT){
-                mActiveAnimationInstance = mCurrentData->aniDescendingRight;
+            if(mCommonCustomStateEngine.activeCustomState()==nullptr){
+                if(mDirection==Direction::RIGHT){
+                    mActiveAnimationInstance = mCurrentData->aniDescendingRight;
 
-            }else if(mDirection==Direction::LEFT){
-                mActiveAnimationInstance = mCurrentData->aniDescendingLeft;
+                }else if(mDirection==Direction::LEFT){
+                    mActiveAnimationInstance = mCurrentData->aniDescendingLeft;
+                }
             }
 
 
         }else if(mJumpMovement.xDirection() != mDirection){
             mDirection = mJumpMovement.xDirection();
 
-            if(mDirection==Direction::RIGHT){
-                mActiveAnimationInstance = mCurrentData->aniAscendingRight;
+            if(mCommonCustomStateEngine.activeCustomState()==nullptr){
+                if(mDirection==Direction::RIGHT){
+                    mActiveAnimationInstance = mCurrentData->aniAscendingRight;
 
-            }else if(mDirection==Direction::LEFT){
-                 mActiveAnimationInstance = mCurrentData->aniAscendingLeft;
+                }else if(mDirection==Direction::LEFT){
+                     mActiveAnimationInstance = mCurrentData->aniAscendingLeft;
+                }
             }
         }
 
@@ -878,6 +971,10 @@ b2Vec2 JumpMovementEngine::update(EngineUpdateParameters &eup)
 
         if(mJumpMovement.state() == JumpSpeedGenerator::State::ON_GROUND){
 
+            //----
+            mCommonCustomStateEngine.reset();   // finish any running custom state
+
+            //----
             if(mDirection==Direction::RIGHT){
                 if(mCurrentData->aniLandingRight){
                     setState(JumpMovementState::LANDING);
@@ -913,16 +1010,56 @@ b2Vec2 JumpMovementEngine::update(EngineUpdateParameters &eup)
             setState(JumpMovementState::LANDED);
             mStateEllapsedTimeS = 0.0f;
         }
-
-
     }
 
     mDirectionSignal.setValue_onNextFrame(static_cast<int>(mDirection));
+
 
     //---
     updateAnimationPlayer();
 
     return mVelocity;
+
+}
+
+
+void JumpMovementEngine::manageCustomStates(EngineUpdateParameters &eup)
+{
+
+
+    CustomStateStatus status = mCommonCustomStateEngine.update(eup, static_cast<int>(mState));
+
+    if(status==CustomStateStatus::CUSTOM_STATE_ENDED){
+
+        if(mState==JumpMovementState::TAKING_OFF){
+            if(mDirection==Direction::LEFT){
+                mActiveAnimationInstance = mCurrentData->aniTakeOffLeft;
+            }else if(mDirection==Direction::RIGHT){
+                mActiveAnimationInstance = mCurrentData->aniTakeOffRight;
+            }
+
+        }else if(mState==JumpMovementState::ASCENDING){
+            if(mDirection==Direction::LEFT){
+                mActiveAnimationInstance = mCurrentData->aniAscendingLeft;
+            }else if(mDirection==Direction::RIGHT){
+                mActiveAnimationInstance = mCurrentData->aniAscendingRight;
+            }
+
+        }else if(mState==JumpMovementState::DESCENDING){
+            if(mDirection==Direction::RIGHT){
+                mActiveAnimationInstance = mCurrentData->aniDescendingRight;
+            }else if(mDirection==Direction::LEFT){
+                mActiveAnimationInstance = mCurrentData->aniDescendingLeft;
+            }
+
+        }else if(mState==JumpMovementState::LANDING){
+            if(mDirection==Direction::RIGHT){
+                mActiveAnimationInstance = mCurrentData->aniLandingRight;
+            }else if(mDirection==Direction::LEFT){
+                mActiveAnimationInstance = mCurrentData->aniLandingLeft;
+            }
+        }
+    }
 
 }
 
@@ -998,15 +1135,15 @@ void JumpMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, Par
 
                 if(signalName=="START_JUMP"){
                     //_signalQuery.mSignal = d.startJump.mSignal;
-                    _psp.obtainValue(_signalQuery, d.startJump.mSignal);
+                    _psp.obtainValue(_signalQuery, d.startJump.signal());
 
                 }else if(signalName=="MOVE_LEFT"){
                     //_signalQuery.mSignal = d.moveLeft.mSignal;
-                    _psp.obtainValue(_signalQuery, d.moveLeft.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveLeft.signal());
 
                 }else if(signalName=="MOVE_RIGHT"){
                     //_signalQuery.mSignal = d.moveRight.mSignal;
-                    _psp.obtainValue(_signalQuery, d.moveRight.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveRight.signal());
 
                 }else if(signalName=="DISABLED"){
                     //_signalQuery.mSignal = &d.sigDisabled;
@@ -1017,14 +1154,15 @@ void JumpMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, Par
             }
         }
 
-        if(_signalQuery.mSignal){
+        if(_signalQuery.signal()){
             return;
         }
     }
 
 
     if(signalName=="STATE"){
-        _psp.obtainValue(_signalQuery, &mSigState, &gJumpMovementStateNamedValues);
+
+        _psp.obtainValue(_signalQuery, &mSigState);
 
         /*
         _signalQuery.mSignal = &mSigState;
@@ -1041,7 +1179,7 @@ void JumpMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, Par
         */
     }
 
-    if(_signalQuery.mSignal==nullptr &&_setErrorMessage){
+    if(_signalQuery.signal()==nullptr &&_setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
@@ -1071,7 +1209,7 @@ void JumpMovementEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, 
     }
 
 
-    if(_signalSetter.mSignal==nullptr &&_setErrorMessage){
+    if(_signalSetter.signal()==nullptr &&_setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting it!");
     }
 

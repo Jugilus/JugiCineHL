@@ -34,8 +34,7 @@ struct SceneLogicStateCfg : public LogicStateCfg
 
     std::string compound;
     std::string component;
-
-
+    std::vector<std::string> components;
 };
 
 

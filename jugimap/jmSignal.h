@@ -1,7 +1,7 @@
 #ifndef JUGIMAP_SIGNAL_H
 #define JUGIMAP_SIGNAL_H
 
-
+#include <memory>
 #include <vector>
 #include <bitset>
 #include <type_traits>
@@ -23,6 +23,7 @@ enum class SignalType
     FLOAT,
     BITSET,
     STRING,
+    BASE_OBJECT,
     UNKNOWN
 
 };
@@ -30,59 +31,22 @@ enum class SignalType
 
 class SignalUpdater;
 class TextStreamWriter;
-//class SignalCallback;;
 class Signal;
-
-//class BoolSignalCallback;
-//class IntSignalCallback;
-//class FloatSignalCallback;
-
-//class IntSignal;
-//class FloatSignal;
-//class BitsetSignal;
-//class StringSignal;
+class ItemData;
+class Item;
+class BaseObject;
 
 
 
 
 
 
-/*
-class SignalCallback
+struct SignalID
 {
-public:
-
-    enum class CallFrom
-    {
-        SIGNAL_SET,
-        SIGNAL_SETTER_SET
-    };
-
-    SignalCallback(){}
-    SignalCallback(CallFrom _callFrom) : mCallFrom(_callFrom){}
-
-    void setCallFrom(CallFrom _callFrom){ mCallFrom = _callFrom; }
-    CallFrom callFrom(){ return mCallFrom; }
-
-    virtual ~SignalCallback(){}
-    virtual void onSetBySignalSetter(BoolSignal *_signal, bool _value){}
-    virtual void onSetBySignalSetter(IntSignal *_signal, int _value){}
-    virtual void onSetBySignalSetter(FloatSignal *_signal, float _value){}
-    virtual void onSetBySignalSetter(BitsetSignal *_signal, unsigned int _flags, bool _flagsState){}
-    virtual void onSetBySignalSetter(StringSignal *_signal, const std::string &_value){}
-    //virtual void onSetBySignalSetter(Signal *_signal){}
-
-    virtual void onSignalSet(BoolSignal *_signal){}
-    virtual void onSignalSet(IntSignal *_signal){}
-    virtual void onSignalSet(FloatSignal *_signal){}
-    virtual void onSignalSet(BitsetSignal *_signal, unsigned int _flags){}
-    virtual void onSignalSet(StringSignal *_signal){}
-
-private:
-    CallFrom mCallFrom = CallFrom::SIGNAL_SETTER_SET;
-
+    //static const unsigned char UPDATED_BOOL_SIGNAL = 1;
+    static const unsigned char UPDATED_ON_SIGNAL_QUERY = 2;
 };
-*/
+
 
 
 class SignalCallback
@@ -90,77 +54,84 @@ class SignalCallback
 public:
     virtual ~SignalCallback(){}
 
-    virtual bool onSetBySignalSetter(Signal *_signal){return true;}
-    virtual bool onSignalSet(Signal *_signal){return true;}
+    virtual bool onSetBySignalSetter(Signal *_signal){ return true; }
+    virtual bool onSignalSet(Signal *_signal){ return true; }
+
+    virtual bool onDataChanged(ItemData *_data){ return true; }
+    virtual bool onChildItemChanged(Item *_parentItem, Item *addedChildItem, Item *removedChildItem, Item *newSelectedItem){ return true; }
+
+
 };
 
 
 //---------------------------------------------------------------------------
+
 /*
-class SignalCallback
+struct NamedValue
 {
-public:
-    virtual ~SignalCallback() = 0;
 
-    virtual void onSetBySignalSetter(Signal *_signal, bool _value){}
-    virtual void onSignalSet(Signal *_signal){}
-};
+    NamedValue(const std::string &_name, SignalType _type) : name(_name), type(_type){}
 
-
-class BoolSignalCallback : public SignalCallback
-{
-public:
-
-    virtual ~BoolSignalCallback(){}
-    virtual void onSetBySignalSetter(BoolSignal *_signal, bool _value){}
-    virtual void onSignalSet(BoolSignal *_signal){}
-
-};
-
-
-class IntSignalCallback : public SignalCallback
-{
-public:
-
-    virtual ~IntSignalCallback(){}
-    virtual void onSetBySignalSetter(IntSignal *_signal, int _value){}
-    virtual void onSignalSet(IntSignal *_signal){}
-
-};
-
-
-class FloatSignalCallback : public SignalCallback
-{
-public:
-
-    virtual ~FloatSignalCallback(){}
-    virtual void onSetBySignalSetter(FloatSignal *_signal, float _value){}
-    virtual void onSignalSet(FloatSignal *_signal){}
-
-};
-
-
-class BitsetSignalCallback : public SignalCallback
-{
-public:
-
-    virtual ~BitsetSignalCallback(){}
-    virtual void onSetBySignalSetter(BitsetSignal *_signal, unsigned int _value){}
-    virtual void onSignalSet(BitsetSignal *_signal){}
-
-};
-
-
-class StringSignalCallback : public SignalCallback
-{
-public:
-
-    virtual ~StringSignalCallback(){}
-    virtual void onSetBySignalSetter(StringSignal *_signal, const std::string & _value){}
-    virtual void onSignalSet(StringSignal *_signal){}
-
+    std::string name;
+    SignalType type;
 };
 */
+
+
+template< typename T>
+struct ExtNamedValue
+{
+    ExtNamedValue(const std::string &_name, T _value) : name(_name), value(_value) {}
+
+    std::string name;
+    T value = 0;
+};
+
+
+typedef ExtNamedValue<bool> NamedBoolValue;
+typedef ExtNamedValue<int> NamedIntValue;
+typedef ExtNamedValue<float> NamedFloatValue;
+typedef ExtNamedValue<unsigned int> NamedBitflagsValue;
+typedef ExtNamedValue<std::string> NamedStringValue;
+
+
+//---------------------------------------------------------------------------
+
+struct SignalExtraData
+{
+
+    virtual ~SignalExtraData(){}
+
+};
+
+
+template< typename T>
+struct TSignalExtraData : public SignalExtraData
+{
+
+    ~TSignalExtraData() override
+    {
+        if(namedValues && namedValuesOwned){
+            delete namedValues;
+        }
+    }
+
+
+    T minValue;
+    T maxValue;
+    std::vector<std::pair<std::string, T>> *namedValues;          // LINK or OWNED
+    bool namedValuesOwned = false;
+
+};
+
+
+typedef TSignalExtraData<bool> BoolSignalExtraData;
+typedef TSignalExtraData<int> IntSignalExtraData;
+typedef TSignalExtraData<float> FloatSignalExtraData;
+typedef TSignalExtraData<unsigned int> BitflagsSignalExtraData;
+typedef TSignalExtraData<std::string> StringSignalExtraData;
+
+
 
 //---------------------------------------------------------------------------
 
@@ -195,7 +166,14 @@ public:
     SignalCallback *callback(){ return mCallback; }
     void setCallback(SignalCallback * _callback ){ mCallback = _callback; }
 
+    BaseObject *dataObject(){ return mDataObject; }
+    void setDataObject(BaseObject* _dataObject){ mDataObject = _dataObject; }
+
+
+    //SignalExtraData *extraData(){ return mExtraData; }
+
     bool stored_forValueSetOnNextFrame(){ return mStored_forValueSetOnNextFrame; }
+
 
 protected:
     SignalType mType = SignalType::UNKNOWN;
@@ -206,6 +184,9 @@ protected:
     bool mStored_forPostUpdate = false;
 
     SignalCallback * mCallback = nullptr;           // LINK
+    //SignalExtraData * mExtraData = nullptr;
+
+    BaseObject * mDataObject = nullptr;
 
 };
 
@@ -233,7 +214,9 @@ private:
 extern SignalUpdater gSignalUpdater;
 
 
-template <typename T, SignalType _type>
+
+
+template <typename T, SignalType _type, typename TSignalExtraData>
 class NumSignal : public Signal
 {
 public:
@@ -245,6 +228,13 @@ public:
     NumSignal(const std::string &_name, T _value, unsigned char _id=0) : Signal(_name, _type, _id) ,
        mValue(_value), mPreviousValue(_value), mDefaultValue(_value), mValue_setOnNextFrame()
     {
+    }
+
+    ~NumSignal()
+    {
+        if(mExtraData){
+            delete mExtraData;
+        }
     }
 
 
@@ -343,6 +333,24 @@ public:
     }
 
 
+
+    //SignalExtraData *extraData(){ return mExtraData; }
+
+
+    void setExtraData(TSignalExtraData* _extraData){ mExtraData = _extraData; }
+
+    TSignalExtraData * createExtraData()
+    {
+        if(mExtraData){
+            delete mExtraData;
+        }
+        mExtraData = new TSignalExtraData();
+        return mExtraData;
+    }
+
+    TSignalExtraData *extraData(){ return mExtraData; }
+
+
     /*
     std::string getDbgInfo() override
     {
@@ -376,27 +384,21 @@ private:
     //---
     bool mValueChanged = false;
 
-    //SignalCallback *mCallback = nullptr;
 
+    TSignalExtraData *mExtraData = nullptr;
+
+    //SignalCallback *mCallback = nullptr;
 
 };
 
 
 
-typedef NumSignal<bool, SignalType::BOOL> BoolSignal;
-typedef NumSignal<int, SignalType::INT> IntSignal;
-typedef NumSignal<float, SignalType::FLOAT> FloatSignal;
-
-
-
+typedef NumSignal<bool, SignalType::BOOL, BoolSignalExtraData> BoolSignal;
+typedef NumSignal<int, SignalType::INT, IntSignalExtraData> IntSignal;
+typedef NumSignal<float, SignalType::FLOAT, FloatSignalExtraData> FloatSignal;
 
 
 //typedef NumSignal<std::string, SignalType::STRING> StringSignal;
-
-
-
-
-
 
 
 /*
@@ -698,12 +700,14 @@ private:
 */
 
 
+
 class BitsetSignal : public Signal
 {
 public:
     BitsetSignal(unsigned char _id=0) : Signal("", SignalType::BITSET, _id){}
     BitsetSignal(const std::string &_name, unsigned int _value, unsigned char _id=0);
 
+    ~BitsetSignal();
 
     bool active(unsigned int _value){ return (mValue & _value)!=0; }
     bool activeStarted(unsigned int _value){ return (mValueStarted & _value)!=0; }
@@ -732,7 +736,13 @@ public:
     void setDefaultValue(unsigned int _value);
 
 
-    //BitsetSignalCallback *callback(){ return mCallback; }
+    //BitflagsSignalExtraData *extraData(){ return mExtraData; }
+    void setExtraData(BitflagsSignalExtraData* _extraData){ mExtraData = _extraData; }
+
+    BitflagsSignalExtraData * createExtraData();
+
+    BitflagsSignalExtraData *extraData(){ return mExtraData; }
+
     //void setCallback(BitsetSignalCallback * _callback ){ mCallback = _callback; }
 
 
@@ -749,6 +759,8 @@ private:
     unsigned char mNumBits = 32;
 
     //BitsetSignalCallback *mCallback = nullptr;
+
+    BitflagsSignalExtraData * mExtraData = nullptr;
 
 };
 
@@ -860,6 +872,13 @@ public:
     }
 
 
+    //StringSignalExtraData *extraData(){ return static_cast<StringSignalExtraData*>(mExtraData); }
+    void setExtraData(StringSignalExtraData* _extraData){ mExtraData = _extraData; }
+
+    StringSignalExtraData * createExtraData();
+    StringSignalExtraData * extraData(){ return mExtraData; }
+
+
     /*
     std::string getDbgInfo() override
     {
@@ -889,9 +908,168 @@ private:
     //---
     bool mValueChanged = false;
 
-    //StringSignalCallback *mCallback = nullptr;
+    //---
+    StringSignalExtraData *mExtraData = nullptr;
 
 };
+
+
+
+class ObjectSignal : public Signal
+{
+public:
+    ObjectSignal(unsigned char _id=0) : Signal("", SignalType::BASE_OBJECT, _id),
+      mValue(), mPreviousValue(), mDefaultValue(), mValue_setOnNextFrame()
+    {
+    }
+
+    ObjectSignal(const std::string &_name, BaseObject *_value, unsigned char _id=0) : Signal(_name, SignalType::STRING, _id) ,
+       mValue(_value), mPreviousValue(_value), mDefaultValue(_value), mValue_setOnNextFrame()
+    {
+    }
+
+
+    bool active(BaseObject* _value){ return _value==mValue; }
+    bool activeStarted(BaseObject* _value){ return _value==mValue && mValueChanged==true; }
+    bool activeEnded(BaseObject* _value){ return _value==mPreviousValue && mValueChanged==true; }
+    bool activeChanged(BaseObject* _value){ return activeStarted(_value) || activeEnded(_value); }
+    bool notActive(BaseObject* _value){ return _value!=mValue; }
+
+
+    BaseObject*  value(){ return mValue; }
+    BaseObject*  previousValue(){ return mPreviousValue; }
+    bool valueChanged(){ return mValueChanged; }
+    BaseObject*  defaultValue(){ return mDefaultValue; }
+    BaseObject*  value_setOnNextFrame(){ return mValue_setOnNextFrame;}
+    BaseObject*  value_currentOrNextIfSet(){return (mStored_forValueSetOnNextFrame)? mValue_setOnNextFrame : mValue; }
+
+
+    void setValue(BaseObject* _value)
+    {
+
+        if(_value == mValue) return;
+
+        mValue = _value;
+        mValueChanged = (mValue != mPreviousValue);
+
+        if(mStored_forPostUpdate==false){
+            gSignalUpdater.addSignal_forPostUpdate(this);
+            mStored_forPostUpdate = true;
+        }
+
+        if(mCallback){
+            mCallback->onSignalSet(this);
+        }
+
+    }
+
+
+    void setValue_onNextFrame(BaseObject* _value)
+    {
+
+        if(_value == mValue && mStored_forValueSetOnNextFrame==false) return;
+
+        mValue_setOnNextFrame = _value;
+
+        if(mStored_forValueSetOnNextFrame==false){
+            gSignalUpdater.addSignal_forValueSetOnNextFrame(this);
+            mStored_forValueSetOnNextFrame = true;
+        }
+
+    }
+
+
+    void reset(BaseObject* _value)
+    {
+        mValue = mPreviousValue = _value;
+        mValue_setOnNextFrame = _value;
+        mValueChanged = false;
+    }
+
+
+    void reset()
+    {
+        reset(mDefaultValue);
+    };
+
+
+    void setDefaultValue(BaseObject* _value)
+    {
+        mDefaultValue = _value;
+    }
+
+
+    void postUpdate()
+    {
+        mPreviousValue = mValue;
+        mValueChanged = false;
+    }
+
+
+    void _setValue(BaseObject* _value)
+    {
+        mValue = _value;
+    }
+
+
+    void _setPreviousValue(BaseObject* _value)
+    {
+        mPreviousValue = _value;
+    }
+
+
+    void _setValueChanged(bool _valueChanged)
+    {
+        mValueChanged = _valueChanged;
+    }
+
+
+
+private:
+
+    BaseObject* mValue = nullptr;
+    BaseObject* mPreviousValue = nullptr;
+    BaseObject* mDefaultValue = nullptr;
+    BaseObject* mValue_setOnNextFrame = nullptr;
+
+    //---
+    bool mValueChanged = false;
+
+
+};
+
+
+
+
+
+
+
+/*
+class SignalParsingStorage
+{
+public:
+
+    void setIdentifiers(std::vector<SignalIdentifier>* _identifiers);
+
+    void add(Signal* _signal, const std::string &_identifier, std::vector<std::pair<std::string, unsigned int>> *_extra);
+
+    void getParsingInfo(SignalParsingInfo &_signalInfo, const std::string &_signaId, const std::string &_extraId, bool _setErrorMessage=true);
+    void getParsingInfo(SignalParsingInfo &_signalInfo, const std::string &_path, bool _setErrorMessage=true);
+
+    Signal *getSignal(int _index);
+
+    std::vector<Signal*>& signals(){ return mSignals; }
+    std::vector<SignalIdentifier>* identifiers(){ return mIdentifiers; }
+
+
+private:
+    std::vector<Signal*>mSignals;                       // LINKS
+    std::vector<SignalIdentifier>*mIdentifiers = nullptr;     // LINK
+
+};
+
+*/
+
 
 
 

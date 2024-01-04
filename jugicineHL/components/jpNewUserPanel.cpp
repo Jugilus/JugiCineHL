@@ -80,7 +80,8 @@ bool NewUserPanel::initConnections(PlayedScene *_scene)
     mUsedWidgets.push_back(mTextInput);
 
     //---
-    mTSActiveUserName = dynamic_cast<GTextSprite*>(mParentPlayerScene->gfxObjectsGroup()->getGfxObject("activeUserName"));
+    //mTSActiveUserName = dynamic_cast<GTextSprite*>(mParentPlayerScene->gfxObjectsGroup()->getGfxObject("activeUserName"));
+    mTSActiveUserName = dynamic_cast<GTextSprite*>(mParentPlayerScene->gfxObjectStorage().getObject("activeUserName"));
     if(mTSActiveUserName==nullptr){
         return false;
     }

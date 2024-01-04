@@ -14,6 +14,7 @@
 #include "jmVectorShape.h"
 #include "jmUtilities.h"
 
+#include "jpAttribute.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
 #include "jpUtilities.h"
@@ -97,11 +98,16 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
                 }else if(attributeName=="fixedRotation"){
                     fixedRotation = a.as_bool(true);
 
+                }else if(attributeName=="spawnedOnce"){
+                    std::string sValue = a.as_string();
+                    if(StdString::boolValue(sValue, spawnedOnce)==false){
+                        return false;
+                    }
+
                 }else{
 
                     dbgSystem.addMessage("Unknown attribute '" + attributeName + "' in node '" + childNodeName +"' !");
                     return false;
-
                 }
             }
 
@@ -118,7 +124,12 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
                 return false;
             }
 
+        }else if(childNodeName=="spawner"){
 
+            mSpawnerCfg.reset(new SpawnerCfg());
+            if(mSpawnerCfg->initCfg(nChild)==false){
+                return false;
+            }
 
         }else if(childNodeName=="behaviorController"){
 
@@ -192,6 +203,63 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
                 }
             }
 
+        }else if(childNodeName=="attributeSet"){
+
+            for(pugi::xml_attribute a = nChild.first_attribute(); a; a = a.next_attribute()){
+                std::string attributeName =std::string(a.name());
+
+                if(attributeName=="use"){
+                    std::string sAttributeSetCfg = a.as_string("");
+                    attributeSetCfg = entitySystem->attributeSetsStorage().getObject(sAttributeSetCfg);
+                    if(attributeSetCfg==nullptr){
+                        return false;
+                    }
+
+                }else{
+
+                    dbgSystem.addMessage("Unknown attribute '" + attributeName + "' in node '" + childNodeName +"' !");
+                    return false;
+
+                }
+            }
+
+
+        }else if(childNodeName=="attributeController"){
+
+
+            attributeControllerCfg = entitySystem->attributeControllersCfgsStorage().addObject(new AttributeLogicStateCfg(name + " attribute controller"));
+            if(attributeControllerCfg->initCfg(nChild)==false){
+                return false;
+            }
+
+                //if(enginesControllerCfg->childStatesCfgs().empty()){
+                //    dbgSystem.addMessage("Entity '" + name + "' has no defined behavior controller states!");
+                //    return false;
+                //}
+                //startState = enginesControllerCfg->statesCfgs.front().name;
+
+
+        }else if(childNodeName=="add"){
+
+            for(pugi::xml_attribute a = nChild.first_attribute(); a; a = a.next_attribute()){
+                std::string attributeName =std::string(a.name());
+
+                if(attributeName=="item"){
+                    item = a.as_string("");
+
+                }else if(attributeName=="animation"){
+                    animation = a.as_string("");
+
+                }else if(attributeName=="relativeMover"){
+                    relativeMover = a.as_string("");
+
+                }else{
+
+                    dbgSystem.addMessage("Unknown attribute '" + attributeName + "' in node '" + childNodeName +"' !");
+                    return false;
+
+                }
+            }
 
         }else{
             dbgSystem.addMessage("Unknown node '" + childNodeName + "' !");
@@ -200,13 +268,12 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
     }
 
 
-
     //--- custom sensor cfgs
+
+    EntityCategoriesGroup & ecg = entitySystem->entityCategoriesGroup();
+
     if(enginesControllerCfg){
-
-        EntityCategoriesGroup & ecg = entitySystem->entityCategoriesGroup();
         MovementEnginesManager *mem = entitySystem->movementEnginesManager();
-
 
         bool hasGroundMovement = false;
         bool addCeilingSensor = false;
@@ -264,6 +331,14 @@ bool SourceEntityCfg::initCfg(const pugi::xml_node &_node)
         // .
 
 
+    }
+
+    if(category->role==EntityRole::SOLID_BULLET){
+        EntityCategory *ec = ecg.getEntityCategory(EntityRole::SOLID_BULLET_SENSOR);
+        if(ec==nullptr){
+            return false;
+        }
+        mCustomSensorSourceEntityCfgs.push_back(CustomSensorSourceEntityCfg(ec, 0, false));
     }
 
 
@@ -354,6 +429,133 @@ b2Vec2 PathwaySourceEntityCfg::getContactPointOffsetForActor(const std::string &
     }
 
     return b2Vec2{0.0f, 0.0f};
+}
+
+
+//=============================================================================================
+
+
+bool SpawnerCfg::initCfg(const pugi::xml_node &_node)
+{
+
+    for(pugi::xml_node n = _node.first_child(); n; n = n.next_sibling()){
+        std::string nodeName = std::string(n.name());
+
+        if(nodeName=="spawned"){
+
+            spawnedEntitiesCfgs.push_back(SpawnedEntityCfg());
+            SpawnedEntityCfg &seCfg = spawnedEntitiesCfgs.back();
+
+            for(pugi::xml_attribute a = n.first_attribute(); a; a = a.next_attribute()){
+                std::string attributeName =std::string(a.name());
+
+                if(attributeName=="entity"){
+                    seCfg.spawnedSourceEntityName = a.as_string("");
+
+                }else if(attributeName=="engine"){
+                    seCfg.spawnerEngineName = a.as_string("");
+
+                }else if(attributeName=="xOffsetP"){
+                    std::string sValue = a.as_string();
+                    int value = 0;
+                    if(StdString::integerNumber(sValue, value)==false){
+                        return false;
+                    }
+                    //seCfg.offsetM.x = gWorldInfo.pixelsToMeters(value);
+                    seCfg.offsetP.x = value;
+
+                /*
+                }else if(attributeName=="xOffsetM"){
+                    std::string sValue = a.as_string();
+                    if(StdString::floatNumber(sValue, seCfg.offsetM.x)==false){
+                        return false;
+                    }
+                */
+
+                }else if(attributeName=="yOffsetP"){
+                    std::string sValue = a.as_string();
+                    int value = 0;
+                    if(StdString::integerNumber(sValue, value)==false){
+                        return false;
+                    }
+                    //seCfg.offsetM.y = gWorldInfo.pixelsToMeters(value);
+                    seCfg.offsetP.y = value;
+
+                /*
+                }else if(attributeName=="yOffsetM"){
+                    std::string sValue = a.as_string();
+                    if(StdString::floatNumber(sValue, seCfg.offsetM.y)==false){
+                        return false;
+                    }
+                */
+
+                }else{
+
+                    dbgSystem.addMessage("Unknown attribute '" + attributeName + "' in node '" + std::string(n.name()) + "' !");
+                    return false;
+                }
+            }
+
+        }else{
+
+            dbgSystem.addMessage("Unknown node '" + nodeName + "' !");
+            return false;
+        }
+    }
+
+
+    return true;
+
+}
+
+
+bool SpawnerCfg::initConnections(PlayedScene *_scene, EntitySystem *_entitySystem)
+{
+
+    for(SpawnedEntityCfg &o : spawnedEntitiesCfgs){
+        o.spawnedSourceEntity = _entitySystem->sourceEntitiesGroup()->getSourceEntitiy(o.spawnedSourceEntityName);
+        if(o.spawnedSourceEntity==nullptr){
+            return false;
+        }
+
+        o.spawnerMovementEngineCfg = _entitySystem->movementEnginesManager()->getMovementEngineCfg(o.spawnerEngineName);
+        if(o.spawnerMovementEngineCfg==nullptr){
+            return false;
+        }
+    }
+
+    return true;
+
+}
+
+
+Vec2f SpawnerCfg::getOffsetForSpawnedEntity(SourceEntity* _sourceEntity, MovementEngineCfg *_currentEngineCfg, Direction _direction)
+{
+
+    for(SpawnedEntityCfg &o : spawnedEntitiesCfgs){
+        if(o.spawnerMovementEngineCfg && o.spawnerMovementEngineCfg!=_currentEngineCfg){
+            continue;
+        }
+
+        if(o.spawnedSourceEntity == _sourceEntity){
+            if(o.spawnerDirection==Direction::INHERITED){
+
+                if(_direction==Direction::RIGHT){
+                    return o.offsetP;
+
+                }else if(_direction==Direction::LEFT){
+                    return Vec2f(-o.offsetP.x, o.offsetP.y);
+
+                }
+
+            }else if(o.spawnerDirection == _direction){
+                return o.offsetP;
+            }
+
+        }
+    }
+
+    return Vec2f{0.0f, 0.0f};
 }
 
 
@@ -599,6 +801,10 @@ bool SourceEntitiesGroup::createSingleSpriteSourceEntities(PlayedScene *_scene)
         SourceEntity *se = getSourceEntitiy(actorName, false);
         if(se){
             continue;       // source entity was already created for this source sprite
+        }
+
+        if(actorName=="iCoin"){
+            DummyFunction();
         }
 
         SourceEntityCfg *cfg = getSourceEntitiyCfg(actorName);

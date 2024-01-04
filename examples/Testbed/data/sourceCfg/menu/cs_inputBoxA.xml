@@ -8,6 +8,5 @@
         <sprite type="Text" name="inputBoxA_text" nameID="text" x="37" y="36" text="inputBoxA_text"/>
     </layer>
     <parameter name="wName" value="textInputA" type="string"/>
-    <parameter name="widgetNew" value="textInput" type="string"/>
-    <constantParameter name="widget" value="textInput" type="string"/>
+    <parameter name="widget" value="textInput" type="string"/>
 </composedSprite>

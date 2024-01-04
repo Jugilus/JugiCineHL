@@ -132,6 +132,19 @@ CompositeSprite* Layer::rootCompositeSprite()
 
 
 
+Map *Layer::rootMap()
+{
+
+    CompositeSprite* rootCS = rootCompositeSprite();
+    if(rootCS){
+        return rootCS->parentLayer()->map();
+    }
+
+    return mMap;
+
+}
+
+
 
 }
 

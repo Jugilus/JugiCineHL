@@ -4,8 +4,11 @@
         <sceneMap name="platformerA_background" mapFile="data/maps/platformer_background-0a.jma" mapType="Parallax" worldSceneMapForParrallaxMap="platformerA">
             <viewport xMinRel="0" xMinAbs="0" xMaxRel="100" xMaxAbs="0" yMinRel="0" yMinAbs="0" yMaxRel="100" yMaxAbs="0"/>
         </sceneMap>
-        <sceneMap name="platformerA" mapFile="data/maps/platformer-DemoTest-2.jma" mapType="World">
-            <viewport xMinRel="0" xMinAbs="0" xMaxRel="100" xMaxAbs="0" yMinRel="0" yMinAbs="0" yMaxRel="100" yMaxAbs="0"/>
+        <sceneMap name="platformerA" mapFile="data/maps/platformer-DemoTest-3m.jma" mapType="World">
+            <viewport xMinRel="0" xMinAbs="0" xMaxRel="100" xMaxAbs="0" yMinRel="0" yMinAbs="0" yMaxRel="100" yMaxAbs="-89"/>
+        </sceneMap>
+        <sceneMap name="platformerA_topOverlay" mapFile="data/maps/platformer_topOverlay-1b.jma" mapType="Screen">
+            <viewport xMinRel="0" xMinAbs="0" xMaxRel="100" xMaxAbs="0" yMinRel="100" yMinAbs="-89" yMaxRel="100" yMaxAbs="0"/>
         </sceneMap>
     </sceneMaps>
 
@@ -26,8 +29,13 @@
             <setNextState state="sceneLogic/platformer" />
         </do>
     -->
-        <a doSetState="sceneLogic" />
-        <a doSetState="sceneLogic:platformer" />
+        <!--<aCo doSetTableNewItemsGroup="inventory, ENTITY:hero/itemsInventory" />-->
+        <aCo doAssignItemToWidget="scoreSlot = ENTITY:hero/" />
+        <aCo doAssignItemToWidget="inventory = ENTITY:hero/itemsInventory" />
+        <aCo doAssignItemToWidget="coinsSlot = ENTITY:hero/coins" />
+
+        <aCo doSetState="sceneLogic" />
+        <aCo doSetState="sceneLogic:platformer" />
     </init>
     
 
@@ -38,11 +46,76 @@
 
     <update>
         <state name="sceneLogic">   <!-- a root logic state is required -->
-    
-            <state name="platformer" component="entitySystem" >
+            <state name="platformer" components="entitySystem, guiSystem:inventory|coinsSlot|scoreSlot" >
                 <!-- <use components="entitySystem" />-->
             </state>
         </state>
     </update>
+
+
+    <guiSystem>
+        <widgets>
+            <button name="inventorySlotButton">
+                <parameters checkable="TRUE" />
+                <style sprite="background" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                    <state_CHECKED frame="1" />
+                </style>
+            </button>
+
+            <slotNew name="inventorySlot">
+                <selectingButton button="inventorySlotButton" buttonSprite="slot" />
+                <components>
+                    <spritePosMarker pointShape="itemIcon" layer="iconLayer" itemSpriteData="icon"/>
+                    <textSprite sprite="amount" itemData="amount"/>
+                </components>
+            </slotNew>
+
+            <button name="inventoryIncrementButton">
+                <style sprite="incrementButton" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                </style>
+            </button>
+
+            <button name="inventoryDecrementButton">
+                <style sprite="decrementButton" property="FRAME">
+                    <state_NORMAL frame="0" />
+                    <state_NORMAL_OVER frame="1" />
+                </style>
+            </button>
+
+            <!--
+            <slider name="inventorySlider">
+                <parameters min="0.0" max="1.0" />
+                <incrementButton sprite="incrementButton" button="inventoryIncrementButton" />
+                <decrementButton sprite="decrementButton" button="inventoryDecrementButton"/>
+            </slider>
+        -->
+
+            <tableNew name="inventoryTable">
+                <parameters scrollingLayout="HORIZONTAL" numRows="1" numColumns="5" spacingColumns="0" spacingRows="0" />
+                <slot sprite="slot" slot="inventorySlot"/>
+                <!--<tableSlider sprite="slider" slider="inventorySlider" />-->
+                <directSlotNavigation signal="INPUT:COMMAND/selectItem" style="VIA_DIRECTION_COMMANDS" /> 
+            </tableNew>
+
+
+            <slotNew name="coinsSlot">
+                <!--<selectingButton button="inventorySlotButton" buttonSprite="slot" />-->
+                <components>
+                    <textSprite sprite="amount" itemData="worth"/>
+                </components>
+            </slotNew>
+
+            <slotNew name="scoreSlot">
+                <components>
+                    <textSprite sprite="score" itemData="score" numDigits="6" />
+                </components>
+            </slotNew>
+        </widgets>
+    </guiSystem>
  
+
 </scene>

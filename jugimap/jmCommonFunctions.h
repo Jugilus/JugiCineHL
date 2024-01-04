@@ -241,11 +241,7 @@ inline float DistanceTwoPoints(const T1& P1, const T2& P2)
     return std::sqrt((P2.x-P1.x)*(P2.x-P1.x) + (P2.y-P1.y)*(P2.y-P1.y));
 }
 
-//template<typename T>
-//inline float DistanceTwoPoints(T x1, T y1, T x2, T y2)
-//{
-//    return std::sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
-//}
+
 inline float DistanceTwoPoints(float x1, float y1, float x2, float y2)
 {
     return std::sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
@@ -349,7 +345,7 @@ inline double distToLine(const T& P, const T& P1, const T& P2)
 template<typename T>
 inline double AngleBetweenTwoPoints(const T& P1, const T& P2)
 {
-    return atan2(P2.y-P1.y, P2.x-P1.x) * 180.0/mathPI;
+    return std::atan2(P2.y-P1.y, P2.x-P1.x) * 180.0/mathPI;
 }
 
 
@@ -372,6 +368,9 @@ bool Intersect(const T& PA1, const T& PA2, const T& PB1, const T& PB2, T& PResul
     return true;
 
 }
+
+
+Vec2f normalVectorFromAngleDeg(float angleDeg);
 
 
 
@@ -576,12 +575,19 @@ inline bool isWhiteSpaceCharacter(char c) { return (c==' ' || c== '\n' || c=='\r
 
 struct StdString
 {
+    static std::string dummyString;
 
     static float stringToFloat(const std::string &_text, float defNumber);
 
+    static bool floatNumber(const std::string &text, float & number, bool setErrorMessage=true);
+
     static int stringToInt(const std::string &_text, int defNumber);
 
+    static bool integerNumber(const std::string &text, int &number, bool setErrorMessage=true);
+
     static bool stringToBool(const std::string &_text);
+
+    static bool boolValue(const std::string &text, bool &value, bool setErrorMessage=true);
 
     static std::string baseNameFromFilePath(const std::string &path);
 

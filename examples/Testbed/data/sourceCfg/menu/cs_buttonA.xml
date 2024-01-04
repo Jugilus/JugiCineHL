@@ -8,5 +8,5 @@
     </layer>
     <parameter name="changeChildText" value="string value" type="string"/>
     <parameter name="wName" value="value" type="string"/>
-    <parameter name="widgetNew" value="panelButton" type="string"/>
+    <parameter name="widget" value="panelButton" type="string"/>
 </composedSprite>

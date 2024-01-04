@@ -6,6 +6,7 @@
 
 #include "jpQueries.h"
 #include "jpComponentsCommon.h"
+#include "jpObjectParser.h"
 #include "jpVariables.h"
 
 

@@ -26,7 +26,7 @@
 #include "gui/widgets/jpGuiTable.h"
 
 #include "jpObjectFactory.h"
-#include "jpLogicState.h"
+#include "jpLogicAction.h"
 #include "jpUtilities.h"
 #include "jpItemSlotData.h"
 #include "jpItemsCommon.h"
@@ -49,6 +49,53 @@ ItemsGroup::~ItemsGroup()
     //    delete mDynamicItem;
     //}
 
+}
+
+
+bool ItemsGroup::initCfg(const pugi::xml_node &_node)
+{
+
+    dbgSystem.addMessage("Load items group '" + mName + "'");
+
+
+    for(pugi::xml_node n = _node.first_child(); n; n = n.next_sibling()){
+
+        std::string nodeName = std::string(n.name());
+
+        if(nodeName=="item"){
+
+            GameItem *i = new GameItem(n.attribute("name").as_string(""), this);
+
+            for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
+                std::string childModeName = std::string(nChild.name());
+
+                if(childModeName=="guiSlotData"){
+
+                    i->mGuiSlotData = new GuiSlotData(i);
+
+                    if(i->mGuiSlotData->createSlotDataComponents(nChild) == false){
+                        return false;
+                    }
+
+                }else if(childModeName=="onSelected"){
+
+                    //i->mDoOnSelected = new Action("onItemSelected", i);
+                    //if(i->mDoOnSelected->createCommands_anonymousAction(nChild) == false){
+                    //    return false;
+                    //}
+
+                }
+            }
+
+            //---
+            mItems.push_back(i);
+
+        }
+    }
+
+    dbgSystem.removeLastMessage();
+
+    return true;
 }
 
 

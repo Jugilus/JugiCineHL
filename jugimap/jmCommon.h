@@ -192,6 +192,8 @@ struct PathPoint : public Vec2f
     bool smoothCorner = false;
 
     PathPoint():Vec2f(){}
+    PathPoint(float _x, float _y) : Vec2f(_x, _y){}
+    PathPoint(float _x, float _y, float _distance) : Vec2f(_x, _y), distance(_distance) {}
     PathPoint(Vec2f _p): Vec2f(_p){}
     PathPoint(Vec2f _p, float _distance) : Vec2f(_p), distance(_distance) {}
     PathPoint(Vec2f _p, float _distance, bool _smoothCorner) : Vec2f(_p), distance(_distance), smoothCorner(_smoothCorner){}

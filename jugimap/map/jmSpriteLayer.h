@@ -115,7 +115,7 @@ public:
     /// Remove and delete the given sprite *_sprite* from this sprite layer. The sprite must belong to this layer otherwise it will not be deleted.
     void deleteSprite(Sprite* _sprite);
 
-    void takeSprite(Sprite* _sprite);
+    bool takeSprite(Sprite* _sprite);
 
 
 

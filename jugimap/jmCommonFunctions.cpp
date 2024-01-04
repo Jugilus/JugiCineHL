@@ -23,6 +23,7 @@
 
 #include "ncine/SceneNode.h"
 #include "jmCommonFunctions.h"
+#include "jmSystem.h"
 
 
 
@@ -276,8 +277,22 @@ bool Point_in_polygon(double tx, double ty, const std::vector<Vec2f> &Poly)
 }
 
 
+
+Vec2f normalVectorFromAngleDeg(float angleDeg)
+{
+
+    float x = std::cos(angleDeg*mathPI/180.0f);
+    float y = std::sin(angleDeg*mathPI/180.0f);
+    return Vec2f(x,y);
+
+}
+
+
+
 // STRING
 //----------------------------------------------------------------------------------------------
+
+std::string StdString::dummyString;
 
 
 std::string StdString::baseNameFromFilePath(const std::string &path)
@@ -468,12 +483,40 @@ float StdString::stringToFloat(const std::string &_text, float defNumber)
 
     try{
          n = std::stof(_text);
+    }
 
-    } catch( ... )
-    {
+    //catch (const std::invalid_argument & e) {
+    //    DummyFunction();
+    //}
+    catch( ... ){
+        n = defNumber;
     }
 
     return n;
+}
+
+
+bool StdString::floatNumber(const std::string &text, float &number, bool setErrorMessage)
+{
+
+
+    try{
+         number = std::stof(text);
+    }
+
+    //catch (const std::invalid_argument & e) {
+    //    DummyFunction();
+    //}
+    catch( ... ){
+
+        if(setErrorMessage){
+            dbgSystem.addMessage("Error parsing float number from string '" + text + "'!");
+        }
+
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -485,9 +528,14 @@ int StdString::stringToInt(const std::string &_text, int defNumber)
 
     try{
          n = std::stoi(_text);
+    }
 
-    } catch( ... )
-    {
+    //catch (const std::invalid_argument & e) {
+    //    DummyFunction();
+    //}
+
+    catch( ... ){
+        n = defNumber;
     }
 
     return n;
@@ -495,13 +543,59 @@ int StdString::stringToInt(const std::string &_text, int defNumber)
 }
 
 
+bool StdString::integerNumber(const std::string &text, int &number, bool setErrorMessage)
+{
+
+    try{
+         number = std::stoi(text);
+    }
+
+    //catch (const std::invalid_argument & e) {
+    //    DummyFunction();
+    //}
+
+    catch( ... ){
+
+        if(setErrorMessage){
+            dbgSystem.addMessage("Error parsing integer from string '" + text +"'!");
+        }
+
+        return false;
+    }
+
+    return true;
+
+}
+
+
+
 bool StdString::stringToBool(const std::string &_text)
 {
 
-    if(_text=="true" || _text=="1"){
+    if(_text=="true" || _text=="TRUE" || _text=="on" || _text=="ON"  || _text=="1"){
         return true;
     }
 
+    return false;
+
+}
+
+
+bool StdString::boolValue(const std::string &text, bool &value, bool setErrorMessage)
+{
+
+    if(text=="true" || text=="TRUE" || text=="on" || text=="ON"  || text=="1"){
+        value = true;
+        return true;
+
+    }else if(text=="false" || text=="FALSE" || text=="off" || text=="OFF"  || text=="0"){
+        value = false;
+        return true;
+    }
+
+    if(setErrorMessage){
+        dbgSystem.addMessage("Error parsing boolen value from string '" + text + "'!");
+    }
     return false;
 
 }

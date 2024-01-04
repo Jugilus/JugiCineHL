@@ -7,6 +7,11 @@
 #include "jmApp.h"
 #include "jpGlobal.h"
 
+namespace pugi {
+class xml_node;
+}
+
+
 namespace jugimap{
 
 
@@ -77,6 +82,28 @@ private:
     std::unique_ptr<SignalParserManager>mSignalParserManager;
 
     std::string mMessage;
+
+
+
+    enum class LoadedContent
+    {
+        SCENE_MAPS,
+        SCENE_COUNT_OBJECTS,
+        SCENE_LOGIC_DATA
+    };
+
+
+    bool loadApplicationBaseParameters(std::string &dbgText);
+
+    bool loadScene(PlayedScene* _scene, LoadedContent _loadedContent);
+
+    bool rootNodeName_xml(const std::string &filePath, std::string &rootNodeName, std::string &rootNodeAttribute);
+
+    bool loadApplication_LanguagesCfg(pugi::xml_node &node, std::string &dbgText);
+
+    bool loadApplicationGlobalData();
+
+
 };
 
 

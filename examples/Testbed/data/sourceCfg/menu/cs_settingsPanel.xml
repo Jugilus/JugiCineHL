@@ -193,27 +193,27 @@
         <sprite type="Composite" name="buttonB" x="265" y="27">
             <parameter name="changeChildText" value="label,gui,22" type="string"/>
             <parameter name="wName" value="mainMenu" type="string"/>
-            <parameter name="widgetNew" value="mainMenuButton" type="string"/>
+            <parameter name="widget" value="mainMenuButton" type="string"/>
         </sprite>
         <sprite type="Text" name="buttonC" x="40" y="450" text="LANGUAGE " book="gui" segment="21">
             <parameter name="wName" value="languageSettings" type="string"/>
             <parameter name="wExclusiveGroup" value="settingsSections" type="string"/>
-            <parameter name="widgetNew" value="panelButton_var2" type="string"/>
+            <parameter name="widget" value="panelButton_var2" type="string"/>
         </sprite>
         <sprite type="Text" name="buttonC" x="40" y="480" text="CONTROLS " book="gui" segment="20">
             <parameter name="wName" value="inputSettings" type="string"/>
             <parameter name="wExclusiveGroup" value="settingsSections" type="string"/>
-            <parameter name="widgetNew" value="panelButton_var2" type="string"/>
+            <parameter name="widget" value="panelButton_var2" type="string"/>
         </sprite>
         <sprite type="Text" name="buttonC" x="40" y="510" text="AUDIO " book="gui" segment="19">
             <parameter name="wName" value="audioSettings" type="string"/>
             <parameter name="wExclusiveGroup" value="settingsSections" type="string"/>
-            <parameter name="widgetNew" value="panelButton_var2" type="string"/>
+            <parameter name="widget" value="panelButton_var2" type="string"/>
         </sprite>
         <sprite type="Text" name="buttonC" x="40" y="540" text="GRAPHICS " book="gui" segment="18">
             <parameter name="wName" value="graphicsSettings" type="string"/>
             <parameter name="wExclusiveGroup" value="settingsSections" type="string"/>
-            <parameter name="widgetNew" value="panelButton_var2" type="string"/>
+            <parameter name="widget" value="panelButton_var2" type="string"/>
         </sprite>
         <sprite type="Text" name="Window Title" x="15" y="619" text="Settings " book="gui" segment="16"/>
     </layer>
@@ -221,51 +221,51 @@
         <sprite type="Text" name="commonBold" x="360" y="510" text="Full Screen " book="gui" segment="23"/>
         <sprite type="Standard" name="checkBoxA" x="325" y="525">
             <parameter name="wName" value="fullScreen" type="string"/>
-            <parameter name="widgetNew" value="checkBoxA" type="string"/>
+            <parameter name="widget" value="checkBoxA" type="string"/>
         </sprite>
     </layer>
     <layer content="Free sprites" name="audio" hidden="true">
         <sprite type="Text" name="commonBold" x="360" y="410" text="Speech " book="gui" segment="28"/>
         <sprite type="Composite" name="sliderA" x="575" y="425">
             <parameter name="wName" value="speechVolume" type="string"/>
-            <parameter name="widgetNew" value="parameterSlider" type="string"/>
+            <parameter name="widget" value="parameterSlider" type="string"/>
         </sprite>
         <sprite type="Standard" name="checkBoxA" x="325" y="425">
             <parameter name="wName" value="speechActive" type="string"/>
-            <parameter name="widgetNew" value="checkBoxA" type="string"/>
+            <parameter name="widget" value="checkBoxA" type="string"/>
         </sprite>
         <sprite type="Text" name="commonBold" x="360" y="460" text="Sfx " book="gui" segment="27"/>
         <sprite type="Standard" name="checkBoxA" x="325" y="475">
             <parameter name="wName" value="sfxActive" type="string"/>
-            <parameter name="widgetNew" value="checkBoxA" type="string"/>
+            <parameter name="widget" value="checkBoxA" type="string"/>
         </sprite>
         <sprite type="Composite" name="sliderA" x="575" y="475">
             <parameter name="wName" value="sfxVolume" type="string"/>
-            <parameter name="widgetNew" value="parameterSlider" type="string"/>
+            <parameter name="widget" value="parameterSlider" type="string"/>
         </sprite>
         <sprite type="Text" name="commonBold" x="360" y="510" text="Music " book="gui" segment="26"/>
         <sprite type="Composite" name="sliderA" x="575" y="525">
             <parameter name="wName" value="musicVolume" type="string"/>
-            <parameter name="widgetNew" value="parameterSlider" type="string"/>
+            <parameter name="widget" value="parameterSlider" type="string"/>
         </sprite>
         <sprite type="Standard" name="checkBoxA" x="325" y="525">
             <parameter name="wName" value="musicActive" type="string"/>
-            <parameter name="widgetNew" value="checkBoxA" type="string"/>
+            <parameter name="widget" value="checkBoxA" type="string"/>
         </sprite>
     </layer>
     <layer content="Free sprites" name="input">
         <sprite type="Composite" name="buttonA" x="297" y="131">
             <parameter name="changeChildText" value="label, gui, 33" type="string"/>
             <parameter name="wName" value="defaultInputAssignment" type="string"/>
-            <parameter name="widgetNew" value="panelButton" type="string"/>
+            <parameter name="widget" value="panelButton" type="string"/>
         </sprite>
         <sprite type="Composite" name="inputKeysSelector" x="200" y="150">
             <parameter name="wName" value="inputButtonsEditor" type="string"/>
-            <parameter name="widgetNew" value="inputButtonsEditor" type="string"/>
+            <parameter name="widget" value="inputButtonsEditor" type="string"/>
         </sprite>
         <sprite type="Composite" name="controlerSelector" x="275" y="550">
             <parameter name="wName" value="inputDeviceSelector" type="string"/>
-            <parameter name="widgetNew" value="inputDeviceSelectorTable" type="string"/>
+            <parameter name="widget" value="inputDeviceSelectorTable" type="string"/>
         </sprite>
     </layer>
     <layer content="Free sprites" name="language" hidden="true">
@@ -273,7 +273,7 @@
         <sprite type="Standard" name="radioBoxA" x="325" y="525">
             <parameter name="wName" value="languageButton" type="string"/>
             <parameter name="wExclusiveGroup" value="languageButtons" type="string"/>
-            <parameter name="widgetNew" value="radioBoxA" type="string"/>
+            <parameter name="widget" value="radioBoxA" type="string"/>
         </sprite>
     </layer>
     <vectorLayer name="Vector Layer 1">

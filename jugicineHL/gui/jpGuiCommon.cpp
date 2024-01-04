@@ -5,6 +5,7 @@
 #include "jmSystem.h"
 
 #include "jpQueries.h"
+#include "jpObjectParser.h"
 #include "widgets/jpGuiBar.h"
 #include "widgets/jpGuiTextInput.h"
 #include "widgets/jpGuiButton.h"

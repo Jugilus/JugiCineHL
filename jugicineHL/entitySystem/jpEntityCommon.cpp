@@ -203,7 +203,7 @@ void TwoEntitiesContact::onEndContact(b2Fixture *_fixtureA, int _childIndexA, b2
 EntityContactSignal::EntityContactSignal(const EntityShape &_entityShapeA, const EntityShape &_entityShapeB) :
     mTwoEntitiesContact(_entityShapeA, _entityShapeB)
 {
-    setId(static_cast<unsigned int>(SignalID::ENTITY_CONTACT_TRIGGER));
+    //setId(static_cast<unsigned int>(SignalID::ENTITY_CONTACT_TRIGGER));
 
     dbgName = _entityShapeA.entity->sourceEntity()->sourceEntityCfg()->name + "  -  " + _entityShapeB.entity->sourceEntity()->sourceEntityCfg()->name;
 
@@ -212,7 +212,7 @@ EntityContactSignal::EntityContactSignal(const EntityShape &_entityShapeA, const
 
 ContactTrigger::ContactTrigger()
 {
-    setId(static_cast<unsigned int>(SignalID::CONTACT_TRIGGER));
+    //setId(static_cast<unsigned int>(SignalID::CONTACT_TRIGGER));
 }
 
 
@@ -472,13 +472,69 @@ EntityContactSignal * ContactTrigger::findEntityContactSignalWithEntityRoleA(Ent
 }
 
 
+void ContactTrigger::clearContact(Entity *_entity, bool clearThisFromContacted)
+{
+
+    Entity *thisEntity = nullptr;
+
+    for(int i = int(mContactedEntitiesTriggers.size())-1; i>=0; i-- ){
+        EntityContactSignal *ect = mContactedEntitiesTriggers[i];
+        Entity *e = ect->mTwoEntitiesContact.entityShapeB().entity;
+        if(e == _entity){
+            thisEntity =  ect->mTwoEntitiesContact.entityShapeA().entity;
+            mContactedEntitiesTriggers.erase(mContactedEntitiesTriggers.begin()+i);
+            delete ect;
+        }
+    }
+
+    if(thisEntity && clearThisFromContacted){
+        _entity->contactTrigger().clearContact(thisEntity, false);
+    }
+
+
+}
+
+
+void ContactTrigger::clearContacts()
+{
+
+    for(int i = int(mContactedEntitiesTriggers.size())-1; i>=0; i-- ){
+        EntityContactSignal *ect = mContactedEntitiesTriggers[i];
+        Entity *eThis = ect->mTwoEntitiesContact.entityShapeA().entity;
+        Entity *e = ect->mTwoEntitiesContact.entityShapeB().entity;
+
+        mContactedEntitiesTriggers.erase(mContactedEntitiesTriggers.begin()+i);
+        delete ect;
+
+        e->contactTrigger().clearContact(eThis, false);
+        mNumContacted = 0;
+    }
+}
+
+
 //--------------------------------------------------------------------------------------------
+/*
+
+void ContactedEntities::addEntity(Entity *_entity)
+{
+
+    if(StdVector::contains(mEntities, _entity)==false){
+        mEntities.push_back(_entity);
+    }else{
+        DummyFunction();
+
+    }
+}
+
+*/
 
 
 FilteredContactSignal::FilteredContactSignal(ContactTrigger* _contactTrigger) : mContactTrigger(_contactTrigger)
 {
-    setId(static_cast<unsigned int>(SignalID::FILTERED_CONTACT_TRIGGER));
+    //setId(static_cast<unsigned int>(SignalID::FILTERED_CONTACT_TRIGGER));
     categoriesBits = std::numeric_limits< unsigned int>::max();
+
+    setDataObject(&mContactedEntities);
 
 }
 
@@ -486,14 +542,12 @@ FilteredContactSignal::FilteredContactSignal(ContactTrigger* _contactTrigger) : 
 void FilteredContactSignal::preUpdate_postContactTriggerUpdate()
 {
 
+    mContactedEntities.entities().clear();
+
     EntityContactSignal *filteredEntityContactTrigger = nullptr;
 
     for(EntityContactSignal *ect : mContactTrigger->contactedEntitiesTriggers()){
 
-        //unsigned int bits = contactedEntity->sourceEntity()->sourceEntityCfg()->category->contactBits;
-        //if((bits & categoriesBits)==0){
-        //    continue;
-        //}
         if(categoriesBits != 0){
             bool categoryFound = false;
             if(ect->mTwoEntitiesContact.dualFixtures().size()==2){
@@ -515,6 +569,7 @@ void FilteredContactSignal::preUpdate_postContactTriggerUpdate()
 
         Entity * contactedEntity = ect->mTwoEntitiesContact.entityShapeB().entity;
 
+        /*
         if(sourceEntities.empty()==false){
             bool sourceEntityFound = false;
             for(SourceEntity *se : sourceEntities){
@@ -540,20 +595,46 @@ void FilteredContactSignal::preUpdate_postContactTriggerUpdate()
                 continue;
             }
         }
+        */
 
         filteredEntityContactTrigger = ect;
-        break;
+
+        //---
+        if(filteredEntityContactTrigger->active(true)){
+            //setValue(filteredEntityContactTrigger->active(true));
+            //mSigContact.setValue(true);
+
+            //if(StdVector::contains(mFilteredContactedEntities, contactedEntity)==false){
+            //    mFilteredContactedEntities.push_back(contactedEntity);
+            //}else{
+            //    DummyFunction();
+            //}
+
+            if(StdVector::contains(mContactedEntities.entities(), contactedEntity)==false){
+                mContactedEntities.entities().push_back(contactedEntity);
+            }else{
+                DummyFunction();
+            }
+        }
+
+        //break;
     }
 
+
+
     //---
-    if(filteredEntityContactTrigger){
-        //_setActive(filteredEntityContactTrigger->active());
-        //_setActiveStarted(filteredEntityContactTrigger->activeStarted());
-        //_setActiveEnded(filteredEntityContactTrigger->activeEnded());
-        setValue(filteredEntityContactTrigger->active(true));
+    //if(filteredEntityContactTrigger){
+    //if(mFilteredContactedEntities.empty()==false){
+    if(mContactedEntities.entities().empty()==false){
+        setValue(true);
+        //setValue(filteredEntityContactTrigger->active(true));
+
+        //mSigContact.setValue(filteredEntityContactTrigger->active(true));
 
     }else{
         reset();
+        //mSigContact.reset();
+
     }
 
 }
@@ -562,10 +643,11 @@ void FilteredContactSignal::preUpdate_postContactTriggerUpdate()
 void FilteredContactSignal::postUpdateSignals()
 {
 
-    postUpdate();
+    //postUpdate();
+
+    //mSigContact.postUpdate();
 
 }
-
 
 
 
@@ -582,7 +664,6 @@ FilteredContactSignalsStorage::~FilteredContactSignalsStorage()
 }
 
 
-
 FilteredContactSignal* FilteredContactSignalsStorage::getNewFilteredContactSignal(ContactTrigger* _contactTrigger)
 {
 
@@ -590,7 +671,6 @@ FilteredContactSignal* FilteredContactSignalsStorage::getNewFilteredContactSigna
     return mFilteredContactSignals.back();
 
 }
-
 
 
 void FilteredContactSignalsStorage::preUpdate_postContactSignalsPreUpdate()
@@ -644,6 +724,7 @@ int CustomEntityIntBitsSignal::value(const std::string &valueName)
     return 0;
 }
 */
+
 
 //=================================================================================================
 
@@ -847,7 +928,6 @@ bool EntityCategoriesGroup::initCfg(const pugi::xml_node &_node)
 }
 
 
-
 bool EntityCategoriesGroup::addEntityCategory(const std::string &_name, EntityRole _role, EntityCategory::ShapeRole _shapeRole)
 {
 
@@ -897,6 +977,18 @@ bool EntityCategoriesGroup::addEntityCategory(const std::string &_name, EntityRo
         ec.sensor = true;
         ec.mB2BodyType = b2BodyType::b2_staticBody;
 
+    }else if(_role==EntityRole::BULLET){
+        ec.sensor = true;
+        ec.mB2BodyType = b2BodyType::b2_dynamicBody;
+
+    }else if(_role==EntityRole::SOLID_BULLET){
+        ec.sensor = false;
+        ec.mB2BodyType = b2BodyType::b2_dynamicBody;
+
+    }else if(_role==EntityRole::SOLID_BULLET_SENSOR){
+        ec.sensor = true;
+        ec.mB2BodyType = b2BodyType::b2_dynamicBody;
+
     }else if(_role==EntityRole::GROUND_SENSOR){
         ec.sensor = true;
         ec.mB2BodyType = b2BodyType::b2_dynamicBody;
@@ -910,6 +1002,7 @@ bool EntityCategoriesGroup::addEntityCategory(const std::string &_name, EntityRo
         ec.mB2BodyType = b2BodyType::b2_dynamicBody;
 
     }else if(_role==EntityRole::OBJECT_WITHOUT_SHAPE){
+
 
     }else{
         assert(false);
@@ -970,6 +1063,157 @@ EntityCategory *EntityCategoriesGroup::getEntityCategory(EntityRole _entityBodyK
 }
 
 
+//==========================================================================================
+
+
+ContactedEntityObtainer::ContactedEntityObtainer(Entity* _contactingEntity, SourceEntity* _sourceEntity, EntityCategory* _entityCategoryB) :
+    mEntityA(_contactingEntity),
+    mSourceEntityB(_sourceEntity),
+    mEntityCategoryB(_entityCategoryB)
+{
+
+}
+
+
+OriginObjectObtainer* ContactedEntityObtainer::copy()
+{
+    return new ContactedEntityObtainer(*this);
+}
+
+
+BaseObject * ContactedEntityObtainer::findOriginObject()
+{
+
+
+    if(mSourceEntityB && mSourceEntityB->name()=="iGamepad"){
+        DummyFunction();
+    }
+
+    for(EntityContactSignal *ect : mEntityA->contactTrigger().contactedEntitiesTriggers()){
+
+
+        Entity * contactedEntity = ect->mTwoEntitiesContact.entityShapeB().entity;
+
+        if(contactedEntity->sourceEntity() == mSourceEntityB){
+            return contactedEntity;
+        }
+
+        if(contactedEntity->sourceEntity()->sourceEntityCfg()->category == mEntityCategoryB){
+            return contactedEntity;
+        }
+
+    }
+
+    return nullptr;
+
+}
+
+
+//==========================================================================================
+
+
+ContactSignalObtainer::ContactSignalObtainer(Entity* _contactingEntity, SourceEntity* _sourceEntity, EntityCategory* _entityCategoryB, bool _anyContact) :
+    SignalObtainer(_contactingEntity),
+    mSourceEntityB(_sourceEntity),
+    mEntityCategoryB(_entityCategoryB),
+    mAnyContact(_anyContact)
+{
+
+}
+
+SignalObtainer *ContactSignalObtainer::copy()
+{
+    return new ContactSignalObtainer(*this);
+}
+
+
+Signal * ContactSignalObtainer::findSignal()
+{
+
+
+    Entity* entityA = static_cast<Entity*>(mSignalOriginObject);
+
+
+    if(mAnyContact){
+        return &entityA->contactTrigger();
+    }
+
+    for(EntityContactSignal *ect : entityA->contactTrigger().contactedEntitiesTriggers()){
+
+
+        Entity * contactedEntity = ect->mTwoEntitiesContact.entityShapeB().entity;
+
+        if(contactedEntity->sourceEntity() == mSourceEntityB){
+            return ect;
+        }
+
+        if(mEntityCategoryB){
+            if(contactedEntity->sourceEntity()->sourceEntityCfg()->category == mEntityCategoryB){
+                return ect;
+            }
+
+            // check for non-body fixtures identified via category
+            for(TwoEntitiesContact::DualFixture &df : ect->mTwoEntitiesContact.dualFixtures()){
+
+                b2Fixture * contactedFixture = df.fixtureB;
+                FixtureUserData *fud = reinterpret_cast<FixtureUserData *>(contactedFixture->GetUserData().pointer);
+                if(fud->category==mEntityCategoryB){
+                    return ect;
+                }
+            }
+        }
+    }
+
+    return nullptr;
+
+}
+
+
+//==========================================================================================
+
+
+ContactSignalObtainer_multi::ContactSignalObtainer_multi(Entity* _contactingEntity) :
+    SignalObtainer(_contactingEntity)
+{
+
+}
+
+
+SignalObtainer *ContactSignalObtainer_multi::copy()
+{
+    return new ContactSignalObtainer_multi(*this);
+}
+
+
+Signal * ContactSignalObtainer_multi::findSignal()
+{
+
+
+    Entity* entityA = static_cast<Entity*>(mSignalOriginObject);
+
+
+    for(EntityContactSignal *ect : entityA->contactTrigger().contactedEntitiesTriggers()){
+
+
+        Entity * contactedEntity = ect->mTwoEntitiesContact.entityShapeB().entity;
+
+        if(StdVector::contains(mSourceEntitiesB, contactedEntity->sourceEntity())==true){
+            return ect;
+        }
+
+        if(StdVector::contains(mEntityCategories, contactedEntity->sourceEntity()->sourceEntityCfg()->category)==true){
+            return ect;
+        }
+
+    }
+
+    return nullptr;
+
+}
+
+
+
+
 
 /*
 
@@ -1017,7 +1261,7 @@ int EntityCategoriesGroup::getContactCategoryBit(const std::string &_name, bool 
 //--------------------------------------------------------------------------------------------
 
 
-
+/*
 void EDirection::setCardinalDirection(Direction _direction)
 {
 
@@ -1045,6 +1289,44 @@ void EDirection::setOpposingDirection()
 
 
 }
+
+*/
+
+
+
+SpawnerAndSpawnedGroup::~SpawnerAndSpawnedGroup()
+{
+    for(SpawnerAndSpawned *sas : mSpawnersAndSpawned){
+        delete sas;
+    }
+}
+
+
+SpawnerAndSpawned* SpawnerAndSpawnedGroup::acquire(Entity *_spawnerEntity, SourceEntity *_spawnedSourceEntity)
+{
+
+    for(SpawnerAndSpawned *sas : mSpawnersAndSpawned){
+        if(sas->spawnerEntity==nullptr){
+            sas->spawnerEntity = _spawnerEntity;
+            sas->spawnedSourceEntity = _spawnedSourceEntity;
+            return sas;
+        }
+    }
+
+    mSpawnersAndSpawned.push_back(new SpawnerAndSpawned(_spawnerEntity, _spawnedSourceEntity));
+
+    return mSpawnersAndSpawned.back();
+
+}
+
+
+void SpawnerAndSpawnedGroup::release(SpawnerAndSpawned *_sas)
+{
+    _sas->spawnerEntity = nullptr;
+    _sas->spawnedSourceEntity = nullptr;
+
+}
+
 
 }
 

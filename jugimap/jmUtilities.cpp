@@ -1,6 +1,7 @@
 #include <string>
 #include <sstream>
 #include "ncine/SceneNode.h"
+#include "jmSystem.h"
 #include "jmGlobal.h"
 #include "jmParameter.h"
 #include "jmSourceContainers.h"
@@ -507,6 +508,21 @@ void CollectSpritesWithSourceSpriteName(SpriteLayer *spriteLayer, std::vector<Sp
 
 //--- FIND VECTOR SHAPE
 
+
+VectorShape* FindVectorShapeWithName(Scene *scene, const std::string &name)
+{
+
+    for(SceneMap *sm : scene->sceneMaps()){
+        VectorShape *vs = FindVectorShapeWithName(sm->map(), name);
+        if(vs){
+            return vs;
+        }
+    }
+
+    return nullptr;
+}
+
+
 VectorShape* FindVectorShapeWithName(Map *map, const std::string &name)
 {
 
@@ -802,13 +818,18 @@ void CollectSourceSpritesWithConstParameter(SourceGroup *sourceGroup, std::vecto
 }
 
 
-SourceSprite* FindSourceSpriteWithName(const std::string &name)
+SourceSprite* FindSourceSpriteWithName(const std::string &name, bool setErrorMessage)
 {
+
     for(SourceGroup * sg : sourceLibrary.sourceGroups()){
         SourceSprite* ss = FindSourceSpriteWithName(sg, name);
         if(ss){
             return ss;
         }
+    }
+
+    if(setErrorMessage){
+        dbgSystem.addMessage("Source sprite '" + name +"' not found!");
     }
 
     return nullptr;

@@ -133,6 +133,8 @@ public:
 
     CompositeSprite* rootCompositeSprite();
 
+    Map* rootMap();
+
 
     ///\brief Returns true if this layer is stored in a Map; if it's stored in a ComposedSprite returns false.
     //bool isMapLayer(){ return (mParentComposedSprite==nullptr); }

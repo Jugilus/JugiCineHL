@@ -153,7 +153,18 @@
         <sprite name="doorB_greenDoor" imageName="doorB__greenDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
         <sprite name="doorB_yellowDoor" imageName="doorB__yellowDoor" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
         <sprite name="doorB_blueKey" imageName="doorB__blueKey" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
-        <sprite name="doorB_greenKey" imageName="doorB__greenKey" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
+        <sprite name="doorB_greenKey" imageName="doorB__greenKey" imageFile="data/graphics/platformer/platformerSpritesA.png">
+            <parameter name="entity" value="iGreenKey" type="string"/>
+            <timelineAnimation name="ani" loopCount="forever" scaleDuration="0.8">
+                <animationMember>
+                    <animationTrack kind="Translation">
+                        <key time="0" easing="Ease start and end quad" dx="0" dy="0"/>
+                        <key time="800" easing="Ease start and end quad" dx="0" dy="12"/>
+                        <key time="1600" easing="Ease start and end quad" dx="0" dy="0"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
         <sprite name="doorB_keyYellow" imageName="doorB__yellowKey" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
         <sprite name="doorB_partAbove" imageName="doorB__partAbove" imageFile="data/graphics/platformer/platformerSpritesA.png"/>
         <sprite name="fancyPlatformA_body" imageName="fancyPlatformA__body" imageFile="data/graphics/platformer/platformerSpritesA.png"/>

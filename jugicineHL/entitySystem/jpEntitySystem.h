@@ -6,9 +6,11 @@
 #include <vector>
 
 #include "jmStorage.h"
+#include "jmSignal.h"
 
 #include "jpGlobal.h"
 #include "components/jpComponentsCommon.h"
+#include "jpEntityPhase.h"
 #include "jpEntityCommon.h"
 
 
@@ -21,6 +23,7 @@ namespace jugimap{
 class CompositeSprite;
 class PlayedScene;
 struct EntityLogicStateCfg;
+struct AttributeLogicStateCfg;
 class Entity;
 //class TasksHandlersCfgsGroup;
 //class TasksCfgsGroup;
@@ -36,6 +39,10 @@ class MovementEnginesManager;
 class TaskEngineManager;
 class SourceEntitiesGroup;
 class EntitySignalsParser;
+struct AttributeSetCfg;
+class EntityPhasesHandler;
+//struct EntityPhasesHandlerCfg;
+
 
 
 class EntitySystem : public Component
@@ -56,8 +63,18 @@ public:
     void onStateEnded() override;
 
 
+    //void spawnEntity(SourceEntity* _sourceEntity);
+    //void removeEntity(Entity* _entity);
+
+
+    std::vector<Entity*> & entities(){ return mEntities; }
+
     SimpleStorage<EntityLogicStateCfg*> & enginesControllersCfsStorage() { return mEnginesControllersCfgsStorage; }
     SimpleStorage<EntityLogicStateCfg*> & taskControllersCfgsStorage() { return mTaskControllerCfgsStorage; }
+
+    SimpleStorage<AttributeSetCfg*> & attributeSetsStorage(){ return mAttributeSetsStorage; }
+    SimpleStorage<AttributeLogicStateCfg*> & attributeControllersCfgsStorage() { return mAttributeControllersCfgsStorage; }
+
 
     ExtraGroundTypesCfgsGroup * extraGroundTypesCfgsGroup() { return mExtraGroundTypesCfgsGroup.get(); }
 
@@ -65,8 +82,10 @@ public:
 
     Entity* getActor(const std::string &_name, bool _setErrorMessage = true);
     Entity* getActor(const std::string &_name, int _linkedGroupID, int _linkedEntityID, CompositeSprite *_rootCompositeSprite, bool _setErrorMessage = true);
-    void collectActorsViaLinkedGroupID(std::vector<Entity*> &_collectedActors, const std::string &_name, int _linkedGroupID);
+    //void collectActorsViaLinkedGroupID(std::vector<Entity*> &_collectedActors, const std::string &_name, int _linkedGroupID);
 
+    SignalIdentifiers &signalIdentifiers() { return mSignalIdentifiers; }
+    SignalStorage* signalStorage() override { return &mSignalStorage;}
 
     PlayedScene* parentPlayerScene(){ return mParentPlayerScene; }
 
@@ -86,6 +105,15 @@ public:
 
     EntitySignalsParser *entitySignalsParser(){ return mEntitySignalsParser; }
 
+    SourceEntitiesGroup* sourceEntitiesGroup(){ return mSourceEntitiesGroup.get(); }
+
+    EntityLifespanHandler & entityLifespanHandler(){ return mEntityLifespanHandler; }
+
+    //SimpleStorage<EntityPhasesHandler> & entityPhasesHandlerStorage(){ return mEntityPhasesHandlerStorage; }
+    //SimpleStorage<EntityPhasesHandlerCfg> & entityPhasesHandlerCfgStorage(){ return mEntityPhasesHandlerCfgStorage; }
+
+    std::vector<Entity*> & spawnedEntities(){ return mSpawnedEntities; }
+
 private:
 
 
@@ -95,12 +123,19 @@ private:
     SimpleStorage<EntityLogicStateCfg*> mEnginesControllersCfgsStorage{"EnginesControllersCfgs"};
     SimpleStorage<EntityLogicStateCfg*> mTaskControllerCfgsStorage{"TaskControllerCfgs"};
 
+    SimpleStorage<AttributeLogicStateCfg*> mAttributeControllersCfgsStorage{"AttributeControllerCfgs"};
+    SimpleStorage<AttributeSetCfg*> mAttributeSetsStorage{"AttributeSetsCfgs"};
 
-    std::unique_ptr<ExtraGroundTypesCfgsGroup>mExtraGroundTypesCfgsGroup;
+    std::unique_ptr<ExtraGroundTypesCfgsGroup> mExtraGroundTypesCfgsGroup;
     std::unique_ptr<SourceEntitiesGroup> mSourceEntitiesGroup;
 
+    //SimpleStorage<EntityPhasesHandler>mEntityPhasesHandlerStorage{"EntityPhasesHandlersStorage"};
+    //SimpleStorage<EntityPhasesHandlerCfg>mEntityPhasesHandlerCfgStorage{"EntityPhasesHandlerCfgsStorage"};
 
-    std::vector<Entity*>mActors;                                                     // OWNED
+
+
+    std::vector<Entity*>mEntities;                                                     // OWNED
+    std::vector<Entity*>mSpawnedEntities;
 
     std::unique_ptr<b2World>mB2World;
     std::unique_ptr<DebugDraw>mDebugDraw;
@@ -113,16 +148,26 @@ private:
     std::unique_ptr<MovementEnginesManager>mMovementEnginesManager;
     std::unique_ptr<TaskEngineManager>mTaskEngineManager;
 
+    EntityLifespanHandler mEntityLifespanHandler;
+
     float mTimeStepS = 1.0f / 60.0f;
     int32 mVelocityIterations = 6;
     int32 mPositionIterations = 2;
 
     EntityCategoriesGroup mContactCategories;
-
     FilteredContactSignalsStorage mFilteredContactTriggersGroup;
     EntityGroupsManager mEntityMovingGroupsManager;
 
     EntitySignalsParser *mEntitySignalsParser = nullptr;        // LINK
+
+    //----
+    ObjectSignal mSigRemoveEntity;
+    ObjectSignal mSigSpawnEntity;
+
+    SignalStorage mSignalStorage;
+    SignalIdentifiers mSignalIdentifiers;
+
+    SpawnerAndSpawnedGroup mSpawnerAndSpawnedGroup;
 
     //MovementConfigurations* mMovementConfiguration = nullptr;
 

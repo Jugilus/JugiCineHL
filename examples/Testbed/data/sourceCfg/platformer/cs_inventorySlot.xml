@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="inventorySlot" set="spritesB" tileWidth="50" tileHeight="50" nTilesX="2" nTilesY="2">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="invSlot_background" nameID="background" x="50" y="50" handleSource="true"/>
+    </layer>
+    <layer content="Free sprites" name="iconLayer"/>
+    <layer content="Free sprites" name="Layer 3">
+        <sprite type="Text" name="numOfCoins" nameID="amount" x="32" y="26" text="3"/>
+    </layer>
+    <vectorLayer name="Vector Layer 1">
+        <singlePoint points="(50,50)" nameID="itemIcon"/>
+    </vectorLayer>
+</composedSprite>

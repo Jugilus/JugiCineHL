@@ -14,6 +14,8 @@
 //#include "jmGuiBar.h"
 #include "jpSystemVarious.h"
 #include "jpQueries.h"
+#include "jpObjectParser.h"
+
 #include "jpPlayedApp.h"
 //#include "jpItemsTable.h"
 #include "jpUser.h"
@@ -787,7 +789,7 @@ void SystemSettings::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedS
     }
 
 
-    if(_signalQuery.mSignal==nullptr){
+    if(_signalQuery.signal()==nullptr){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
@@ -799,14 +801,14 @@ void SystemSettings::obtainSignal_signalSetter(SignalSetter &_signalSetter, Pars
 
     for(Signal* s : mAllSignals.objects()){
         if(s->name()==_psp.signalFullName()){
-             _signalSetter.mSignal = s;
+             _signalSetter._setSignal(s);
 
              StdVector::addElementIfNotInVector(mUsedSignals, s);
             break;
         }
     }
 
-    if(_signalSetter.mSignal==nullptr){
+    if(_signalSetter.signal()==nullptr){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 

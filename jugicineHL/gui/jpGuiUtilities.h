@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "jpGlobal.h"
+#include "jpObjectParser.h"
 #include "jpQueries.h"
 
 //#include "jpGuiCommon.h"

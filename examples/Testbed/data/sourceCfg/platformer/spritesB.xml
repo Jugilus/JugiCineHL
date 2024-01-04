@@ -3,9 +3,7 @@
     <images>
         <spriteSheetImage file="data/graphics/platformer/platformerSpritesB.png"/>
     </images>
-    <textSprites>
-        <textSprite name="score" fontName="fontBig_yellow" handle="right-top"/>
-    </textSprites>
+    <textSprites/>
     <sprites>
         <sprite name="charA">
             <image name="charA__stand-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
@@ -54,6 +52,18 @@
             <image name="charA_push-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
             <image name="charA_push-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
             <image name="charA_push_standing-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__stand_throw-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__stand_throw-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__stand_throw-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__stand_throw-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump__down_throw-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump__down_throw-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump__down_throw-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump__down_throw-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump__up_throw-jfr1" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump__up_throw-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump__up_throw-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="charA__jump__up_throw-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
             <parameter name="entity" value="hero" type="string"/>
             <frameAnimation name="standingRight" loopCount="forever" horMirror="standingLeft">
                 <frame image="charA__stand-jfr1" duration="200"/>
@@ -226,6 +236,42 @@
             <frameAnimation name="standingToLeftObject" loopCount="0" horMirror="standingToRightObject">
                 <frame image="charA_push_standing-jfr1" duration="100" xFlip="1"/>
             </frameAnimation>
+            <frameAnimation name="standingThrowingRight" loopCount="0" horMirror="standingThrowingLeft">
+                <frame image="charA__stand_throw-jfr1" duration="100"/>
+                <frame image="charA__stand_throw-jfr2" duration="100"/>
+                <frame image="charA__stand_throw-jfr3" duration="100" dataFlags="1"/>
+                <frame image="charA__stand_throw-jfr4" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingUpThrowingRight" loopCount="0" horMirror="jumpingUpThrowingLeft">
+                <frame image="charA__jump__up_throw-jfr1" duration="100"/>
+                <frame image="charA__jump__up_throw-jfr2" duration="100"/>
+                <frame image="charA__jump__up_throw-jfr3" duration="100" dataFlags="1"/>
+                <frame image="charA__jump__up_throw-jfr4" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingDownThrowingRight" loopCount="0" horMirror="jumpingDownThrowingLeft">
+                <frame image="charA__jump__down_throw-jfr1" duration="100"/>
+                <frame image="charA__jump__down_throw-jfr2" duration="100"/>
+                <frame image="charA__jump__down_throw-jfr3" duration="100" dataFlags="1"/>
+                <frame image="charA__jump__down_throw-jfr4" duration="100"/>
+            </frameAnimation>
+            <frameAnimation name="standingThrowingLeft" loopCount="0" horMirror="standingThrowingRight">
+                <frame image="charA__stand_throw-jfr1" duration="100" xFlip="1"/>
+                <frame image="charA__stand_throw-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__stand_throw-jfr3" duration="100" xFlip="1" dataFlags="1"/>
+                <frame image="charA__stand_throw-jfr4" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingUpThrowingLeft" loopCount="0" horMirror="jumpingUpThrowingRight">
+                <frame image="charA__jump__up_throw-jfr1" duration="100" xFlip="1"/>
+                <frame image="charA__jump__up_throw-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__jump__up_throw-jfr3" duration="100" xFlip="1" dataFlags="1"/>
+                <frame image="charA__jump__up_throw-jfr4" duration="100" xFlip="1"/>
+            </frameAnimation>
+            <frameAnimation name="jumpingDownThrowingLeft" loopCount="0" horMirror="jumpingDownThrowingRight">
+                <frame image="charA__jump__down_throw-jfr1" duration="100" xFlip="1"/>
+                <frame image="charA__jump__down_throw-jfr2" duration="100" xFlip="1"/>
+                <frame image="charA__jump__down_throw-jfr3" duration="100" xFlip="1" dataFlags="1"/>
+                <frame image="charA__jump__down_throw-jfr4" duration="100" xFlip="1"/>
+            </frameAnimation>
             <timelineAnimation name="turnWallSwitchRight" loopCount="0">
                 <animationMember>
                     <animationTrack kind="Translation">
@@ -300,17 +346,260 @@
         <sprite name="3partSwitch_middle" imageName="i3partSwitch__middle" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
         <sprite name="3partSwitch_left" imageName="i3partSwitch__left" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
         <sprite name="3partSwitch_right" imageName="i3partSwitch__right" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
-        <sprite name="iBoomerang" imageName="iBoomerang" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
-        <sprite name="iUmbrella" imageName="iUmbrella" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iBoomerang" imageName="iBoomerang" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iBoomerang" type="string"/>
+        </sprite>
+        <sprite name="iUmbrella" imageName="iUmbrella" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iUmbrella" type="string"/>
+            <timelineAnimation name="ani" loopCount="forever">
+                <animationMember>
+                    <animationTrack kind="Rotation">
+                        <key time="0" easing="Ease start and end quad" rotation="30"/>
+                        <key time="1000" easing="Ease start and end quad" rotation="-30"/>
+                        <key time="2000" easing="Ease start and end quad" rotation="30"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
         <sprite name="iUmbrella_inv" imageName="iUmbrella_inv" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
         <sprite name="iBoomerang_inv" imageName="iBoomerang_inv" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
-        <sprite name="iGamepad" imageName="iGamepad" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iGamepad" imageName="iGamepad" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iGamepad" type="string"/>
+        </sprite>
         <sprite name="iGamepad_inv" imageName="iGamepad_inv" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
-        <sprite name="iShuriken" imageName="iShuriken" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iShuriken" imageName="iShuriken" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iShuriken" type="string"/>
+        </sprite>
         <sprite name="iShuriken_inv" imageName="iShuriken_inv" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
-        <sprite name="iStarA" imageName="iStarA" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
-        <sprite name="iStarB" imageName="iStarB" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
-        <sprite name="iCoinA" imageName="iCoinA-jfr1" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iStarA" imageName="iStarA" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iStarA" type="string"/>
+            <timelineAnimation name="ani" loopCount="forever">
+                <animationMember>
+                    <animationTrack kind="Rotation">
+                        <key time="0" easing="Linear" rotation="0"/>
+                        <key time="4000" easing="Linear" rotation="360"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
+        <sprite name="iStarB" imageName="iStarB" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iStarB" type="string"/>
+        </sprite>
+        <sprite name="iCoinA" imageName="iCoinA-jfr1" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iSmallCoin" type="string"/>
+        </sprite>
         <sprite name="iHeart" imageName="iHeart" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="invSlider_decrementButton">
+            <image name="invArrowLeft-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="invArrowLeft-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+        </sprite>
+        <sprite name="invSlider_incrementButton">
+            <image name="invArrowRight-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="invArrowRight-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+        </sprite>
+        <sprite name="vanishEffectA">
+            <image name="vanishEffectA-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="vanishEffectA-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="vanishEffectA-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="vanishEffectA-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="vanishEffectA-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="vanishEffectA-jfr6" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <frameAnimation name="ani" loopCount="0">
+                <frame image="vanishEffectA-jfr1" duration="100"/>
+                <frame image="vanishEffectA-jfr2" duration="100"/>
+                <frame image="vanishEffectA-jfr3" duration="100"/>
+                <frame image="vanishEffectA-jfr4" duration="100"/>
+                <frame image="vanishEffectA-jfr5" duration="100"/>
+                <frame image="vanishEffectA-jfr6" duration="100"/>
+            </frameAnimation>
+        </sprite>
+        <sprite name="vanishEffectB_filled" imageName="vanishEffectB__filled" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="vanishEffectB_ring" imageName="vanishEffectB__ring" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <timelineAnimation name="ani" loopCount="0">
+                <animationMember>
+                    <animationTrack kind="Scaling">
+                        <key time="0" easing="Linear" scale="1"/>
+                        <key time="300" easing="Linear" scale="2"/>
+                    </animationTrack>
+                    <animationTrack kind="Alpha">
+                        <key time="0" easing="Linear" alpha="0"/>
+                        <key time="100" easing="Linear" alpha="0.7"/>
+                        <key time="300" easing="Linear" alpha="0"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
+        <sprite name="iCoin1">
+            <image name="iCoin1-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="iCoin1-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr6" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr7" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr8" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr9" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr10" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr11" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin1-jfr12" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <parameter name="entity" value="iSmallCoin" type="string"/>
+            <frameAnimation name="ani" loopCount="forever">
+                <frame image="iCoin1-jfr1" duration="100"/>
+                <frame image="iCoin1-jfr2" duration="100"/>
+                <frame image="iCoin1-jfr3" duration="100"/>
+                <frame image="iCoin1-jfr4" duration="100"/>
+                <frame image="iCoin1-jfr5" duration="100"/>
+                <frame image="iCoin1-jfr6" duration="100"/>
+                <frame image="iCoin1-jfr7" duration="100"/>
+                <frame image="iCoin1-jfr8" duration="100"/>
+                <frame image="iCoin1-jfr9" duration="100"/>
+                <frame image="iCoin1-jfr10" duration="100"/>
+                <frame image="iCoin1-jfr11" duration="100"/>
+                <frame image="iCoin1-jfr12" duration="100"/>
+            </frameAnimation>
+        </sprite>
+        <sprite name="iCoin5">
+            <image name="iCoin5-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="iCoin5-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr6" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr7" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr8" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr9" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr10" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr11" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iCoin5-jfr12" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <parameter name="entity" value="iBigCoin" type="string"/>
+            <frameAnimation name="ani" loopCount="forever">
+                <frame image="iCoin5-jfr1" duration="2000"/>
+                <frame image="iCoin5-jfr2" duration="100"/>
+                <frame image="iCoin5-jfr3" duration="100"/>
+                <frame image="iCoin5-jfr4" duration="100"/>
+                <frame image="iCoin5-jfr5" duration="100"/>
+                <frame image="iCoin5-jfr6" duration="100"/>
+                <frame image="iCoin5-jfr7" duration="100"/>
+                <frame image="iCoin5-jfr8" duration="100"/>
+                <frame image="iCoin5-jfr9" duration="100"/>
+                <frame image="iCoin5-jfr10" duration="100"/>
+                <frame image="iCoin5-jfr11" duration="100"/>
+                <frame image="iCoin5-jfr12" duration="100"/>
+            </frameAnimation>
+        </sprite>
+        <sprite name="shurikenUsed" imageName="iShuriken" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="shurikenUsed" type="string"/>
+            <timelineAnimation name="aniRight" loopCount="forever">
+                <animationMember>
+                    <animationTrack kind="Rotation">
+                        <key time="0" easing="Linear" rotation="0"/>
+                        <key time="500" easing="Linear" rotation="-360"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+            <timelineAnimation name="aniLeft" loopCount="forever">
+                <animationMember>
+                    <animationTrack kind="Rotation">
+                        <key time="0" easing="Linear" rotation="0"/>
+                        <key time="499" easing="Linear" rotation="360"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
+        <sprite name="topBarBackground" imageName="topBarBackground" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="coinsSlotIcon" imageName="coinsSlotIcon" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="iShurikenPack" imageName="iShurikenPack" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iShurikenPack" type="string"/>
+        </sprite>
+        <sprite name="wBoomerang">
+            <image name="wBoomerang-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="wBoomerang-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="wBoomerang-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="wBoomerang-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="wBoomerang-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="wBoomerang-jfr6" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="wBoomerang-jfr7" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="wBoomerang-jfr8" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <parameter name="entity" value="wBoomerang" type="string"/>
+            <frameAnimation name="ani" loopCount="forever">
+                <frame image="wBoomerang-jfr1" duration="50"/>
+                <frame image="wBoomerang-jfr2" duration="50"/>
+                <frame image="wBoomerang-jfr3" duration="50"/>
+                <frame image="wBoomerang-jfr4" duration="50"/>
+                <frame image="wBoomerang-jfr5" duration="50"/>
+                <frame image="wBoomerang-jfr6" duration="50"/>
+                <frame image="wBoomerang-jfr7" duration="50"/>
+                <frame image="wBoomerang-jfr8" duration="50"/>
+            </frameAnimation>
+            <timelineAnimation name="flying" loopCount="forever">
+                <animationMember>
+                    <animationTrack kind="Translation">
+                        <key time="0" easing="Ease end quad" dx="0" dy="0"/>
+                        <key time="500" easing="Ease start quad" dx="300" dy="0"/>
+                        <key time="1000" easing="Linear" dx="0" dy="0"/>
+                    </animationTrack>
+                    <animationTrack kind="Frame animation">
+                        <key time="0" frameAnimationName="ani" fSpeed="2.5"/>
+                        <key time="1000" frameAnimationName=""/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
+        <sprite name="wGamepad" imageName="iGamepad" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="wGamepad" type="string"/>
+        </sprite>
+        <sprite name="starC" imageName="iStarC" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iStarC" type="string"/>
+        </sprite>
+        <sprite name="amigaBall">
+            <image name="iAmigaBall-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="iAmigaBall-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iAmigaBall-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iAmigaBall-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iAmigaBall-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iAmigaBall-jfr6" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="iAmigaBall-jfr7" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <parameter name="entity" value="iAmigaBall" type="string"/>
+            <frameAnimation name="ani" loopCount="forever">
+                <frame image="iAmigaBall-jfr1" duration="100"/>
+                <frame image="iAmigaBall-jfr2" duration="100"/>
+                <frame image="iAmigaBall-jfr3" duration="100"/>
+                <frame image="iAmigaBall-jfr4" duration="100"/>
+                <frame image="iAmigaBall-jfr5" duration="100"/>
+                <frame image="iAmigaBall-jfr6" duration="100"/>
+                <frame image="iAmigaBall-jfr7" duration="100"/>
+            </frameAnimation>
+            <timelineAnimation name="vanishEffect" loopCount="0">
+                <animationMember>
+                    <animationTrack kind="Scaling">
+                        <key time="0" easing="Linear" scale="1"/>
+                        <key time="1000" easing="Linear" scale="3"/>
+                    </animationTrack>
+                    <animationTrack kind="Alpha">
+                        <key time="0" easing="Linear" alpha="1"/>
+                        <key time="300" easing="Linear" alpha="0.2"/>
+                        <key time="1000" easing="Ease end quad" alpha="0"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </sprite>
+        <sprite name="healthBottle" imageName="iHealthBottle" imageFile="data/graphics/platformer/platformerSpritesB.png">
+            <parameter name="entity" value="iHealthBottle" type="string"/>
+        </sprite>
+        <sprite name="iHealthBottle_inv" imageName="iHealthBottle_inv" imageFile="data/graphics/platformer/platformerSpritesB.png"/>
+        <sprite name="shuriken_vanishEffect">
+            <image name="shuriken_vanishEffect-jfr1" file="data/graphics/platformer/platformerSpritesB.png" marker="1"/>
+            <image name="shuriken_vanishEffect-jfr2" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="shuriken_vanishEffect-jfr3" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="shuriken_vanishEffect-jfr4" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <image name="shuriken_vanishEffect-jfr5" file="data/graphics/platformer/platformerSpritesB.png"/>
+            <frameAnimation name="ani" loopCount="0">
+                <frame image="shuriken_vanishEffect-jfr1" duration="70"/>
+                <frame image="shuriken_vanishEffect-jfr2" duration="70"/>
+                <frame image="shuriken_vanishEffect-jfr3" duration="70"/>
+                <frame image="shuriken_vanishEffect-jfr4" duration="70"/>
+                <frame image="shuriken_vanishEffect-jfr5" duration="70"/>
+            </frameAnimation>
+        </sprite>
     </sprites>
 </sourceGraphicSet>

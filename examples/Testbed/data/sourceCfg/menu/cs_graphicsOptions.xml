@@ -4,7 +4,7 @@
         <sprite type="Text" name="Window Title" x="66" y="12" text="FULL SCREEN"/>
         <sprite type="Standard" name="checkBoxA" x="25" y="25">
             <parameter name="wName" value="fullScreen" type="string"/>
-            <parameter name="widgetNew" value="checkBoxA" type="string"/>
+            <parameter name="widget" value="checkBoxA" type="string"/>
         </sprite>
     </layer>
 </composedSprite>

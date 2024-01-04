@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sourceGraphicSet name="textSprites">
+    <images/>
+    <textSprites>
+        <textSprite name="numOfLives" fontName="fontNormal_bold" handle="left-bottom"/>
+        <textSprite name="numOfCoins" fontName="fontNormal_bold" handle="left"/>
+        <textSprite name="numScore" fontName="fontBig_yellow" handle="right-top"/>
+        <textSprite name="LIVES" fontName="fontNormal_bold" handle="left-bottom"/>
+        <textSprite name="scoreEffect" fontName="font_effect" handle="center">
+            <timelineAnimation name="ani" loopCount="0">
+                <animationMember>
+                    <animationTrack kind="Translation">
+                        <key time="0" easing="Linear" dx="0" dy="0"/>
+                        <key time="1000" easing="Linear" dx="0" dy="20"/>
+                    </animationTrack>
+                    <animationTrack kind="Alpha">
+                        <key time="0" easing="Linear" alpha="0"/>
+                        <key time="100" easing="Linear" alpha="1"/>
+                        <key time="600" easing="Linear" alpha="1"/>
+                        <key time="1000" easing="Linear" alpha="0"/>
+                    </animationTrack>
+                </animationMember>
+            </timelineAnimation>
+        </textSprite>
+    </textSprites>
+    <sprites/>
+</sourceGraphicSet>

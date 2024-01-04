@@ -8,5 +8,5 @@
         <sprite type="Standard" name="sliderA_slidingButton" nameID="slidingButton" x="75" y="25"/>
     </layer>
     <parameter name="wName" value="value" type="string"/>
-    <parameter name="widgetNew" value="parameterSlider" type="string"/>
+    <parameter name="widget" value="parameterSlider" type="string"/>
 </composedSprite>

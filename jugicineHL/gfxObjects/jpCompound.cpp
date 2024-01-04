@@ -231,16 +231,16 @@ bool Compound::build(PlayedScene *_scene)
 
     //--- GFX OBJECT
     std::vector<void*>objects;
-    GfxObjectType gfxObjectType = GfxObjectType::NOT_DEFINED;
+    GSpritesObjectType gfxObjectType = GSpritesObjectType::NOT_DEFINED;
     std::string objectName;
 
     if(mCfg->gfxObject_spriteLayer.empty()==false){
         objectName = mCfg->gfxObject_spriteLayer;
-        gfxObjectType = GfxObjectType::SPRITE_LAYER;
+        gfxObjectType = GSpritesObjectType::SPRITE_LAYER;
 
     }else if(mCfg->gfxObject_sprite.empty()==false){
         objectName = mCfg->gfxObject_sprite;
-        gfxObjectType = GfxObjectType::SPRITE;
+        gfxObjectType = GSpritesObjectType::SPRITE;
     }
 
     if(collectObjects(objects, _scene, gfxObjectType, objectName, mCfg->gfxObject_map)==false){

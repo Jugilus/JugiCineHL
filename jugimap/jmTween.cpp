@@ -73,42 +73,75 @@ void Tween::Init(float _valueStart, float _valueEnd, float _durationS, EasingKin
     timeEndMS = timeStartMS + durationMS;
     easing.kind = _easingKind;
 
-    state = stateIDLE;
+    //state = stateIDLE;
+    mState = TweenState::IDLE;
 }
+
+
+void Tween::Play(float _valueStart, float _valueEnd)
+{
+
+    if(mState == TweenState::NEVER_INITIALIZED){
+        return;
+    }
+
+    valueStart = _valueStart;
+    valueEnd = _valueEnd;
+    timeStartMS = time.GetPassedNetTimeMS();
+    timeEndMS = timeStartMS + durationMS;
+    mState = TweenState::PLAYING;
+    reverse = false;
+
+}
+
 
 
 void Tween::Play()
 {
-    if(state==stateNEVER_INITIALIZED) return;
+    //if(state==stateNEVER_INITIALIZED) return;
+    if(mState == TweenState::NEVER_INITIALIZED){
+        return;
+    }
 
     timeStartMS = time.GetPassedNetTimeMS();
     timeEndMS = timeStartMS + durationMS;
-    state = statePLAYING;
+    //state = statePLAYING;
+    mState = TweenState::PLAYING;
     reverse = false;
 }
 
 
 void Tween::Stop()
 {
-    state = stateIDLE;
+    //state = stateIDLE;
+    mState = TweenState::IDLE;
 }
 
 
 void Tween::Pause()
 {
-    if(state!=statePLAYING) return;
+    //if(state!=statePLAYING) return;
+    if(mState != TweenState::PLAYING){
+        return;
+    }
 
-    stateStored = state;
+    //stateStored = state;
+    mStateStored = mState;
     msTimeStored = time.GetPassedNetTimeMS();
-    state = statePAUSED;
+    //state = statePAUSED;
+    mState = TweenState::PAUSED;
 }
 
 
 void Tween::Resume()
 {
-    if(state!=statePAUSED) return;
+    //if(state!=statePAUSED) return;
+    if(mState != TweenState::PAUSED){
+        return;
+    }
 
-    state = stateStored;
+    //state = stateStored;
+    mState = mStateStored;
     timeStartMS += time.GetPassedNetTimeMS() - msTimeStored;
     timeEndMS += time.GetPassedNetTimeMS() - msTimeStored;
 }
@@ -117,7 +150,8 @@ void Tween::Resume()
 float Tween::Update()
 {
 
-    if(state==statePLAYING){
+    //if(state==statePLAYING){
+    if(mState==TweenState::PLAYING){
 
         float p = (time.GetPassedNetTimeMS()-timeStartMS)/float(timeEndMS-timeStartMS);
 
@@ -139,7 +173,8 @@ float Tween::Update()
                 if(mode==Mode::REVERSE){
                     value = valueStart;
                 }
-                state = stateIDLE;
+                //state = stateIDLE;
+                mState = TweenState::IDLE;
                 return value;
             }
         }

@@ -10,6 +10,7 @@
 #include "jmTextSprite.h"
 #include "jmCompositeSprite.h"
 #include "jmStandardSprite.h"
+#include "jmSpriteLayer.h"
 #include "jmMap.h"
 #include "jmText.h"
 
@@ -128,6 +129,7 @@ bool GuiTextInput::initConnections(GuiSystem *_guiSystem)
     dbgSystem.addMessage("Init connections for the widget '" + mCfg->name + "' ...");
 
 
+    mRootMap = mRootSprite->parentLayer()->rootMap();
     mName = mRootSprite->parameters().value("wName");
     if(mName=="" && mChildWidget==false){
         dbgSystem.addMessage("Missing parameter 'wName' (identification name of the widget) !");

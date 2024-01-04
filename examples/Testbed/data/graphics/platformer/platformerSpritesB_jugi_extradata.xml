@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <imageExtraData>
+    <subimage name="healthBar__background" handlePoint="0,0"/>
     <subimage name="charA__climbing-jfr1">
         <rectangle points="(-30,-46);(31,-46);(31,34);(-30,34)"/>
     </subimage>
@@ -129,5 +130,152 @@
     </subimage>
     <subimage name="charA_push-jfr5">
         <rectangle points="(-25,-46);(26,-46);(26,34);(-25,34)"/>
+    </subimage>
+    <subimage name="wBoomerang-jfr1">
+        <rectangle points="(-32,-27);(32,-27);(32,26);(-32,26)"/>
+    </subimage>
+    <subimage name="wBoomerang-jfr2">
+        <rectangle points="(-32,-27);(32,-27);(32,26);(-32,26)"/>
+    </subimage>
+    <subimage name="wBoomerang-jfr3">
+        <rectangle points="(-32,-27);(32,-27);(32,26);(-32,26)"/>
+    </subimage>
+    <subimage name="wBoomerang-jfr4">
+        <rectangle points="(-32,-27);(32,-27);(32,26);(-32,26)"/>
+    </subimage>
+    <subimage name="wBoomerang-jfr5">
+        <rectangle points="(-32,-27);(32,-27);(32,26);(-32,26)"/>
+    </subimage>
+    <subimage name="wBoomerang-jfr6">
+        <rectangle points="(-32,-27);(32,-27);(32,26);(-32,26)"/>
+    </subimage>
+    <subimage name="wBoomerang-jfr7">
+        <rectangle points="(-32,-27);(32,-27);(32,26);(-32,26)"/>
+    </subimage>
+    <subimage name="wBoomerang-jfr8">
+        <rectangle points="(-32,-27);(32,-27);(32,26);(-32,26)"/>
+    </subimage>
+    <subimage name="iUmbrella" handlePoint="35,14">
+        <rectangle points="(-23,-25);(21,-25);(21,28);(-23,28)"/>
+    </subimage>
+    <subimage name="iBoomerang">
+        <rectangle points="(-25,-23);(26,-23);(26,26);(-25,26)"/>
+    </subimage>
+    <subimage name="iGamepad">
+        <polyline points="(-35,-19);(35,-19);(30,20);(-30,20)" closed="true"/>
+    </subimage>
+    <subimage name="iAmigaBall-jfr1">
+        <rectangle points="(-22,-22);(22,-22);(22,21);(-22,21)"/>
+    </subimage>
+    <subimage name="iAmigaBall-jfr2">
+        <rectangle points="(-22,-22);(22,-22);(22,21);(-22,21)"/>
+    </subimage>
+    <subimage name="iAmigaBall-jfr3">
+        <rectangle points="(-22,-22);(22,-22);(22,21);(-22,21)"/>
+    </subimage>
+    <subimage name="iAmigaBall-jfr4">
+        <rectangle points="(-22,-22);(22,-22);(22,21);(-22,21)"/>
+    </subimage>
+    <subimage name="iAmigaBall-jfr5">
+        <rectangle points="(-22,-22);(22,-22);(22,21);(-22,21)"/>
+    </subimage>
+    <subimage name="iAmigaBall-jfr6">
+        <rectangle points="(-22,-22);(22,-22);(22,21);(-22,21)"/>
+    </subimage>
+    <subimage name="iAmigaBall-jfr7">
+        <rectangle points="(-22,-22);(22,-22);(22,21);(-22,21)"/>
+    </subimage>
+    <subimage name="iStarA">
+        <rectangle points="(-16,-17);(17,-17);(17,15);(-16,15)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr1">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr2">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr3">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr4">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr5">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr6">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr7">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr8">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr9">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr10">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr11">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iCoin5-jfr12">
+        <rectangle points="(-17,-17);(16,-17);(16,17);(-17,17)"/>
+    </subimage>
+    <subimage name="iShurikenPack">
+        <rectangle points="(-19,-19);(18,-19);(18,19);(-19,19)"/>
+    </subimage>
+    <subimage name="iHealthBottle">
+        <rectangle points="(-16,-21);(17,-21);(17,23);(-16,23)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr1">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr2">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr3">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr4">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr5">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr6">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr7">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr8">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr9">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr10">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr11">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iCoin1-jfr12">
+        <rectangle points="(-12,-13);(12,-13);(12,13);(-12,13)"/>
+    </subimage>
+    <subimage name="iShuriken">
+        <rectangle points="(-17,-18);(17,-18);(17,18);(-17,18)"/>
+    </subimage>
+    <subimage name="iCoinA-jfr1">
+        <rectangle points="(-15,-17);(15,-17);(15,17);(-15,17)"/>
+    </subimage>
+    <subimage name="iStarB">
+        <polyline points="(-15,1);(1,-15);(16,1);(1,17)" closed="true"/>
+    </subimage>
+    <subimage name="iStarC">
+        <polyline points="(-15,1);(1,-15);(16,1);(1,17)" closed="true"/>
     </subimage>
 </imageExtraData>

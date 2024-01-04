@@ -13,6 +13,7 @@
 #include "jmUtilities.h"
 
 #include "jpQueries.h"
+#include "jpObjectParser.h"
 #include "jpGuiCommon.h"
 #include "jpGuiButton.h"
 
@@ -62,7 +63,7 @@ ButtonState GetButtonStateFromString(const std::string &state)
 }
 
 
-std::vector<NamedValue>gButtonStateNamedValues
+std::vector<std::pair<std::string, int>>gButtonStateNamedValues
 {
     {"NORMAL", 0},
     {"NORMAL_HOVERED", 1},
@@ -1185,6 +1186,7 @@ bool GuiButton::initConnections(GuiSystem *_guiSystem)
         DummyFunction();
     }
 
+    mRootMap = mRootSprite->parentLayer()->rootMap();
     mName = mRootSprite->parameters().value("wName");
 
     if(mName=="" && mChildWidget==false){
@@ -1265,6 +1267,8 @@ bool GuiButton::initConnections(GuiSystem *_guiSystem)
     mSigChecked_setter.setCallback(this);
     mSigDisabled.setCallback(this);
     mSigVisible.setCallback(this);
+    IntSignalExtraData *extraData = static_cast<IntSignalExtraData *>(mSigState.createExtraData());
+    extraData->namedValues = &gButtonStateNamedValues;
 
     mInitialized = true;
 
@@ -2216,7 +2220,7 @@ void GuiButton::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignal
 
     GuiWidget::obtainSignal_signalQuery(_signalQuery, _psp, _setErrorMessage);
 
-    if(_signalQuery.mSignal){
+    if(_signalQuery.signal()){
         return;
     }
 
@@ -2231,11 +2235,11 @@ void GuiButton::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignal
         _psp.obtainValue(_signalQuery, &mSigChecked);
 
     }else if(_psp.signalFullName()=="STATE"){
-        _psp.obtainValue(_signalQuery, &mSigState, &gButtonStateNamedValues);
+        _psp.obtainValue(_signalQuery, &mSigState);
 
     }
 
-    if(_setErrorMessage && _signalQuery.mSignal==nullptr){
+    if(_setErrorMessage && _signalQuery.signal()==nullptr){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
@@ -2247,7 +2251,7 @@ void GuiButton::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSig
 
     GuiWidget::obtainSignal_signalSetter(_signalSetter, _psp, _setErrorMessage);
 
-    if(_signalSetter.mSignal){
+    if(_signalSetter.signal()){
         return;
     }
 
@@ -2257,7 +2261,7 @@ void GuiButton::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSig
         _psp.obtainValue(_signalSetter, &mSigChecked_setter);
     }
 
-    if(_setErrorMessage && _signalSetter.mSignal==nullptr){
+    if(_setErrorMessage && _signalSetter.signal()==nullptr){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 

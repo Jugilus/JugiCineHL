@@ -17,7 +17,9 @@
 #include "items/jpItemsCommon.h"
 #include "items/jpItemSlotData.h"
 #include "logic/jpLogicState.h"
+#include "logic/jpFunction.h"
 #include "logic/jpTransition.h"
+#include "data/jpItem.h"
 
 #include "components/jpComponentsCommon.h"
 #include "jpSceneLogicState.h"
@@ -39,7 +41,7 @@ namespace jugimap {
 
 
 
-
+/*
 bool AppConfigurationLoader_xml::loadApplicationBaseParameters(PlayedApp *app, std::string &dbgText)
 {
 
@@ -135,8 +137,10 @@ bool AppConfigurationLoader_xml::loadApplicationBaseParameters(PlayedApp *app, s
     return true;
 
 }
+*/
 
 
+/*
 bool AppConfigurationLoader_xml::loadApplicationGlobalData(PlayedApp *app)
 {
 
@@ -198,7 +202,10 @@ bool AppConfigurationLoader_xml::loadApplicationGlobalData(PlayedApp *app)
     return true;
 
 }
+*/
 
+
+/*
 
 bool AppConfigurationLoader_xml::loadSceneBaseData(Scene *scene)
 {
@@ -533,18 +540,6 @@ bool AppConfigurationLoader_xml::loadScene_LogicData(PlayedScene *playerScene, c
 
 
                 //------
-                }else if(nodeName=="gfxObjects"){
-
-                    for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
-                        std::string childNodeName = std::string(nChild.name());
-
-                        if(childNodeName=="spritesObject"){
-                            playerScene->gfxObjectsGroup()->gfxObjects().push_back(new GSpritesObject(nChild));
-
-                        }else if(childNodeName=="textSpriteObject"){
-                            playerScene->gfxObjectsGroup()->gfxObjects().push_back(new GTextSprite(nChild));
-                        }
-                    }
 
 
                 //------
@@ -591,39 +586,17 @@ bool AppConfigurationLoader_xml::loadScene_LogicData(PlayedScene *playerScene, c
                     }
 
                 //------
-                /*
-                }else if(nodeName=="overlayComponents"){
-
-                    for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
-                        std::string childNodeName = std::string(nChild.name());
-
-                        Component *c = actionFactory->createComponent(childNodeName, nChild);
-
-                        if(c){
-                            playerScene->overlayComponentsGroup()->components().push_back(c);
-                        }else{
-                            dbgSystem.addMessage("Component '" + childNodeName + "' not found!");
-                            return false;
-                        }
-                    }
-                */
-
-                //------
-
-
-                /*
-                }else if(nodeName=="customComponent"){
-
-                    std::string name = n.attribute("name").as_string("");
 
 
 
+                }else if(nodeName=="items"){
 
-                    if(app->entitySystem()->initCfg(playerScene, n)==false){
+                    SourceItemsStorage *sourceItemsStorage = playerScene->sourceItemsStorage();
+
+                    if(sourceItemsStorage->initCfg(n)==false){
                         return false;
                     }
 
-                */
 
                 //------
                 }else if(nodeName=="variable"){
@@ -685,6 +658,9 @@ bool AppConfigurationLoader_xml::loadScene_LogicData(PlayedScene *playerScene, c
     dbgSystem.removeLastMessage();
     return true;
 }
+
+*/
+
 
 /*
 bool AppConfigurationLoader_xml::loadScene_OnInit(PlayedScene *playerScene, const pugi::xml_node &node)
@@ -762,6 +738,7 @@ bool AppConfigurationLoader_xml::loadScene_OnUpdate(PlayedScene *playerScene, co
     return true;
 }
 */
+
 
 /*
 bool AppConfigurationLoader_xml::loadGameState(LogicState *state, pugi::xml_node &node)
@@ -854,6 +831,7 @@ bool AppConfigurationLoader_xml::loadGameState(LogicState *state, pugi::xml_node
 */
 
 
+/*
 bool AppConfigurationLoader_xml::loadScene_ItemsGroup(ItemsGroup *itemsGroup, pugi::xml_node &node)
 {
 
@@ -900,8 +878,10 @@ bool AppConfigurationLoader_xml::loadScene_ItemsGroup(ItemsGroup *itemsGroup, pu
     return true;
 
 }
+*/
 
 
+/*
 void AppConfigurationLoader_xml::readParameter(CParameter &pv, pugi::xml_node &node)
 {
 
@@ -930,7 +910,10 @@ void AppConfigurationLoader_xml::readParameter(CParameter &pv, pugi::xml_node &n
 
 }
 
+*/
 
+
+/*
 bool AppConfigurationLoader_xml::loadApplication_LanguagesCfg(PlayedApp * app, pugi::xml_node &node, std::string &dbgText)
 {
 
@@ -991,9 +974,10 @@ bool AppConfigurationLoader_xml::loadApplication_LanguagesCfg(PlayedApp * app, p
     dbgSystem.removeLastMessage();
     return true;
 }
+*/
 
 
-
+/*
 std::string AppConfigurationLoader_xml::rootNodeName(const std::string &filePath, std::string &rootNodeAttribute, bool &error)
 {
 
@@ -1016,9 +1000,10 @@ std::string AppConfigurationLoader_xml::rootNodeName(const std::string &filePath
 
     return "";
 }
+*/
 
 
-AppConfigurationLoader_xml appConfigurationLoader_xml;
+//AppConfigurationLoader_xml appConfigurationLoader_xml;
 
 
 

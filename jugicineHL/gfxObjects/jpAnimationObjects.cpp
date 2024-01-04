@@ -18,6 +18,7 @@
 #include "jpPlayedScene.h"
 #include "jpQueries.h"
 #include "jpUtilities.h"
+#include "jpObjectParser.h"
 #include "jpAnimationObjects.h"
 
 
@@ -210,7 +211,7 @@ void AnimationObject::obtainSignal_signalQuery(SignalQuery &_signalQuery, Parsed
         _psp.obtainValue(_signalQuery, &mSigEnabled);
     }
 
-    if(_signalQuery.mSignal==nullptr &&_setErrorMessage){
+    if(_signalQuery.signal()==nullptr &&_setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
@@ -224,9 +225,44 @@ void AnimationObject::obtainSignal_signalSetter(SignalSetter &_signalSetter, Par
         _psp.obtainValue(_signalSetter, &mSigEnabled);
     }
 
-    if(_signalSetter.mSignal==nullptr &&_setErrorMessage){
+    if(_signalSetter.signal()==nullptr &&_setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting it!");
     }
+}
+
+
+bool AnimationObject::obtainSignal(SignalParsingInfo &_spi, bool _setErrorMessage)
+{
+
+    if(_spi.signalAccessorType==SignalAccessorType::QUERY){
+
+        if(_spi.signalIdentifierPath=="ENABLED"){
+            _spi.signal = &mSigEnabled;
+
+        }else{
+            if(_spi.signal==nullptr &&_setErrorMessage){
+                dbgSystem.addMessage("There is no signal with name'" + _spi.signalIdentifierPath + "' in the animation object!");
+                return false;
+            }
+        }
+
+
+    }else if(_spi.signalAccessorType==SignalAccessorType::SETTER){
+
+        if(_spi.signalIdentifierPath=="ENABLED"){
+            _spi.signal = &mSigEnabled;
+
+        }else{
+            if(_spi.signal==nullptr &&_setErrorMessage){
+                dbgSystem.addMessage("There is no signal with name'" + _spi.signalIdentifierPath + "' in the animation object!");
+                return false;
+            }
+        }
+
+    }
+
+    return true;
+
 }
 
 

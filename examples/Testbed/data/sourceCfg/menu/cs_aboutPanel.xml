@@ -182,7 +182,7 @@
         <sprite type="Composite" name="buttonB" x="242" y="27">
             <parameter name="changeChildText" value="label,gui,22" type="string"/>
             <parameter name="wName" value="aboutPanel_mainMenuButton" type="string"/>
-            <parameter name="widgetNew" value="mainMenuButton" type="string"/>
+            <parameter name="widget" value="mainMenuButton" type="string"/>
         </sprite>
         <sprite type="Composite" name="sliderB" nameID="slider" x="766" y="370"/>
         <sprite type="Text" name="Window Title" x="15" y="617" text="About " book="gui" segment="45"/>
@@ -198,6 +198,6 @@
         </rectangle>
         <rectangle points="(50,141);(711,141);(711,588);(50,588)" nameID="visibleArea"/>
     </vectorLayer>
-    <parameter name="widgetNew" value="aboutPanelTextField" type="string"/>
     <parameter name="wName" value="aboutPanel_textField" type="string"/>
+    <parameter name="widget" value="aboutPanelTextField" type="string"/>
 </composedSprite>

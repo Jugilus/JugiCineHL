@@ -237,6 +237,7 @@ public:
     PathPTPMovementEngine(MovementEngineFactory * _factory);
 
     bool initDataObjectsConnections(PlayedScene *_scene, Entity *_actor) override;
+    void collectSignalsForLUT(SignalStorage &_storage) override;
     void createDataObjects(std::vector<MovementEngineCfg*> &_cfgs) override;
 
 
@@ -252,6 +253,7 @@ public:
     //Direction direction(){ return mDirection; }
 
     MovementEngineData* currentData() override { return mCurrentData; }
+    MovementEngineCfg* currentCfg() override { return mCurrentData->cfg; }
     //std::vector<PathPTPMovementData> & pathMovementDatas(){ return mPathMovementDatas; }
     //PathPTPMovementData* getPathMovementData(const std::string &_name, bool _setErrorMessage = true);
 

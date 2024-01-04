@@ -94,8 +94,12 @@ private:
 class Body
 {
 public:
+    Body(SourceBody *_sourceBody, Entity *_parentEntity);
 
-    bool init(SourceBody *_sourceBody, Entity *_parentEntity, Vec2f _bodyPos, float _bodyAngle);
+    //bool init(SourceBody *_sourceBody, Entity *_parentEntity, Vec2f _bodyPos, float _bodyAngle);
+
+    void createB2Body(Vec2f _bodyPos, float _bodyAngle);
+    void destroyB2Body();
 
     b2Body * B2Body(){ return mB2Body; }
     Entity * parentEntity(){ return mParentEntity; }

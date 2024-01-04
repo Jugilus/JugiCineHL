@@ -23,7 +23,7 @@
 #include "jpPlayedScene.h"
 #include "jpItemsCommon.h"
 #include "jpLogicState.h"
-
+#include "jpLogicAction.h"
 
 #include "jpUtilities.h"
 
@@ -546,7 +546,7 @@ SceneWidget *ObtainSceneWidget(PlayerScene* scene, Action *sourceAction, const s
 */
 
 
-bool collectObjects(std::vector<void*>&objects, PlayedScene *scene, GfxObjectType objectType, const std::string &objectName, const std::string &srcMapName)
+bool collectObjects(std::vector<void*>&objects, PlayedScene *scene, GSpritesObjectType objectType, const std::string &objectName, const std::string &srcMapName)
 {
 
     Map *map = scene->getMap(srcMapName);
@@ -562,7 +562,7 @@ bool collectObjects(std::vector<void*>&objects, PlayedScene *scene, GfxObjectTyp
     }
 
 
-    if(objectType==GfxObjectType::SPRITE){
+    if(objectType==GSpritesObjectType::SPRITE){
 
         std::vector<Sprite*>collectedSprites;
         CollectSpritesWithName(map, collectedSprites, objectName);
@@ -577,7 +577,7 @@ bool collectObjects(std::vector<void*>&objects, PlayedScene *scene, GfxObjectTyp
         }
 
 
-    }else if(objectType==GfxObjectType::SPRITE_LAYER){
+    }else if(objectType==GSpritesObjectType::SPRITE_LAYER){
 
         std::vector<Layer*>collectedLayers;
         CollectLayersWithName(map, collectedLayers, objectName, LayerKind::SPRITE_LAYER);
@@ -591,7 +591,7 @@ bool collectObjects(std::vector<void*>&objects, PlayedScene *scene, GfxObjectTyp
             objects.push_back(l);
         }
 
-    }else if(objectType==GfxObjectType::MAP){
+    }else if(objectType==GSpritesObjectType::MAP){
 
         objects.push_back(map);
     }
@@ -1193,7 +1193,7 @@ AnimationInstance* ObtainFrameAnimationInstance(StandardSprite *_sprite, const s
 }
 
 
-jugimap::AnimationInstance *ObtainAnimationInstance(Sprite *_sprite, const std::string &aniName, bool throwError)
+jugimap::AnimationInstance *ObtainAnimationInstance(Sprite *_sprite, const std::string &aniName, bool setErrorMessage)
 {
 
     if(_sprite->type()==SpriteType::STANDARD){
@@ -1209,7 +1209,7 @@ jugimap::AnimationInstance *ObtainAnimationInstance(Sprite *_sprite, const std::
     }
 
 
-    if( throwError){
+    if( setErrorMessage){
         dbgSystem.addMessage("Animation '"+ aniName +"' not found!");
     }
 
@@ -1272,6 +1272,42 @@ VectorShape* ObtainVectorShapeWithAPathPointPosition(Map *map, Vec2f pos, float 
 
     return vectorShape;
 }
+
+
+
+std::string obtainStateIdentifierString(LogicState *_logicState, const std::string &_prefix)
+{
+
+    std::string identifier;
+    LogicState* state = _logicState;
+
+    while(true){
+
+        identifier = ":" + state->name() + identifier;
+
+        if(state->parentObject() && state->parentObject()->baseType()==BaseObjectType::LOGIC_STATE){
+            LogicState* parentState= static_cast<LogicState*>(state->parentObject());
+
+            if(parentState->parentObject() && parentState->parentObject()->baseType()==BaseObjectType::LOGIC_STATE){    // the last parent logic state is not included !
+                state = parentState;
+                continue;
+            }
+        }
+        break;
+
+    }
+
+    identifier = _prefix + identifier;
+
+    return identifier;
+
+}
+
+
+
+
+
+
 
 
 }

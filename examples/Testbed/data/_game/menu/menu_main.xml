@@ -6,9 +6,13 @@
         </sceneMap>
     </sceneMaps>
 
+    <add gfxObjects="activeUserName" />
     
+
     <gfxObjects>
-        <textSpriteObject name="activeUserName" textSprite="activeUserName" sourceMap="menuMap" />
+        <textSpriteObject name="activeUserName" >
+            <existing textSprite="activeUserName" map="menuMap" />
+        </textSpriteObject>
     </gfxObjects>
 
 
@@ -329,21 +333,21 @@
     <init>
 
 
-        <a doSetTableItemsGroup="sceneSelector, sceneNames" />
-        <a doSetSignal="GFX:activeUserName/TEXT = SIGNAL/USERS/ACTIVE_USER" />
+        <aCo doSetTableItemsGroup="sceneSelector, sceneNames" />
+        <aCo doSetSignal="GFX:activeUserName/TEXT = SIGNAL/USERS/ACTIVE_USER" />
         <!--<a doSetSignal="GFX:activeUserName/TEXT:Test User" />-->
 
-        <a doSetSignal="BUTTON:graphicsSettings/CHECKED = TRUE" />
-        <a doSetSignal="BUTTON:musicActive/CHECKED = SIGNAL/SETTINGS/musicActive" />
-        <a doSetSignal="BUTTON:sfxActive/CHECKED = SIGNAL/SETTINGS/sfxActive" />
-        <a doSetSignal="BUTTON:speechActive/CHECKED = SIGNAL/SETTINGS/speechActive" />
-        <a doSetSignal="SLIDER:musicVolume/VALUE = SIGNAL/SETTINGS/musicVolume" />
-        <a doSetSignal="SLIDER:sfxVolume/VALUE = SIGNAL/SETTINGS/sfxVolume" />
-        <a doSetSignal="SLIDER:speechVolume/VALUE = SIGNAL/SETTINGS/speechVolume" />
+        <aCo doSetSignal="BUTTON:graphicsSettings/CHECKED = TRUE" />
+        <aCo doSetSignal="BUTTON:musicActive/CHECKED = SIGNAL/SETTINGS/musicActive" />
+        <aCo doSetSignal="BUTTON:sfxActive/CHECKED = SIGNAL/SETTINGS/sfxActive" />
+        <aCo doSetSignal="BUTTON:speechActive/CHECKED = SIGNAL/SETTINGS/speechActive" />
+        <aCo doSetSignal="SLIDER:musicVolume/VALUE = SIGNAL/SETTINGS/musicVolume" />
+        <aCo doSetSignal="SLIDER:sfxVolume/VALUE = SIGNAL/SETTINGS/sfxVolume" />
+        <aCo doSetSignal="SLIDER:speechVolume/VALUE = SIGNAL/SETTINGS/speechVolume" />
 
-        <a doSetState="sceneLogic" />
-        <a doSetState="sceneLogic:mainMenu" />
-        <a doSetState="sceneLogic:settingsMenu:graphicsMenu" />
+        <aCo doSetState="sceneLogic" />
+        <aCo doSetState="sceneLogic:mainMenu" />
+        <aCo doSetState="sceneLogic:settingsMenu:graphicsMenu" />
     </init>
     
 
@@ -358,7 +362,7 @@
 
             <state name="mainMenu" compound="mainMenu">
 
-                <a onSignal="messagePanel/close/START" doDbgPrint="Message panel closed." />
+                <a onSignal="messagePanel/close/START" doDbgPrintNEW="Message panel closed." />
 
                 <a onSignals="STATES/THIS/START , USERS/ACTIVE_USER=''" doShowOverlayCompound="newUserPanel" />
                 <a onSignal="BUTTON:openUsersDialog/PRESSED=TRUE" doSetState="usersDialog" />
@@ -367,7 +371,7 @@
                 <a onSignal="BUTTON:about/PRESSED" doSetState="aboutPanel" />
                 <a onSignal="BUTTON:quit/PRESSED/START" doQuitGame="" />
 
-                <a onSignal="INPUT:KEYBOARD/P/CHANGED" doDbgPrint="Key P pressed!" />
+                <a onSignal="INPUT:KEYBOARD/P/CHANGED" doDbgPrintNEW="Key P pressed!" />
 
             </state>
 

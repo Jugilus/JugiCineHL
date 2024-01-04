@@ -68,7 +68,10 @@ void EntityContactListener::BeginContact(b2Contact* contact)
 
 
     //if(entityA->type()==EntityType::ACTOR){
-    if(entityA->mainShapeRole()==EntityRole::ACTOR || entityA->mainShapeRole()==EntityRole::MOVABLE_OBJECT){
+    if(entityA->mainShapeRole()==EntityRole::ACTOR || entityA->mainShapeRole()==EntityRole::MOVABLE_OBJECT ||
+       entityA->mainShapeRole()==EntityRole::BULLET || entityA->mainShapeRole()==EntityRole::SOLID_BULLET ||
+       entityA->mainShapeRole()==EntityRole::SOLID_BULLET_SENSOR){
+
         mActor = entityA;
         mActorFixture = mFixtureA;
         mActorFixtureChildIndex = childIndexA;
@@ -78,7 +81,10 @@ void EntityContactListener::BeginContact(b2Contact* contact)
         mEntityFixtureChildIndex = childIndexB;
 
     //}else if(entityB->type()==EntityType::ACTOR){
-    }else if(entityB->mainShapeRole()==EntityRole::ACTOR || entityB->mainShapeRole()==EntityRole::MOVABLE_OBJECT){
+    }else if(entityB->mainShapeRole()==EntityRole::ACTOR || entityB->mainShapeRole()==EntityRole::MOVABLE_OBJECT ||
+             entityB->mainShapeRole()==EntityRole::BULLET || entityB->mainShapeRole()==EntityRole::SOLID_BULLET ||
+             entityB->mainShapeRole()==EntityRole::SOLID_BULLET_SENSOR){
+
         mActor = entityB;
         mActorFixture = mFixtureB;
         mActorFixtureChildIndex = childIndexB;
@@ -187,7 +193,10 @@ void EntityContactListener::EndContact(b2Contact* contact)
     }
 
     //if(entityA->type()==EntityType::ACTOR){
-    if(entityA->mainShapeRole()==EntityRole::ACTOR || entityA->mainShapeRole()==EntityRole::MOVABLE_OBJECT){
+    if(entityA->mainShapeRole()==EntityRole::ACTOR || entityA->mainShapeRole()==EntityRole::MOVABLE_OBJECT ||
+       entityA->mainShapeRole()==EntityRole::BULLET || entityA->mainShapeRole()==EntityRole::SOLID_BULLET ||
+       entityA->mainShapeRole()==EntityRole::SOLID_BULLET_SENSOR){
+
         mActor = entityA;
         mActorFixture = mFixtureA;
         mActorFixtureChildIndex = childIndexA;
@@ -197,7 +206,9 @@ void EntityContactListener::EndContact(b2Contact* contact)
         mEntityFixtureChildIndex = childIndexB;
 
     //}else if(entityB->type()==EntityType::ACTOR){
-    }else if(entityB->mainShapeRole()==EntityRole::ACTOR || entityB->mainShapeRole()==EntityRole::MOVABLE_OBJECT){
+    }else if(entityB->mainShapeRole()==EntityRole::ACTOR || entityB->mainShapeRole()==EntityRole::MOVABLE_OBJECT ||
+             entityB->mainShapeRole()==EntityRole::BULLET || entityB->mainShapeRole()==EntityRole::SOLID_BULLET ||
+             entityB->mainShapeRole()==EntityRole::SOLID_BULLET_SENSOR){
 
         mActor = entityB;
         mActorFixture = mFixtureB;
@@ -329,6 +340,10 @@ void EntityContactListener::PreSolve(b2Contact *contact, const b2Manifold *oldMa
         if(state2[1]!=b2_addState && state2[1]!=b2_persistState){
             return;
         }
+    }
+
+    if(entityA->sourceEntity()->name()=="iGamepad" || entityB->sourceEntity()->name()=="iGamepad"){
+        DummyFunction();
     }
 
     bool reverseNormal = false;
@@ -554,7 +569,15 @@ void EntityContactListener::PreSolve(b2Contact *contact, const b2Manifold *oldMa
             contact->SetEnabled(false);
 
         }else{
-            contact->SetFriction(0.0f);
+
+
+            if(mDynamicEntity1->sourceEntity()->sourceEntityCfg()->category->role==EntityRole::SOLID_BULLET){
+                DummyFunction();
+                contact->SetFriction(0.6f);
+
+            }else{
+                contact->SetFriction(0.0f);
+            }
         }
 
 

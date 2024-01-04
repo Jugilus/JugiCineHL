@@ -9,6 +9,7 @@
 
 #include "jpUtilities.h"
 #include "jpPlayedApp.h"
+#include "jpObjectParser.h"
 
 #include "jpB2World.h"
 #include "jpB2Body.h"
@@ -60,7 +61,7 @@ int GetTransporterStatusFromString(const std::string &_type)
 }
 
 
-std::vector<NamedValue>gTransporterStatusNamedValues
+std::vector<std::pair<std::string, unsigned int>>gTransporterStatusNamedValues
 {
     { "MOVING", static_cast<int>(TransporterStatus::MOVING) },
     { "DIRECTION_FORWARD", static_cast<int>(TransporterStatus::DIRECTION_FORWARD) },
@@ -275,6 +276,8 @@ void TETransporter::init(Entity *_entity)
 
     mSignals.push_back(&mSigStatus);
 
+    mSigStatus.createExtraData()->namedValues = &gTransporterStatusNamedValues;
+
 }
 
 
@@ -335,6 +338,31 @@ bool TETransporter::initDataObjectsConnections(PlayedScene *_scene, Entity *_act
     return true;
 
 }
+
+
+void TETransporter::collectSignalsForLUT(SignalStorage &_storage)
+{
+
+    for(TETransporterData& d : mDataObjects){
+
+        std::string signalParsingPrefix = d.cfg->getSignalParsingPrefix();
+        if(d.moveForward.signal()) _storage.addSignal_query(d.moveForward.signal(), signalParsingPrefix + "MOVE_FORWARD");
+        if(d.moveBackward.signal()) _storage.addSignal_query(d.moveBackward.signal(), signalParsingPrefix + "MOVE_BACKWARD");
+        if(d.moveLeft.signal()) _storage.addSignal_query(d.moveLeft.signal(), signalParsingPrefix + "MOVE_LEFT");
+        if(d.moveRight.signal()) _storage.addSignal_query(d.moveRight.signal(), signalParsingPrefix + "MOVE_RIGHT");
+        if(d.moveUp.signal()) _storage.addSignal_query(d.moveUp.signal(), signalParsingPrefix + "MOVE_UP");
+        if(d.moveDown.signal()) _storage.addSignal_query(d.moveDown.signal(), signalParsingPrefix + "MOVE_DOWN");
+
+        _storage.addSignal_query(&mSigEnabled, signalParsingPrefix + "ENABLED");
+        SignalIdentifier *si = _storage.addSignal_query(&mSigStatus, signalParsingPrefix + "STATUS");
+        if(si) si->bitflagsIdentifier = &gTransporterStatusNamedValues;
+
+        // setter signals
+        _storage.addSignal_setter(&mSigEnabled, signalParsingPrefix + "ENABLED");
+    }
+
+}
+
 
 
 TaskEngineData* TETransporter::getData(const std::string &_name, bool _setErrorMessage)
@@ -769,35 +797,35 @@ void TETransporter::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSi
                 engineData = &d;
 
                 if(signalName=="MOVE_FORWARD"){
-                    _psp.obtainValue(_signalQuery, d.moveForward.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveForward.signal());
 
                 }else if(signalName=="MOVE_BACKWARD"){
-                    _psp.obtainValue(_signalQuery, d.moveBackward.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveBackward.signal());
 
                 }else if(signalName=="MOVE_LEFT"){
-                    _psp.obtainValue(_signalQuery, d.moveLeft.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveLeft.signal());
 
                 }else if(signalName=="MOVE_RIGHT"){
-                    _psp.obtainValue(_signalQuery, d.moveRight.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveRight.signal());
 
                 }else if(signalName=="MOVE_UP"){
-                    _psp.obtainValue(_signalQuery, d.moveUp.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveUp.signal());
 
                 }else if(signalName=="MOVE_DOWN"){
-                    _psp.obtainValue(_signalQuery, d.moveDown.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveDown.signal());
 
                 }
                 break;
             }
         }
 
-        if(_signalQuery.mSignal){
+        if(_signalQuery.signal()){
             return;
         }
     }
 
     if(signalName=="STATUS"){
-        _psp.obtainValue(_signalQuery, &mSigStatus, &gTransporterStatusNamedValues);
+        _psp.obtainValue(_signalQuery, &mSigStatus);
 
         /*
         _signalQuery.mSignal = &mSigStatus;
@@ -816,7 +844,7 @@ void TETransporter::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSi
     }
 
 
-    if(_signalQuery.mSignal==nullptr && _setErrorMessage){
+    if(_signalQuery.signal()==nullptr && _setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
@@ -839,7 +867,7 @@ void TETransporter::obtainSignal_signalSetter(SignalSetter &_signalSetter, Parse
                 break;
             }
         }
-        if(_signalSetter.mSignal){
+        if(_signalSetter.signal()){
             return;
         }
     }
@@ -854,7 +882,7 @@ void TETransporter::obtainSignal_signalSetter(SignalSetter &_signalSetter, Parse
     }
 
 
-    if(_signalSetter.mSignal==nullptr && _setErrorMessage){
+    if(_signalSetter.signal()==nullptr && _setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting!");
     }
 

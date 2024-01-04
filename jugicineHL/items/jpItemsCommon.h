@@ -109,6 +109,7 @@ public:
     ItemsGroup(const std::string &_name, BaseObject* _parent ): mName(_name), mParent(_parent){}
     ~ItemsGroup();
 
+    bool initCfg(const pugi::xml_node &_node);
     bool initConnections(PlayedScene* _scene);
 
 

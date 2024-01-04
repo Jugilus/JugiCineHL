@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<scene name="PlatformerA">
+
+    <!-- <itemsSystem>-->
+
+        <items info="PICKABLE ITEMS"  >
+
+            <itemTags>
+                <tag name="throwable"/>
+            </itemTags>
+
+
+            <item name="staff" >
+                <float name="attackDemage" value="10" />
+            </item>
+
+            <item name="sword" >
+                <float name="attackDemage" value="40" />
+                <string name="testString" text="Test" />
+            </item>
+
+            <item name="dragonSword" >
+                <float name="attackDemage" value="80" >
+                    <exception case="meleeAttack/ATTACKED/dragonArmour" factor="0.5" />
+                </float>
+            </item>
+            
+            <item name="iceSword" >
+                <float name="attackDemage" value="70" />
+            </item>
+
+
+            <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+            <item name="leatherArmour">
+                <float name="attackProtection" value="20" />
+            </item>
+
+            <item name="metalArmour">
+                <float name="attackProtection" value="50" />
+             </item>
+
+            <item name="dragonArmour">
+                <float name="attackProtection" value="70" >
+                    <exception  case="meleeAttack/ATTACKER/iceSword" factor="0.5" />
+                </float>
+            </item>
+
+            <item name="hat" >
+                <float name="attackProtection" value="15" />
+            </item>
+
+            <item name="iron helmet" >
+                <float name="attackProtection" value="40" />
+            </item>
+
+            <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+            <item name="umbrella" >
+                <sprite name="icon" sourceSprite="iUmbrella_inv" />
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                </item>
+            </item>
+
+            <item name="amigaBall" >
+                <sprite name="icon" sourceSprite="amigaBall" />
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="amigaBall_vanishEffect" />
+                </item>
+            </item> 
+
+            <item name="healthBottle" type="COUNTABLE" countableData="amount">
+                <int name="amount" value="1" />
+                <sprite name="icon" sourceSprite="iHealthBottle_inv" />
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                </item>
+            </item> 
+
+            <item name="gamepad" tags="throwable">
+                <sprite name="icon" sourceSprite="iGamepad_inv" />
+                
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                </item>
+            
+            </item> 
+
+            <!-- 
+            <item name="wGamepad" >
+                <float name="damage" value="10" />
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                </item>
+            </item>
+        -->
+
+            <item name="boomerang" tags="throwable">
+                <sprite name="icon" sourceSprite="iBoomerang_inv" />
+            </item>
+
+            <item name="wBoomerang" >
+                <float name="damage" value="10" />
+            </item>
+
+            <item name="shurikenProxy" type="COUNTABLE" countableData="amount" tags="throwable">
+                <int name="amount" />
+                <sprite name="icon" sourceSprite="iShuriken_inv" />
+            </item> 
+
+            <item name="shurikenOne" type="COUNTABLE" countableData="amount" tags="throwable" countableProxyItem="shurikenProxy">
+                <int name="amount" value="1" />
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                </item>
+            </item> 
+
+            <item name="shurikenTen" type="COUNTABLE" countableData="amount" tags="throwable" countableProxyItem="shurikenProxy">
+                <int name="amount" value="10" />
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                </item>
+            </item>
+
+            <item name="shurikenUsed" tags="throwable">
+                <float name="damage" value="10" />
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="shuriken_vanishEffect" />
+                </item>
+            </item>
+
+            <item name="3partSwitch_left" >
+                <bool name="picked" value="FALSE" />
+                <sprite name="icon" sourceSprite="3partSwitch_left" />
+            </item> 
+
+            <item name="3partSwitch_middle" >
+                <bool name="picked" value="FALSE" />
+                <sprite name="icon" sourceSprite="3partSwitch_middle" />
+            </item> 
+
+            <item name="3partSwitch_right" >
+                <bool name="picked" value="FALSE" />
+                <sprite name="icon" sourceSprite="3partSwitch_right" />
+            </item> 
+
+            <item name="key">
+                <bool name="picked" value="FALSE" />
+            </item>
+
+            <item name="uniqueKey" >
+                <bool name="picked" value="FALSE" />
+            </item>
+
+            <item name="greenKey" >
+                <sprite name="icon" sourceSprite="doorB_greenKey" />
+
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                </item>
+            </item>
+
+            <item name="coin" type="COUNTABLE" countableData="worth">
+                <int name="worth" />
+            </item>
+
+            <item name="smallCoin" type="COUNTABLE" countableData="worth" countableProxyItem="coin">
+                <int name="worth" value="1" />
+                
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectA" />
+                </item>
+            </item>
+
+            <item name="bigCoin" type="COUNTABLE" countableData="worth" countableProxyItem="coin">
+                <int name="worth" value="5" />
+
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectA" />
+                </item>
+            </item>
+
+            <item name="starA" type="COUNTABLE" countableData="score" >
+                <int name="score" value="10" />
+
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                    <aniSpriteObject name="scoreEffect" text="10" />
+                </item>
+            </item>
+
+            <item name="starB" type="COUNTABLE" countableData="score" >
+                <int name="score" value="5" />
+
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                    <aniSpriteObject name="scoreEffect" dataForText="score" />
+                </item>
+            </item>
+
+
+            <item name="starC" type="COUNTABLE" countableData="score" >
+                <int name="score" value="5" />
+
+                <item name="endPhase" >
+                    <tween name="alphaFade" start="0.0" end="1.0" duration="0.25" /> 
+                    <aniSpriteObject name="vanishEffectB" />
+                    <aniSpriteObject name="scoreEffect" dataForText="score" />
+                </item>
+            </item>
+
+
+        </items>
+
+        
+        <items info="ENTITIES">
+
+            <item name="hero" >
+                <float name="energy" value="100" />
+                <float name="energyMax" value="100" maxValue="200" />
+                <int name="lives" maxValue="5" value="3" />
+                <int name="score" value="0" />
+
+
+                <item name="skills">
+                    <item name="meleeCombat" >
+                        <float name="attackDemage" value="100" />
+                        <float name="attackProtection" value="100" />  
+                    </item> 
+                </item>
+
+                <item name="coins" type="COUNTABLE" countableData="worth" countableProxyItem="coin">
+                    <int name="worth" />
+                    <allowedChildren items="coin, bigCoin, smallCoin" />
+                    <!--<addedChildren items="smallCoin, bigCoin" />-->
+                </item>
+
+                <item name="itemsInventory" type="SELECTABLE_GROUP">
+                    <allowedChildren items="umbrella, amigaBall, healthBottle, greenKey, key, uniqueKey, gamepad, boomerang, 3partSwitch_left, 3partSwitch_middle, 3partSwitch_right" />
+                    <allowedChildren items="shurikenProxy, shurikenOne, shurikenTen" />
+
+                    <!-- <addedChildren items="umbrella" />-->
+                </item>
+
+                <item name="weapons" type="SELECTABLE_GROUP" >
+                    <allowedChildren items="staff, sword, dragonSword, iceSword" />
+                </item>
+
+                <item name="armours">
+                    <item name="bodyArmour" type="SELECTABLE_GROUP" childItemsDataFactor="0.6" >
+                        <allowedChildren items="leatherArmour, metalArmour, dragonArmour" />
+                    </item>
+                    <item name="headArmour" type="SELECTABLE_GROUP" childItemsDataFactor="0.4">
+                        <allowedChildren items="hat, iron helmet" />
+                    </item>
+                </item>
+                <!-- 
+                <dataCollector name="attackDemageCollector">
+                    <collect data="/attackDemage" />
+                </dataCollector>
+
+                <dataCollector name="attackProtectionCollector">
+                    <collect data="/attackProtection" />
+                </dataCollector>
+            -->
+
+            </item>
+
+
+            <item name="enemyA">
+                <float name="energy" value="100" />
+                
+                <item name="skills">
+                    <item name="meleeCombat" >
+                        <float name="attackDemage" value="100" />
+                        <float name="attackProtection" value="100" />  
+                    </item> 
+                </item>
+
+                <item name="inventory">
+                    <allowedChildren items="umbrella, key, uniqueKey" />
+                </item>
+
+                <item name="weapons" type="SELECTABLE_GROUP">
+                    <allowedChildren items="staff, sword, dragonSword, iceSword" />
+                </item>
+
+                <item name="armours">
+                    <item name="bodyArmour" type="SELECTABLE_GROUP" childItemsDataFactor="0.6" >
+                        <allowedChildren items="leatherArmour, metalArmour, dragonArmour" />
+                    </item>
+                    <item name="headArmour" type="SELECTABLE_GROUP"  childItemsDataFactor="0.4">
+                        <allowedChildren items="hat, iron helmet" />
+                    </item>
+                </item>
+                <!--
+                <dataCollector name="attackDemageCollector">
+                    <collect data="/attackDemage" />
+                </dataCollector>
+
+                <dataCollector name="attackProtectionCollector">
+                    <collect data="/attackProtection" />
+                </dataCollector>
+            -->
+            </item>
+
+
+        </items>
+
+        <!-- 
+        <actions>
+
+            <action name="meleeAttack" rootItems="ATTACKER, ATTACKED">
+
+                <float name="energyReduction" />
+                
+                <itemDataCollector name="energyReduction" rootItems="ATTACKER, ATTACKED" >
+                    <add data="ATTACKER/weapon:attackDemage" factor="1" />
+                    <add data="ATTACKER/skill:meleeAttack:attackDemage" factor="1"/>
+                    <add data="ATTACKED/armour:attackProtection" factor="-1"/> 
+                    <add data="ATTACKED/skill:meleeDefense:attackProtection" factor="-1"/> 
+                </itemDataCollector>
+
+                <collectedData storeInto="energyReduction" >
+                    <add collector="ATTACKER:CollectAttackDamage" factor="1" />
+                    <add collector="ATTACKED:CollectAttackProtection" factor="1" />
+                </collectedData> 
+
+                <a doSetItemData="ATTACKED:energy = - COLLECTED:energyReduction" />
+                <a onItemData="ATTACKED:energy=0" doItemDataAction="loseLife(ATTACKER,ATTACKED)" />
+            </action>
+
+            <action name="loseLife" rootItems="ATTACKER, ATTACKED">
+                <a onItemData="ATTACKER/NAME=hero" doSetItemData="ATTACKER/score = + ATTACKED/scoreValue" />
+                <a doSetItemData="ATTACKED/numberOfLives = -1" />
+                <a onItemData="ATTACKED/numberOfLives=0" doSetItemData="ATTACKED/alive = FALSE" />
+            </action>
+
+
+            <action name="coinPicked" rootItems="PICKER, PICKED">
+                <a doSetItemData="PICKER/coins = + PICKED/coinValue" />
+                <a doSetItemData="PICKED/picked = TRUE" />
+            </action>
+
+            <action name="itemPicked" characters="PICKER, PICKED" >
+                <a doSetItemData="PICKER/pickableItem:PICKED:count = + 1" />
+                <a doSetItemData="PICKED/picked = TRUE" />
+            </action>
+
+        </actions>
+    -->
+
+    <!-- </itemsSystem>-->
+
+
+    <!-- 
+    <functions>
+
+
+        <function name="meleeAttackEnergyReduction" arguments="ITEM:ATTACKER, ITEM:ATTACKED">
+            <float name="energyReduction" minValue="0" value="0" />
+            <a doSetData="LOCAL:energyReduction = + ATTACKER:COLLECT:attackDemage" />
+            <a doSetData="LOCAL:energyReduction = - ATTACKED:COLLECT:attackProtection" />
+        </function>
+
+        <function name="meleeAttack" arguments="ITEM:ATTACKER, ITEM:ATTACKED">
+            <a doSetData="ATTACKED:energy = - FUNCTION:meleeAttackEnergyReduction(ATTACKER,ATTACKED)/energyReduction" />
+            <a onData="ATTACKED:energy=0" doFunction="loseLife(ATTACKER,ATTACKED)" />
+        </function>
+
+        
+        <function name="loseLife" arguments="ITEM:ATTACKER, ITEM:ATTACKED">
+            <a onData="ATTACKER:name=hero" doSetData="hero:score = + ATTACKED:scoreValue" />
+            <a doSetData="ATTACKED:numberOfLives = -1" />
+            <a onData="ATTACKED:numberOfLives=0" doSetData="ATTACKED:alive = FALSE" />
+        </function>
+
+
+        <function name="coinPicked" arguments="ITEM:PICKER, ITEM:PICKED">
+            <a doSetData="PICKER:coins = + PICKED:coinValue" />
+            <a doSetData="PICKED:picked = TRUE" />
+        </function>
+
+        <function name="itemPicked" arguments="ITEM:PICKER, ITEM:PICKED" >
+            <a onItemStorable="PICKER:pickableItem/PICKED" doStoreItem="PICKER:pickableItem/PICKED" doSetData="PICKED:inWorld = FALSE" />
+        </function>
+
+    </functions>
+-->
+
+
+
+</scene>

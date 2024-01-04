@@ -13,6 +13,10 @@ namespace ncine {
 class Viewport;
 }
 
+namespace pugi {
+class xml_node;
+}
+
 
 namespace jugimap {
 
@@ -25,6 +29,9 @@ class Camera;
 
 struct SceneMapInfo
 {
+
+    bool loadCfg(const pugi::xml_node &_node);
+
 
 
     bool operator==(SceneMapInfo &other);
@@ -74,6 +81,8 @@ public:
 
 
     SceneMapInfo info;
+
+
 
     ~SceneMap();
 

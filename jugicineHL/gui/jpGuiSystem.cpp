@@ -31,7 +31,9 @@
 #include "jpGuiUtilities.h"
 #include "widgets/jpGuiButton.h"
 #include "widgets/jpGuiSlider.h"
+#include "widgets/jpGuiSlot.h"
 #include "widgets/jpGuiTable.h"
+#include "widgets/jpGuiTableNew.h"
 #include "widgets/jpGuiTextField.h"
 #include "widgets/jpGuiTextInput.h"
 #include "widgets/jpGuiBar.h"
@@ -54,12 +56,14 @@ GuiSystem::GuiSystem()
 
     mWidgetsManager->addWidgetFactory(new ButtonFactory("button", WidgetType::BUTTON));
     mWidgetsManager->addWidgetFactory(new SliderFactory("slider", WidgetType::SLIDER));
+    mWidgetsManager->addWidgetFactory(new GuiSlotNewFactory("slotNew", WidgetType::SLOT));
     mWidgetsManager->addWidgetFactory(new TableFactory("table", WidgetType::TABLE));
+    mWidgetsManager->addWidgetFactory(new TableNewFactory("tableNew", WidgetType::TABLE));
     mWidgetsManager->addWidgetFactory(new TextFieldFactory("textField", WidgetType::TEXT_FIELD));
     mWidgetsManager->addWidgetFactory(new TextInputFactory("textInput", WidgetType::TEXT_INPUT));
     mWidgetsManager->addWidgetFactory(new BarFactory("bar", WidgetType::BAR));
 
-    mWidgetSignalParser = new WidgetSignalParser({"BUTTON", "SLIDER", "TEXT_FIELD", "TEXT_INPUT", "BAR", "TABLE"});
+    mWidgetSignalParser = new WidgetSignalParser({"BUTTON", "SLIDER", "TEXT_FIELD", "TEXT_INPUT", "BAR", "TABLE", "SLOT"});
     app->signalParserManager()->addAndStoreSignalParser(mWidgetSignalParser);
 
 }
@@ -144,9 +148,11 @@ bool GuiSystem::buildObjects(PlayedScene *_scene)
     //--- create widgets
     for(GuiWidgetCfg* wCfg : mWidgetsManager->widgetCfgs()){
 
+        std::vector<Sprite*>sprites_WidgetNew;
         std::vector<Sprite*>sprites;
         for(SceneMap *sm : _scene->sceneMaps()){
-            CollectSpritesWithParameter(sm->map(), sprites, "widgetNew", wCfg->name);
+            CollectSpritesWithParameter(sm->map(), sprites_WidgetNew, "widgetNew", wCfg->name);
+            CollectSpritesWithParameter(sm->map(), sprites, "widget", wCfg->name);
         }
 
         if(wCfg->name=="panelButton"){
@@ -235,6 +241,44 @@ bool GuiSystem::initConnections(PlayedScene *_scene)
 }
 
 
+bool GuiSystem::initConnections_setParameters(const std::string &parameters, PlayedScene *_scene)
+{
+
+    dbgSystem.addMessage("Initializing gui system - setting parameters ... ");
+
+
+    for(GuiWidget* w : mUsedWidgets){
+        w->cleanupFlags();
+    }
+
+
+    if(parameters.empty()){
+
+        for(GuiWidget* w : mWidgets){
+            mUsedWidgets.push_back(w);
+        }
+
+
+    }else{
+
+        std::vector<std::string>parts = StdString::splitString(parameters, "|");
+        for(const std::string &s : parts){
+            GuiWidget *w = findWidget(s, WidgetType::NOT_DEFINED, true);
+            if(w==nullptr){
+                return false;
+            }
+            mUsedWidgets.push_back(w);
+        }
+    }
+
+
+    //---
+    dbgSystem.removeLastMessage();
+    return true;
+
+}
+
+
 void GuiSystem::start()
 {
 
@@ -263,6 +307,7 @@ void GuiSystem::preUpdate(UpdateMode &_updateMode)
         if(map->isHidden()) continue;
 
 
+
         Vec2f cursorInMapPosition = map->camera()->MapPointFromScreenPoint(guiCursorDeviceInput.getCursorScreenPosition());
         guiCursorDeviceInput._setCursorInMapPosition(cursorInMapPosition);
 
@@ -270,7 +315,7 @@ void GuiSystem::preUpdate(UpdateMode &_updateMode)
         //    mWidgetManager->updateWidgets();
         //}
 
-        updateWidgets();
+        updateWidgets(map);
     }
 
 }
@@ -319,7 +364,7 @@ void GuiSystem::setWidgetsToInitialState()
 }
 
 
-void GuiSystem::updateWidgets()
+void GuiSystem::updateWidgets(Map *_map)
 {
 
     if(mEnabled==false){
@@ -328,7 +373,13 @@ void GuiSystem::updateWidgets()
 
 
     for(GuiWidget * w : mUsedWidgets){
-        if(w->modalBlockLevel()>0) continue;
+        if(w->rootMap()!=_map){
+            continue;
+        }
+
+        if(w->modalBlockLevel()>0){
+            continue;
+        }
 
         w->update();
     }
@@ -360,7 +411,6 @@ GuiWidget* GuiSystem::findWidget(const std::string &_name, WidgetType guiWidgetK
 
     return nullptr;
 }
-
 
 
 GuiWidget* GuiSystem::findWidget(int _tag, WidgetType guiWidgetKind, bool _setErrorMessage)

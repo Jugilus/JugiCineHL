@@ -12,6 +12,7 @@
 
 #include "jpPlayedScene.h"
 #include "jpPlayedApp.h"
+#include "jpObjectParser.h"
 
 #include "jpSourceEntity.h"
 #include "jpEntity.h"
@@ -51,7 +52,7 @@ PathMovementState GetPathMovementStateFromString(const std::string &state)
 }
 
 
-std::vector<NamedValue>gPathMovementStateNamedValues
+std::vector<std::pair<std::string, int>>gPathMovementStateNamedValues
 {
     {"STANDING", static_cast<int>(PathMovementState::STANDING) },
     {"IDLE", static_cast<int>(PathMovementState::IDLE) },
@@ -374,6 +375,11 @@ bool PathMovementData::initConnections(PlayedScene *_scene, Entity *_actor)
 
 //==========================================================================
 
+PathwayAccessedSignal::PathwayAccessedSignal()
+{
+    setId(SignalID::UPDATED_ON_SIGNAL_QUERY);
+}
+
 
 PathwayAccessedSignal::PathwayAccessedSignal(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathMovementEngine) : UpdatedBoolSignal(),
     mActor(_actor),
@@ -383,12 +389,30 @@ PathwayAccessedSignal::PathwayAccessedSignal(Entity *_actor, PathMovementData *_
 }
 
 
+void PathwayAccessedSignal::updateNEW(Entity *_Actor, PathMovementData *_pathMovementData, PathMovementEngine *_PathMovementEngine)
+{
+    mActor = _Actor;
+    mPathMovementData = _pathMovementData;
+    mPathMovementEngine = _PathMovementEngine;
+    update();
+}
+
+void PathwayAccessedSignal::set(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathMovementEngine)
+{
+    mActor = _actor;
+    mPathMovementData = _pathMovementData;
+    mPathMovementEngine = _pathMovementEngine;
+
+}
+
+
 void PathwayAccessedSignal::update()
 {
 
     // check commands for accessing pathway
     if(mPathMovementData->moveForward.active()==false && mPathMovementData->moveBackward.active()==false){
-        setValue_onNextFrame(false);
+        //setValue_onNextFrame(false);
+        setValue(false);
         return;
     }
 
@@ -432,7 +456,8 @@ void PathwayAccessedSignal::update()
 
 
         if(mPathMovementEngine->preStartIfPathwayAccessed(mPathMovementData, direction, &mActor->animationPlayer())){
-            setValue_onNextFrame(true);
+            //setValue_onNextFrame(true);
+            setValue(true);
             return;
         }
     }
@@ -440,7 +465,8 @@ void PathwayAccessedSignal::update()
     mPathMovementData->vectorShape = nullptr;    // ! ('vectorShape' is used as flag that pathwayMovementEngine is ready to be used)
     mPathMovementData->pathway = nullptr;
 
-    setValue_onNextFrame(false);
+    // setValue_onNextFrame(false);
+    setValue(false);
     return;
 
 }
@@ -448,6 +474,11 @@ void PathwayAccessedSignal::update()
 
 
 //==========================================================================
+
+PathwayLeftSignal::PathwayLeftSignal()
+{
+
+}
 
 
 PathwayLeftSignal::PathwayLeftSignal(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathwayEngine, MovementEngineData *_targetEngineData) : UpdatedBoolSignal(),
@@ -458,6 +489,16 @@ PathwayLeftSignal::PathwayLeftSignal(Entity *_actor, PathMovementData *_pathMove
 {
 
 }
+
+
+void PathwayLeftSignal::set(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathMovementEngine)
+{
+    mActor = _actor;
+    mPathMovementData = _pathMovementData;
+    mPathwayEngine = _pathMovementEngine;
+
+}
+
 
 
 void PathwayLeftSignal::update()
@@ -487,6 +528,125 @@ void PathwayLeftSignal::update()
    setValue_onNextFrame(false);
 
 }
+
+
+
+//======================================================================================
+
+
+PathwayPositionAtEndSignal::PathwayPositionAtEndSignal()
+{
+    setId(SignalID::UPDATED_ON_SIGNAL_QUERY);
+
+}
+
+
+void PathwayPositionAtEndSignal::set(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathMovementEngine)
+{
+    mActor = _actor;
+    mPathMovementData = _pathMovementData;
+    mPathwayEngine = _pathMovementEngine;
+
+}
+
+
+void PathwayPositionAtEndSignal::update()
+{
+
+    assert(mPathwayEngine == mActor->currentEngine());
+
+
+    bool pathwayEnd = false;
+
+    if(mPathwayEngine->direction()==Direction::FORWARD){
+        if(mPathwayEngine->velocityGenerator().isPathwayEnd()){
+            pathwayEnd = true;
+        }
+
+    }else if(mPathwayEngine->direction()==Direction::BACKWARD){
+        if(mPathwayEngine->velocityGenerator().isPathwayStart()){
+            pathwayEnd = true;
+        }
+    }
+
+    if(pathwayEnd==false){
+        if(mPathMovementData->moveBackward.active() && (mActor->blockedDirectionsRef() & static_cast<int>(Direction::DOWN))){
+            pathwayEnd = true;
+        }
+    }
+
+    setValue(pathwayEnd);
+
+
+}
+
+
+//======================================================================================
+
+
+PathwayPositionAtExitPointSignal::PathwayPositionAtExitPointSignal()
+{
+    setId(SignalID::UPDATED_ON_SIGNAL_QUERY);
+
+}
+
+
+void PathwayPositionAtExitPointSignal::set(Entity *_actor, PathMovementData *_pathMovementData, PathMovementEngine *_pathMovementEngine)
+{
+    mActor = _actor;
+    mPathMovementData = _pathMovementData;
+    mPathwayEngine = _pathMovementEngine;
+
+}
+
+
+void PathwayPositionAtExitPointSignal::update()
+{
+
+    assert(mPathwayEngine == mActor->currentEngine());
+
+
+    bool atPathwayExitPoint = false;
+
+    Vec2f currentPosP = mPathwayEngine->velocityGenerator().currentPositionP();
+    float maxFromGroundDistance = gWorldInfo.minGeometryBlockPixels() * 0.5;
+
+    if(mPathMovementData->pathwayOrientation==PathwayOrientation::VERTICAL){
+
+        for(int index : mPathMovementData->exitPathPointsIndexes){
+            int yExit = mPathMovementData->vectorShape->pathPoints().at(index).y;
+            if(currentPosP.y > yExit - maxFromGroundDistance  &&  currentPosP.y < yExit + maxFromGroundDistance) {
+                print("Actor within maxGroundDistance!");
+                atPathwayExitPoint = true;
+            }
+        }
+        /*
+        if(mCurrentData->vectorShape->pathPoints().front().y < mCurrentData->vectorShape->pathPoints().back().y){
+
+            if(currentPosP.y < mCurrentData->vectorShape->pathPoints().front().y  + maxFromGroundDistance ){
+                print("Actor within maxGroundDistance!");
+                return true;
+            }
+
+        }else{
+            if(currentPosP.y < mCurrentData->vectorShape->pathPoints().back().y + maxFromGroundDistance){
+                print("Actor within maxGroundDistance!");
+                return true;
+            }
+
+        }
+        */
+
+    }
+
+    setValue(atPathwayExitPoint);
+
+}
+
+
+
+//======================================================================================
+
 
 
 
@@ -539,7 +699,6 @@ bool VGPathMovement::initMovement(PathMovementData &_data, Direction _direction,
     return true;
 
 }
-
 
 
 b2Vec2 VGPathMovement::updateVelocity(float _timeStep, Direction _inputDirection, int _blockedDirections, b2Vec2 _actorContactPosM)
@@ -895,10 +1054,64 @@ bool PathMovementEngine::initDataObjectsConnections(PlayedScene *_scene, Entity 
         if(d.initConnections(_scene, _actor)==false){
             return false;
         }
+
+        /*
+        //---
+        std::string signalParsingPrefix = d.cfg->getSignalParsingPrefix();
+        _actor->signalStorage()->addSignal_query(d.moveForward.signal(), signalParsingPrefix + "MOVE_FORWARD");
+        _actor->signalStorage()->addSignal_query(d.moveBackward.signal(), signalParsingPrefix +"MOVE_BACKWARD");
+        _actor->signalStorage()->addSignal_query(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+        SignalIdentifier *si = _actor->signalStorage()->addSignal_query(&mSigState, signalParsingPrefix + "STATE");
+        if(si) si->intValuesIdentifier = &gPathMovementStateNamedValues;
+
+        mSigPathwayAccessed.set(_actor, &d, this);
+        _actor->signalStorage()->addSignal_query(&mSigPathwayAccessed, signalParsingPrefix + "PATWAY_ACCESSED");
+
+        mSigPathwayPositionAtEnd.set(_actor, &d, this);
+        _actor->signalStorage()->addSignal_query(&mSigPathwayPositionAtEnd, signalParsingPrefix + "PATWAY_END_POSITION");
+
+        mSigPathwayPositionAtExitPoint.set(_actor, &d, this);
+        _actor->signalStorage()->addSignal_query(&mSigPathwayPositionAtExitPoint, signalParsingPrefix + "PATWAY_EXIT_POSITION");
+
+
+        // setter signals
+        _actor->signalStorage()->addSignal_setter(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+        */
     }
 
     return true;
 }
+
+
+void PathMovementEngine::collectSignalsForLUT(SignalStorage &_storage)
+{
+
+    for(PathMovementData& d : mPathMovementDatas){
+
+        std::string signalParsingPrefix = d.cfg->getSignalParsingPrefix();
+        _storage.addSignal_query(d.moveForward.signal(), signalParsingPrefix + "MOVE_FORWARD");
+        _storage.addSignal_query(d.moveBackward.signal(), signalParsingPrefix +"MOVE_BACKWARD");
+
+        _storage.addSignal_query(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+        SignalIdentifier *si = _storage.addSignal_query(&mSigState, signalParsingPrefix + "STATE");
+        if(si) si->intValuesIdentifier = &gPathMovementStateNamedValues;
+
+        mSigPathwayAccessed.set(mParentEntity, &d, this);
+        _storage.addSignal_query(&mSigPathwayAccessed, signalParsingPrefix + "PATWAY_ACCESSED");
+
+        mSigPathwayPositionAtEnd.set(mParentEntity, &d, this);
+        _storage.addSignal_query(&mSigPathwayPositionAtEnd, signalParsingPrefix + "PATWAY_END_POSITION");
+
+        mSigPathwayPositionAtExitPoint.set(mParentEntity, &d, this);
+        _storage.addSignal_query(&mSigPathwayPositionAtExitPoint, signalParsingPrefix + "PATWAY_EXIT_POSITION");
+
+
+        // setter signals
+        _storage.addSignal_setter(&d.sigDisabled, signalParsingPrefix +"DISABLED");
+    }
+
+}
+
 
 
 bool PathMovementEngine::preStartIfPathwayAccessed(PathMovementData *_data, Direction _direction, AnimationPlayer *_animationPlayer)
@@ -1099,14 +1312,16 @@ bool PathMovementEngine::init(Entity *_entity)
     mSignals.push_back(&mSigState);
 
     for(PathMovementData& d : mPathMovementDatas){
-        if(d.moveForward.mSignal == &d.sigMoveForwardObj){
+        if(d.moveForward.signal() == &d.sigMoveForwardObj){
             mSignals.push_back(&d.sigMoveForwardObj);
         }
-        if(d.moveBackward.mSignal == &d.sigMoveBackwardObj){
+        if(d.moveBackward.signal() == &d.sigMoveBackwardObj){
             mSignals.push_back(&d.sigMoveBackwardObj);
         }
         mSignals.push_back(&d.sigDisabled);
     }
+
+    mSigState.createExtraData()->namedValues = &gPathMovementStateNamedValues;
 
     return true;
 }
@@ -1152,6 +1367,9 @@ bool PathMovementEngine::start(MovementEngineData *_data)
 b2Vec2 PathMovementEngine::update(EngineUpdateParameters &eup)
 {
 
+    //mSigPathwayAccessed.updateNEW(mParentEntity, mCurrentData, this);
+
+    //---
     mStateEllapsedTimeS += eup.timeStep;
     mVelocity.SetZero();
 
@@ -1177,8 +1395,6 @@ b2Vec2 PathMovementEngine::update(EngineUpdateParameters &eup)
         }
 
     }
-
-
 
     //---
     if(mState==PathMovementState::STANDING || mState==PathMovementState::IDLE){
@@ -1431,6 +1647,8 @@ bool PathMovementEngine::isPathwayFinished(bool _activeGroundMoveCommand)
 }
 
 
+
+
 /*
 bool PathMovementEngine::isPathwayAccessed(PathMovementData *_data, b2Vec2 _actorPosM)
 {
@@ -1503,12 +1721,12 @@ void PathMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, Par
 
                 if(signalName=="MOVE_FORWARD"){
                     //_signalQuery.mSignal = d.moveForward.mSignal;
-                    _psp.obtainValue(_signalQuery, d.moveForward.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveForward.signal());
                     return;
 
                 }else if(signalName=="MOVE_BACKWARD"){
                     //_signalQuery.mSignal = d.moveBackward.mSignal;
-                    _psp.obtainValue(_signalQuery, d.moveBackward.mSignal);
+                    _psp.obtainValue(_signalQuery, d.moveBackward.signal());
                     return;
                 }
             }
@@ -1526,7 +1744,7 @@ void PathMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, Par
             dbgSystem.addMessage("Unknown signal value '" + _psp.signalValue + " ' !");
         }
         */
-        _psp.obtainValue(_signalQuery, &mSigState, &gPathMovementStateNamedValues);
+        _psp.obtainValue(_signalQuery, &mSigState);
 
         return;
     }
@@ -1559,7 +1777,7 @@ void PathMovementEngine::obtainSignal_signalQuery(SignalQuery &_signalQuery, Par
     }
 
 
-    if(_signalQuery.mSignal==nullptr && _setErrorMessage){
+    if(_signalQuery.signal()==nullptr && _setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
@@ -1584,7 +1802,7 @@ void PathMovementEngine::obtainSignal_signalSetter(SignalSetter &_signalSetter, 
     }
 
 
-    if(_signalSetter.mSignal==nullptr && _setErrorMessage){
+    if(_signalSetter.signal()==nullptr && _setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting it!");
     }
 

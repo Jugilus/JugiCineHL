@@ -13,6 +13,7 @@
 #include "jmUtilities.h"
 
 #include "jpQueries.h"
+#include "jpObjectParser.h"
 #include "jpGuiCommon.h"
 #include "jpGuiSystem.h"
 #include "jpGuiButton.h"
@@ -215,6 +216,8 @@ bool GuiSlider::initConnections(GuiSystem * _guiSystem)
 
     dbgSystem.addMessage("Init connections for the widget '" + mCfg->name + "' ...");
 
+
+    mRootMap = mRootSprite->parentLayer()->rootMap();
 
     mName = mRootSprite->parameters().value("wName");
     if(mName=="" && mChildWidget==false){
@@ -1042,7 +1045,7 @@ void GuiSlider::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignal
 
     GuiWidget::obtainSignal_signalQuery(_signalQuery, _psp, _setErrorMessage);
 
-    if(_signalQuery.mSignal){
+    if(_signalQuery.signal()){
         return;
     }
 
@@ -1051,7 +1054,7 @@ void GuiSlider::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignal
         _psp.obtainValue(_signalQuery, &mSigValue);
     }
 
-    if(_setErrorMessage && _signalQuery.mSignal==nullptr){
+    if(_setErrorMessage && _signalQuery.signal()==nullptr){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
@@ -1063,7 +1066,7 @@ void GuiSlider::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSig
 
     GuiWidget::obtainSignal_signalSetter(_signalSetter, _psp, _setErrorMessage);
 
-    if(_signalSetter.mSignal){
+    if(_signalSetter.signal()){
         return;
     }
 
@@ -1072,7 +1075,7 @@ void GuiSlider::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSig
         _psp.obtainValue(_signalSetter, &mSigValue);
     }
 
-    if(_setErrorMessage && _signalSetter.mSignal==nullptr){
+    if(_setErrorMessage && _signalSetter.signal()==nullptr){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 

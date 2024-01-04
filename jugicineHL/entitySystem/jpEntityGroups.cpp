@@ -70,7 +70,7 @@ int GetMovableObjectFromString_signalSetter(const std::string &_type)
 }
 
 
-std::vector<NamedValue>gMovableObjectNamedValues_query
+std::vector<std::pair<std::string, unsigned int>>gMovableObjectNamedValues_query
 {
     {"MOVED", MovableObject::MOVED },
     {"ON_LEFT", MovableObject::ON_LEFT },
@@ -81,7 +81,7 @@ std::vector<NamedValue>gMovableObjectNamedValues_query
 };
 
 
-std::vector<NamedValue>gMovableObjectNamedValues_setter
+std::vector<std::pair<std::string, unsigned int>>gMovableObjectNamedValues_setter
 {
     {"MOVED", MovableObject::MOVED }
 

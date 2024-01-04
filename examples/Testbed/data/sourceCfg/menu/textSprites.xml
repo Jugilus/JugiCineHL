@@ -5,32 +5,20 @@
         <textSprite name="Window Title" fontName="fontNormal_bold" colorName="yellowB" handle="left-bottom"/>
         <textSprite name="key" fontName="fontNormal_bold" colorName="yellowA" handle="left-bottom"/>
         <textSprite name="userName" fontName="fontNormal_bold" handle="left-bottom"/>
-        <textSprite name="sceneName" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom">
-            <constantParameter name="wSlotTextSprite" value="sceneName" type="string"/>
-        </textSprite>
+        <textSprite name="sceneName" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom"/>
         <textSprite name="common" fontName="fontNormal" colorName="violetA" handle="left-bottom"/>
         <textSprite name="commonBold" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom"/>
         <textSprite name="controlerName" fontName="fontNormal_bold" colorName="violetA" handle="center"/>
         <textSprite name="buttonC" fontName="fontNormal_bold" colorName="violetB" handle="left-bottom">
             <parameter name="wName" value="value" type="string"/>
             <parameter name="wExclusiveGroup" value="settingsSections" type="string"/>
-            <parameter name="widgetNew" value="panelButton_var2" type="string"/>
+            <parameter name="widget" value="panelButton_var2" type="string"/>
         </textSprite>
         <textSprite name="buttonA_text" fontName="fontNormal_bold" handle="center"/>
-        <textSprite name="buttonB_text1" fontName="fontBig_blue" handle="left-bottom">
-            <constantParameter name="wVisible" value="1" type="int"/>
-            <constantParameter name="wVisible_CO" value="0" type="int"/>
-        </textSprite>
-        <textSprite name="buttonB_text2" fontName="fontBig_yellow" handle="left-bottom">
-            <constantParameter name="wVisible" value="0" type="int"/>
-            <constantParameter name="wVisible_CO" value="1" type="int"/>
-        </textSprite>
-        <textSprite name="inputBoxA_text" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom">
-            <constantParameter name="wText" value="true" type="bool"/>
-        </textSprite>
-        <textSprite name="inputBoxA_cursor" fontName="fontNormal_bold" colorName="redA" handle="left-bottom">
-            <constantParameter name="wCursor" value="true" type="bool"/>
-        </textSprite>
+        <textSprite name="buttonB_text1" fontName="fontBig_blue" handle="left-bottom"/>
+        <textSprite name="buttonB_text2" fontName="fontBig_yellow" handle="left-bottom"/>
+        <textSprite name="inputBoxA_text" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom"/>
+        <textSprite name="inputBoxA_cursor" fontName="fontNormal_bold" colorName="redA" handle="left-bottom"/>
         <textSprite name="activeUserName" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom"/>
         <textSprite name="inputCommandDescription" fontName="fontNormal_bold" colorName="violetA" handle="left-bottom"/>
         <textSprite name="inputCommandButton" fontName="fontNormal_bold" handle="left-bottom"/>

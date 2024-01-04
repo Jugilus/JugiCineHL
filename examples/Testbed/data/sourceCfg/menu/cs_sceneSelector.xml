@@ -155,5 +155,5 @@
         <singlePoint points="(868,339)"/>
     </vectorLayer>
     <parameter name="wName" value="sceneSelector" type="string"/>
-    <parameter name="widgetNew" value="sceneSelectorTable" type="string"/>
+    <parameter name="widget" value="sceneSelectorTable" type="string"/>
 </composedSprite>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="coinsCounter" set="spritesB" tileWidth="50" tileHeight="50" nTilesX="2" nTilesY="1">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="coinsSlotIcon" x="33" y="7"/>
+        <sprite type="Text" name="numOfCoins" nameID="amount" x="80" y="9" text="numOfCoins"/>
+    </layer>
+    <layer content="Free sprites" name="Layer 2" hidden="true">
+        <sprite type="Standard" name="markerA" x="70" y="7" handleSource="true"/>
+    </layer>
+    <parameter name="widget" value="coinsSlot" type="string"/>
+    <parameter name="wName" value="coinsSlot" type="string"/>
+</composedSprite>

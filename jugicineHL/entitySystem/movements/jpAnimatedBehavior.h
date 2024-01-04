@@ -87,6 +87,7 @@ public:
 
     void createDataObjects(std::vector<MovementEngineCfg*> &_cfgs) override;
     bool initDataObjectsConnections(PlayedScene *_scene, Entity *_actor) override;
+    void collectSignalsForLUT(SignalStorage &_storage) override;
 
     bool init(Entity *_entity) override;
     bool start(MovementEngineData *_data) override;
@@ -97,6 +98,7 @@ public:
     AnimatedBehaviorState state(){ return mState; }
 
     MovementEngineData* currentData() override { return mCurrentData; }
+    MovementEngineCfg* currentCfg() override { return mCurrentData->cfg; }
     //std::vector<AnimatedBehaviorData> & animatedBehaviorDatas(){ return mAniMovementDatas; }
     //AnimatedBehaviorData* getAnimatedBehaviorData(const std::string &_name, bool _setErrorMessage = true);
 

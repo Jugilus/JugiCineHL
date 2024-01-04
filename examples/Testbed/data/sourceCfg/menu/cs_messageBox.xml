@@ -51,13 +51,13 @@
         <sprite type="Composite" name="buttonA" x="225" y="33">
             <parameter name="changeChildText" value="label,gui, 14" type="string"/>
             <parameter name="wName" value="messagePanel_Ok" type="string"/>
-            <parameter name="widgetNew" value="panelButton" type="string"/>
+            <parameter name="widget" value="panelButton" type="string"/>
         </sprite>
         <sprite type="Standard" name="tilesA,9" x="200" y="100" handleSource="true"/>
     </layer>
     <vectorLayer name="Vector Layer 1">
         <rectangle points="(49,83);(400,83);(400,182);(49,182)" nameID="textArea"/>
     </vectorLayer>
-    <parameter name="widgetNew" value="panelTextField" type="string"/>
     <parameter name="wName" value="stringValue" type="string"/>
+    <parameter name="widget" value="panelTextField" type="string"/>
 </composedSprite>

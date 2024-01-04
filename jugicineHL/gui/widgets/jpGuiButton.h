@@ -38,7 +38,7 @@ enum class ButtonState : int
 
 ButtonState GetButtonStateFromString(const std::string &state);
 
-extern std::vector<NamedValue>gButtonStateNamedValues;
+extern std::vector<std::pair<std::string, int>>gButtonStateNamedValues;
 
 
 enum class GuiButtonSpritePropertyKind

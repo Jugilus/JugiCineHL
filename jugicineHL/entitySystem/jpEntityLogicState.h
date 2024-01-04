@@ -59,6 +59,8 @@ public:
 
     bool initConnections(PlayedScene *_scene) override;
 
+    void collectSignals(SignalStorage &_signalStorage, std::string _identifier) override;
+
     void start() override;
     void finish() override;
 

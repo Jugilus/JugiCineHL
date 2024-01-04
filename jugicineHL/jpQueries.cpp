@@ -18,6 +18,7 @@
 //#include "jpSourceEntity.h"
 //#include "jpEntity.h"
 //#include "jpEntityUtilities.h"
+#include "jpObjectParser.h"
 #include "jpQueries.h"
 
 
@@ -25,52 +26,469 @@ namespace jugimap{
 
 
 
+
+SignalAccessorRightSide::SignalAccessorRightSide(const SignalAccessorRightSide &_src)
+{
+
+    if(_src.mObjectObtainer){
+        mObjectObtainer = _src.mObjectObtainer->copy();
+    }
+    mIntValue = _src.mIntValue;
+    mFloatValue = _src.mFloatValue;
+    mBoolValue = _src.mBoolValue;
+    mStringValue = _src.mStringValue;
+    mAnyValueChanged = _src.mAnyValueChanged;
+    mValueNotRequired = _src.mValueNotRequired;
+
+    mSigData = _src.mSigData;
+    mSigDataFlag = _src.mSigDataFlag;
+}
+
+
+SignalAccessorRightSide& SignalAccessorRightSide::operator=(const SignalAccessorRightSide &_src)
+{
+    if(&_src==this){
+        return *this;
+    }
+
+    if(_src.mObjectObtainer){
+        mObjectObtainer = _src.mObjectObtainer->copy();
+    }
+    mIntValue = _src.mIntValue;
+    mFloatValue = _src.mFloatValue;
+    mBoolValue = _src.mBoolValue;
+    mStringValue = _src.mStringValue;
+    mAnyValueChanged = _src.mAnyValueChanged;
+    mValueNotRequired = _src.mValueNotRequired;
+
+    mSigData = _src.mSigData;
+    mSigDataFlag = _src.mSigDataFlag;
+
+    return *this;
+
+}
+
+
+SignalAccessorRightSide::~SignalAccessorRightSide()
+{
+    if(mObjectObtainer){
+        delete mObjectObtainer;
+    }
+}
+
+
+SignalAccessor::SignalAccessor(SignalAccessorType _type) : mType(_type){}
+
+
+SignalAccessor::SignalAccessor(const SignalAccessor &_src)
+{
+
+    mType = _src.mType;
+    mSignal = _src.mSignal;
+
+    if(_src.mSignalOriginObtainer){
+        mSignalOriginObtainer = _src.mSignalOriginObtainer->copy();
+    }
+    if(_src.mSignalObtainer){
+        mSignalObtainer = _src.mSignalObtainer->copy();
+    }
+
+
+    mSignalIndex = _src.mSignalIndex;
+
+    mRightSide = _src.mRightSide;
+
+    mOwnedSignal = _src.mOwnedSignal;
+    mNotUsed = _src.mNotUsed;
+
+}
+
+
 SignalAccessor::~SignalAccessor()
 {
 
-    if(mOwnedSignal){
+    if(mSignalOriginObtainer){
+        delete mSignalOriginObtainer;
+    }
+    if(mSignalObtainer){
+        delete mSignalObtainer;
+    }
 
+    if(mOwnedSignal){
         delete mSignal;
+    }
+
+}
+
+
+bool SignalAccessor::parseBoolSignal(PlayedScene *_scene, const std::string & _leftSignalPath, bool _rightSideValue, BaseObject *_rootParentObject)
+{
+
+    dbgSystem.addMessage("Parsing signal '" + _leftSignalPath +"' ..." );
+
+
+    SignalParsingInfo spi;
+    spi.rootParentObject = _rootParentObject;
+    spi.signalAccessorType = mType;
+
+
+    //---- LEFT SIDE
+    if(app->signalParserManager()->parseSignalAccessorNEW(_scene, spi, _leftSignalPath, "")==false){
+        return false;
+    }
+    parseStyle(spi.signalStylePath);
+
+
+    mSignal = spi.signal;
+    mSignalIndex = spi.signalIndex;
+    mSignalOriginObtainer = spi.originObjectObtainer;
+    mSignalObtainer = spi.signalObtainer;
+    if(spi.signalType==SignalType::BITSET){
+        assert(spi.bitFlagValue!=0);
+        mRightSide.mIntValue = spi.bitFlagValue;
+    }
+    mNotUsed = spi.accessorNotUsed;
+
+
+    //---- RIGHT SIDE
+    mRightSide.mBoolValue = _rightSideValue;
+
+
+    dbgSystem.removeLastMessage();
+    return true;
+
+}
+
+
+bool SignalAccessor::parse(PlayedScene *_scene, const std::string &_signalFullPath, BaseObject *_rootParentObject, LogicState *_logicState)
+{
+
+    dbgSystem.addMessage("Parsing signal '" + _signalFullPath +"' ..." );
+
+    if(_signalFullPath=="ENTITY:CONTACTED:iGamepad/ITEM_PICKABLE=TRUE"){
+        DummyFunction();
+    }
+
+
+    SignalParsingInfo spi;
+    spi.rootParentObject = _rootParentObject;
+    spi.logicState = _logicState;
+    spi.signalAccessorType = mType;
+
+    //---
+    std::vector<std::string>parts = StdString::splitString(_signalFullPath, "=");
+    if(mType==SignalAccessorType::QUERY && !(parts.size()==1 || parts.size()==2)){
+        dbgSystem.addMessage("Error parsing string '" + _signalFullPath + "'!");
+        return false;
+    }
+    if(mType==SignalAccessorType::SETTER &&  parts.size()!=2){
+        dbgSystem.addMessage("Error parsing string '" + _signalFullPath + "'!");
+        return false;
+    }
+
+    const std::string & leftSide = parts[0];
+    std::string rightSide;
+    if(parts.size()==2){
+        rightSide = parts[1];
+    }
+
+    bool rightSideIsSignal = false;
+    if(rightSide.size()>7 && rightSide.substr(0,7)=="SIGNAL:"){
+        rightSide = rightSide.substr(7);
+        rightSideIsSignal = true;
+    }
+
+
+    //---- LEFT SIDE
+    if(app->signalParserManager()->parseSignalAccessorNEW(_scene, spi, leftSide, rightSide)==false){
+        return false;
+    }
+    parseStyle(spi.signalStylePath);
+
+
+    mSignal = spi.signal;
+    mSignalIndex = spi.signalIndex;
+    mSignalOriginObtainer = spi.originObjectObtainer;
+    mSignalObtainer = spi.signalObtainer;
+    if(spi.signalType==SignalType::BITSET){
+        assert(spi.bitFlagValue!=0);
+        mRightSide.mIntValue = spi.bitFlagValue;
+    }
+    mNotUsed = spi.accessorNotUsed;
+
+
+    //---- RIGHT SIDE
+    if(mNotUsed==false){
+        if(rightSideIsSignal){
+
+            SignalParsingInfo spiRightSide;
+            spiRightSide.rootParentObject = _rootParentObject;
+            spiRightSide.logicState = _logicState;
+            spiRightSide.signalAccessorType = mType;
+
+            if(app->signalParserManager()->parseSignalAccessorNEW(_scene, spiRightSide, rightSide, "")==false){
+                return false;
+            }
+            if(spiRightSide.signal==nullptr){
+                dbgSystem.addMessage("Signal parsing error! Signal on the right side must be static (known at initialization)!");
+            }
+            if(spiRightSide.signalType!=spi.signalType){
+                dbgSystem.addMessage("Signal on the right side is of the different type than on the left side!");
+            }
+
+            mRightSide.mSigData = spiRightSide.signal;
+            mRightSide.mSigDataFlag = spiRightSide.bitFlagValue;
+
+        }else if(spi.signalType==SignalType::BASE_OBJECT){
+
+            SignalParsingInfo spiRightSide;
+            spiRightSide.rootParentObject = _rootParentObject;
+            spiRightSide.logicState = _logicState;
+            spiRightSide.signalAccessorType = mType;
+
+
+            if(app->signalParserManager()->parseObject(_scene, spiRightSide, rightSide)==false){
+                return false;
+            }
+
+            mRightSide.mObject = spiRightSide.originObject;
+            mRightSide.mObjectObtainer = spiRightSide.originObjectObtainer;
+
+
+        }else{
+
+            if(parseDirectSignalValue(rightSide, spi, leftSide)==false){
+                return false;
+            }
+        }
+    }
+
+
+
+    dbgSystem.removeLastMessage();
+    return true;
+
+}
+
+
+bool SignalAccessor::parseDirectSignalValue(const std::string &_signalValue, SignalParsingInfo &_spi, const std::string & _signalPath)
+{
+
+    //---
+    if(_spi.signalType==SignalType::BOOL || _spi.signalType==SignalType::BITSET){
+
+        if(_signalValue.empty() || _signalValue=="TRUE" || _signalValue=="ON" || _signalValue=="1"){
+            mRightSide.mBoolValue = true;
+
+        }else if(_signalValue=="FALSE" || _signalValue=="OFF" || _signalValue=="0"){
+            mRightSide.mBoolValue = false;
+
+        }else{
+
+            dbgSystem.addMessage("Wrong value '" + _signalValue +" for signal with path '" +_signalPath + "'!");
+            return false;
+        }
+
+
+    }else if(_spi.signalType==SignalType::INT){
+
+        if(_signalValue.empty()){
+            dbgSystem.addMessage("Missing value for integer signal with path '" +_signalPath + "'!");
+            return false;
+        }
+
+        if(_spi.predefiendValueDefined){
+            mRightSide.mIntValue = _spi.predefinedIntValue;
+
+        }else if(_signalValue=="ANY"){
+            mRightSide.mAnyValueChanged = true;
+
+        }else{
+            if(StdString::integerNumber(_signalValue, mRightSide.mIntValue)==false){
+                return false;
+            }
+        }
+
+
+    }else if(_spi.signalType==SignalType::FLOAT){
+
+        if(_signalValue.empty()){
+            dbgSystem.addMessage("Missing value for float signal with path '" +_signalPath + "'!");
+            return false;
+        }
+
+        if(_spi.predefiendValueDefined){
+            mRightSide.mFloatValue = _spi.predefinedFloatValue;
+
+        }else if(_signalValue=="ANY"){
+            mRightSide.mAnyValueChanged = true;
+
+        }else{
+            if(StdString::floatNumber(_signalValue, mRightSide.mFloatValue)==false){
+                return false;
+            }
+        }
+
+
+    }else if(_spi.signalType==SignalType::STRING){
+
+        if(_signalValue.empty()){
+            dbgSystem.addMessage("Missing value for signal '" + _signalPath +"' !");
+            return false;
+        }
+
+        if(_spi.predefiendValueDefined){
+            mRightSide.mStringValue = _spi.predefinedStringValue;
+
+        }else if(_signalValue=="ANY"){
+            mRightSide.mAnyValueChanged = true;
+
+        }else{
+            mRightSide.mStringValue = _signalValue;
+        }
+
+        if(mRightSide.mStringValue=="''"){        // KEY WORD for empty string
+            mRightSide.mStringValue.clear();
+        }
+
+    }else if(_spi.signalType==SignalType::UNKNOWN){
+        assert(false);
 
     }
 
+    return true;
 }
 
 
 //==================================================================================
 
 
-bool SignalQuery::active(){
+bool SignalQuery::parseStyle(const std::string &_style, bool _setErrorMessage)
+{
 
+
+    if(_style==""){
+        mStyle = SignalQuery::Style::ACTIVE;
+
+    }else if(_style=="START"){
+        mStyle = SignalQuery::Style::ACTIVE_STARTED;
+
+     }else if(_style=="ACTIVE"){
+        mStyle = SignalQuery::Style::ACTIVE;
+
+    }else if(_style=="END"){
+       mStyle = SignalQuery::Style::ACTIVE_ENDED;
+
+    }else if(_style=="CHANGED"){
+       mStyle = SignalQuery::Style::ACTIVE_CHANGED;
+
+    }else if(_style=="NOT_ACTIVE"){
+       mStyle = SignalQuery::Style::NOT_ACTIVE;
+
+    }else{
+        if(_setErrorMessage){
+            dbgSystem.addMessage("Error parsing signal query style from string'" + _style +"' !");
+        }
+        return false;
+    }
+
+    return true;
+}
+
+
+SignalQuery::SignalQuery() : SignalAccessor(SignalAccessorType::QUERY)
+{
+
+}
+
+
+bool SignalQuery::active()
+{
+
+    if(mNotUsed) return true;
 
     //if(mSignal->dbgName == "inputCommand-fire"){
     //    std::string dbgInfo = mSignal->getDbgInfo();
     //    print(dbgInfo);
     //}
 
+    if(mSignalOriginObtainer){
 
+        BaseObject* signalOrigin = mSignalOriginObtainer->findOriginObject();
+        if(signalOrigin == nullptr){
+            return false;
+        }
+
+        if(mSignalObtainer){
+
+            mSignalObtainer->setSignalOriginObject(signalOrigin);
+            mSignal = mSignalObtainer->findSignal();
+            if(mSignal==nullptr){
+                return false;
+            }
+
+        }else{
+            assert(mSignalIndex !=-1);
+            mSignal = signalOrigin->signalStorage()->getSignal_query(mSignalIndex);
+
+        }
+
+    }else if(mSignalObtainer){
+
+       mSignal = mSignalObtainer->findSignal();
+       if(mSignal==nullptr){
+           return false;
+       }
+    }
+
+
+    assert(mSignal);
+
+    //----
+    if(mSignal->id()==SignalID::UPDATED_ON_SIGNAL_QUERY){
+        if(mSignal->type()==SignalType::BOOL){
+            UpdatedBoolSignal *ubs = static_cast<UpdatedBoolSignal*>(mSignal);
+            ubs->update();
+        }
+    }
+
+
+    //----
     if(mSignal->type()==SignalType::BOOL){
 
         BoolSignal *vs = static_cast<BoolSignal*>(mSignal);
 
+        bool value = mRightSide.mBoolValue;
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::BOOL);
+            BoolSignal *vsRightSide = static_cast<BoolSignal*>(mRightSide.mSigData);
+            value = vsRightSide->value();
+        }
+
+        if(value==false){
+            DummyFunction();
+        }
+
+        value = true;
+
         if(mStyle==Style::ACTIVE_STARTED){
-            return vs->activeStarted(true);
+            return vs->activeStarted(value);
 
         }else if(mStyle==Style::ACTIVE){
-            return vs->active(true);
+            return vs->active(value);
 
         }else if(mStyle==Style::ACTIVE_ENDED){
-            return vs->activeEnded(true);
+            return vs->activeEnded(value);
 
         }else if(mStyle==Style::ACTIVE_CHANGED){
-            if(mAnyValueChanged){
+            if(mRightSide.mAnyValueChanged){
                 return vs->valueChanged();
             }else{
-                return vs->activeChanged(true);
+                return vs->activeChanged(value);
             }
 
         }else if(mStyle==Style::NOT_ACTIVE){
-            return vs->notActive(true);
+            return vs->notActive(value);
 
         }
 
@@ -78,6 +496,13 @@ bool SignalQuery::active(){
     }else if(mSignal->type()==SignalType::INT){
 
         IntSignal *vs = static_cast<IntSignal*>(mSignal);
+
+        int mIntValue = mRightSide.mIntValue;
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::INT);
+            IntSignal *vsRightSide = static_cast<IntSignal*>(mRightSide.mSigData);
+            mIntValue = vsRightSide->value();
+        }
 
         if(mStyle==Style::ACTIVE_STARTED){
             return vs->activeStarted(mIntValue);
@@ -89,7 +514,7 @@ bool SignalQuery::active(){
             return vs->activeEnded(mIntValue);
 
         }else if(mStyle==Style::ACTIVE_CHANGED){
-            if(mAnyValueChanged){
+            if(mRightSide.mAnyValueChanged){
                 return vs->valueChanged();
             }else{
                 return vs->activeChanged(mIntValue);
@@ -105,6 +530,13 @@ bool SignalQuery::active(){
 
         FloatSignal *vs = static_cast<FloatSignal*>(mSignal);
 
+        float mFloatValue = mRightSide.mFloatValue;
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::FLOAT);
+            FloatSignal *vsRightSide = static_cast<FloatSignal*>(mRightSide.mSigData);
+            mFloatValue = vsRightSide->value();
+        }
+
         if(mStyle==Style::ACTIVE_STARTED){
             return vs->activeStarted(mFloatValue);
 
@@ -115,7 +547,7 @@ bool SignalQuery::active(){
             return vs->activeEnded(mFloatValue);
 
         }else if(mStyle==Style::ACTIVE_CHANGED){
-            if(mAnyValueChanged){
+            if(mRightSide.mAnyValueChanged){
                 return vs->valueChanged();
             }else{
                 return vs->activeChanged(mFloatValue);
@@ -130,24 +562,32 @@ bool SignalQuery::active(){
 
         BitsetSignal *vs = static_cast<BitsetSignal*>(mSignal);
 
+        int flagValue = mRightSide.mIntValue;
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::BITSET);
+            BitsetSignal *vsRightSide = static_cast<BitsetSignal*>(mRightSide.mSigData);
+            flagValue = vsRightSide->value();
+        }
+
+
         if(mStyle==Style::ACTIVE_STARTED){
-            return vs->activeStarted(mIntValue);
+            return vs->activeStarted(flagValue);
 
         }else if(mStyle==Style::ACTIVE){
-            return vs->active(mIntValue);
+            return vs->active(flagValue);
 
         }else if(mStyle==Style::ACTIVE_ENDED){
-            return vs->activeEnded(mIntValue);
+            return vs->activeEnded(flagValue);
 
         }else if(mStyle==Style::ACTIVE_CHANGED){
-            if(mAnyValueChanged){
+            if(mRightSide.mAnyValueChanged){
                 return vs->valueChanged();
             }else{
-                return vs->activeChanged(mIntValue);
+                return vs->activeChanged(flagValue);
             }
 
         }else if(mStyle==Style::NOT_ACTIVE){
-            return vs->notActive(mIntValue);
+            return vs->notActive(flagValue);
 
         }
 
@@ -155,6 +595,13 @@ bool SignalQuery::active(){
     }else if(mSignal->type()==SignalType::STRING){
 
         StringSignal *vs = static_cast<StringSignal*>(mSignal);
+
+        std::string mStringValue = mRightSide.mStringValue;
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::STRING);
+            StringSignal *vsRightSide = static_cast<StringSignal*>(mRightSide.mSigData);
+            mStringValue = vsRightSide->value();
+        }
 
         if(mStyle==Style::ACTIVE_STARTED){
             return vs->activeStarted(mStringValue);
@@ -166,7 +613,7 @@ bool SignalQuery::active(){
             return vs->activeEnded(mStringValue);
 
         }else if(mStyle==Style::ACTIVE_CHANGED){
-            if(mAnyValueChanged){
+            if(mRightSide.mAnyValueChanged){
                 return vs->valueChanged();
             }else{
                 return vs->activeChanged(mStringValue);
@@ -177,26 +624,95 @@ bool SignalQuery::active(){
 
         }
 
+
+
+    }else if(mSignal->type()==SignalType::BASE_OBJECT){
+
+        ObjectSignal *vs = static_cast<ObjectSignal*>(mSignal);
+
+        if(mRightSide.mObjectObtainer){
+            mRightSide.mObject = mRightSide.mObjectObtainer->findOriginObject();
+            if(mRightSide.mObject==nullptr){
+                return false;
+            }
+        }
+
+        if(mStyle==Style::ACTIVE_STARTED){
+            return vs->activeStarted(mRightSide.mObject);
+
+        }else if(mStyle==Style::ACTIVE){
+            return vs->active(mRightSide.mObject);
+
+        }else if(mStyle==Style::ACTIVE_ENDED){
+            return vs->activeEnded(mRightSide.mObject);
+
+        }else if(mStyle==Style::ACTIVE_CHANGED){
+            if(mRightSide.mAnyValueChanged){
+                return vs->valueChanged();
+            }else{
+                return vs->activeChanged(mRightSide.mObject);
+            }
+
+        }else if(mStyle==Style::NOT_ACTIVE){
+            return vs->notActive(mRightSide.mObject);
+
+        }
+
+
+
     }
 
-
     return false;
-
 }
+
+
+//==================================================================================
 
 
 void SignalSetter::set()
 {
 
+    if(mNotUsed) return;
+
+
+    if(mSignalOriginObtainer){
+
+        BaseObject* signalOrigin = mSignalOriginObtainer->findOriginObject();
+        if(signalOrigin == nullptr){
+            return;
+        }
+
+        if(mSignalObtainer){
+
+            mSignalObtainer->setSignalOriginObject(signalOrigin);
+            mSignal = mSignalObtainer->findSignal();
+            if(mSignal==nullptr){
+                return;
+            }
+
+        }else{
+            assert(mSignalIndex !=-1);
+            mSignal = signalOrigin->signalStorage()->getSignal_query(mSignalIndex);
+        }
+
+    }else if(mSignalObtainer){
+
+       mSignal = mSignalObtainer->findSignal();
+       if(mSignal==nullptr){
+           return;
+       }
+    }
+
+
     if(mSignal->type()==SignalType::BOOL){
 
         BoolSignal *vs = static_cast<BoolSignal*>(mSignal);
 
-        bool value = mBoolValue;
+        bool value = mRightSide.mBoolValue;
 
-        if(mSigData){
-            assert(mSigData->type()==SignalType::BOOL);
-            BoolSignal *sigData = static_cast<BoolSignal*>(mSigData);
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::BOOL);
+            BoolSignal *sigData = static_cast<BoolSignal*>(mRightSide.mSigData);
             value = sigData->value();
         }
 
@@ -207,11 +723,11 @@ void SignalSetter::set()
 
         IntSignal *vs = static_cast<IntSignal*>(mSignal);
 
-        int value = mIntValue;
+        int value = mRightSide.mIntValue;
 
-        if(mSigData){
-            assert(mSigData->type()==SignalType::INT);
-            IntSignal *sigData = static_cast<IntSignal*>(mSigData);
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::INT);
+            IntSignal *sigData = static_cast<IntSignal*>(mRightSide.mSigData);
             value = sigData->value();
         }
 
@@ -222,11 +738,11 @@ void SignalSetter::set()
 
         FloatSignal *vs = static_cast<FloatSignal*>(mSignal);
 
-        float value = mFloatValue;
+        float value = mRightSide.mFloatValue;
 
-        if(mSigData){
-            assert(mSigData->type()==SignalType::FLOAT);
-            FloatSignal *sigData = static_cast<FloatSignal*>(mSigData);
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::FLOAT);
+            FloatSignal *sigData = static_cast<FloatSignal*>(mRightSide.mSigData);
             value = sigData->value();
         }
 
@@ -237,14 +753,14 @@ void SignalSetter::set()
 
         BitsetSignal *vs = static_cast<BitsetSignal*>(mSignal);
 
-        unsigned int flags = mIntValue;
-        bool flagsState = mBoolValue;
+        unsigned int flags = mRightSide.mIntValue;
+        bool flagsState = mRightSide.mBoolValue;
 
-        if(mSigData){
-            assert(mSigData->type()==SignalType::BITSET);
-            BitsetSignal *sigData = static_cast<BitsetSignal*>(mSigData);
-            flags = mSigDataFlag;
-            flagsState = sigData->active(mSigDataFlag);
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::BITSET);
+            BitsetSignal *sigData = static_cast<BitsetSignal*>(mRightSide.mSigData);
+            flags = mRightSide.mSigDataFlag;
+            flagsState = sigData->active(mRightSide.mSigDataFlag);
         }
 
         vs->setFlags_onNextFrame(flags, flagsState);
@@ -254,17 +770,32 @@ void SignalSetter::set()
 
         StringSignal *vs = static_cast<StringSignal*>(mSignal);
 
-        std::string value = mStringValue;
+        std::string value = mRightSide.mStringValue;
 
-        if(mSigData){
-            assert(mSigData->type()==SignalType::STRING);
-            StringSignal *sigData = static_cast<StringSignal*>(mSigData);
+        if(mRightSide.mSigData){
+            assert(mRightSide.mSigData->type()==SignalType::STRING);
+            StringSignal *sigData = static_cast<StringSignal*>(mRightSide.mSigData);
             value = sigData->value();
         }
 
         vs->setValue_onNextFrame(value);
 
+    }else if(mSignal->type()==SignalType::BASE_OBJECT){
+
+        ObjectSignal *vs = static_cast<ObjectSignal*>(mSignal);
+
+        if(mRightSide.mObjectObtainer){
+            mRightSide.mObject = mRightSide.mObjectObtainer->findOriginObject();
+            if(mRightSide.mObject==nullptr){
+                return;
+            }
+        }
+        assert(mRightSide.mObject);
+
+        vs->setValue_onNextFrame(mRightSide.mObject);
+
     }
+
 
     if(mSignal->callback()){
         mSignal->callback()->onSetBySignalSetter(mSignal);
@@ -368,6 +899,118 @@ bool CompositeQuery::parse(std::string text)
 
 
 
+bool CompositeQuery::parseNEW(std::string text)
+{
+
+    mKind = Kind::AND;
+    StdString::removeStringWhiteSpacesOnStartAndEnd(text);
+
+    if(text.empty()){
+        return false;
+    }
+
+    int pos = 0;
+    bool ok = _parse(text, pos, 0);
+
+    return ok;
+
+}
+
+
+bool CompositeQuery::_parse(const std::string &text, int &pos, int _depth)
+{
+
+    std::string queryCfg;
+
+    while(pos < text.length()){
+        char c = text[pos];
+        pos++;
+
+        if(c == '('){
+
+            if(pos==1 && text.back()==')'){
+                mKind = Kind::AND;
+
+            }else{
+                mChildrenQueries.push_back(CompositeQuery(Kind::AND));
+                bool ok = mChildrenQueries.back()._parse(text, pos, _depth+1);
+                if(ok==false){
+                    return false;
+                }
+            }
+
+
+        }else if(c == '['){
+
+            if(pos==1 && text.back()==']'){
+                mKind = Kind::OR;
+
+            }else{
+                mChildrenQueries.push_back(CompositeQuery(Kind::OR));
+                bool ok = mChildrenQueries.back()._parse(text, pos, _depth+1);
+                if(ok==false){
+                    return false;
+                }
+            }
+
+        }else if(c == ')'){
+
+            if(mKind==Kind::AND){
+
+                StdString::removeStringWhiteSpacesOnStartAndEnd(queryCfg);
+                if(queryCfg.empty()){
+                    return false;
+                }
+                mSignalQueryCfgs.push_back(queryCfg);
+                //pos = i+1;
+                return true;
+
+            }else{
+                return false;
+            }
+
+
+        }else if(c == ']'){
+
+            if(mKind==Kind::OR){
+
+                StdString::removeStringWhiteSpacesOnStartAndEnd(queryCfg);
+                if(queryCfg.empty()){
+                    return false;
+                }
+                mSignalQueryCfgs.push_back(queryCfg);
+                //pos = i+1;
+                return true;
+
+            }else{
+                return false;
+            }
+
+
+        }else if(c == ','){
+
+            StdString::removeStringWhiteSpacesOnStartAndEnd(queryCfg);
+            if(queryCfg.empty()==false){
+                mSignalQueryCfgs.push_back(queryCfg);
+                queryCfg.clear();
+            }
+
+        }else{
+            queryCfg += std::string(1, c);
+        }
+
+    }
+
+    if(_depth==0){
+        StdString::removeStringWhiteSpacesOnStartAndEnd(queryCfg);
+        mSignalQueryCfgs.push_back(queryCfg);
+    }
+
+    return _depth==0;
+
+}
+
+
 bool CompositeQuery::initConnections(PlayedScene *_scene, BaseObject *obj1, BaseObject *obj2)
 {
 
@@ -381,7 +1024,7 @@ bool CompositeQuery::initConnections(PlayedScene *_scene, BaseObject *obj1, Base
 
         app->signalParserManager()->parseSignalAccessor(_scene, path, signalQuery, obj1, obj2);
 
-        if(signalQuery.mNotUsed){
+        if(signalQuery.notUsed()){
             mSignalQueries.pop_back();
             continue;
         }
@@ -408,8 +1051,48 @@ bool CompositeQuery::initConnections(PlayedScene *_scene, BaseObject *obj1, Base
 }
 
 
+bool CompositeQuery::initConnectionsNEW(PlayedScene *_scene, BaseObject* _rootParentObject, LogicState* _logicState)
+{
+
+
+    for(const std::string &path : mSignalQueryCfgs){
+
+        mSignalQueries.emplace_back(SignalQuery());
+        SignalQuery &signalQuery = mSignalQueries.back();
+
+        if(signalQuery.parse(_scene, path, _rootParentObject, _logicState)==false){
+            return false;
+        }
+
+        if(signalQuery.notUsed()){
+            mSignalQueries.pop_back();
+            continue;
+        }
+
+        //if(signalQuery.isValid()==false){
+        //    return false;
+        //}
+    }
+
+
+    for(CompositeQuery &tg : mChildrenQueries){
+        if(tg.initConnectionsNEW(_scene, _rootParentObject, _logicState)==false){
+            return false;
+        }
+
+    }
+
+    return true;
+}
+
+
 bool CompositeQuery::active()
 {
+
+    if(mSignalQueries.empty() && mChildrenQueries.empty()){
+        return true;
+    }
+
 
 
     for(int i=0; i<mSignalQueries.size(); i++){
@@ -451,805 +1134,276 @@ bool CompositeQuery::active()
 
 }
 
-//=====================================================================================
+
+//===================================================================================
 
 
-void CoreSignalsParser::parseSignalAccessor(PlayedScene *scene, const std::string &_path, SignalAccessor &_signalAccessor, BaseObject *obj1, BaseObject *obj2)
+SignalIdentifier *SignalIdentifiers::add_query(SignalType _type, unsigned char _id, const std::string &_signalPath)
 {
 
-    if(obj1){
+    mSignalIdentifiers_query.emplace_back();
+    mSignalIdentifiers_query.back().type = _type;
+    mSignalIdentifiers_query.back().id = _id;
+    mSignalIdentifiers_query.back().signalPath = _signalPath;
 
-    }else{
+    return &mSignalIdentifiers_query.back();
+}
 
+
+SignalIdentifier *SignalIdentifiers::add_setter(SignalType _type, unsigned char _id, const std::string &_signalPath)
+{
+
+    mSignalIdentifiers_setter.emplace_back();
+    mSignalIdentifiers_setter.back().type = _type;
+    mSignalIdentifiers_setter.back().id = _id;
+    mSignalIdentifiers_setter.back().signalPath = _signalPath;
+
+    return &mSignalIdentifiers_setter.back();
+}
+
+
+bool SignalIdentifiers::getParsingInfo_query(SignalParsingInfo &_signalInfo, const std::string &_signalPath, const std::string &_signalValue, bool _setErrorMessage)
+{
+    return getParsingInfo(mSignalIdentifiers_query, _signalInfo, _signalPath, _signalValue, _setErrorMessage);
+
+}
+
+
+bool SignalIdentifiers::getParsingInfo_setter(SignalParsingInfo &_signalInfo, const std::string &_signalPath, const std::string &_signalValue, bool _setErrorMessage)
+{
+    return getParsingInfo(mSignalIdentifiers_setter, _signalInfo, _signalPath, _signalValue, _setErrorMessage);
+}
+
+
+bool SignalIdentifiers::getParsingInfo(std::vector<SignalIdentifier>&_signalIdentifiers, SignalParsingInfo &_signalInfo, const std::string &_signalPath, const std::string &_signalValue, bool _setErrorMessage)
+{
+
+    // for bitflag signals the bitflag name is part of the _path !
+
+    std::string bitflagSignalPath;
+    std::string bitflagName;
+
+    size_t index = _signalPath.find_last_of(":");
+    if(index != std::string::npos){
+        bitflagSignalPath = _signalPath.substr(0, index);
+        bitflagName = _signalPath.substr(index+1);
     }
 
-    LogicState *currentLogicState = nullptr;
+    for(unsigned int i=0; i<_signalIdentifiers.size(); i++){
+        SignalIdentifier &si = _signalIdentifiers[i];
 
-    if(obj2){
-        if(obj2->baseType()==BaseObjectType::LOGIC_STATE){
-            currentLogicState = static_cast<LogicState*>(obj2);
+        if(si.type==SignalType::BITSET){
+
+            // the last part of path is extra
+            /*
+            std::string signalPath;
+            std::string extraPath;
+
+            size_t index = _path.find_last_of(":");
+            if(index != std::string::npos){
+                signalPath = _path.substr(0, index+1);
+                extraPath = _path.substr(index+1);
+            }
+            */
+
+            assert(si.bitflagsIdentifier);
+
+            if(si.signalPath == bitflagSignalPath){
+
+                _signalInfo.signalIndex = i;
+                _signalInfo.signalType = si.type;
+                _signalInfo.signalID = si.id;
+
+                //---
+                for(const auto &p : *si.bitflagsIdentifier){
+                    if(p.first == bitflagName){
+                        _signalInfo.bitFlagValue = p.second;
+                        break;
+                    }
+                }
+
+                if(_signalInfo.bitFlagValue==0){
+                    if(_setErrorMessage){
+                        dbgSystem.addMessage("Signal parsing info for path '" + _signalPath + "' error! Bitflag name '" + bitflagName + "' not found!");
+                    }
+                    return false;
+                }
+
+                return true;
+            }
+
+        }else{
+
+            if(si.signalPath == _signalPath ){
+                _signalInfo.signalIndex = i;
+                _signalInfo.signalType = si.type;
+                _signalInfo.signalID = si.id;
+
+                if(_signalValue.empty()==false){
+                    if(si.type== SignalType::INT){
+                        if(si.intValuesIdentifier){
+                            for(const auto & p : *si.intValuesIdentifier){
+                                if(p.first == _signalValue){
+                                    _signalInfo.predefinedIntValue = p.second;
+                                    _signalInfo.predefiendValueDefined = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                    }else if(si.type == SignalType::FLOAT){
+                        if(si.floatValuesIdentifier){
+                            for(const auto & p : *si.floatValuesIdentifier){
+                                if(p.first == _signalValue){
+                                    _signalInfo.predefinedFloatValue = p.second;
+                                    _signalInfo.predefiendValueDefined = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                    }else if(si.type == SignalType::FLOAT){
+                        if(si.stringValuesIdentifier){
+                            for(const auto & p : *si.stringValuesIdentifier){
+                                if(p.first == _signalValue){
+                                    _signalInfo.predefinedStringValue = p.second;
+                                    _signalInfo.predefiendValueDefined = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
         }
     }
 
 
-    std::vector<std::string>pathParts = StdString::splitString(_path, "/");
+    if(_setErrorMessage){
+        dbgSystem.addMessage("Signal parsing info for path '" + _signalPath + "' error!");
+    }
 
-    std::string signalOrigin;
-    std::string signalNameAndValue;
-    std::string signalStyle;
+    return false;
 
+}
+
+
+
+
+
+//====================================================================================
+
+
+void SignalStorage::setIdentifiers(SignalIdentifiers *_identifiers)
+{
+    mIdentifiers = _identifiers;
+
+}
+
+
+SignalIdentifier *SignalStorage::addSignal_query(Signal* _signal, const std::string &_signalPath)
+{
+    assert(_signal);
+
+    mSignals_query.push_back(_signal);
+
+    if(mIdentifiers->identifiers_query().size() < mSignals_query.size()){
+        return mIdentifiers->add_query(_signal->type(), _signal->id(), _signalPath);
+    }
+
+    return nullptr;
+}
+
+
+SignalIdentifier *SignalStorage::addSignal_setter(Signal* _signal, const std::string &_signalPath)
+{
+    assert(_signal);
+
+    mSignals_setter.push_back(_signal);
+    if(mIdentifiers->identifiers_setter().size() < mSignals_setter.size()){
+        return mIdentifiers->add_setter(_signal->type(), _signal->id(), _signalPath);
+    }
+
+    return nullptr;
+
+}
+
+
+Signal* SignalStorage::getSignal_query(int index)
+{
+    assert(index>=0 && index<mSignals_query.size());
+
+    return mSignals_query[index];
+
+}
+
+
+Signal* SignalStorage::getSignal_setter(int index)
+{
+    assert(index>=0 && index<mSignals_setter.size());
+
+    return mSignals_setter[index];
+
+}
+
+
+
+//--------------------------------------------------------------------------------------
+
+SignalParsingInfo::SignalParsingInfo()
+{
+
+}
+
+
+SignalParsingInfo::~SignalParsingInfo()
+{
+    /*
+    if(signalOriginObtainer){
+        delete signalOriginObtainer;
+    }
+    if(signalObtainer){
+        delete signalObtainer;
+    }
+    */
+}
+
+
+bool SignalParsingInfo::parseMainPaths(const std::string &_fullSignalPath)
+{
+
+    fullPath = _fullSignalPath;
+
+    std::vector<std::string>pathParts = StdString::splitString(_fullSignalPath, "/");
 
     if(pathParts.size()>0){
-        signalOrigin = pathParts[0];
+        originObjectPath = pathParts[0];
     }
     if(pathParts.size()>1){
-        signalNameAndValue = pathParts[1];
+        signalIdentifierPath = pathParts[1];
     }
     if(pathParts.size()>2){
-        signalStyle = pathParts[2];
+        signalStylePath = pathParts[2];
     }
 
-
-    ParsedSignalPath psp(signalNameAndValue);
-
-    //-----
-    if(signalOrigin=="STATES"){
-
-        if(currentLogicState==nullptr){
-            dbgSystem.addMessage("Current logic state is not a valid logic state! You can access core logic states only within the core state machine!");
-            return;
-        }
-
-        //ParsedSignalPath psp(signalNameAndValue);
-
-        BoolSignal *stateSignal = nullptr;
-
-        if(psp.signalNamePartAt(0)=="THIS"){
-            stateSignal = &(currentLogicState->stateSignal());
-
-        }else{
-            LogicState* state = ObtainLogicStateFromPath2(scene, currentLogicState, psp.signalFullName());      // !
-
-            if(state==nullptr){
-                return;
-            }
-            stateSignal = &(state->stateSignal());
-        }
-
-        if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
-            psp.obtainValue(static_cast<SignalQuery&>(_signalAccessor), stateSignal);
-
-        }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
-            dbgSystem.addMessage("Setting state signals is not available! Use 'doSetState' command!");
-        }
-
-
-    }else if(signalOrigin=="USERS"){
-
-        if(psp.signalNamePartAt(0)=="ACTIVE_USER"){
-
-            //ParsedSignalPath psp(signalNameAndValue);
-
-            if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
-                psp.obtainValue(static_cast<SignalQuery&>(_signalAccessor), app->usersDatabase()->activeUserSignal());
-
-            }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
-                _signalAccessor.mSignal = app->usersDatabase()->activeUserSignal();
-            }
-        }
-
-
-    }else if(signalOrigin.substr(0,6)=="INPUT:"){
-        std::string inputSource = signalOrigin.substr(6);
-
-        if(inputSource=="KEYBOARD"){
-
-            //ParsedSignalPath psp(signalNameAndValue);
-            BoolSignal *key = keyboard.keySignalForKeyName(psp.signalFullName());
-            if(key==nullptr){
-                return;
-            }
-
-            if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
-                psp.obtainValue(static_cast<SignalQuery&>(_signalAccessor), key);
-
-            }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
-                dbgSystem.addMessage("Setting 'keyboard' signals is not possible!");
-            }
-
-        }else if(inputSource=="COMMAND"){
-
-            //ParsedSignalPath psp(signalNameAndValue);
-
-            BoolSignal *command = app->inputSystem()->getGameInputCommand(psp.signalFullName());
-            if(command==nullptr){
-                return;
-            }
-
-            if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
-                psp.obtainValue(static_cast<SignalQuery&>(_signalAccessor), command);
-
-            }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
-                dbgSystem.addMessage("Setting 'command' signals is not possible!");
-            }
-
-        }
-
-
-    }else if(signalOrigin.substr(0,16)=="ANIMATED_OBJECT:"){
-
-        std::string aniObjectName = signalOrigin.substr(16);
-
-        AnimationObject *animatedObject = scene->animationManager()->getAnimationObject(aniObjectName);
-        if(animatedObject==nullptr){
-            return;
-        }
-
-        //ParsedSignalPath psp(signalNameAndValue);
-
-        if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
-            animatedObject->obtainSignal_signalQuery(static_cast<SignalQuery&>(_signalAccessor), psp);
-
-        }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
-            animatedObject->obtainSignal_signalSetter(static_cast<SignalSetter&>(_signalAccessor), psp);
-        }
-
-
-    }else if(signalOrigin=="SETTINGS"){
-
-        SystemSettings* settings = app->systemSettings();
-
-        //ParsedSignalPath psp(signalNameAndValue);
-
-        if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
-            settings->obtainSignal_signalQuery(static_cast<SignalQuery&>(_signalAccessor), psp);
-
-        }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
-            settings->obtainSignal_signalSetter(static_cast<SignalSetter&>(_signalAccessor), psp);
-        }
-
-
-    }else if(signalOrigin.substr(0,4)=="GFX:"){
-
-        std::string objPath = signalOrigin.substr(4);
-
-        GfxObject* gfxObject = scene->gfxObjectsGroup()->getGfxObject(objPath);
-        if(gfxObject==nullptr){
-            return;
-        }
-
-        //ParsedSignalPath psp(signalNameAndValue);
-
-        if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
-            gfxObject->obtainSignal_signalQuery(static_cast<SignalQuery&>(_signalAccessor), psp);
-
-        }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
-            gfxObject->obtainSignal_signalSetter(static_cast<SignalSetter&>(_signalAccessor), psp);
-        }
-
+    if(originObjectPath==""){
+        dbgSystem.addMessage("Parse signal query from string '" + _fullSignalPath +"' error! Signal origin is an empty string!");
+        return false;
     }
-
-
-    return;
-
-}
-
-
-
-//=====================================================================================
-
-
-SignalParserManager::~SignalParserManager()
-{
-
-    for(SignalParser *sp : mSignalParsers){
-        delete sp;
-    }
-
-}
-
-
-void SignalParserManager::addAndStoreSignalParser(SignalParser *_signalParser)
-{
-
-    mSignalParsers.push_back(_signalParser);
-}
-
-
-void SignalParserManager::parseSignalAccessor(PlayedScene *_scene, const std::string &_path, SignalAccessor &_signalAccessor, BaseObject *obj1, BaseObject *obj2)
-{
-
-    std::vector<std::string>pathParts = StdString::splitString(_path, "/");
-
-    std::string signalOrigin;
-    std::string signalName;
-    std::string signalStyle;
-
-
-    if(pathParts.size()>0){
-        signalOrigin = pathParts[0];
-    }
-    if(pathParts.size()>1){
-        signalName = pathParts[1];
-    }
-    if(pathParts.size()>2){
-        signalStyle = pathParts[2];
-    }
-
-
-    if(signalOrigin==""){
-        dbgSystem.addMessage("Parse signal query from string '" + _path +"' error! Signal origin is empty string!");
-        return;
-    }
-
-
-    parseSignalAccessorStyle(signalStyle, _signalAccessor);
-
-
-    std::string parserKeyword = signalOrigin;
-
-    std::vector<std::string>parts = StdString::splitString(parserKeyword, ":");
-    if(parts.size()>1){
-        parserKeyword = parts[0];
-    }
-
-
-    SignalParser *signalParser = nullptr;
-    for(SignalParser *sp : mSignalParsers){
-        if(StdVector::contains(sp->keyWords(), parserKeyword)){
-            signalParser = sp;
-            break;
-        }
-    }
-
-    if(signalParser==nullptr){
-        dbgSystem.addMessage("Parse signal accessor from string '" + _path +"' error! No signal parser found for keyword '" + parserKeyword + "'!");
-        return;
-    }
-
-
-    signalParser->parseSignalAccessor(_scene, _path, _signalAccessor, obj1, obj2);
-
-    if(_signalAccessor.mNotUsed){
-        return;
-    }
-
-    if(_signalAccessor.mSignal){
-        if(_signalAccessor.mSignal->id() == static_cast<unsigned char>(SignalID::CUSTOM_ENTITY_SIGNAL)){
-
-            LogicState *currentLogicState = nullptr;
-
-            if(obj2){
-                if(obj2->baseType()==BaseObjectType::LOGIC_STATE){
-                    currentLogicState = static_cast<LogicState*>(obj2);
-                }
-            }
-
-
-            if(currentLogicState){
-                currentLogicState->customUpdatedSignals().push_back(_signalAccessor.mSignal);
-            }
-            _signalAccessor.mOwnedSignal = true;   // Custom signals are owned by signal accessors !
-        }
-        return;
-    }
-
-
-    if(_signalAccessor.mSignal==nullptr){
-        dbgSystem.addMessage("Error parsing '" + _path +"' ! No signal found for the signal accessor!");
-    }
-
-}
-
-
-
-bool SignalParserManager::parseSignalAccessorStyle(const std::string & style, SignalAccessor &_signalAccessor)
-{
-
-
-    if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
-
-        SignalQuery &_signalQuerry = static_cast<SignalQuery&>(_signalAccessor);
-
-        if(style==""){
-            _signalQuerry.mStyle = SignalQuery::Style::ACTIVE;
-
-        }else{
-
-            //_signalQuerry.mStyle = _ParseTriggerStyle(syle);
-
-
-            if(style=="START"){
-                _signalQuerry.mStyle = SignalQuery::Style::ACTIVE_STARTED;
-
-             }else if(style=="ACTIVE"){
-                _signalQuerry.mStyle = SignalQuery::Style::ACTIVE;
-
-            }else if(style=="END"){
-               _signalQuerry.mStyle = SignalQuery::Style::ACTIVE_ENDED;
-
-            }else if(style=="CHANGED"){
-               _signalQuerry.mStyle = SignalQuery::Style::ACTIVE_CHANGED;
-
-            }else if(style=="NOT_ACTIVE"){
-               _signalQuerry.mStyle = SignalQuery::Style::NOT_ACTIVE;
-
-            }else{
-                dbgSystem.addMessage("Error parsing signal query style from string'" + style +"' !");
-                return false;
-            }
-        }
-
-
-    //}else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
-
-
-
-        //SignalSetter &_signalSetter = static_cast<SignalSetter&>(_signalAccessor);
-        //_signalSetter.mStyle = SignalSetter::Style::SET;
-
-        /*
-        if(style=="TRUE"){
-            _signalSetter.mFlagState = true;
-
-        }else if(style=="FALSE"){
-            _signalSetter.mFlagState = false;
-
-        }else{
-            dbgSystem.addMessage("Error parsing signal setter style from string'" + style +"' !");
-            return false;
-
-        }
-        */
-
-    }
-
-
-    return true;
-}
-
-
-//======================================================================================================
-
-
-ParsedSignalPath::ParsedSignalPath(const std::string &_fullPath) : mFullPath(_fullPath)
-{
-
-    std::vector<std::string> signalParts = StdString::splitString(mFullPath, "=");
-
-    if(signalParts.size()>0){
-        mSignalFullName = signalParts[0];
-        mSignalNameParts = StdString::splitString(mSignalFullName, ":");
-    }
-
-    if(signalParts.size()>1){
-        mValue = signalParts[1];
-    }
-
-}
-
-
-const std::string & ParsedSignalPath::signalNamePartAt(int i)
-{
-
-    if(i>=0 && i<mSignalNameParts.size()){
-        return mSignalNameParts[i];
-    }
-
-    return mEmpty;
-
-}
-
-
-
-/*
-void ParsedSignalPath::parsePath_name_value(const std::string &_path)
-{
-
-    std::vector<std::string> signalParts = StdString::splitString(_path, ":");
-
-    if(signalParts.size()>0){
-        signalName = signalParts[0];
-    }
-    if(signalParts.size()>1){
-        valueName = signalParts[1];
-    }
-    if(signalParts.size()>2){
-        flagName = signalParts[1];
-        valueName = signalParts[2];
-    }
-
-}
-*/
-
-bool ParsedSignalPath::obtainValue(SignalQuery &_signalQuery, Signal *_signal , std::vector<NamedValue> *_valuesSet)
-{
-
-    if(_signalQuery.valueNotRequired){
-        _signalQuery.mSignal = _signal;
-        return true;
-    }
-
-    //if(parse_query(_signal)==false){
-    //    return false;
-    //}
-
-
-    //---
-    if(_signal->type()==SignalType::BOOL){
-
-        if(mValue.empty() || mValue=="TRUE" || mValue=="ON" || mValue=="1"){
-            _signalQuery.mBoolValue = true;
-
-        }else if(mValue=="FALSE" || mValue=="OFF" || mValue=="0"){
-            _signalQuery.mBoolValue = false;
-
-        }else{
-
-            dbgSystem.addMessage("Wrong value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-
-    }else if(_signal->type()==SignalType::INT){
-
-        if(mValue.empty()){
-            dbgSystem.addMessage("Missing value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-
-        if(_valuesSet){
-
-            bool found = false;
-            for(NamedValue &nn : *_valuesSet){
-                if(nn.name==mValue){
-                    _signalQuery.mIntValue = nn.intValue;
-                    found = true;
-                }
-            }
-
-            if(found==false){
-                dbgSystem.addMessage("Value '" + mValue + "' not found in the values set for the signal '" + mSignalFullName +"' !");
-                return false;
-            }
-
-        }else if(mValue=="ANY"){
-            _signalQuery.mAnyValueChanged = true;
-
-        }else{
-            _signalQuery.mIntValue = StdString::stringToInt(mValue, 0);
-
-        }
-
-
-    }else if(_signal->type()==SignalType::FLOAT){
-
-        if(mValue.empty()){
-            dbgSystem.addMessage("Missing value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-        if(mValue=="ANY"){
-            _signalQuery.mAnyValueChanged = true;
-
-        }else{
-            _signalQuery.mFloatValue = StdString::stringToFloat(mValue, 0.0f);
-        }
-
-
-    }else if(_signal->type()==SignalType::BITSET){
-
-        if(mSignalNameParts.size()<2){
-            dbgSystem.addMessage("Missing flag name for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-        mFlagName = mSignalNameParts.back();        // last part is always flag
-
-        //if(mFlagName.empty()){
-        //    dbgSystem.addMessage("Missing flag name for signal '" + mSignalFullName +"' !");
-        //    return false;
-        //}
-
-
-
-        if(_valuesSet){
-
-            bool found = false;
-            for(NamedValue &nn : *_valuesSet){
-                if(nn.name==mFlagName){
-                    _signalQuery.mIntValue = nn.intValue;
-                    found = true;
-                    break;
-                }
-            }
-
-            if(found==false){
-                dbgSystem.addMessage("Flag name '" + mValue + "' not found for signal '" + mSignalFullName +"' !");
-                return false;
-            }
-
-        }else{
-            dbgSystem.addMessage("Missing values set for signal '" + mSignalFullName +"' (required for bitflag signals) !");
-            return false;
-        }
-
-
-        //----
-        if(mValue.empty() || mValue=="TRUE" || mValue=="ON" || mValue=="1"){
-            _signalQuery.mBoolValue = true;
-
-        }else if(mValue=="FALSE" || mValue=="OFF" || mValue=="0"){
-            _signalQuery.mBoolValue = false;
-
-        }else{
-
-            dbgSystem.addMessage("Wrong value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-
-    }else if(_signal->type()==SignalType::STRING){
-
-        if(mValue.empty()){
-            dbgSystem.addMessage("Missing value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-        if(mValue=="ANY"){
-            _signalQuery.mAnyValueChanged = true;
-
-        }else{
-            _signalQuery.mStringValue = mValue;
-            if(_signalQuery.mStringValue=="''"){        // KEY WORD for empty string
-                _signalQuery.mStringValue.clear();
-            }
-        }
-
-    }
-
-    _signalQuery.mSignal = _signal;         // serves as flag so we set it at the end if ok
 
     return true;
 
 }
 
+//---------------------------------------------------------------------------------------------
 
-bool ParsedSignalPath::obtainValue(SignalSetter &_signalSetter, Signal *_signal , std::vector<NamedValue> *_valuesSet)
+UpdatedBoolSignal::UpdatedBoolSignal() : BoolSignal(static_cast<unsigned char>(SignalID::UPDATED_ON_SIGNAL_QUERY))
 {
-
-    if(_signalSetter.valueNotRequired){
-        _signalSetter.mSignal = _signal;
-        return true;
-    }
-
-    if(_signalSetter.mSigData){             // value is another signal
-        _signalSetter.mSignal = _signal;
-        return true;
-    }
-
-    //if(parse_setter(_signal)==false){
-    //    return false;
-    //}
-
-    //---
-    if(_signal->type()==SignalType::BOOL){
-
-        if(mValue.empty() || mValue=="TRUE" || mValue=="ON" || mValue=="1"){
-            _signalSetter.mBoolValue = true;
-
-        }else if(mValue=="FALSE" || mValue=="OFF" || mValue=="0"){
-            _signalSetter.mBoolValue = false;
-
-        }else{
-
-            dbgSystem.addMessage("Wrong value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-
-    }else if(_signal->type()==SignalType::INT){
-
-        if(mValue.empty()){
-            dbgSystem.addMessage("Missing value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-
-        if(_valuesSet){
-
-            bool found = false;
-            for(NamedValue &nn : *_valuesSet){
-                if(nn.name==mValue){
-                    _signalSetter.mIntValue = nn.intValue;
-                    found = true;
-                }
-            }
-
-            if(found==false){
-                dbgSystem.addMessage("Value '" + mValue + "' not found in the values set for the signal '" + mSignalFullName +"' !");
-                return false;
-            }
-
-        }else if(mValue=="ANY"){
-            _signalSetter.mAnyValueChanged = true;
-
-        }else{
-            _signalSetter.mIntValue = StdString::stringToInt(mValue, 0);
-
-        }
-
-
-    }else if(_signal->type()==SignalType::FLOAT){
-
-        if(mValue.empty()){
-            dbgSystem.addMessage("Missing value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-        if(mValue=="ANY"){
-            _signalSetter.mAnyValueChanged = true;
-
-        }else{
-            _signalSetter.mFloatValue = StdString::stringToFloat(mValue, 0.0f);
-        }
-
-
-    }else if(_signal->type()==SignalType::BITSET){
-
-        /*
-        if(mFlagName.empty()){
-            dbgSystem.addMessage("Missing flag name for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-        if(mValue.empty()){
-            dbgSystem.addMessage("Missing value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-        */
-        if(mSignalNameParts.size()<2){
-            dbgSystem.addMessage("Missing flag name for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-        mFlagName = mSignalNameParts.back();        // last part is always flag
-
-
-
-        if(_valuesSet){
-
-            bool found = false;
-            for(NamedValue &nn : *_valuesSet){
-                if(nn.name==mFlagName){
-                    _signalSetter.mIntValue = nn.intValue;
-                    found = true;
-                }
-            }
-
-            if(found==false){
-                dbgSystem.addMessage("Flag name '" + mValue + "' not found for signal '" + mSignalFullName +"' !");
-                return false;
-            }
-
-        }else{
-            dbgSystem.addMessage("Missing values set for signal '" + mSignalFullName +"' (required for bitflag signals) !");
-            return false;
-        }
-
-
-        //----
-        if(mValue.empty() || mValue=="TRUE" || mValue=="ON" || mValue=="1"){
-            _signalSetter.mBoolValue = true;
-
-        }else if(mValue=="FALSE" || mValue=="OFF" || mValue=="0"){
-            _signalSetter.mBoolValue = false;
-
-        }else{
-
-            dbgSystem.addMessage("Wrong value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-
-    }else if(_signal->type()==SignalType::STRING){
-
-        if(mValue.empty()){
-            dbgSystem.addMessage("Missing value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-        if(mValue=="ANY"){
-            _signalSetter.mAnyValueChanged = true;
-
-        }else{
-            _signalSetter.mStringValue = mValue;
-        }
-
-    }
-
-
-    _signalSetter.mSignal = _signal;         // serves as flag so we set it at the end if ok
-
-    return true;
 
 }
 
-
-/*
-bool ParsedSignalPath::parse_query(Signal* _signal)
-{
-
-    std::vector<std::string> signalParts = StdString::splitString(mFullPath, "=");
-
-    if(signalParts.size()>0){
-        mSignalFullName = signalParts[0];
-    }
-
-
-    if(_signal->type()==SignalType::BOOL){
-
-        if(signalParts.size()>1){
-            mValue = signalParts[1];
-        }
-        if(signalParts.size()>2){
-            dbgSystem.addMessage("Boolean signal syntax error!");
-            return false;
-        }
-
-
-    }else if(_signal->type()==SignalType::INT || _signal->type()==SignalType::FLOAT || _signal->type()==SignalType::STRING){
-
-        if(signalParts.size()>1){
-            mValue = signalParts[1];
-        }
-        if(mValue.empty()){
-            dbgSystem.addMessage("Missing value for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-        if(signalParts.size()>2){
-            dbgSystem.addMessage("Signal syntax error!");
-            return false;
-        }
-
-
-    }else if(_signal->type()==SignalType::BITSET){
-
-        if(signalParts.size()>1){
-            mFlagName = signalParts[1];
-        }
-
-        if(mFlagName.empty()){
-            dbgSystem.addMessage("Missing flag name for signal '" + mSignalFullName +"' !");
-            return false;
-        }
-
-        if(signalParts.size()>2){
-            mValue = signalParts[2];
-        }
-        //if(valueName.empty()){
-        //    dbgSystem.addMessage("Missing value for signal '" + signalName +"' !");
-        //    return false;
-        //}
-        if(signalParts.size()>3){
-            dbgSystem.addMessage("Bitflags signal syntax error!");
-            return false;
-        }
-    }
-
-
-    return true;
-
-}
-
-
-bool ParsedSignalPath::parse_setter(Signal *_signal)
-{
-
-    return parse_query(_signal);
-
-}
-*/
 
 
 

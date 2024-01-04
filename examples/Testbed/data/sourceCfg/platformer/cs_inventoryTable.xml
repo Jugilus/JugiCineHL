@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="inventoryTable" set="spritesB" tileWidth="50" tileHeight="50" nTilesX="4" nTilesY="1">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Standard" name="markerA" x="158" y="0" handleSource="true"/>
+        <sprite type="Composite" name="inventorySlot" nameID="slot" x="0" y="0"/>
+    </layer>
+    <parameter name="widget" value="inventoryTable" type="string"/>
+    <parameter name="wName" value="inventoryTable" type="string"/>
+</composedSprite>

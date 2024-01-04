@@ -76,7 +76,7 @@ void CollectSpritesWithId(Map *map, std::vector<Sprite*>&collectedSprites,  int 
 void CollectSpritesWithId(CompositeSprite *composedSprite, std::vector<Sprite*>&collectedSprites,  int id);
 
 
-void CollectSpritesWithName(Scene *map, std::vector<Sprite*>&collectedSprites,  const std::string &name);
+void CollectSpritesWithName(Scene *scene, std::vector<Sprite*>&collectedSprites,  const std::string &name);
 
 /// \brief Collect sprites with the given name.
 ///
@@ -275,6 +275,8 @@ void CollectSpritesWithSourceSpriteName(SpriteLayer *layer, std::vector<Sprite*>
 
 //--- FIND VECTOR SHAPE
 
+VectorShape* FindVectorShapeWithName(Scene *scene, const std::string &name);
+
 
 /// \brief Find a vector shape with the given *name*.
 ///
@@ -436,7 +438,7 @@ void CollectSourceSpritesWithConstParameter(std::vector<SourceSprite*>&collected
 void CollectSourceSpritesWithConstParameter(SourceGroup *sourceGroup, std::vector<SourceSprite*>&collectedSourceSprites, const std::string &pName, const std::string &pValue="");
 
 
-SourceSprite* FindSourceSpriteWithName(const std::string &name);
+SourceSprite* FindSourceSpriteWithName(const std::string &name, bool setErrorMessage=true);
 
 /// \brief Find a source sprite with the given name.
 ///

@@ -6,6 +6,7 @@
         <font name="fontBig_yellow" file="data/fonts/calibri_r_bold_50px_outline2px_B.fnt"/>
         <font name="fontNormal_bold" file="data/fonts/calibri_bold_widthScale120_30px.fnt"/>
         <font name="fontNormal" file="data/fonts/calibri_widthScale120_30px.fnt"/>
+        <font name="font_effect" file="data/fonts/calibri_r_bold_30px_outline2px.fnt"/>
     </fonts>
     <colors>
         <color name="violetA" color="776AA0"/>

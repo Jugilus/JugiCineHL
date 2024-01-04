@@ -1,6 +1,9 @@
 #include <ncine/Application.h>
 #include <ncine/FileSystem.h>
-//#include "jmGuiText.h"
+
+#include "pugixml/pugixml.hpp"
+
+#include "jmText.h"
 #include "jmSourceContainers.h"
 #include "jmFont.h"
 #include "jmSourceObjectsLoader_xml.h"
@@ -62,7 +65,8 @@ void PlayedApp::preInit()
 
     jugimap::settings.setYorientation(jugimap::Yorientation::UP);
 
-    if(appConfigurationLoader_xml.loadApplicationBaseParameters(this, mMessage)==false){
+    //if(appConfigurationLoader_xml.loadApplicationBaseParameters(this, mMessage)==false){
+    if(loadApplicationBaseParameters(mMessage)==false){
         mError = AppError::PREINIT_ERROR;
         //mMessage = "loadApplicationBaseParameters ERROR ";
         return;
@@ -151,14 +155,15 @@ void PlayedApp::init()
     mCustomComponentFactoryManager->addFactory(new EntitySystemFactory("entitySystem"));
     mCustomComponentFactoryManager->addFactory(new GuiSystemFactory("guiSystem"));
     mCustomComponentFactoryManager->addFactory(new MessagePanelFactory("messagePanel"));
-
+    //mCustomComponentFactoryManager->addFactory(new CharacterSystemFactory("characterSystem"));
 
     mSignalParserManager.reset(new SignalParserManager());
     mSignalParserManager->addAndStoreSignalParser(new CoreSignalsParser(
     {"STATES", "USERS", "INPUT_COMMAND", "INPUT", "SETTINGS", "ANIMATED_OBJECT", "GFX"}));
 
 
-    if(appConfigurationLoader_xml.loadApplicationGlobalData(this)==false){
+    //if(appConfigurationLoader_xml.loadApplicationGlobalData(this)==false){
+    if(loadApplicationGlobalData()==false){
         mError = AppError::INIT_ERROR;
         return;
     }
@@ -179,6 +184,7 @@ void PlayedApp::init()
 
     //--- SCENES
 
+    /*
     //---- load base configuration data for scenes
     for(Scene *s : mScenes){
         if(appConfigurationLoader_xml.loadSceneBaseData(s)==false){
@@ -202,8 +208,25 @@ void PlayedApp::init()
     }
     mInitializationStatus |= static_cast<int>(AppInitializationStatus::SCENE_LOGIC_CONFIGURATION_DATA_LOADED);
     assert(dbgErrorMessages.empty());
+    */
 
+    for(Scene *s : mScenes){
+        //if(appConfigurationLoader_xml.loadSceneBaseData(s)==false){
+        if(loadScene(static_cast<PlayedScene*>(s), LoadedContent::SCENE_COUNT_OBJECTS)==false){
+            mError = AppError::INIT_ERROR;
+            return;
+        }
+    }
 
+    for(Scene *s : mScenes){
+        //if(appConfigurationLoader_xml.loadSceneBaseData(s)==false){
+        if(loadScene(static_cast<PlayedScene*>(s), LoadedContent::SCENE_LOGIC_DATA)==false){
+            mError = AppError::INIT_ERROR;
+            return;
+        }
+    }
+
+    mInitializationStatus |= static_cast<int>(AppInitializationStatus::SCENE_LOGIC_CONFIGURATION_DATA_LOADED);
 
 
     //---- load source objects
@@ -370,9 +393,9 @@ void PlayedApp::update(float _framePeriod)
 
         //---
         gSignalUpdater.preUpdateSignals();
+        mInputSystem->preUpdate();
 
         mActiveScene->preUpdate();
-        mInputSystem->preUpdate();
 
         mActiveScene->update();
 
@@ -392,175 +415,335 @@ void PlayedApp::update(float _framePeriod)
 
     }
 
-
-
-
     //App::update(_framePeriod);
-
-
-
 
 }
 
 
-/*
-    if(mState==State::NORMAL){
 
-        App::update(_framePeriod);
-        mDelayedTaskManager->update();
+bool PlayedApp::loadApplicationBaseParameters(std::string &dbgText)
+{
 
-    }else if(mState==State::RELOAD_APP_PART_1){
-
-        // Delete all source, map, logic data.... and reset possible dangling link pointers
-        // After deleting the application should be ready to be initialized again.
-
-        deleteContent();
-        sourceLibrary.deleteContent();
-        fontsLibrary.deleteContent();
-        textColorsLibrary.deleteContent();
-        DeleteGuiSupportingObjects();
-        DeleteInputSupportingObjects();
-
-        mActiveScene = nullptr;
-        mInitializationStatus = static_cast<int>(InitializationStatus::APP_BASE_CONFIGURATION_DATA_LOADED);
-
-        //---
-
-        mShapeDrawer->begin();
-
-        Vec2f pos(100, settings.GetScreenSize().y-100);
-        mShapeDrawer->drawText("RELOADING GAME !", pos);
-
-        mShapeDrawer->end();
-
-        //---
-        mState = State::RELOAD_APP_PART_2;
-
-        App::update(_framePeriod);
+    std::string filePath = CurrentProject.gameCfgDir + "/_application.xml";
 
 
-    }else if(mState==State::RELOAD_APP_PART_2){
-
-        init();
-        mState = State::NORMAL;
-
-    }else if(mState==State::ERROR){
-
-        showErrorMessage();
-    }
+    //---
+    dbgSystem.addMessage("Loading application base parameters from file '_application.xml' ...");
 
 
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file(filePath.c_str());
 
 
+    if(result.status==pugi::xml_parse_status::status_ok){
+        dbgText = "OK Path : " + filePath;
 
-    //----
-    if(mShowOverlay){
+        pugi::xml_node rootNode = doc.child("application");
+        if(rootNode.empty()==false){
+            mName = rootNode.attribute("name").as_string("MyGame");
 
-        mShapeDrawer->begin();
+            for(pugi::xml_node n = rootNode.first_child(); n; n = n.next_sibling()){
+                std::string nodeName = std::string(n.name());
 
-        mShapeDrawer->setOutlineColor(ColorRGBA(0,0,0,128));
-        mShapeDrawer->drawRectFilled(BoundingBoxFloat(30,30, 300, 300));
+                if(nodeName=="saveDataDirName"){
+                    mSaveDataDirName = n.attribute("name").as_string("jugicineGame");
 
-        mShapeDrawer->end();
+                }else if(nodeName=="designResolution"){
+                    mDesignResolution.width = n.attribute("width").as_int(1200);
+                    mDesignResolution.height = n.attribute("height").as_int(800);
 
-    }
+                    mDesignResolution.widthMin = n.attribute("widthMin").as_int(mDesignResolution.width);
+                    mDesignResolution.widthMax = n.attribute("widthMax").as_int(mDesignResolution.width);
+                    if(mDesignResolution.widthMin != mDesignResolution.width ||
+                       mDesignResolution.widthMax != mDesignResolution.width)
+                    {
+                        mDesignResolution.useWidthMinMax = true;
+                    }
 
-    if(mShowGui && mState==State::NORMAL){
+                    mDesignResolution.heightMin = n.attribute("heightMin").as_int(mDesignResolution.height);
+                    mDesignResolution.heightMax = n.attribute("heightMax").as_int(mDesignResolution.height);
+                    if(mDesignResolution.heightMin != mDesignResolution.height ||
+                       mDesignResolution.heightMax != mDesignResolution.height)
+                    {
+                        mDesignResolution.useHeightMinMax = true;
+                    }
 
 
-        if(ImGui::Begin("Player")){
-            if (ImGui::Button("Reload Game")){
+                }else if(nodeName=="scenes"){
+                    for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
+                        std::string childNodeName = std::string(nChild.name());
 
-                mState = State::RELOAD_APP_PART_1;
+                        if(childNodeName=="scene"){
+                            std::string name = nChild.attribute("name").as_string("");
+                            Scene * scene = new PlayedScene(name, app);
+                            scenes().push_back(scene);
 
-            }
+                            if(nChild.attribute("startingScene").empty()==false){
+                                bool startingScene = nChild.attribute("startingScene").as_bool(false);
+                                if(startingScene){
+                                    setActiveScene(scene);
+                                }
+                            }
+                        }
+                    }
 
-            if (ImGui::Button("Reload Logic")){
+                }else if(nodeName=="language"){
+                    if(loadApplication_LanguagesCfg(n, dbgText)==false){
+                        return false;
+                    }
 
-                if(updateActiveSceneLogic()==false){
-                    mState = State::ERROR;
                 }
             }
 
-            ImGui::Checkbox("Debug", &mShowOverlay);
-
-            if(ImGui::Button("Test Message Box")){
-                 mState = State::ERROR;
-            }
-
         }
-        ImGui::End();
+
+    }else{
+        dbgText = "Path error: " + filePath;
     }
 
-}
+    jugimap::settings.SetScreenSize(Vec2i(mDesignResolution.width, mDesignResolution.height));
 
-
-
-bool PlayedApp::updateActiveSceneLogic()
-{
-
-    PlayedScene* activePlayerScene = static_cast<PlayedScene*>(mActiveScene);
-
-    std::unique_ptr<PlayedScene>temporarySceneForLogicData;
-    temporarySceneForLogicData.reset(new PlayedScene(activePlayerScene->name(), this));
-
-
-    if(appConfigurationLoader_xml.loadSceneLogicData(temporarySceneForLogicData.get())==false){
-        mState = State::ERROR;
+    //---
+    if(scenes().empty()){
+        dbgSystem.addMessage("No scenes found in '" + mName + "' (file '" + filePath + "')!");
         return false;
-    }
-    if(activePlayerScene->updateLogicData(temporarySceneForLogicData.get())==false){
-        mState = State::ERROR;
-        return false;
+
     }
 
-    if(activePlayerScene->initActionTasksAndEvents()==false){
-        mState = State::ERROR;
-        return false;
-    }
-
+    dbgSystem.removeLastMessage();
 
     return true;
 
 }
 
 
-void PlayedApp::showErrorMessage()
+
+bool PlayedApp::loadApplicationGlobalData()
 {
 
-    ImVec2 size(400.0f, 400.0f);
-    ImGui::SetNextWindowSize(size, ImGuiCond_None);
-    ImVec2 pos(settings.GetScreenSize().x/2 - size.x/2, settings.GetScreenSize().y/2 - size.y/2);
-    ImGui::SetNextWindowPos(pos, ImGuiCond_None);
+    std::string filePath = CurrentProject.gameCfgDir + "/_application.xml";
 
-    if(ImGui::Begin("Message!", nullptr, ImGuiWindowFlags_Modal)){
+    //---
+    dbgSystem.addMessage("Loading application global data from file '_application.xml' ...");
 
-        if(dbgSystem.errorMessages().empty()==false){
-            for(const std::string &s : dbgSystem.errorMessages()){
-                ImGui::Text("%s", s.c_str());
+
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file(filePath.c_str());
+
+
+    if(result.status==pugi::xml_parse_status::status_ok){
+
+        pugi::xml_node rootNode = doc.child("application");
+        if(rootNode.empty()==false){
+            mName = rootNode.attribute("name").as_string("MyGame");
+
+            for(pugi::xml_node n = rootNode.first_child(); n; n = n.next_sibling()){
+                std::string nodeName = std::string(n.name());
+
+                if(nodeName=="variable"){
+
+                    std::string varName = n.attribute("name").as_string("");
+                    std::string varValue = n.attribute("value").as_string("");
+                    std::string varType = n.attribute("type").as_string("");
+                    VariableType type = GetVariableTypeFromString(varType);
+
+                    if(globalVariables()->addVariable(varName, varValue, type)==nullptr){
+                        return false;
+                    }
+
+                }else if(nodeName=="inputCommands"){
+                    if(inputSystem()->initCfg(n)==false){
+                        return false;
+                    }
+                }
             }
-
-        }else{
-            ImGui::Text("Undefined error!");
         }
+    }
 
-        ImGui::Dummy(ImVec2(20,20));
+    jugimap::settings.SetScreenSize(Vec2i(mDesignResolution.width, mDesignResolution.height));
 
-        ImGui::Separator();
+    //---
+    if(scenes().empty()){
+        dbgSystem.addMessage("No scenes found in '" + mName + "' (file '" + filePath + "')!");
+        return false;
 
-        ImGui::Dummy(ImVec2(20,20));
+    }
 
-        if(ImGui::Button("Close")){
-             mState = State::NORMAL;
+    dbgSystem.removeLastMessage();
+
+    return true;
+
+}
+
+
+
+bool PlayedApp::loadScene(PlayedScene *_scene, LoadedContent _loadedContent)
+{
+
+    std::string dirPath = CurrentProject.gameCfgDir;
+
+    if(ncine::FileSystem::isDirectory(dirPath.c_str())==false){
+        return false;
+    }
+
+    ncine::FileSystem::Directory dir(dirPath.c_str());
+
+
+    while(true){
+        const char *_fileName = dir.readNext();
+        if(_fileName==nullptr){
+            break;
         }
+        std::string fileName(_fileName);
+        if(fileName.empty()==false && fileName.substr(0, 1)=="."){
+             continue;
+        }
+        std::string filePath = dirPath + "/" + fileName;
+        if(ncine::FileSystem::isDirectory(filePath.c_str())){
+
+            // scene directory
+            ncine::FileSystem::Directory dirScene(filePath.c_str());
+
+            while(true){
+
+                const char *_fileNameScene = dirScene.readNext();
+                if(_fileNameScene==nullptr){
+                    break;
+                }
+                std::string fileNameScene(_fileNameScene);
+                if(fileNameScene.empty()==false && fileNameScene.substr(0, 1)=="."){
+                     continue;
+                }
+                std::string filePathScene = filePath + "/" + fileNameScene;
+                std::string suffix = StdString::suffixFromFilePath(filePathScene);
+
+                if(ncine::FileSystem::isFile(filePathScene.c_str())){
+
+                    std::string rootNodeName;
+                    std::string rootNodeAttribute_name = "name";
+
+                    if(rootNodeName_xml(filePathScene, rootNodeName, rootNodeAttribute_name)==false){
+                        return false;
+                    }
+
+                    if(rootNodeName=="scene" && rootNodeAttribute_name==_scene->name()){
+
+                        if(_loadedContent==LoadedContent::SCENE_COUNT_OBJECTS){
+
+                             if(_scene->preloadScene_countObjects(filePathScene)==false){
+                                return false;
+                            }
+
+                        }else if(_loadedContent==LoadedContent::SCENE_LOGIC_DATA){
+
+                            if(_scene->loadScene_LogicData(filePathScene)==false){
+                                return false;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
-        ImGui::End();
+    //---
+    if(_loadedContent==LoadedContent::SCENE_LOGIC_DATA && _scene->sceneMaps().empty()){
+        dbgSystem.addMessage("Error! Scene '"+_scene->name()+"' does not have defined any scene maps!");
+        assert(false);
+        return false;
     }
 
 }
 
-*/
+
+bool PlayedApp::rootNodeName_xml(const std::string &filePath, std::string &rootNodeName, std::string &rootNodeAttribute)
+{
+
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_file(filePath.c_str());
+
+    if(result.status==pugi::xml_parse_status::status_ok){
+        for(pugi::xml_node n = doc.first_child(); n; n = n.next_sibling()){
+            if(n.type()==pugi::node_element){
+                rootNodeAttribute = n.attribute(rootNodeAttribute.c_str()).as_string("");
+
+                rootNodeName = std::string(n.name());
+            }
+        }
+
+    }else{
+        dbgSystem.addMessage("Error reading xml file '" + filePath + "'");
+        return false;
+    }
+
+    return true;
+}
+
+
+bool PlayedApp::loadApplication_LanguagesCfg(pugi::xml_node &node, std::string &dbgText)
+{
+
+    dbgSystem.addMessage("Loading languages cfg ...");
+
+
+    std::string textDirectory = node.attribute("textDirectory").as_string("");
+    std::string defLanguage = node.attribute("defLanguage").as_string("");
+
+    std::string dirPath = CurrentProject.gameRootDir + "/" + textDirectory;
+    //if(CurrentProject.gameRootDir.empty()){
+    //    dirPath = textDirectory;
+    //}
+
+    if(ncine::FileSystem::isDirectory(dirPath.c_str())==false){
+        dbgText = "Wrong directory: " + dirPath;
+        dbgSystem.addMessage("Directory '" + dirPath + "' is not valid!");
+        return false;
+    }else{
+        dbgText = "Ok directory: " + dirPath;
+    }
+
+    textLibrary.setRelativeTextsPath(textDirectory);
+
+    ncine::FileSystem::Directory dir(dirPath.c_str());
+
+
+    while(true){
+        const char *_fileName = dir.readNext();
+        if(_fileName==nullptr){
+            break;
+        }
+        std::string fileName(_fileName);
+        if(fileName.empty()==false && fileName.substr(0, 1)=="."){
+             continue;
+        }
+        std::string filePath = dirPath + "/" + fileName;
+        if(ncine::FileSystem::isDirectory(filePath.c_str())){
+
+            textLibrary.languages().push_back(fileName);
+            if(fileName==defLanguage){
+                textLibrary.setActiveLanguage(fileName);
+            }
+        }
+    }
+
+
+    if(textLibrary.languages().empty()){
+        dbgSystem.addMessage("No language directories found within defined text directory '" + textDirectory + "'!");
+        return false;
+    }
+    if(textLibrary.activeLanguage().empty()){
+        dbgSystem.addMessage("Default language directory '" +defLanguage+ "' not found!");
+        return false;
+    }
+
+
+    dbgSystem.removeLastMessage();
+    return true;
+}
+
+
 
 
 PlayedApp *app = nullptr;

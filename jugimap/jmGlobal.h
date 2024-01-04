@@ -375,6 +375,7 @@ enum class WidgetType
     BAR,                    ///< Bar - GuiBar object.
     TEXT_FIELD,             ///< Text field - GuiTextField object.
     TEXT_INPUT,              ///< Text input - GuiTextInput object.
+    SLOT,
     TABLE
 
 };

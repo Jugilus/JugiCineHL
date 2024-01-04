@@ -23,8 +23,8 @@ class TextSegment;
 class Sprite;
 class ShapeDrawer;
 class Compound;
-struct SignalQuery;
-struct SignalSetter;
+class SignalQuery;
+class SignalSetter;
 
 class ParsedSignalPath;
 
@@ -40,6 +40,7 @@ public:
     virtual bool initCfg(PlayedScene *, const pugi::xml_node &){ return true; }
     virtual bool buildObjects(PlayedScene *_scene){ return true; }
     virtual bool initConnections(PlayedScene* _scene){ return true; }
+    virtual bool initConnections_setParameters(const std::string &parameters, PlayedScene* _scene){ return true; }
 
     virtual void start(){}
     virtual bool startingPhaseUpdate(){ start();  return false; }

@@ -2,10 +2,13 @@
 
 set(JUGICINEHL_SOURCES
 logic/jpLogicState.h
+logic/jpLogicAction.h
 logic/jpSceneLogicState.h
 logic/jpLogicStateCfg.h
 logic/jpConditions.h
 logic/jpCommands.h
+logic/jpFunction.h
+logic/jpLogicCommon.h
 logic/jpTransition.h
 logic/jpTransitionOperations.h
 items/jpItemsCommon.h
@@ -20,6 +23,7 @@ components/jpMessagePanel.h
 gfxObjects/jpGfxObjectsCommon.h
 gfxObjects/jpAnimationObjects.h
 gfxObjects/jpCompound.h
+gfxObjects/jpMoving.h
 gui/jpGuiCommon.h
 gui/jpGuiSystem.h
 gui/jpGuiUtilities.h
@@ -29,13 +33,18 @@ gui/widgets/jpGuiSlider.h
 gui/widgets/jpGuiTextField.h
 gui/widgets/jpGuiTextInput.h
 gui/widgets/jpGuiTable.h
+gui/widgets/jpGuiSlot.h
+gui/widgets/jpGuiTableNew.h
 entitySystem/jpEntity.h
 entitySystem/jpEntitySystem.h
+entitySystem/jpEntityPhase.h
+entitySystem/jpEntityManager.h
 entitySystem/jpEntityCommon.h
 entitySystem/jpEntityGlobal.h
 entitySystem/jpEntityGroups.h
 entitySystem/jpEntityUtilities.h
 entitySystem/jpSourceEntity.h
+entitySystem/jpEntityCharacter.h
 entitySystem/jpB2Callbacks.h
 entitySystem/jpB2Body.h
 entitySystem/jpB2Fixture.h
@@ -52,9 +61,14 @@ entitySystem/movements/jpPathMovement.h
 entitySystem/movements/jpPathPtPMovement.h
 entitySystem/movements/jpAnimatedBehavior.h
 entitySystem/movements/jpAngularVelocity.h
+entitySystem/movements/jpCustomState.h
 entitySystem/task/jpTaskBase.h
 entitySystem/task/jpTaskCommon.h
 entitySystem/task/jpTransporter.h
+character/jpCharacterAction.h
+data/jpDataUtilities.h
+data/jpData.h
+data/jpItem.h
 systems/jpSettings.h
 systems/jpUser.h
 systems/jpInput.h
@@ -65,14 +79,19 @@ jpVariables.h
 jpGameObjectsLoader_xml.h
 jpUtilities.h
 jpQueries.h
+jpObjectParser.h
+jpAttribute.h
 jpPlayedApp.h
 jpPlayedScene.h
 
 logic/jpLogicState.cpp
+logic/jpLogicAction.cpp
 logic/jpSceneLogicState.cpp
 logic/jpLogicStateCfg.cpp
 logic/jpConditions.cpp
 logic/jpCommands.cpp
+logic/jpFunction.cpp
+logic/jpLogicCommon.cpp
 logic/jpTransition.cpp
 logic/jpTransitionOperations.cpp
 items/jpItemsCommon.cpp
@@ -87,6 +106,7 @@ components/jpMessagePanel.cpp
 gfxObjects/jpGfxObjectsCommon.cpp
 gfxObjects/jpAnimationObjects.cpp
 gfxObjects/jpCompound.cpp
+gfxObjects/jpMoving.cpp
 gui/jpGuiCommon.cpp
 gui/jpGuiSystem.cpp
 gui/jpGuiUtilities.cpp
@@ -96,13 +116,18 @@ gui/widgets/jpGuiSlider.cpp
 gui/widgets/jpGuiTextField.cpp
 gui/widgets/jpGuiTextInput.cpp
 gui/widgets/jpGuiTable.cpp
+gui/widgets/jpGuiSlot.cpp
+gui/widgets/jpGuiTableNew.cpp
 entitySystem/jpEntity.cpp
 entitySystem/jpEntitySystem.cpp
+entitySystem/jpEntityPhase.cpp
+entitySystem/jpEntityManager.cpp
 entitySystem/jpEntityCommon.cpp
 entitySystem/jpEntityGlobal.cpp
 entitySystem/jpEntityGroups.cpp
 entitySystem/jpEntityUtilities.cpp
 entitySystem/jpSourceEntity.cpp
+entitySystem/jpEntityCharacter.cpp
 entitySystem/jpB2Callbacks.cpp
 entitySystem/jpB2Body.cpp
 entitySystem/jpB2Fixture.cpp
@@ -119,9 +144,14 @@ entitySystem/movements/jpPathMovement.cpp
 entitySystem/movements/jpPathPtPMovement.cpp
 entitySystem/movements/jpAnimatedBehavior.cpp
 entitySystem/movements/jpAngularVelocity.cpp
+entitySystem/movements/jpCustomState.cpp
 entitySystem/task/jpTaskBase.cpp
 entitySystem/task/jpTaskCommon.cpp
 entitySystem/task/jpTransporter.cpp
+character/jpCharacterAction.cpp
+data/jpDataUtilities.cpp
+data/jpData.cpp
+data/jpItem.cpp
 systems/jpSettings.cpp
 systems/jpUser.cpp
 systems/jpInput.cpp
@@ -132,6 +162,8 @@ jpVariables.cpp
 jpGameObjectsLoader_xml.cpp
 jpUtilities.cpp
 jpQueries.cpp
+jpObjectParser.cpp
+jpAttribute.cpp
 jpPlayedScene.cpp
 jpPlayedApp.cpp
 

@@ -12,6 +12,7 @@
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
 #include "jpUtilities.h"
+#include "jpObjectParser.h"
 #include "jpConfirmPanel.h"
 
 

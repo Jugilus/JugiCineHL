@@ -50,7 +50,7 @@ public:
 
     const std::string & name();
     std::vector<void*>& objects();
-    GfxObjectType objectType();
+    GSpritesObjectType objectType();
 
 
     ActionStatus status(){ return mStatus; }
@@ -93,7 +93,7 @@ class Transition
 {
 public:
     static std::string type;
-    static std::vector<GfxObjectType>allowedObjects;
+    static std::vector<GSpritesObjectType>allowedObjects;
 
 
     Transition(BaseObject* _parent);

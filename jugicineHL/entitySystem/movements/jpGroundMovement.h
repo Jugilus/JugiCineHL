@@ -9,6 +9,7 @@
 #include "jpGlobal.h"
 #include "jpVariables.h"
 #include "jpSpeedGenerators.h"
+#include "jpCustomState.h"
 #include "jpMovementBase.h"
 
 
@@ -34,17 +35,23 @@ struct SourceFixture;
 
 enum class GroundMovementState
 {
-    STANDING,
-    IDLE,
-    TURNING_AROUND,
-    MOVING,
-    STEEP_SLOPE_STUMBLING,
-    UNKNOWN
 
+    UNKNOWN =                   0,
+    STANDING =                  1,
+    IDLE =                      2,
+    TURNING_AROUND =            3,
+    MOVING =                    4,
+    STEEP_SLOPE_STUMBLING =     5,
+    COUNT =                     6
 };
+
 
 GroundMovementState GetGroundMovementStateFromString(const std::string &state);
 std::string GetGroundMovementStateString(GroundMovementState);
+
+
+extern std::vector<std::pair<std::string, int>>gGroundMovementStateNamedValues;
+
 
 //------------------------------------------------------------------------------------
 
@@ -95,63 +102,9 @@ public:
     Direction bodyOrientationMovingRight = Direction::RIGHT;
 
 
-    //---
-
-    enum class BaseState
-    {
-        STANDING,
-        MOVING
-    };
-
-
-    struct CustomStateCfg
-    {
-
-        bool initCfg(const pugi::xml_node &_node);
-
-
-        std::string name;
-        BaseState baseState = BaseState::STANDING;
-
-        std::string sigTrigger;
-
-        std::string aniRight;
-        std::string aniLeft;
-
-        //---
-        std::string contextTrigger;
-
-        //---
-        CustomSensorCfg customSensorCfg;
-    };
-
     std::vector<CustomStateCfg>customStates;
 
 };
-
-
-
-struct GroundMovementCustomStateData
-{
-
-    ~GroundMovementCustomStateData();
-    bool initConnections(PlayedScene *_scene, Entity *_actor);
-
-
-    GroundMovementCfg::CustomStateCfg *cfg = nullptr;          //LINK
-    SignalQuery trigger;
-    AnimationInstance * aniLeft = nullptr;                  // OWNED
-    AnimationInstance * aniRight = nullptr;                 // OWNED
-
-    //---
-    SignalQuery contextTrigger;
-
-    //---
-    SourceFixture *triggeringExtraShapeSourceFixture = nullptr;
-    bool extraShapeFixtureCreated = false;
-
-};
-
 
 
 struct GroundMovementData : public GroundMovementDataBase
@@ -177,9 +130,9 @@ public:
     AnimationInstance * aniSteepSlopeStaggeringLeft = nullptr;
     AnimationInstance * aniSteepSlopeStaggeringRight = nullptr;
 
-    std::vector<GroundMovementCustomStateData>customStandingStates;
-    std::vector<GroundMovementCustomStateData>customMovingStates;
-
+    //std::vector<GroundMovementCustomStateData>customStandingStates;
+    //std::vector<GroundMovementCustomStateData>customMovingStates;
+    std::vector<CustomStateData>customStates;
 
 };
 
@@ -301,6 +254,7 @@ public:
 
     void createDataObjects(std::vector<MovementEngineCfg*> &_cfgs) override;
     bool initDataObjectsConnections(PlayedScene *_scene, Entity *_actor) override;
+    void collectSignalsForLUT(SignalStorage &_storage) override;
 
     bool init(Entity *_entity) override;
     bool start(MovementEngineData *_data) override;
@@ -320,6 +274,7 @@ public:
     GroundMovementState state(){ return mState; }
 
     MovementEngineData* currentData() override { return mCurrentData; }
+    MovementEngineCfg* currentCfg() override { return mCurrentData->cfg; }
     //std::vector<GroundMovementData> & groundMovementDatas(){ return mGroundMovementDatas; }
     //GroundMovementData* getGroundMovementData(const std::string &_name, bool _setErrorMessage = true);
     VGGroundMovement & groundMovement(){ return mGroundMovement; }
@@ -330,16 +285,19 @@ public:
 
 private:
     GroundMovementState mState = GroundMovementState::STANDING;
-    GroundMovementCustomStateData *mCustomState = nullptr;
+    //GroundMovementCustomStateData *mCustomState = nullptr;
 
     VGGroundMovement mGroundMovement;
     ESlopeSliding mSlopeSliding;
     EGroundConveyor mGroundConveyor;
 
     Direction mInputDirection;
-    //b2Vec2 mGroundNormal;
     GroundMovementData* mCurrentData = nullptr;        // LINK
     std::vector<GroundMovementData>mGroundMovementDatas;          // stored
+
+
+    CustomStateEngine mCustomStateEngine;
+
 
     //----
     IntSignal mSigState;
@@ -361,7 +319,10 @@ private:
     void updateSliding(EngineUpdateParameters &eup);
     void updateConveyor(EngineUpdateParameters &eup);
 
-    void updateCustomState(EngineUpdateParameters &eup);
+    void manageCustomStates(EngineUpdateParameters &eup);
+
+    //GroundMovementCustomStateData* checkForCustomState();
+    //void updateCustomState(EngineUpdateParameters &eup);
 
 };
 

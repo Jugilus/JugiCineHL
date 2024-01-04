@@ -12,6 +12,7 @@
 
 #include "jpPlayedScene.h"
 #include "jpPlayedApp.h"
+#include "jpObjectParser.h"
 
 #include "jpEntity.h"
 #include "jpEntityUtilities.h"
@@ -296,7 +297,7 @@ bool PathPTPMovementData::initConnections(PlayedScene *_scene, Entity *_actor)
         if(moveBackward.isValid()==false){
             return false;
         }
-        if(moveForward.mSignal->type()!=SignalType::BOOL){
+        if(moveForward.signal()->type()!=SignalType::BOOL){
             dbgSystem.addMessage("'move forward' trigger is not a boolean! ");
             return false;
         }
@@ -1096,6 +1097,16 @@ bool PathPTPMovementEngine::initDataObjectsConnections(PlayedScene *_scene, Enti
 }
 
 
+void PathPTPMovementEngine::collectSignalsForLUT(SignalStorage &_storage)
+{
+
+    for(PathPTPMovementData& d : mPathMovementDatas){
+
+    }
+
+}
+
+
 /*
 void PathPointToPointMovementEngine::start(PathMovementData *_data, Direction _direction, Entity *_entity)
 {
@@ -1126,18 +1137,18 @@ bool PathPTPMovementEngine::init(Entity *_entity)
     mSignals.push_back(&mSigState);
 
     for(PathPTPMovementData& d : mPathMovementDatas){
-        if(d.moveForward.mSignal == &d.sigMoveForwardObj){
+        if(d.moveForward.signal() == &d.sigMoveForwardObj){
             mSignals.push_back(&d.sigMoveForwardObj);
         }
-        if(d.moveBackward.mSignal == &d.sigMoveBackwardObj){
+        if(d.moveBackward.signal() == &d.sigMoveBackwardObj){
             mSignals.push_back(&d.sigMoveBackwardObj);
         }
         mSignals.push_back(&d.sigDisabled);
 
-        if(d.rotateCW.mSignal == &d.sigRotateCWObj){
+        if(d.rotateCW.signal() == &d.sigRotateCWObj){
             mSignals.push_back(&d.sigRotateCWObj);
         }
-        if(d.rotateCCW.mSignal == &d.sigRotateCCWObj){
+        if(d.rotateCCW.signal() == &d.sigRotateCCWObj){
             mSignals.push_back(&d.sigRotateCCWObj);
         }
         mSignals.push_back(&d.sigRotateDisabled);

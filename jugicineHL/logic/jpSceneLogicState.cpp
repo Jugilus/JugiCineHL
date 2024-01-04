@@ -59,6 +59,10 @@ bool SceneLogicStateCfg::initCfg(const pugi::xml_node &_node)
         }else if(attributeName=="component"){
             component = a.as_string("");
 
+        }else if(attributeName=="components"){
+            std::string sValue = a.as_string("");
+            components = StdString::splitString(sValue, ",");
+
         }else{
 
             dbgSystem.addMessage("Wrong attribute '" + attributeName + "' !");
@@ -107,6 +111,30 @@ bool SceneCustomLogicState::initConnections(PlayedScene *_scene)
 
         Component *component = _scene->componentsGroup()->getComponent(mCfg->component);
         if(component==nullptr){
+            return false;
+        }
+        mUsedComponents.push_back(component);
+    }
+
+
+    for(const std::string &s : mCfg->components){
+
+        std::string cName;
+        std::string cParameters;
+        std::vector<std::string>parts = StdString::splitString(s, ":");
+
+        if(parts.size()>0){
+            cName = parts[0];
+        }
+        if(parts.size()>1){
+            cParameters = parts[1];
+        }
+
+        Component *component = _scene->componentsGroup()->getComponent(cName);
+        if(component==nullptr){
+            return false;
+        }
+        if(component->initConnections_setParameters(cParameters, _scene)==false){
             return false;
         }
         mUsedComponents.push_back(component);

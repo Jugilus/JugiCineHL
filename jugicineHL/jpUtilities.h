@@ -17,6 +17,7 @@ class AnimationInstance;
 class FrameAnimationInstance;
 class StandardSprite;
 
+class Map;
 class Sprite;
 class SourceSprite;
 class TextSegment;
@@ -37,7 +38,7 @@ class Entity;
 //class BehaviorState;
 class VectorShape;
 struct FilteredContactSignal;
-struct SignalAccessor;
+class SignalAccessor;
 struct MovementEngineData;
 struct TaskEngineData;
 
@@ -71,7 +72,7 @@ ItemsGroup* ObtainItemsGroup(PlayedScene* scene, const std::string &itemsGroupNa
 //SceneWidget* ObtainSceneWidget(PlayerScene* scene, Action *sourceAction, const std::string &widgetPath, GuiWidgetKind guiWidgetKind);
 
 
-bool collectObjects(std::vector<void*>&objects, PlayedScene *scene, GfxObjectType objectType, const std::string &objectName, const std::string &srcMapName);
+bool collectObjects(std::vector<void*>&objects, PlayedScene *scene, GSpritesObjectType objectType, const std::string &objectName, const std::string &srcMapName);
 
 
 TextSegment* ObtainTextSegment(const std::string &textSegmentPath);
@@ -129,13 +130,16 @@ StringVar* ObtainStringVariableFromPath(const std::string &path, PlayedScene *sc
 
 jugimap::AnimationInstance *ObtainFrameAnimationInstance(StandardSprite *_sprite, const std::string &aniName);
 
-jugimap::AnimationInstance *ObtainAnimationInstance(Sprite *_sprite, const std::string &aniName, bool throwError=true);
+jugimap::AnimationInstance *ObtainAnimationInstance(Sprite *_sprite, const std::string &aniName, bool setErrorMessage=true);
 
 
 
 //----------------------------------------------------------------
 
 VectorShape* ObtainVectorShapeWithAPathPointPosition(Map *map, Vec2f pos, float &distMin, int &index);
+
+
+std::string obtainStateIdentifierString(LogicState *_logicState, const std::string &_prefix);
 
 
 

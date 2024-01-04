@@ -4,8 +4,8 @@
     <designResolution width="1400" height="900"/>
 
     <scenes>
-        <scene name="Menu" startingScene="true" />
-        <scene name="PlatformerA"  />
+        <scene name="Menu" />
+        <scene name="PlatformerA" startingScene="true" />
     </scenes>
 
     <!-- 
@@ -15,14 +15,14 @@
     <language textDirectory="data/text" defLanguage="English" />
 
     <inputCommands defKeyboardName="gui/31" defJoystickName="gui/32">
-        <command name="moveLeft" description="inputCommands/0" defKeyboardKey="LEFT" defJoystickCommand="DPAD_LEFT" />
-        <command name="moveRight" description="inputCommands/1" defKeyboardKey="RIGHT" defJoystickCommand="DPAD_RIGHT" />
-        <command name="moveUp" description="inputCommands/2" defKeyboardKey="UP" defJoystickCommand="DPAD_UP" />
-        <command name="moveDown" description="inputCommands/3" defKeyboardKey="DOWN" defJoystickCommand="DPAD_DOWN" />
+        <command name="moveLeft" description="inputCommands/0" defKeyboardKey="LEFT" defJoystickCommand="DPAD_LEFT" blockingCommands="selectItem" />
+        <command name="moveRight" description="inputCommands/1" defKeyboardKey="RIGHT" defJoystickCommand="DPAD_RIGHT" blockingCommands="selectItem" />
+        <command name="moveUp" description="inputCommands/2" defKeyboardKey="UP" defJoystickCommand="DPAD_UP" blockingCommands="selectItem" />
+        <command name="moveDown" description="inputCommands/3" defKeyboardKey="DOWN" defJoystickCommand="DPAD_DOWN" blockingCommands="selectItem" />
         <command name="jump" description="inputCommands/4" defKeyboardKey="C" defJoystickCommand="A" />
         <command name="dash" description="inputCommands/5" defKeyboardKey="LSHIFT" defJoystickCommand="X" />
         <command name="fire" description="inputCommands/6" defKeyboardKey="LCTRL" defJoystickCommand="B" />
-        <command name="selectWeapon" description="inputCommands/7" defKeyboardKey="SPACE" defJoystickCommand="GUIDE" trigger="pressed"/>
+        <command name="selectItem" description="inputCommands/7" defKeyboardKey="SPACE" defJoystickCommand="GUIDE" trigger="pressed"/>
         <command name="anotherCommand" description="inputCommands/8" defKeyboardKey="R" defJoystickCommand="MISC1" />
         <command name="anotherCommand2" description="inputCommands/9" defKeyboardKey="T" defJoystickCommand="MISC1" />
         <command name="anotherCommand3" description="inputCommands/10" defKeyboardKey="U" defJoystickCommand="MISC1" />

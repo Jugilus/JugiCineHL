@@ -67,13 +67,70 @@ ActionCondition* ActionFactory::createActionCondition(const std::string &type, A
     if(type==ACOnSignal::type){
         return new ACOnSignal(parentAction, value);
 
+    //}else if(type==ACOnData::type){
+    //    return new ACOnData(parentAction, value);
+
+    }else if(type==ACOnDataNEW::type){
+        return new ACOnDataNEW(parentAction, value);
+
+    }else if(type==ACOnItem::type){
+        return new ACOnItem(parentAction, value);
+
     }else if(type==ACOnSignals::type){
         return new ACOnSignals(parentAction, value);
+
+    //}else if(type==ACOnSignalNEW::type){
+    //    return new ACOnSignalNEW(parentAction, value);
+
+    }else if(type==ACOnSignalsNEW::type || type==ACOnSignalNEW::type){
+
+        bool oneSignal = true;
+        if(value.find(",") != std::string::npos){
+            oneSignal = false;
+        }
+
+        if(oneSignal){
+            return new ACOnSignalNEW(parentAction, value);
+
+        }else{
+            return new ACOnSignalsNEW(parentAction, value);
+        }
 
     }
 
     return nullptr;
 }
+
+
+
+ActionCondition* ActionFactory::createActionTriggerCondition(const std::string &type, ActionTrigger *parentAction, const std::string &value)
+{
+
+    if(type==ACOnDataNEW::type){
+        return new ACOnDataNEW(parentAction, value);
+
+    }else if(type==ACOnItem::type){
+        return new ACOnItem(parentAction, value);
+
+    }else if(type==ACOnSignalsNEW::type || type==ACOnSignalNEW::type){
+
+        bool oneSignal = true;
+        if(value.find(",") != std::string::npos){
+            oneSignal = false;
+        }
+
+        if(oneSignal){
+            return new ACOnSignalNEW(parentAction, value);
+
+        }else{
+            return new ACOnSignalsNEW(parentAction, value);
+        }
+
+    }
+
+    return nullptr;
+}
+
 
 
 /*
@@ -151,8 +208,20 @@ ActionCommand* ActionFactory::createActionCommands(const std::string &type, Acti
     //if(type==SetChildState::doType){
     //    return new SetChildState(parentAction, value);
 
-    }else if(type==DoSetSignalB::doType){
-        return new DoSetSignalB(parentAction, value);
+    }else if(type==DoSetSignal::doType){
+        return new DoSetSignal(parentAction, value);
+
+    }else if(type==DoSetSignalNEW::doType){
+        return new DoSetSignalNEW(parentAction, value);
+
+    //}else if(type==DoSetData::doType){
+    //    return new DoSetData(parentAction, value);
+
+    }else if(type==DoSetDataNEW::doType){
+        return new DoSetDataNEW(parentAction, value);
+
+    }else if(type==DoSetItem::doType){
+        return new DoSetItem(parentAction, value);
 
     }else if(type==AShowOverlayCompound::doType){
         return new AShowOverlayCompound(parentAction, value);
@@ -160,11 +229,20 @@ ActionCommand* ActionFactory::createActionCommands(const std::string &type, Acti
     }else if(type==SetTableItemsGroup::doType){
         return new SetTableItemsGroup(parentAction, value);
 
+    }else if(type==SetTableNewItemsGroup::doType){
+        return new SetTableNewItemsGroup(parentAction, value);
+
+    }else if(type==AssignItemToWidget::doType){
+        return new AssignItemToWidget(parentAction, value);
+
     }else if(type==AQuitGame::doType){
         return new AQuitGame(parentAction, value);
 
     }else if(type==ADbgPrint::doType){
         return new ADbgPrint(parentAction, value);
+
+    }else if(type==ADbgPrintNEW::doType){
+        return new ADbgPrintNEW(parentAction, value);
     }
 
     return nullptr;

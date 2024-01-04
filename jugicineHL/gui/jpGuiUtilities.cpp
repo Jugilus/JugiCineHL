@@ -76,37 +76,48 @@ void WidgetSignalParser::parseSignalAccessor(PlayedScene *scene, const std::stri
     GuiWidget *widget = nullptr;
     std::string widgetName;
 
-    if(signalOrigin.substr(0,7)=="BUTTON:"){
+    if(signalOrigin.size()>=7 && signalOrigin.substr(0,7)=="WIDGET:"){
+
+        widgetName = signalOrigin.substr(7);
+        widget = guiSystem->findWidget(widgetName, WidgetType::NOT_DEFINED);
+
+    }else if(signalOrigin.size()>=7 && signalOrigin.substr(0,7)=="BUTTON:"){
 
         widgetName = signalOrigin.substr(7);
         widget = guiSystem->findWidget(widgetName, WidgetType::BUTTON);
 
 
-    }else if(signalOrigin.substr(0,7)=="SLIDER:"){
+    }else if(signalOrigin.size()>=7 && signalOrigin.substr(0,7)=="SLIDER:"){
 
         widgetName = signalOrigin.substr(7);
         widget = guiSystem->findWidget(widgetName, WidgetType::SLIDER);
 
 
-    }else if(signalOrigin.substr(0,11)=="TEXT_FIELD:"){
+    }else if(signalOrigin.size()>=11 && signalOrigin.substr(0,11)=="TEXT_FIELD:"){
 
         widgetName = signalOrigin.substr(11);
         widget = guiSystem->findWidget(widgetName, WidgetType::TEXT_FIELD);
 
 
-    }else if(signalOrigin.substr(0,11)=="TEXT_INPUT:"){
+    }else if(signalOrigin.size()>=11 && signalOrigin.substr(0,11)=="TEXT_INPUT:"){
 
         widgetName = signalOrigin.substr(11);
         widget = guiSystem->findWidget(widgetName, WidgetType::TEXT_INPUT);
 
 
-    }else if(signalOrigin.substr(0,4)=="BAR:"){
+    }else if(signalOrigin.size()>=4 && signalOrigin.substr(0,4)=="BAR:"){
 
         widgetName = signalOrigin.substr(4);
         widget = guiSystem->findWidget(widgetName, WidgetType::BAR);
 
 
-    }else if(signalOrigin.substr(0,6)=="TABLE:"){
+    }else if(signalOrigin.size()>=5 && signalOrigin.substr(0,5)=="SLOT:"){
+
+        widgetName = signalOrigin.substr(5);
+        widget = guiSystem->findWidget(widgetName, WidgetType::SLOT);
+
+
+    }else if(signalOrigin.size()>=6 && signalOrigin.substr(0,6)=="TABLE:"){
 
         widgetName = signalOrigin.substr(6);
         widget = guiSystem->findWidget(widgetName, WidgetType::TABLE);
@@ -141,15 +152,15 @@ void WidgetSignalParser::parseSignalAccessor(PlayedScene *scene, const std::stri
     */
 
     //---
-    if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
+    if(_signalAccessor.type()==SignalAccessorType::QUERY){
         widget->obtainSignal_signalQuery(static_cast<SignalQuery&>(_signalAccessor), psp);
 
-    }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
+    }else if(_signalAccessor.type()==SignalAccessorType::SETTER){
         widget->obtainSignal_signalSetter(static_cast<SignalSetter&>(_signalAccessor), psp);
 
     }
 
-    if(_signalAccessor.mSignal){
+    if(_signalAccessor.signal()){
         return;
     }
 

@@ -21,6 +21,7 @@
 #include "jpPlayedScene.h"
 #include "jpObjectFactory.h"
 #include "jpLogicStateCfg.h"
+#include "jpLogicAction.h"
 #include "jpLogicState.h"
 
 
@@ -56,6 +57,11 @@ LogicState::~LogicState()
         delete  gs;
     }
 
+    for(Signal *s : mCustomUpdatedSignals){
+        delete s;
+    }
+
+
     delete mCustomState;
 
 }
@@ -83,6 +89,13 @@ bool LogicState::build(LogicStateCfg* _logicStateCfg)
             return false;
         }
         mChildStates.push_back(childState);
+    }
+
+    for(ItemData* isd : _logicStateCfg->sourceDataStorage().objects()){
+        //if(mDataStorage.addObject(ItemData::create(isd))==nullptr){
+        if(mDataStorage.addObject(ItemData::copy(isd))==nullptr){
+            return false;
+        }
     }
 
     return true;
@@ -120,6 +133,36 @@ bool LogicState::initConnections(PlayedScene *_scene)
 
     dbgSystem.removeLastMessage();
     return true;
+}
+
+
+void LogicState::collectSignals(SignalStorage &_signalStorage, std::string _prevIdentifier)
+{
+
+    std::string identifier = _prevIdentifier;
+    if(mParentObject->baseType()==BaseObjectType::LOGIC_STATE){
+
+        if(identifier.empty()==false){
+            identifier += ":";
+        }
+        identifier += mName;
+        _signalStorage.addSignal_query(&mSigState, "STATE:" + identifier);
+
+        if(mCustomState){
+            mCustomState->collectSignals(_signalStorage, identifier);
+        }
+
+
+    }else{
+        // root logic state is just the base container and is never called
+    }
+
+
+    //---
+    for(LogicState *gs : mChildStates){
+        gs->collectSignals(_signalStorage, identifier);
+    }
+
 }
 
 
@@ -199,7 +242,6 @@ void LogicState::preUpdate(UpdateMode &_updateMode)
 
 
 
-
 void LogicState::preUpdate_startState()
 {
 
@@ -243,7 +285,8 @@ void LogicState::update(UpdateMode &_updateMode)
 
     for(Action* ga : mActions){
         if(ga->update(_updateMode)==true){
-            if(_updateMode.loopAllStateActions==false){
+            //if(_updateMode.loopAllStateActions==false){
+            if(ga->breakOnExecuted()){
                 break;
             }
         }
@@ -430,7 +473,218 @@ LogicState* LogicState::findChildStateViaPath(std::vector<std::string>& statePat
 
 //==================================================================================================
 
+/*
 
+LogicFunction::LogicFunction(LogicFunctionCfg *_cfg, BaseObject * _parent)
+{
+
+    mCfg = _cfg;
+    mParentObject = _parent;
+    mName = _cfg->name();
+
+    mBaseType = BaseObjectType::LOGIC_FUNCTION;
+
+
+}
+
+
+
+bool LogicFunction::build()
+{
+
+    dbgSystem.addMessage("Building logic function '" + mName +"' ...");
+
+
+    //for(const std::string &s : mCfg->arguments()){
+    //    mArguments.addObject(FunctionArgument(s));
+    //}
+
+
+    for(ItemSourceData *isd : mCfg->sourceData().objects()){
+        if(isd->mType==ItemDataType::INT){
+            mData.addObject(new IntItemData(static_cast<IntSourceItemData*>(isd)));
+
+        }else if(isd->mType==ItemDataType::FLOAT){
+            mData.addObject(new FloatItemData(static_cast<FloatSourceItemData*>(isd)));
+
+        }else if(isd->mType==ItemDataType::BOOL){
+            mData.addObject(new BoolItemData(static_cast<BoolSourceItemData*>(isd)));
+
+        }
+    }
+
+    //---
+    for(ActionCfg &cfg : mCfg->actionsCfgs()){
+        Action *a = new Action(this);
+        if(a->build(cfg)==false){
+            return false;
+        }
+        mActions.push_back(a);
+    }
+
+
+    dbgSystem.removeLastMessage();
+    return true;
+}
+
+
+bool LogicFunction::initConnections(PlayedScene *_scene, SimpleNoNameStorage<FunctionArgument> *_arguments, BaseObject *_rootParentObject, LogicState *_parentState )
+{
+
+    dbgSystem.addMessage("Initializing logic function '" + mName +"' ...");
+
+
+    mRootParentObject = _rootParentObject;
+    mParentState = _parentState;
+    mArguments = _arguments;
+
+
+    dbgSystem.removeLastMessage();
+    return true;
+
+}
+
+
+bool LogicFunction::run(SimpleNoNameStorage<FunctionArgument> *_arguments, BaseObject *_rootParentObject, LogicState *_parentState )
+{
+
+    mRootParentObject = _rootParentObject;
+    mParentState = _parentState;
+    mArguments = _arguments;
+
+
+    //----
+    UpdateMode updateMode;
+
+    for(Action* ga : mActions){
+        if(ga->update(updateMode)==true){
+            //if(updateMode.loopAllStateActions==false){
+            //    break;
+            //}
+        }
+    }
+
+
+
+    return true;
+
+}
+
+
+//=================================================================================================
+
+
+
+
+bool FunctionStorage::initCfg(const pugi::xml_node &_node)
+{
+
+    dbgSystem.addMessage("Loading source items and actions... !");
+
+
+
+    for(pugi::xml_node n = _node.first_child(); n; n = n.next_sibling()){
+
+        std::string nodeName = std::string(n.name());
+
+        if(nodeName=="function"){
+
+            std::string name = _node.attribute("name").as_string();
+            if(name.empty()){
+                dbgSystem.addMessage("Missing function name!");
+                return false;
+            }
+
+            if(mFunctions.getObject(itemName,false)){
+                dbgSystem.addMessage("Item with name '" + itemName +"' already exist!");
+                return nullptr;
+
+            }
+
+            SourceItem *sourceItem =  mFunctions.addObject(new LogicFunction(itemName));
+
+            if(sourceItem->initCfg(this, _node)==false){
+                return nullptr;
+            }
+
+
+            for(pugi::xml_node nChild = n.first_child(); nChild; nChild = nChild.next_sibling()){
+                std::string childNodeName = std::string(nChild.name());
+
+                if(childNodeName=="item"){
+                    if(initCfg_addSourceItem(nChild)==nullptr){
+                        return false;
+                    }
+                }
+            }
+
+
+        }else{
+            dbgSystem.addMessage("Unknown node '" + nodeName + "' !");
+            return false;
+
+        }
+
+    }
+
+
+    dbgSystem.removeLastMessage();
+
+    return true;
+
+}
+
+
+bool FunctionStorage::buildObjects(PlayedScene *_scene)
+{
+
+    dbgSystem.addMessage("Building source items and actions... !");
+
+    for(SourceItem *si : mSourceItems.objects()){
+        if(si->build(this)==false){
+            return false;
+        }
+    }
+
+
+    dbgSystem.removeLastMessage();
+
+    return true;
+
+}
+
+
+SourceItem *FunctionStorage::initCfg_addSourceItem(const pugi::xml_node &_node)
+{
+
+    std::string itemName = _node.attribute("name").as_string();
+    if(itemName.empty()){
+        dbgSystem.addMessage("Missing item name!");
+        return nullptr;
+    }
+
+    if(mSourceItems.getObject(itemName,false)){
+        dbgSystem.addMessage("Item with name '" + itemName +"' already exist!");
+        return nullptr;
+
+    }
+
+    SourceItem *sourceItem =  mSourceItems.addObject(new SourceItem(itemName));
+
+    if(sourceItem->initCfg(this, _node)==false){
+        return nullptr;
+    }
+
+    return sourceItem;
+
+}
+
+*/
+
+
+//==================================================================================================
+
+/*
 
 Action::Action(BaseObject* _parentObject) : mParentObject(_parentObject)
 {
@@ -478,6 +732,17 @@ bool Action::build(ActionCfg &_actionCfg)
     mDisabled = _actionCfg.mDisabled;
     mDbgId = _actionCfg.mDbgId;
 
+    //----
+    //BaseObject * parentObject = mParentAction->parentObject();
+    //LogicState * parentState = nullptr;
+
+
+    //assert(mParentState);
+    //BaseObject * rootParentObject = nullptr;
+    //if(parentState){
+    //    mRootParentObject = mParentState->rootParentObject();
+    //}
+
 
     return true;
 }
@@ -509,8 +774,6 @@ bool Action::initConnections(PlayedScene *_scene)
 }
 
 
-
-
 bool Action::update(UpdateMode &_updateMode)
 {
 
@@ -536,6 +799,26 @@ bool Action::update(UpdateMode &_updateMode)
     return true;
 }
 
+
+ParentObjects Action::parentObjects()
+{
+    ParentObjects po;
+
+    if(mParentObject->baseType()==BaseObjectType::LOGIC_STATE){
+        po.parentLogicState = static_cast<LogicState*>(mParentObject);
+
+    }else if(mParentObject->baseType()==BaseObjectType::LOGIC_FUNCTION){
+         po.parentLogicFunction = static_cast<LogicFunction*>(mParentObject);
+         po.parentLogicState = po.parentLogicFunction->parentState();
+    }
+
+    assert(po.parentLogicState);
+
+    po.rootParentObject = po.parentLogicState->rootParentObject();
+
+    return po;
+}
+*/
 
 //-----------------------------------------------------------------------------------------
 

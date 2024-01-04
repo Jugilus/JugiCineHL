@@ -18,5 +18,5 @@
         <sprite type="Composite" name="inputDeviceSelectorSlot" nameID="slot" x="225" y="30"/>
     </layer>
     <parameter name="wName" value="inputDeviceSelector" type="string"/>
-    <parameter name="widgetNew" value="inputDeviceSelectorTable" type="string"/>
+    <parameter name="widget" value="putDeviceSelectorTable" type="string"/>
 </composedSprite>

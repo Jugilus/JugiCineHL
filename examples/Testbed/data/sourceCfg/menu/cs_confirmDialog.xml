@@ -66,18 +66,18 @@
         <sprite type="Composite" name="buttonA" x="165" y="33">
             <parameter name="changeChildText" value="label,gui, 40" type="string"/>
             <parameter name="wName" value="confirmPanel_Yes" type="string"/>
-            <parameter name="widgetNew" value="panelButton" type="string"/>
+            <parameter name="widget" value="panelButton" type="string"/>
         </sprite>
         <sprite type="Composite" name="buttonA" x="335" y="33">
             <parameter name="changeChildText" value="label, gui, 41" type="string"/>
             <parameter name="wName" value="confirmPanel_No" type="string"/>
-            <parameter name="widgetNew" value="panelButton" type="string"/>
+            <parameter name="widget" value="panelButton" type="string"/>
         </sprite>
         <sprite type="Standard" name="tilesA,9" x="250" y="150" handleSource="true"/>
     </layer>
     <vectorLayer name="Vector Layer 1">
         <rectangle points="(49,82);(448,82);(448,232);(49,232)" nameID="textArea" id="1" dataFlags="2"/>
     </vectorLayer>
-    <parameter name="widgetNew" value="panelTextField" type="string"/>
     <parameter name="wName" value="stringValue" type="string"/>
+    <parameter name="widget" value="panelTextField" type="string"/>
 </composedSprite>

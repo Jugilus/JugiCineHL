@@ -121,7 +121,7 @@ bool MessagePanel::initConnections(PlayedScene *_scene)
     if(mInitialized) return true;
 
 
-    dbgSystem.addMessage("init component '" + mName + "'");
+    dbgSystem.addMessage("Initializing component '" + mName + "'");
 
     mParentPlayerScene = _scene;
 
@@ -225,7 +225,7 @@ void MessagePanel::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSig
         _psp.obtainValue(_signalQuery, &mSigClose);
     }
 
-    if(_setErrorMessage && _signalQuery.mSignal==nullptr){
+    if(_setErrorMessage && _signalQuery.signal()==nullptr){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
@@ -235,7 +235,7 @@ void MessagePanel::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSig
 void MessagePanel::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage)
 {
 
-    if(_setErrorMessage && _signalSetter.mSignal==nullptr){
+    if(_setErrorMessage && _signalSetter.signal()==nullptr){
         dbgSystem.addMessage("Set signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 
@@ -282,15 +282,15 @@ void MessagePanelSignalParser::parseSignalAccessor(PlayedScene *scene, const std
         ParsedSignalPath psp(signalPath);
         //psp.parsePath_name_value(signalPath);
 
-        if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
+        if(_signalAccessor.type()==SignalAccessorType::QUERY){
             messagePanel->obtainSignal_signalQuery(static_cast<SignalQuery&>(_signalAccessor), psp);
 
-        }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
+        }else if(_signalAccessor.type()==SignalAccessorType::SETTER){
             messagePanel->obtainSignal_signalSetter(static_cast<SignalSetter&>(_signalAccessor), psp);
         }
     }
 
-    if(_signalAccessor.mSignal){
+    if(_signalAccessor.signal()){
         return;
     }
 

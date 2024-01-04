@@ -8,6 +8,7 @@
 #include "jmSignal.h"
 
 #include "jpGlobal.h"
+#include "data/jpData.h"
 #include "jpSettings.h"
 
 
@@ -49,16 +50,33 @@ struct ActionCommandCfg
 
 struct ActionCfg
 {
-    std::vector<ActionConditionCfg>mConditions;
-    std::vector<ActionCommandCfg>mCommands;
+
+    bool initCfg(const pugi::xml_node &_node);
+
+
+    bool mBreakOnExecuted = true;
     bool mDisabled = false;
     std::string mDbgId;
+    std::vector<ActionConditionCfg>mConditions;
+    std::vector<ActionCommandCfg>mCommands;
+    std::vector<ActionCfg>mChildActions;
 };
 
 
 
-struct LogicStateCfg
+struct ActionTriggerCfg
 {
+    bool initCfg(const pugi::xml_node &_node);
+
+    std::vector<ActionConditionCfg>mConditions;
+};
+
+
+
+
+class LogicStateCfg
+{
+public:
 
     LogicStateCfg(const std::string &_name);
     virtual ~LogicStateCfg();
@@ -74,16 +92,17 @@ struct LogicStateCfg
 
     std::vector<ActionCfg> & actionsCfgs(){ return mActionsCfgs; }
     std::vector<LogicStateCfg*> & childStatesCfgs(){ return mChildStatesCfgs; }
+    SimpleNoNameStorage<ItemData*> &sourceDataStorage(){ return mSourceDataStorage; }
 
 protected:
     std::string mName;
     std::vector<ActionCfg>mActionsCfgs;           // OWNED
     std::vector<LogicStateCfg*>mChildStatesCfgs;              // OWNED
+
+    SimpleNoNameStorage<ItemData*>mSourceDataStorage;
+
+
 };
-
-
-//-------------------------------------------------------------------------
-
 
 
 

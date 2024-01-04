@@ -102,6 +102,17 @@ bool AnimatedMovementEngine::initDataObjectsConnections(PlayedScene *_scene, Ent
 }
 
 
+void AnimatedMovementEngine::collectSignalsForLUT(SignalStorage &_storage)
+{
+
+    for(AnimatedMovementData& d : mAniMovementDatas){
+
+
+    }
+
+}
+
+
 
 /*
 void AnimatedBehaviorEngine::start(AnimatedBehaviorData *_animatedBehaviorData, Actor *_actor)

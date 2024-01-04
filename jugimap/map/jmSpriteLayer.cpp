@@ -460,13 +460,15 @@ void SpriteLayer::deleteSprite(Sprite *_sprite)
 }
 
 
-void SpriteLayer::takeSprite(Sprite *_sprite)
+bool SpriteLayer::takeSprite(Sprite *_sprite)
 {
 
-    if(_sprite->parentLayer()!=this) return;
+    if(_sprite->parentLayer()!=this) return false;
 
     mNode->removeChildNode(_sprite->node());
     mSprites.erase(_sprite->iter);
+
+    return true;
 
 }
 

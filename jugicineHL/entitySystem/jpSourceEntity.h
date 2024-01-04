@@ -6,6 +6,7 @@
 #include <vector>
 #include "box2d.h"
 #include "jmCommon.h"
+#include "jmStorage.h"
 #include "jpEntityGlobal.h"
 #include "jpEntityLogicState.h"
 
@@ -18,15 +19,20 @@ class xml_node;
 namespace jugimap{
 
 
-
+class Entity;
 class PlayedScene;
 class EntitySystem;
 class SourceSprite;
+class SourceEntity;
 class SourceBody;
 class SpriteLayer;
 class FixtureUserDataGroup;
 struct EntityCategory;
 struct EntityLogicStateCfg;
+struct MovementEngineCfg;
+
+struct AttributeSetCfg;
+struct AttributeLogicStateCfg;
 //struct EnginesControllerCfg;
 //struct TaskControllerCfg;
 //struct EnvironmentObjectBehaviorCfg;
@@ -59,7 +65,32 @@ struct PathwaySourceEntityCfg
 };
 
 
+//-------------------------------------------------------------------------------
 
+
+struct SpawnedEntityCfg
+{
+    std::string spawnedSourceEntityName;
+    SourceEntity *spawnedSourceEntity = nullptr;
+    std::string spawnerEngineName;
+    MovementEngineCfg *spawnerMovementEngineCfg = nullptr;
+    Direction spawnerDirection = Direction::INHERITED;
+    //b2Vec2 offsetM{0.0f, 0.0f};
+    Vec2f offsetP;
+};
+
+
+struct SpawnerCfg
+{
+
+    bool initCfg(const pugi::xml_node &_node);
+    bool initConnections(PlayedScene *_scene, EntitySystem* _entitySystem);
+
+    Vec2f getOffsetForSpawnedEntity(SourceEntity* _sourceEntity, MovementEngineCfg* _currentEngineCfg,  Direction _direction);
+
+    std::vector<SpawnedEntityCfg>spawnedEntitiesCfgs;
+
+};
 
 
 
@@ -87,6 +118,10 @@ struct SourceEntityCfg
 
 
 
+    std::string item;
+    std::string animation;
+    std::string relativeMover;
+
     //EntityType type = EntityType::UNKNOWN;
     //EntityBodyType bodyType = EntityBodyType::SOLID;
 
@@ -97,12 +132,18 @@ struct SourceEntityCfg
     EntityLogicStateCfg *taskControllerCfg = nullptr;               // LINK
     std::string taskHandlerStartState;
 
+    AttributeSetCfg *attributeSetCfg = nullptr;
+    AttributeLogicStateCfg *attributeControllerCfg = nullptr;
+
     //----
     std::unique_ptr<PathwaySourceEntityCfg>mPathwaySourceEntityCfg;
 
     //----
     //std::unique_ptr<EnginesControllerCfg>ownedEnginesControllerCfg;
     std::vector<CustomSensorSourceEntityCfg>mCustomSensorSourceEntityCfgs;
+
+    std::unique_ptr<SpawnerCfg>mSpawnerCfg;
+
 
     //----
     bool passableFromBellow = false;
@@ -112,6 +153,7 @@ struct SourceEntityCfg
     //unsigned int collisionCategoryBits = 0;
 
     bool fixedRotation = true;
+    bool spawnedOnce = false;
 
     EntitySystem * entitySystem = nullptr;  // LINK
 
@@ -138,7 +180,7 @@ private:
 //-------------------------------------------------------------------------------
 
 
-class SourceEntity
+class SourceEntity : public BaseObject
 {
 public:
 
@@ -151,16 +193,30 @@ public:
     const std::string & name(){ return mSourceEntityCfg->name; }
     SourceEntityCfg* sourceEntityCfg() const { return mSourceEntityCfg; }
     SourceSprite * sourceSprite() const { return mSourceSprite; }
+    SpriteLayer * spriteLayer() const { return mSpriteLayer; }
     SourceBody* sourceBody() const { return mSourceBody.get(); }
+    SignalIdentifiers & signalIdentifiers(){ return mSignalIdentifiers; }
+
+    void _setSpriteLayer(SpriteLayer *_spriteLayer){ mSpriteLayer = _spriteLayer; }
+
+    PoolStorage<Entity*, 10> & entityPool(){ return mEntityPool; }
+
+    std::vector<Entity*> &spawners(){ return mSpawners; }
 
 
 private:
-    //EntityType mBodyRole = EntityType::NOT_DEFINED;
-
     SourceEntityCfg * mSourceEntityCfg = nullptr;       // LINK
+
     SourceSprite * mSourceSprite = nullptr;             // LINK
+    SpriteLayer * mSpriteLayer = nullptr;               // LINK
 
     std::unique_ptr<SourceBody>mSourceBody;
+    SignalIdentifiers mSignalIdentifiers;
+
+    PoolStorage<Entity*, 10> mEntityPool;
+
+    std::vector<Entity*>mSpawners;
+
 };
 
 
@@ -196,9 +252,6 @@ private:
 
 
 };
-
-
-//-------------------------------------------------------------------------------
 
 
 

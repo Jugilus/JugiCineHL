@@ -12,5 +12,5 @@
         <singlePoint points="(30,350)" nameID="firstSlot"/>
     </vectorLayer>
     <parameter name="wName" value="inputButtonsEditor" type="string"/>
-    <parameter name="widgetNew" value="inputButtonsEditor" type="string"/>
+    <parameter name="widget" value="inputButtonsEditor" type="string"/>
 </composedSprite>

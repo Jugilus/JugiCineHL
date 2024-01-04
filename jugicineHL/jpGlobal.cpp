@@ -179,8 +179,111 @@ std::string  GetEntityTypeString(EntityType type)
 
 
 
+Direction GetDirectionFromString(const std::string &direction)
+{
+
+    if(direction == "LEFT"){
+        return Direction::LEFT;
+
+    }else if(direction == "RIGHT"){
+        return Direction::RIGHT;
+
+    }else if(direction == "UP"){
+        return Direction::UP;
+
+    }else if(direction == "DOWN"){
+        return Direction::DOWN;
+
+    }else if(direction == "LEFT_UP"){
+        return Direction::LEFT_UP;
+
+    }else if(direction == "LEFT_DOWN"){
+        return Direction::LEFT_DOWN;
+
+    }else if(direction == "RIGHT_UP"){
+        return Direction::RIGHT_UP;
+
+    }else if(direction == "RIGHT_DOWN"){
+        return Direction::RIGHT_DOWN;
+
+    }else if(direction == "FORWARD"){
+        return Direction::FORWARD;
+
+    }else if(direction == "BACKWARD"){
+        return Direction::BACKWARD;
+    }
+
+    return Direction::NONE;
+}
+
+std::vector<std::pair<std::string, unsigned int>>gDirectionNamedValues
+{
+    { "LEFT", static_cast<int>(Direction::LEFT) },
+    { "RIGHT", static_cast<int>(Direction::RIGHT) },
+    { "UP", static_cast<int>(Direction::UP) },
+    { "DOWN", static_cast<int>(Direction::DOWN) },
+    { "LEFT_UP", static_cast<int>(Direction::LEFT_UP) },
+    { "LEFT_DOWN", static_cast<int>(Direction::LEFT_DOWN) },
+    { "RIGHT_UP", static_cast<int>(Direction::RIGHT_UP) },
+    { "RIGHT_DOWN", static_cast<int>(Direction::RIGHT_DOWN) },
+    { "FORWARD", static_cast<int>(Direction::FORWARD) },
+    { "BACKWARD", static_cast<int>(Direction::BACKWARD) }
+
+};
+
+
+std::string GetDirectionString(Direction direction)
+{
+
+    if(direction == Direction::LEFT){
+        return "LEFT";
+
+    }else if(direction == Direction::RIGHT){
+        return "RIGHT";
+
+    }else if(direction == Direction::UP){
+        return "UP";
+
+    }else if(direction == Direction::DOWN){
+        return "DOWN";
+
+    }else if(direction == Direction::LEFT_UP){
+        return "LEFT_UP";
+
+    }else if(direction == Direction::LEFT_DOWN){
+        return "LEFT_DOWN";
+
+    }else if(direction == Direction::RIGHT_UP){
+        return "RIGHT_UP";
+
+    }else if(direction == Direction::RIGHT_DOWN){
+        return "RIGHT_DOWN";
+
+    }else if(direction == Direction::FORWARD){
+        return "FORWARD";
+
+    }else if(direction == Direction::BACKWARD){
+        return "BACKWARD";
+    }
+
+    return "NONE";
+}
 //------------------------------------------------------------------------------------------
 
+
+RotationDirection GetRotationDirectionFromString(const std::string &direction)
+{
+
+    if(direction == "CW"){
+        return RotationDirection::CW;
+
+    }else if(direction == "CCW"){
+        return RotationDirection::CCW;
+    }
+
+    return RotationDirection::NONE;
+
+}
 
 
 
@@ -188,37 +291,37 @@ std::string  GetEntityTypeString(EntityType type)
 //----------------------------------------------------------------------------
 
 
-GfxObjectType GetGfxObjectTypeFromString(const std::string &objectType)
+GSpritesObjectType GetGfxObjectTypeFromString(const std::string &objectType)
 {
 
     if(objectType=="spriteLayer"){
-        return GfxObjectType::SPRITE_LAYER;
+        return GSpritesObjectType::SPRITE_LAYER;
 
     }else if(objectType=="sprite"){
-        return GfxObjectType::SPRITE;
+        return GSpritesObjectType::SPRITE;
 
     }else if(objectType=="spriteGroup"){
-        return GfxObjectType::SPRITE_GROUP;
+        return GSpritesObjectType::SPRITE_GROUP;
 
     }else if(objectType=="screenMap"){
-        return GfxObjectType::MAP;
+        return GSpritesObjectType::MAP;
 
     }
 
-    return GfxObjectType::NOT_DEFINED;
+    return GSpritesObjectType::NOT_DEFINED;
 }
 
 
-GfxObjectType VerifyIfObjectTypeIsAllowed(GfxObjectType objectType, const std::vector<GfxObjectType> &allowedTypes)
+GSpritesObjectType VerifyIfObjectTypeIsAllowed(GSpritesObjectType objectType, const std::vector<GSpritesObjectType> &allowedTypes)
 {
 
-    for(GfxObjectType ot : allowedTypes){
+    for(GSpritesObjectType ot : allowedTypes){
         if(objectType == ot){
             return objectType;
         }
     }
 
-    return GfxObjectType::NOT_DEFINED;
+    return GSpritesObjectType::NOT_DEFINED;
 }
 
 

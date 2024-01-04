@@ -163,16 +163,18 @@ bool EntityCustomLogicState::initConnections(PlayedScene *_scene)
 
     Entity *parentEntity = static_cast<Entity*>(mParentState->rootParentObject());
 
-    if(mBehaviorStateCfg->animation.empty()==false){
-        mAnimationInstance = ObtainAnimationInstance(parentEntity->sprite(), mBehaviorStateCfg->animation);
-        if(mAnimationInstance==nullptr){
-            return false;
-        }
+    if(parentEntity->sprite()){
+        if(mBehaviorStateCfg->animation.empty()==false){
+            mAnimationInstance = ObtainAnimationInstance(parentEntity->sprite(), mBehaviorStateCfg->animation);
+            if(mAnimationInstance==nullptr){
+                return false;
+            }
 
-    }else{
-        // check out for possible animation with the same name
-        if(mBehaviorStateCfg->movementEngine.empty()){
-            mAnimationInstance = ObtainAnimationInstance(parentEntity->sprite(), mParentState->name(), false);
+        }else{
+            // check out for possible animation with the same name
+            if(mBehaviorStateCfg->movementEngine.empty()){
+                mAnimationInstance = ObtainAnimationInstance(parentEntity->sprite(), mParentState->name(), false);
+            }
         }
     }
 
@@ -197,6 +199,14 @@ bool EntityCustomLogicState::initConnections(PlayedScene *_scene)
 
 
     return true;
+
+}
+
+
+void EntityCustomLogicState::collectSignals(SignalStorage &_signalStorage, std::string _identifier)
+{
+
+    _signalStorage.addSignal_query(&mAnimationSignal, "STATE_ANIMATION:" + _identifier);
 
 }
 

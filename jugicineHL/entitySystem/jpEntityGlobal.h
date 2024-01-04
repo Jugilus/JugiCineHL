@@ -19,6 +19,7 @@
 namespace jugimap{
 
 
+class Entity;
 
 
 struct FixtureProperties
@@ -49,9 +50,12 @@ enum class EntityRole : unsigned char
     PASSABLE_OBJECT,
     PASSABLE_AREA,
     PATHWAY,
+    BULLET,
+    SOLID_BULLET,
 
     GROUND_SENSOR,
     CEILING_SENSOR,
+    SOLID_BULLET_SENSOR,
     CUSTOM_SENSOR,
 
     OBJECT_WITHOUT_SHAPE,
@@ -134,54 +138,6 @@ struct EntityStatusFlags
 
 
 
-//------------------------------------------------------------------------------------
-
-
-enum class Direction
-{
-
-    NONE = 0,
-    LEFT =          1 << 0,
-    RIGHT =         1 << 1,
-    UP =            1 << 2,
-    DOWN =          1 << 3,
-    LEFT_UP =       1 << 4,
-    LEFT_DOWN =     1 << 5,
-    RIGHT_UP =      1 << 6,
-    RIGHT_DOWN =    1 << 7,
-
-    FORWARD =       1 << 8,
-    BACKWARD =      1 << 9,
-
-    ANGLE_BASED =   1 << 10
-
-};
-
-
-Direction GetDirectionFromString(const std::string &direction);
-std::string GetDirectionString(Direction direction);
-
-
-extern std::vector<NamedValue>gDirectionNamedValues;
-
-
-enum class DirectionMode
-{
-    CARDINAL,
-    PATH,
-    ANGLE_BASED
-};
-
-
-enum class RotationDirection
-{
-    NONE,
-    CW,
-    CCW,
-};
-
-
-RotationDirection GetRotationDirectionFromString(const std::string &direction);
 
 
 //------------------------------------------------------------------------------------
@@ -190,7 +146,7 @@ RotationDirection GetRotationDirectionFromString(const std::string &direction);
 struct ContactPointInfo
 {
 
-    b2Fixture* fixture;
+    b2Fixture* fixture = nullptr;       // LINK
     int shapeIndex = 0;
     b2Vec2 normal;
     b2Vec2 position;

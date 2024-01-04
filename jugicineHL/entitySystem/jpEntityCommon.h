@@ -8,7 +8,7 @@
 #include <limits>
 
 #include "jmCommon.h"
-
+#include "jpQueries.h"
 #include "jpEntityGlobal.h"
 
 
@@ -56,7 +56,6 @@ private:
 };
 
 
-
 //------------------------------------------------------------------------
 
 
@@ -92,7 +91,6 @@ struct EntityShape
     bool operator!=(const EntityShape &other){ return entity!=other.entity || category!=other.category; }
 
 };
-
 
 
 class TwoEntitiesContact
@@ -187,7 +185,6 @@ struct EntityContactSignal : public BoolSignal
 };
 
 
-
 struct ContactTrigger : public BoolSignal
 {
 
@@ -207,18 +204,32 @@ struct ContactTrigger : public BoolSignal
     //std::vector<std::pair<b2Fixture*,int>>mFixtures;
 
     EntityContactSignal *findEntityContactTriggerWithEntityB(Entity* _entityB);
-    EntityContactSignal *findEntityContactTriggerWithEntityRoleB(EntityRole _entityRoleB);
+    //EntityContactSignal *findEntityContactTriggerWithEntityRoleB(EntityRole _entityRoleB);
     EntityContactSignal *findEntityContactSignalWithEntityRoleA(EntityRole _entityRoleA);
     std::vector<EntityContactSignal*> &contactedEntitiesTriggers(){ return mContactedEntitiesTriggers; }
 
 
-
+    void clearContact(Entity* _entity, bool clearThisFromContacted);
+    void clearContacts();
 
 
 private:
     //---
     std::vector<EntityContactSignal*>mContactedEntitiesTriggers;
     int mNumContacted = 0;
+
+};
+
+
+class ContactedEntities : public BaseObject
+{
+public:
+
+    //void addEntity(Entity *_entity);
+    std::vector<Entity*> & entities(){ return mEntities; }
+
+private:
+    std::vector<Entity*>mEntities;
 
 };
 
@@ -239,6 +250,10 @@ struct FilteredContactSignal : public BoolSignal
     void preUpdate_postContactTriggerUpdate();
     void postUpdateSignals();
 
+    //BoolSignal &contactSignal(){ return mSigContact; }
+
+    //std::vector<Entity*> &filteredContactedEntities(){ return mFilteredContactedEntities; }
+    ContactedEntities & contactedEntities(){ return mContactedEntities; }
 
 private:
     ContactTrigger* mContactTrigger = nullptr;          // LINK
@@ -248,11 +263,79 @@ private:
     std::vector<SourceEntity*> sourceEntities;          // LINKS
     std::vector<Entity*> entities;                      // LINKS (only entities with groupID or identifierID)
 
+   // BoolSignal mSigContact;
+
+    ContactedEntities mContactedEntities;
+    //std::vector<Entity*>mFilteredContactedEntities;
+
 };
 
 
+//==========================================================================
+
+
+class ContactedEntityObtainer : public OriginObjectObtainer
+{
+public:
+
+    ContactedEntityObtainer(Entity* _entityA, SourceEntity* _sourceEntityB, EntityCategory* _entityCategoryB);
+    OriginObjectObtainer* copy() override;
+
+    SourceEntity* sourceEntityB(){ return mSourceEntityB; }
+    EntityCategory* entityCategoryB(){ return mEntityCategoryB; }
+
+
+    BaseObject * findOriginObject() override;
+
+
+private:
+    Entity* mEntityA = nullptr;                         // LINK
+    SourceEntity* mSourceEntityB = nullptr;             // LINK
+    EntityCategory* mEntityCategoryB = nullptr;         // LINK
+
+};
+
 
 //==========================================================================
+
+
+class ContactSignalObtainer : public SignalObtainer
+{
+public:
+
+    ContactSignalObtainer(Entity* _entityA, SourceEntity* _sourceEntityB, EntityCategory* _entityCategoryB, bool _anyContact);
+    SignalObtainer *copy() override;
+
+    Signal * findSignal() override;
+
+
+private:
+    SourceEntity* mSourceEntityB = nullptr;             // LINK
+    EntityCategory* mEntityCategoryB = nullptr;         // LINK
+    bool mAnyContact = false;
+
+};
+
+
+class ContactSignalObtainer_multi : public SignalObtainer
+{
+public:
+
+    ContactSignalObtainer_multi(Entity* _entityA);
+    SignalObtainer *copy() override;
+
+    void addSourceEntity(SourceEntity *_sourceEntity){ mSourceEntitiesB.push_back(_sourceEntity); }
+    void addEntityCategory(EntityCategory *_category){ mEntityCategories.push_back(_category); }
+
+
+    Signal * findSignal() override;
+
+
+private:
+    std::vector<SourceEntity*> mSourceEntitiesB;            // LINKS
+    std::vector<EntityCategory*> mEntityCategories;         // LINKS
+
+};
 
 
 
@@ -424,7 +507,7 @@ private:
 
 //------------------------------------------------------------------------
 
-
+/*
 class EDirection
 {
 public:
@@ -448,6 +531,37 @@ private:
     Mode mMode = Mode::CARDINAL;
     Direction mDirection = Direction::NONE;
     b2Vec2 mDirVector{0.0f, 0.0f};
+
+};
+
+*/
+
+
+
+class SpawnerAndSpawned : public BaseObject
+{
+public:
+
+    SpawnerAndSpawned(Entity *_spawnerEntity, SourceEntity* _spawnedSourceEntity) : spawnerEntity(_spawnerEntity), spawnedSourceEntity(_spawnedSourceEntity){}
+
+    Entity *spawnerEntity = nullptr;                    // LINK
+    SourceEntity *spawnedSourceEntity = nullptr;        // LINK
+
+};
+
+
+
+class SpawnerAndSpawnedGroup
+{
+public:
+
+    ~SpawnerAndSpawnedGroup();
+
+    SpawnerAndSpawned* acquire(Entity *_spawnerEntity, SourceEntity* _spawnedSourceEntity);
+    void release(SpawnerAndSpawned* _sas);
+
+private:
+    std::vector<SpawnerAndSpawned*>mSpawnersAndSpawned;         // OWNED
 
 };
 

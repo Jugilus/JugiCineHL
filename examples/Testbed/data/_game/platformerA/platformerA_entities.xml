@@ -3,6 +3,87 @@
 <scene name="PlatformerA">
 
 
+
+    <gfxObjects>
+
+        <aniSpriteObject name="vanishEffectA" >
+            <new sourceSprite="vanishEffectA" animation="ani" layer="effects" map="platformerA" />
+        </aniSpriteObject>
+
+        <aniSpriteObject name="vanishEffectB" >
+            <new sourceSprite="vanishEffectB_ring" animation="ani" layer="effects" map="platformerA" />
+        </aniSpriteObject>
+
+        <aniSpriteObject name="shuriken_vanishEffect" >
+            <new sourceSprite="shuriken_vanishEffect" animation="ani" layer="effects" map="platformerA" />
+        </aniSpriteObject>
+
+        <aniSpriteObject name="amigaBall_vanishEffect" >
+            <new sourceSprite="amigaBall" animation="vanishEffect" layer="effects" map="platformerA" />
+        </aniSpriteObject>
+
+        <aniSpriteObject name="scoreEffect" >
+            <!-- <int name="score" />-->
+            <new sourceSprite="scoreEffect" animation="ani" layer="text effects" map="platformerA"/>
+            <!-- <dataConnections text="score" />-->
+        </aniSpriteObject>
+
+        <!-- 
+         <compositeAniObject name="itemPickupWithScore">
+            <add aniObjects="vanishEffectB, scoreEffect" />
+         </compositeAniObject>
+        -->
+
+        <relativeMover name="shuriken">
+            <parameters kind="LINEAR" speedP="600" />
+            <parentDirections>
+                <right angle="0" animation="aniRight" />
+                <left angle="180" animation="aniLeft" />
+            </parentDirections>
+        </relativeMover>
+
+        <relativeMover name="boomerang">
+            <parameters kind="PATH" speedP="500" />
+            <onEnd tags="FOLLOW_SPAWNER, REMOVE" />
+            <parentDirections>
+                <right path="boomerangMover_right" animation="ani" />
+                <left path="boomerangMover_left" animation="ani" />
+            </parentDirections>
+        </relativeMover>
+
+        <relativeMover name="gamepad">
+            <parameters kind="PATH"  speedP="400" />
+            <parentDirections>
+                <right angle="45" path="itemMoverA_right" />
+                <left angle="150" path="itemMoverA_left" />
+            </parentDirections>
+        </relativeMover>
+
+        <relativeMover name="gamepad2">
+            <parameters kind="PARABOLA" speedP="400" />
+            <fieldSpeed angle="-90" speedP="-50" />
+            <parentDirections>
+                <right distanceP="400" heightP="150"/>
+                <left distanceP="-400" heightP="150" />
+            </parentDirections>
+        </relativeMover>
+
+        
+    </gfxObjects>
+
+    <!--
+    <movers>
+        <relativeMover name="shuriken">
+            <parameters speedP="400" />
+            <parentDirections>
+                <right angle="0" animation="aniRight" />
+                <left angle="180" animation="aniLeft" />
+            </parentDirections>
+        </relativeMover>
+    </movers>
+-->
+
+
     <entitySystem>
 
         <entityCategories>
@@ -17,11 +98,15 @@
             <mainCategory name="door" solid="TRUE" role="BLOCKING_OBJECT" />
             <mainCategory name="doorSensorArea" role="PASSABLE_AREA" />
             <mainCategory name="ladder" role="PATHWAY" />
+            <mainCategory name="pickableItem" role="PASSABLE_OBJECT" />
             <mainCategory name="entityWithoutShape" role="OBJECT_WITHOUT_SHAPE" />
+            <mainCategory name="thrownItem" role="BULLET" />
+            <mainCategory name="solidThrownItem" role="SOLID_BULLET" />
 
             <extraCategory name="groundSensor" role="GROUND_SENSOR"  />
             <extraCategory name="ceilingSensor" role="CEILING_SENSOR"  />
             <extraCategory name="heroHandSensor" role="CUSTOM_SENSOR" />
+            <extraCategory name="solidBulletSensor" role="SOLID_BULLET_SENSOR" />
 
 
             <!-- CONTACT FILTERS (must be defined bellow categories) -->
@@ -30,9 +115,47 @@
             <contactFilter category="groundSensor" contacts="solidEnvironment, movingPlatform, groundSwitch" />
             <contactFilter category="ceilingSensor" contacts="solidEnvironment" />
             <contactFilter category="heroHandSensor" contacts="wallSwitch" />
+            <contactFilter category="pickableItem" contacts="controlledCharacter" />
+            <contactFilter category="thrownItem" contacts="solidEnvironment, door" />
+            <contactFilter category="solidThrownItem" contacts="solidEnvironment, door" />
+            <contactFilter category="solidBulletSensor" contacts="controlledCharacter" />
 
         </entityCategories>
 
+        <!-- 
+        <entityPhaseHandlers>
+            <entityPhaseHandler name = "coin">
+                <end alphaFadeDurationS="0.5">
+                    <overlay sourceSprite="vanishEffectA" animation="ani" layer="effects" /> 
+                </end>
+            </entityPhaseHandler>
+            <entityPhaseHandler name = "scoreItem">
+                <end alphaFadeDurationS="0.5">
+                    <int name="score" />
+                    <overlay sourceSprite="vanishEffectB_ring" animation="ani" layer="effects" /> 
+                    <overlay sourceSprite="scoreEffect" animation="ani" layer="text effects" textFromData="score" /> 
+                </end>
+            </entityPhaseHandler>
+        </entityPhaseHandlers>
+    -->
+
+        <!-- 
+        <entityPhaseHandlers>
+            <entityPhaseHandler name="coin">
+                <endPhase aniSpriteObjects="vanishEffectA" alphaFadeDurationS="0.25" />
+            </entityPhaseHandler>
+            <entityPhaseHandler name="pickableItemWithScoreValue">
+                <endPhase aniSpriteObjects="vanishEffectB, scoreEffect" alphaFadeDurationS="0.25" />
+            </entityPhaseHandler>
+        </entityPhaseHandlers>
+    -->
+        <!-- 
+        <spawningVelocities>
+            <spawningVelocity name="shuriken" speedP="400" direction="FROM_SPAWNER" angle="0" distance="UNLIMITED"  >
+
+            </spawningVelocity>
+        </spawningVelocities>
+    -->
 
         <extraGroundTypes>
             <slidingGround name="ice" speedOn45degSlopeP="300" accDistanceP="75" />
@@ -49,13 +172,21 @@
                 <baseStates>
                     <standing animationLeft="standingLeft" animationRight="standingRight" />
                     <turning animationLeft="turningToLeft" animationRight="turningToRight" />
-                    <idle delay="5" animationLeft="idleLeft" animationRight="idleRight" />
+                    <idle delay="8" animationLeft="idleLeft" animationRight="idleRight" />
                     <moving animationLeft="walkingLeft" animationRight="walkingRight" />
                     <steepSlopeStaggering animationLeft="staggeringLeft" animationRight="staggeringRight" />
                 </baseStates>
-                <customState name="turnWallSwitch" baseState="STANDING" trigger="INPUT:COMMAND/fire" animationLeft="turnWallSwitchLeft" animationRight="turnWallSwitchRight">
-                    <context onSignal="ENTITY:THIS/CONTACT:CATEGORY:wallSwitch" />
+                <!-- <customState name="turningWallSwitch" baseStates="STANDING" trigger="INPUT:COMMAND/fire">-->
+                <customState name="turningWallSwitch" baseStates="STANDING" movement="FALSE">
+                    <!-- <context onSignal="ENTITY:THIS/CONTACT:CATEGORY:wallSwitch" />-->
+                    <trigger onSignalsNEW="INPUT:COMMAND/fire , ENTITY:THIS/CONTACT:CAT:wallSwitch" />
+                    <animations animationLeft="turnWallSwitchLeft" animationRight="turnWallSwitchRight" />
                     <customSensor extraShapeCategory="heroHandSensor" vectorShapeData="1" activeOnAnimationKeyData="1" />
+                </customState>
+                <customState name="throwingItem" baseStates="STANDING,MOVING" movement="FALSE" >
+                    <trigger onSignalNEW="INPUT:COMMAND/fire , ENTITY:THIS/SPAWNED_ONCE/NOT_ACTIVE = SOURCE_ENTITY:wBoomerang" onItem="ENTITY:THIS/itemsInventory SELECTED ITEM_TAG:throwable" />
+                    <animations animationLeft="standingThrowingLeft" animationRight="standingThrowingRight" />
+                    <activePhase onFrameData="1" />
                 </customState>
             </groundMovement>
 
@@ -94,6 +225,17 @@
                     <descending animationLeft="jumpingDescendingLeft" animationRight="jumpingDescendingRight" />
                     <!-- <landing animationLeft="jumpingLandingLeft" animationRight="jumpingLandingRight" /> -->
                 </baseStates>
+                <customState name="acendingThrowingItem" baseStates="ASCENDING" movement="TRUE" >
+                    <trigger onSignalNEW="INPUT:COMMAND/fire , ENTITY:THIS/SPAWNED_ONCE/NOT_ACTIVE = SOURCE_ENTITY:wBoomerang" onItem="ENTITY:THIS/itemsInventory SELECTED ITEM_TAG:throwable" />
+                    <animations animationLeft="jumpingUpThrowingLeft" animationRight="jumpingUpThrowingRight" />
+                    <!-- <activePhase onFrameData="1" />-->
+                </customState>
+                <customState name="descendingThrowingItem" baseStates="DESCENDING" movement="TRUE" >
+                    <trigger onSignalNEW="INPUT:COMMAND/fire , ENTITY:THIS/SPAWNED_ONCE/NOT_ACTIVE = SOURCE_ENTITY:wBoomerang" onItem="ENTITY:THIS/itemsInventory SELECTED ITEM_TAG:throwable" />
+                    <animations animationLeft="jumpingDownThrowingLeft" animationRight="jumpingDownThrowingRight" />
+                    <!-- <activePhase onFrameData="1" />-->
+                </customState>
+                
             </jumpMovement>
 
 
@@ -105,7 +247,7 @@
 
             <pathMovement name="heroClimbingLadder" >
                 <parameters maxSpeedP="200" accDistanceP="25" pathways="ladder" />
-                <triggers moveForward="INPUT:COMMAND/moveUp" moveBackward="INPUT:COMMAND/moveDown" />
+                <triggers moveForward="INPUT:COMMAND/moveUp" moveBackward="INPUT:COMMAND/moveDown"  />
                 <baseStates>
                     <standing animationForward="standingOnLadder" animationBackward="standingOnLadder" />
                     <!--
@@ -134,33 +276,102 @@
         <behaviorControllers>
 
             <behaviorController name="heroBehaviorController">
+                <float name="energyReduction" minValue="-10"  />
 
+                
+
+                <a onSignal="INPUT:KEYBOARD/S/START" doSetDataNEW="ITEM/ENTITY:THIS/score = ADD/10" />
+                
+                <a onSignal="INPUT:KEYBOARD/D/START" doSetDataNEW="LOCAL/energyReduction = ADD/ITEM/ENTITY:THIS/skills:meleeCombat:attackDemage" >
+                    <a doSetDataNEW="LOCAL/energyReduction = SUBTRACT/1" doDbgPrintNEW="LOCAL/energyReduction" />
+                </a>
+                
+                <a onSignal="INPUT:KEYBOARD/F/START" doSetDataNEW="LOCAL/energyReduction = MIN_VALUE" doDbgPrintNEW="LOCAL/energyReduction" >
+                    <aCo doSetDataNEW="ITEM/ENTITY:THIS/energy = 50" />
+                    <aCo onDataNEW="ITEM/ENTITY:THIS/energy = 50" doDbgPrintNEW="ITEM/ENTITY:THIS/energy" />
+                    <aCo doDbgPrintNEW="Some debug text."/>
+                </a>
+
+                <!-- <a onSignalNEW="ENTITY:CONTACTED:iSmallCoin/CONTACT:ANY/START"  doDbgPrintNEW="ITEM/ENTITY:CONTACTED:iSmallCoin/worth" />-->
+                <!-- <a onSignalNEW="ENTITY:CONTACTED:iSmallCoin/CONTACT:ANY/START" doSetSignalNEW="ENTITY:CONTACTED:iSmallCoin/MANAGER = REMOVE" />-->
+                <!-- <a onSignalNEW="ENTITY:CONTACTED:iSmallCoin/CONTACT:ANY/START" >-->
+                <a onSignalNEW="ENTITY:THIS/CONTACT:CAT:pickableItem/START"  >
+                    <a onSignalNEW="ENTITY:CONTACTED:iSmallCoin/CONTACT:ANY/START" doSetItem="ENTITY:THIS/coins ADD ENTITY:CONTACTED:iSmallCoin" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iSmallCoin" />
+                    <a onSignalNEW="ENTITY:CONTACTED:iBigCoin/CONTACT:ANY/START" doSetItem="ENTITY:THIS/coins ADD ENTITY:CONTACTED:iBigCoin" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iBigCoin" />
+                    
+                    <a onSignalNEW="ENTITY:CONTACTED:iStarA/CONTACT:ANY/START" doSetDataNEW="ITEM/ENTITY:THIS/score = ADD/ITEM/ENTITY:CONTACTED:iStarA/score" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iStarA" />
+                    <a onSignalNEW="ENTITY:CONTACTED:iStarB/CONTACT:ANY/START" doSetDataNEW="ITEM/ENTITY:THIS/score = ADD/ITEM/ENTITY:CONTACTED:iStarB/score" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iStarB" />
+                    <a onSignalNEW="ENTITY:CONTACTED:iStarC/CONTACT:ANY/START" doSetDataNEW="ITEM/ENTITY:THIS/score = ADD/ITEM/ENTITY:CONTACTED:iStarC/score" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iStarC" />
+
+                    <a onSignalNEW="ENTITY:CONTACTED:iGreenKey/CONTACT:ANY/START" doSetItem="ENTITY:THIS/itemsInventory ADD ENTITY:CONTACTED:iGreenKey" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iGreenKey" />
+
+                    <a onSignalNEW="ENTITY:CONTACTED:iShuriken/CONTACT:ANY/START" doSetItem="ENTITY:THIS/itemsInventory ADD ENTITY:CONTACTED:iShuriken" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iShuriken" />
+                    <a onSignalNEW="ENTITY:CONTACTED:iShurikenPack/CONTACT:ANY/START" doSetItem="ENTITY:THIS/itemsInventory ADD ENTITY:CONTACTED:iShurikenPack" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iShurikenPack" />
+                    <a onSignalNEW="ENTITY:CONTACTED:iBoomerang/CONTACT:ANY/START" doSetItem="ENTITY:THIS/itemsInventory ADD ENTITY:CONTACTED:iBoomerang" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iBoomerang" />
+                    <a onSignalNEW="ENTITY:CONTACTED:iUmbrella/CONTACT:ANY/START" doSetItem="ENTITY:THIS/itemsInventory ADD ENTITY:CONTACTED:iUmbrella" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iUmbrella" />
+                    <a onSignalNEW="ENTITY:CONTACTED:iAmigaBall/CONTACT:ANY/START" doSetItem="ENTITY:THIS/itemsInventory ADD ENTITY:CONTACTED:iAmigaBall" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iAmigaBall" />
+                    <a onSignalNEW="ENTITY:CONTACTED:iHealthBottle/CONTACT:ANY/START" doSetItem="ENTITY:THIS/itemsInventory ADD ENTITY:CONTACTED:iHealthBottle" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iHealthBottle" />
+                </a>
+
+                <a onSignalNEW="ENTITY:CONTACTED:iGamepad/CONTACT:THIS/START=TRUE , ENTITY:CONTACTED:iGamepad/ITEM_PICKABLE=TRUE" doSetItem="ENTITY:THIS/itemsInventory ADD ENTITY:CONTACTED:iGamepad" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:iGamepad" />
+
+                <!--<a onSignalNEW="INPUT:COMMAND/fire"  onItem="ENTITY:THIS/itemsInventory SELECTED ITEM_TAG:throwable" doSetSignalNEW="ENTITY:THIS/ENGINE:heroRunning:CUSTOM_STATE:throwingItem = true" />-->
+                 
+                <!--<a onSignalNEW="INPUT:COMMAND/fire/START" onItem="ENTITY:THIS/itemsInventory SELECTED shuriken" 
+                            doSetItem="ENTITY:THIS/itemsInventory REMOVE shuriken" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:shurikenUsed" />-->
+                    
+                <a onSignalsNEW="ENTITY:THIS/CUSTOM_ACT/START = throwingItem" >
+                    <a onItem="ENTITY:THIS/itemsInventory SELECTED gamepad" doSetItem="ENTITY:THIS/itemsInventory REMOVE gamepad" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:iGamepad" />
+                    <a onItem="ENTITY:THIS/itemsInventory SELECTED shurikenProxy" doSetItem="ENTITY:THIS/itemsInventory REMOVE shurikenOne" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:shurikenUsed" />
+                    <a onItem="ENTITY:THIS/itemsInventory SELECTED boomerang" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:wBoomerang" />
+                </a>   
+                <a onSignalsNEW="ENTITY:THIS/CUSTOM_ACT/START = acendingThrowingItem" >
+                    <a onItem="ENTITY:THIS/itemsInventory SELECTED gamepad" doSetItem="ENTITY:THIS/itemsInventory REMOVE gamepad" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:iGamepad" />
+                    <a onItem="ENTITY:THIS/itemsInventory SELECTED shurikenProxy" doSetItem="ENTITY:THIS/itemsInventory REMOVE shurikenOne" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:shurikenUsed" />
+                    <a onItem="ENTITY:THIS/itemsInventory SELECTED boomerang" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:wBoomerang" />
+                </a>
+                <a onSignalsNEW="ENTITY:THIS/CUSTOM_ACT/START = descendingThrowingItem" >
+                    <a onItem="ENTITY:THIS/itemsInventory SELECTED gamepad" doSetItem="ENTITY:THIS/itemsInventory REMOVE gamepad" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:iGamepad" />
+                    <a onItem="ENTITY:THIS/itemsInventory SELECTED shurikenProxy" doSetItem="ENTITY:THIS/itemsInventory REMOVE shurikenOne" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:shurikenUsed" />
+                    <a onItem="ENTITY:THIS/itemsInventory SELECTED boomerang" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:wBoomerang" />
+                </a> 
+
+                <!-- <a onSignalsNEW="ENTITY:THIS/CUSTOM_ACT/START = throwingItem" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:shurikenUsed" />-->
+                <!-- <a onSignalsNEW="ENTITY:THIS/CUSTOM_ACT/START = acendingThrowingItem" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:shurikenUsed" />-->
+                <!-- <a onSignalsNEW="ENTITY:THIS/CUSTOM_ACT/START = descendingThrowingItem" doSetSignalNEW="ENTITY:THIS/SPAWN = SOURCE_ENTITY:shurikenUsed" />-->
+
+                <!-- BEHAVIOR STATES-->
                 <state name="groundMovement" movementEngine="heroRunning">
-                    <a onSignal="ENTITY:THIS/ENGINE:heroJumping:START_JUMP" doSetState="jumping" />
-                    <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
-                    <a onSignal="ENTITY:THIS/ENGINE:heroClimbingLadder:PATWAY_ACCESSED" doSetState="climbingLadder" />
-                    <a onSignals="ENTITY:THIS/MOVABLE_OBJECT:ON_RIGHT, INPUT:COMMAND/fire" doSetState="movingMovableObjectOnRight" />
-                    <a onSignals="ENTITY:THIS/MOVABLE_OBJECT:ON_LEFT, INPUT:COMMAND/fire" doSetState="movingMovableObjectOnLeft" />
+                    <a onSignalsNEW="ENTITY:THIS/ENGINE:heroJumping:START_JUMP" doSetState="jumping" />
+                    <!-- <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />-->
+                    <a onSignalsNEW="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
+                    <a onSignalsNEW="ENTITY:THIS/ENGINE:heroClimbingLadder:PATWAY_ACCESSED" doSetState="climbingLadder" />
+                    <a onSignalsNEW="ENTITY:THIS/MOVABLE_OBJECT:ON_RIGHT, INPUT:COMMAND/fire" doSetState="movingMovableObjectOnRight" />
+                    <a onSignalsNEW="ENTITY:THIS/MOVABLE_OBJECT:ON_LEFT, INPUT:COMMAND/fire" doSetState="movingMovableObjectOnLeft" />
+                    <!-- <a onSignalsNEW="ENTITY:THIS/CUSTOM_ACT/START = throwingItem" doDbgPrintNEW="Throwin Item" />-->
                 </state>
 
                 <state name="movingMovableObjectOnRight" movementEngine="heroMovingMovableObjectOnRight">
-                    <a onSignal="ENTITY:THIS/STATE:THIS/START" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED=TRUE" />
-                    <a onSignals="[INPUT:COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED=FALSE" doSetState="groundMovement" />
-                    <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
+                    <a onSignalsNEW="ENTITY:THIS/STATE:THIS/START" doSetSignalNEW="ENTITY:THIS/MOVABLE_OBJECT:MOVED=TRUE" />
+                    <a onSignalsNEW="[INPUT:COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignalNEW="ENTITY:THIS/MOVABLE_OBJECT:MOVED=FALSE" doSetState="groundMovement" />
+                    <a onSignalsNEW="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
                 </state>
 
                 <state name="movingMovableObjectOnLeft" movementEngine="heroMovingMovableObjectOnLeft">
-                    <a onSignal="ENTITY:THIS/STATE:THIS/START" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED=TRUE" />
-                    <a onSignals="[INPUT:COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignal="ENTITY:THIS/MOVABLE_OBJECT:MOVED=FALSE" doSetState="groundMovement" />
-                    <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
+                    <a onSignalsNEW="ENTITY:THIS/STATE:THIS/START" doSetSignalNEW="ENTITY:THIS/MOVABLE_OBJECT:MOVED=TRUE" />
+                    <a onSignalsNEW="[INPUT:COMMAND/fire/END, ENTITY:THIS/MOVABLE_OBJECT:MOVED/NOT_ACTIVE]" doSetSignalNEW="ENTITY:THIS/MOVABLE_OBJECT:MOVED=FALSE" doSetState="groundMovement" />
+                    <a onSignalsNEW="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="jumping" />
                 </state>
         
                 <state name="jumping" movementEngine="heroJumping">
-                    <a onSignals="ENTITY:THIS/ENGINE:heroJumping:STATE=LANDED" doSetState="groundMovement" />
+                    <a onSignalsNEW="ENTITY:THIS/ENGINE:heroJumping:STATE=LANDED" doSetState="groundMovement" />
                 </state>
 
                 <state name="climbingLadder" movementEngine="heroClimbingLadder">
-                    <a onSignal="ENTITY:THIS/ENGINE:heroClimbingLadder:PATHWAY_LEFT:heroRunning" doSetState="groundMovement" />
+                    <!-- <a onSignal="ENTITY:THIS/ENGINE:heroClimbingLadder:PATHWAY_LEFT:heroRunning" doSetState="groundMovement" />-->
+                    <a onSignalsNEW="ENTITY:THIS/ENGINE:heroClimbingLadder:PATWAY_END_POSITION" doSetState="groundMovement" />
+                    <a onSignalsNEW="[ENTITY:THIS/ENGINE:heroRunning:MOVE_LEFT , ENTITY:THIS/ENGINE:heroRunning:MOVE_RIGHT] , ENTITY:THIS/ENGINE:heroClimbingLadder:PATWAY_EXIT_POSITION" 
+                                    doSetState="groundMovement" />
                 </state>
         
             </behaviorController>
@@ -168,10 +379,10 @@
 
             <behaviorController name="movableBoxBehaviorController">
                 <state name="groundMovement" movementEngine="groundMovableObjectDummy">
-                    <a onSignal="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="falling" />
+                    <a onSignalsNEW="ENTITY:THIS/BLOCKED_DIRECTION:DOWN/NOT_ACTIVE" doSetState="falling" />
                 </state>
                 <state name="falling" movementEngine="objectFalling">
-                    <a onSignals="ENTITY:THIS/ENGINE:objectFalling:STATE=LANDED" doSetState="groundMovement" />
+                    <a onSignalsNEW="ENTITY:THIS/ENGINE:objectFalling:STATE=LANDED" doSetState="groundMovement" />
                 </state>
             </behaviorController>
         
@@ -211,12 +422,34 @@
         </taskControllers>
 
 
+
         <entities>
 
             <entity name="worldEnvironment" mainCategory="solidEnvironment">
+                <behaviorController>
+                    <a onSignalNEW="ENTITY:CONTACTED:shurikenUsed/CONTACT:THIS/START=TRUE" doSetSignalNEW="ENTITY_MANAGER/REMOVE = ENTITY:CONTACTED:shurikenUsed" />
+                    <state name="normal" />
+                </behaviorController>  
             </entity>
 
             <entity name="hero" mainCategory="controlledCharacter" >
+                <!-- 
+                <attributeController>
+                    <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:meleeWeapon=TRUE/START" > 
+                        <float name="energyReduction" minValue="0" startValue="0" />
+                        <a doCollectData="LOCAL:energyReduction / ENTITY:THIS/skill/COLLECT:attackDemage / ENTITY:CONTACTED/CHARACTER/COLLECT:attackProtection " />
+                        <a doSetData="ENTITY:THIS/energy = - LOCAL:energyReduction" />
+                        <a onData="ENTITY:THIS/energy = MIN_VALUE" doSetData="ENTITY:THIS/numberOfLives = -1" >
+                            <a onData="ATTACKED:numberOfLives = 0" doSetSignal="SCENE:FINISH = TRUE" />
+                        </a>
+                    </a>
+                </attributeController>
+            -->
+                <add item="hero" /> 
+                <spawner>
+                    <spawned entity="shurikenUsed" engine="heroRunning" xOffsetP="50" yOffsetP="0" />
+                    <spawned entity="shurikenUsed" engine="heroJumping" xOffsetP="50" yOffsetP="0" />
+                </spawner>
                 <behaviorController use="heroBehaviorController" startState="groundMovement" />
             </entity>
 
@@ -233,6 +466,75 @@
                 </pathwayParameters>
             </entity>
 
+            <!--//////     PICKABL ITEMS     //////-->
+
+            <entity name="iSmallCoin" mainCategory="pickableItem">
+                <add item="smallCoin" animation="ani" /> 
+            </entity>
+
+            <entity name="iBigCoin" mainCategory="pickableItem">
+                <add item="bigCoin" animation="ani" /> 
+            </entity>
+
+
+            <entity name="iStarA" mainCategory="pickableItem">
+                <add item="starA" animation="ani" /> 
+            </entity>
+
+            <entity name="iStarB" mainCategory="pickableItem">
+                <add item="starB" /> 
+            </entity>
+
+            <entity name="iStarC" mainCategory="pickableItem">
+                <add item="starC" /> 
+            </entity>
+
+            <entity name="iBoomerang" mainCategory="pickableItem">
+                <add item="boomerang" /> 
+            </entity>
+
+            <entity name="wBoomerang" mainCategory="thrownItem">
+                <parameters spawnedOnce="TRUE" />
+                <add item="wBoomerang" relativeMover="boomerang"/> 
+            </entity>
+
+            <entity name="iShuriken" mainCategory="pickableItem">
+                <add item="shurikenOne" /> 
+            </entity>
+
+            <entity name="iShurikenPack" mainCategory="pickableItem">
+                <add item="shurikenTen" /> 
+            </entity>
+
+            <entity name="shurikenUsed" mainCategory="thrownItem">
+                <add item="shurikenUsed" relativeMover="shuriken" /> 
+            </entity>
+
+            <entity name="iGamepad" mainCategory="solidThrownItem">
+                <parameters fixedRotation="FALSE" />
+                <add item="gamepad" relativeMover="gamepad2"/> 
+            </entity>
+            <!-- 
+            <entity name="wGamepad" mainCategory="solidThrownItem">
+                <add item="wGamepad" relativeMover="gamepad"/> 
+            </entity>
+        -->
+
+            <entity name="iUmbrella" mainCategory="pickableItem">
+                <add item="umbrella" animation = "ani"/> 
+            </entity>
+            
+            <entity name="iAmigaBall" mainCategory="pickableItem">
+                <add item="amigaBall" animation="ani" /> 
+            </entity>
+
+            <entity name="iHealthBottle" mainCategory="pickableItem">
+                <add item="healthBottle" /> 
+            </entity>
+
+            <entity name="iGreenKey" mainCategory="pickableItem">
+                <add item="greenKey" animation="ani" /> 
+            </entity>
 
 
             <!--//////     MOVING PLATFORMS     //////-->
@@ -298,25 +600,25 @@
                 <behaviorController>
                     <state name="off">
                         <!--<a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/ACTIVE" doSetState="standBy" />-->
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/ACTIVE" doSetState="standBy" />
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/ACTIVE" doSetState="standBy" />
                     </state>
                     <state name="standBy">
                         <!--<a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE" doSetState="off" />-->
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/NOT_ACTIVE" doSetState="off" />
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_PARTLY_ON" doSetState="blinking" />
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/NOT_ACTIVE" doSetState="off" />
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_PARTLY_ON" doSetState="blinking" />
                     </state>
                     <state name="blinking">
                         <!--<a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:OPERATING/NOT_ACTIVE" doSetState="off" />-->
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/NOT_ACTIVE" doSetState="off" />
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:NO_PASSENGER" doSetState="standBy" />
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_FULLY_ON" doSetState="on" />
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/NOT_ACTIVE" doSetState="off" />
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:NO_PASSENGER" doSetState="standBy" />
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_FULLY_ON" doSetState="on" />
                     </state>
                     <state name="on">
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/NOT_ACTIVE,  
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/NOT_ACTIVE,  
                                     ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:MOVING/NOT_ACTIVE" 
                                     doSetState="off"/>
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_PARTLY_ON" doSetState="blinking" />
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:NO_PASSENGER" doSetState="standBy" />
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:PASSENGER_PARTLY_ON" doSetState="blinking" />
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:STATUS:NO_PASSENGER" doSetState="standBy" />
                     </state>
                 </behaviorController>
             </entity>
@@ -326,11 +628,15 @@
                 <parameters centerMarginP="25" />
                 <behaviorController>
                     <state name="off">
-                        <a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/ACTIVE" doSetState="on" />
-                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED=TRUE" doSetState="on" />
+                        <!--<a onSignals="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/ACTIVE" doSetState="on" />-->
+                        <a onSignalsNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED/ACTIVE" doSetState="on" />
+                        <!-- <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED=TRUE" doSetState="on" />-->
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:CAT:heroHandSensor/START" doSetSignalNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED=TRUE" doSetState="on" />
+
                     </state> 
                     <state name="on">
-                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED=FALSE" doSetState="off" />
+                        <!--<a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED=FALSE" doSetState="off" />-->
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:CAT:heroHandSensor/START" doSetSignalNEW="ENTITY:fancyPlatformA/TASK:tFancyPlatformA:ENABLED=FALSE" doSetState="off" />
                     </state>
                 </behaviorController>  
             </entity>
@@ -343,18 +649,18 @@
                 <parameters passableFromBellow="TRUE" />
                 <behaviorController>
                     <state name="disabled" movementEngine="behMovingPlatformA" >
-                        <a onSignals= "ENTITY:groundSwitch_platformA_v2:1/STATE:on , 
+                        <a onSignalsNEW= "ENTITY:groundSwitch_platformA_v2:1/STATE:on , 
                                         ENTITY:groundSwitch_platformA_v2:2/STATE:off ,
                                         ENTITY:groundSwitch_platformA_v2:3/STATE:on "
-                                doSetSignal="ENTITY:THIS/TASK:tPlatformA:ENABLED=TRUE" 
+                                doSetSignalNEW="ENTITY:THIS/TASK:tPlatformA:ENABLED=TRUE" 
                                 doSetState="enabled" >
                         </a>
                     </state>
                     <state name="enabled" movementEngine="behMovingPlatformA" >
-                        <a onSignals= "[ENTITY:groundSwitch_platformA_v2:1/STATE:on / NOT_ACTIVE , 
+                        <a onSignalsNEW= "[ENTITY:groundSwitch_platformA_v2:1/STATE:on / NOT_ACTIVE , 
                                          ENTITY:groundSwitch_platformA_v2:2/STATE:off/ NOT_ACTIVE ,
                                          ENTITY:groundSwitch_platformA_v2:3/STATE:on / NOT_ACTIVE ]"
-                                doSetSignal="ENTITY:THIS/TASK:tPlatformA:ENABLED=FALSE"                         
+                                doSetSignalNEW="ENTITY:THIS/TASK:tPlatformA:ENABLED=FALSE"                         
                                 doSetState="disabled" >
                         </a>
                     </state>
@@ -368,14 +674,28 @@
             <entity name="groundSwitch_platformA_v2" mainCategory="groundSwitch">
                 <behaviorController>
                     <state name="off">
-                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
                     </state> 
                     <state name="on">
-                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
                     </state>
                 </behaviorController>   
             </entity>
 
+
+            <entity name="greenDoor" mainCategory="door">
+                <behaviorController>
+                    <state name="closed" contactsEnabled="TRUE">
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ENT:hero" onItem="ENTITY:CONTACTED:hero/itemsInventory STORED greenKey " doSetItem="ENTITY:CONTACTED:hero/itemsInventory REMOVE greenKey"  doSetState="opening" />
+                    </state>
+                    <state name="opening" animation="opening" contactsEnabled="FALSE">
+                        <a onSignalsNEW="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
+                    </state>
+                    <state name="opened" contactsEnabled="FALSE"> 
+                    </state>
+                    <!--<state name="closing" animation="closing" contactsEnabled="TRUE" />-->
+                </behaviorController>
+            </entity>
 
             
             <!--//////     DOORS , SWITCHES     //////-->
@@ -383,16 +703,16 @@
             <entity name="doorA1" mainCategory="door">
                 <behaviorController>
                     <state name="closed" contactsEnabled="TRUE">
-                        <a onSignals="ENTITY:groundSwitch_doorA1/STATE:on" doSetState="opening" />
+                        <a onSignalsNEW="ENTITY:groundSwitch_doorA1/STATE:on" doSetState="opening" />
                     </state>
                     <state name="opening" animation="opening" contactsEnabled="FALSE">
-                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
+                        <a onSignalsNEW="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
                     </state>
                     <state name="opened" contactsEnabled="FALSE"> 
-                        <a onSignals="ENTITY:groundSwitch_doorA1/STATE:off" doSetState="closing" />
+                        <a onSignalsNEW="ENTITY:groundSwitch_doorA1/STATE:off" doSetState="closing" />
                     </state>
                     <state name="closing" animation="closing" contactsEnabled="TRUE">
-                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
+                        <a onSignalsNEW="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
                     </state>
                 </behaviorController>
             </entity>
@@ -401,10 +721,10 @@
             <entity name="groundSwitch_doorA1" mainCategory="groundSwitch">
                 <behaviorController>
                     <state name="off">
-                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
                     </state> 
                     <state name="on">
-                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
                     </state>
                 </behaviorController>   
             </entity>
@@ -416,16 +736,16 @@
             <entity name="doorA1_v2" mainCategory="door">
                 <behaviorController>
                     <state name="closed" contactsEnabled="TRUE">
-                        <a onSignals="ENTITY:groundSwitch_doorA1_v2/STATE:on" doSetState="opening" />
+                        <a onSignalsNEW="ENTITY:groundSwitch_doorA1_v2/STATE:on" doSetState="opening" />
                     </state>
                     <state name="opening" animation="opening" contactsEnabled="FALSE">
-                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
+                        <a onSignalsNEW="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
                     </state>
                     <state name="opened" contactsEnabled="FALSE"> 
-                        <a onSignals="ENTITY:groundSwitch_doorA1_v2/STATE:off" doSetState="closing" />
+                        <a onSignalsNEW="ENTITY:groundSwitch_doorA1_v2/STATE:off" doSetState="closing" />
                     </state>
                     <state name="closing" animation="closing" contactsEnabled="TRUE">
-                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
+                        <a onSignalsNEW="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
                     </state>
                 </behaviorController>
             </entity>
@@ -434,10 +754,10 @@
             <entity name="groundSwitch_doorA1_v2" mainCategory="groundSwitch">
                 <behaviorController>
                     <state name="off">
-                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
                     </state> 
                     <state name="on">
-                        <a onSignal="ENTITY:THIS/CONTACT:ANY/END" doSetState="off" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY/END" doSetState="off" />
                     </state>
                 </behaviorController>   
             </entity>
@@ -450,16 +770,16 @@
                 
                 <behaviorController>
                     <state name="closed" contactsEnabled="TRUE">
-                        <a onSignals="ENTITY:doorA2_area/STATE:opened" doSetState="opening" />
+                        <a onSignalsNEW="ENTITY:doorA2_area/STATE:opened" doSetState="opening" />
                     </state>
                     <state name="opening" animation="opening" contactsEnabled="FALSE">
-                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
+                        <a onSignalsNEW="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="opened" />
                     </state>
                     <state name="opened" contactsEnabled="FALSE"> 
-                        <a onSignals="ENTITY:doorA2_area/STATE:closed" doSetState="closing" />
+                        <a onSignalsNEW="ENTITY:doorA2_area/STATE:closed" doSetState="closing" />
                     </state>
                     <state name="closing" animation="closing" contactsEnabled="TRUE">
-                        <a onSignals="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
+                        <a onSignalsNEW="ENTITY:THIS/STATE_ANIMATION:THIS/END" doSetState="closed" />
                     </state>
                 </behaviorController>
             
@@ -469,10 +789,10 @@
             <entity name="doorA2_light" mainCategory="entityWithoutShape">
                 <behaviorController>
                     <state name="red">
-                        <a onSignals= "ENTITY:groundSwitch_doorA2/STATE:on/ACTIVE" doSetState="green" />
+                        <a onSignalsNEW= "ENTITY:groundSwitch_doorA2/STATE:on/ACTIVE" doSetState="green" />
                     </state>
                     <state name="green">
-                        <a onSignals= "ENTITY:groundSwitch_doorA2/STATE:off/ACTIVE" doSetState="red" />
+                        <a onSignalsNEW= "ENTITY:groundSwitch_doorA2/STATE:off/ACTIVE" doSetState="red" />
                     </state>
                 </behaviorController>
 
@@ -482,10 +802,10 @@
             <entity name="doorA2_area" mainCategory="doorSensorArea">
                 <behaviorController>
                     <state name="closed">
-                        <a onSignals="ENTITY:THIS/CONTACT, ENTITY:doorA2_light/STATE:green/ACTIVE" doSetState="opened" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY, ENTITY:doorA2_light/STATE:green/ACTIVE" doSetState="opened" />
                     </state>
                     <state name="opened">
-                        <a onSignals="ENTITY:THIS/CONTACT:ANY/NOT_ACTIVE" doSetState="closed" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY/NOT_ACTIVE" doSetState="closed" />
                     </state>
                 </behaviorController>
             </entity>
@@ -494,10 +814,10 @@
             <entity name="groundSwitch_doorA2" mainCategory="groundSwitch">
                 <behaviorController>
                     <state name="off">
-                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY/START" doSetState="on" />
                     </state> 
                     <state name="on">
-                        <a onSignal="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:ANY/START" doSetState="off" />
                     </state>
                 </behaviorController>   
             </entity>
@@ -510,11 +830,11 @@
                 <parameters centerMarginP="25" />
                 <behaviorController>
                     <state name="off">
-                        <a onSignals="ANIMATED_OBJECT:rotatingWheelA/ENABLED" doSetState="on" />
-                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ANIMATED_OBJECT:rotatingWheelA/ENABLED=TRUE" doSetState="on" />
+                        <a onSignalsNEW="ANIMATED_OBJECT:rotatingWheelA/ENABLED" doSetState="on" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:CAT:heroHandSensor/START" doSetSignalNEW="ANIMATED_OBJECT:rotatingWheelA/ENABLED=TRUE" doSetState="on" />
                     </state> 
                     <state name="on">
-                        <a onSignal="ENTITY:THIS/CONTACT:CATEGORY:heroHandSensor/START" doSetSignal="ANIMATED_OBJECT:rotatingWheelA/ENABLED=FALSE" doSetState="off" />
+                        <a onSignalsNEW="ENTITY:THIS/CONTACT:CAT:heroHandSensor/START" doSetSignalNEW="ANIMATED_OBJECT:rotatingWheelA/ENABLED=FALSE" doSetState="off" />
                     </state>
                 </behaviorController>  
             </entity>

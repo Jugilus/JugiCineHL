@@ -13,6 +13,7 @@ namespace jugimap {
 
 
 class Action;
+class ActionTrigger;
 //class BehaviorAction;
 class ActionCommand;
 //class ActionTrigger;
@@ -33,6 +34,8 @@ public:
 
     //virtual ActionTrigger* createActionTrigger(const std::string &type, Action* parentAction, const pugi::xml_node& node);
     virtual ActionCondition* createActionCondition(const std::string &type, Action* parentAction, const std::string &value);
+    virtual ActionCondition* createActionTriggerCondition(const std::string &type, ActionTrigger* parentAction, const std::string &value);
+
     //virtual ActionCommand* createActionCommands(const std::string &type, Action* parentAction, const pugi::xml_node& node);
     virtual ActionCommand* createActionCommands(const std::string &type, Action* parentAction, const std::string &value);
 

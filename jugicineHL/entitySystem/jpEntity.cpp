@@ -16,12 +16,17 @@
 #include "jmSourceSprite.h"
 #include "jmVectorShapeUtilities.h"
 #include "jmUtilities.h"
+
+#include "jpObjectParser.h"
 #include "items/jpItemsCommon.h"
 #include "jpPlayedApp.h"
 #include "jpPlayedScene.h"
 #include "jpUtilities.h"
 #include "jpLogicState.h"
 #include "jpLogicStateCfg.h"
+#include "jpAttribute.h"
+#include "data/jpItem.h"
+#include "gfxObjects/jpGfxObjectsCommon.h"
 
 //-----
 #include "jpB2Body.h"
@@ -48,6 +53,18 @@ using namespace jugimap;
 
 
 
+
+EntityMapElement::~EntityMapElement()
+{
+
+    if(mSprite){
+        if( mOwnedSprite){
+            delete mSprite;
+        }
+
+    }
+
+}
 
 
 void EntityMapElement::init(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spriteLayer)
@@ -183,6 +200,65 @@ void EntityMapElement::setRotationFromBody(float _rotation)
 }
 
 
+void EntityMapElement::setVisible(bool _visible)
+{
+
+    if(mSprite){
+        mSprite->setVisible(_visible);
+
+    }else if(mSpriteLayer){
+        mSpriteLayer->setVisible(_visible);
+
+    }
+}
+
+
+void EntityMapElement::setAlpha(float _alpha)
+{
+
+    if(mSprite){
+        mSprite->setAlpha(_alpha);
+
+    }else if(mSpriteLayer){
+        mSpriteLayer->setAlpha(_alpha);
+
+    }
+
+}
+
+
+void EntityMapElement::removeFromMap()
+{
+
+    if(mSprite){
+        //mSprite->setAlpha(_alpha);
+        mSprite->parentLayer()->takeSprite(mSprite);
+        mOwnedSprite = true;
+
+    }else if(mSpriteLayer){
+        mSpriteLayer->setAlpha(1.0f);
+
+    }
+
+}
+
+
+void EntityMapElement::addToMap()
+{
+
+    if(mSprite){
+        //mSprite->setAlpha(_alpha);
+        mSprite->parentLayer()->addSprite(mSprite);
+        mOwnedSprite = false;
+
+    }else if(mSpriteLayer){
+        mSpriteLayer->setAlpha(0.0f);
+
+    }
+
+}
+
+
 /*
 Entity::Entity(SourceEntity *_sourceEntity) : mSourceEntity(_sourceEntity)
 {
@@ -193,7 +269,7 @@ Entity::Entity(SourceEntity *_sourceEntity) : mSourceEntity(_sourceEntity)
 */
 
 
-Entity::Entity(SourceEntity *_sourceEntity) : mSourceEntity(_sourceEntity)
+Entity::Entity()
 {
 
 }
@@ -222,6 +298,12 @@ Entity::~Entity()
     if(mSigMovableObject){
         delete mSigMovableObject;
     }
+    if(mSigBlockedDirection){
+        delete mSigBlockedDirection;
+    }
+    if(mSigItemPickable){
+        delete mSigItemPickable;
+    }
 
 }
 
@@ -238,15 +320,78 @@ EntityRole Entity::mainShapeRole() const
 }
 
 
-bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spriteLayer)
+bool Entity::build(PlayedScene *_scene, SourceEntity *_sourceEntity, Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spriteLayer)
 {
+
+    mSourceEntity = _sourceEntity;
 
     dbgSystem.addMessage("Building actor '" + mSourceEntity->sourceEntityCfg()->name + "' ...");
 
 
     mMapElement.init(_sprite, _vectorShape, _spriteLayer);
-    //mSprite = _sprite;
-    //mVectorShape = _vectorShape;
+
+    if(mMapElement.vectorShape()){
+        VectorShape *vs = mMapElement.vectorShape();
+        Vec2f pos = vs->pathPoints().front();
+        Vec2f dPosVertices = -pos;
+
+        Sprite *s = mMapElement.sprite();
+        if(s){  // situation when the vector shape is stored inside a composite sprite
+
+            assert(s->type()==SpriteType::COMPOSITE);
+            pos = s->absPosition();
+            dPosVertices.set(0.0f, 0.0f);
+        }
+        mSourceEntity->sourceBody()->addSourceFixtureFromMapVectorShape(vs, dPosVertices);
+
+    }else if(mMapElement.type()==EntityMapElement::Type::SPRITE){
+        mSourceEntity->_setSpriteLayer(mMapElement.sprite()->parentLayer());
+    }
+
+
+    if(mainShapeRole() != EntityRole::OBJECT_WITHOUT_SHAPE ){
+        mBody.reset(new Body(mSourceEntity->sourceBody(), this));
+    }
+
+
+    //----
+    if(mSourceEntity->sourceEntityCfg()->item.empty()==false){
+
+        SourceItem *si = _scene->sourceItemsStorage()->findSourceItem(mSourceEntity->sourceEntityCfg()->item);
+        if(si==nullptr){
+            return false;
+        }
+        si->buildParsingIdentifiers(si->itemDataIdentifiers(), "", 0);
+
+        mItem = _scene->sourceItemsStorage()->acquireAndSetupItem(si, nullptr);
+        //mItem = si->acquireAndSetupNewItem(nullptr);
+
+    }
+
+    //----
+    if(mSourceEntity->sourceEntityCfg()->relativeMover.empty()==false){
+        GfxObjectCfg *gfxObjectCfg = _scene->gfxObjectCfgStorage().getObject(mSourceEntity->sourceEntityCfg()->relativeMover);
+        if(gfxObjectCfg==nullptr){
+            return false;
+        }
+        if(gfxObjectCfg->type()!=GfxObjectType::RELATIVE_MOVER){
+            dbgSystem.addMessage("Gfx object '" + mSourceEntity->sourceEntityCfg()->relativeMover + "' is not of 'relativeMover' type!");
+            return false;
+        }
+        if(mMapElement.type()!=EntityMapElement::Type::SPRITE){
+            dbgSystem.addMessage("Gfx object '" + mSourceEntity->sourceEntityCfg()->relativeMover + "' san not be used in a non-sprite entity!");
+            return false;
+        }
+        mRelativeMover.reset(new GORelativeMover(static_cast<GORelativeMoverCfg*>(gfxObjectCfg), this, mMapElement.sprite()));
+
+        //if(mRelativeMover->initConnections(_scene)==false){
+        //    return false;
+        //}
+    }
+
+
+
+    //----
     mCurrentEngine = parentEntitySystem()->movementEnginesManager()->getDummyMovementEngine();       // initial engine
     mCurrentTaskEngine = parentEntitySystem()->taskEnginesManager()->getDummyTaskEngine();
 
@@ -292,6 +437,7 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
 
 
 
+
     EntityLogicStateCfg * taskHandlerCfg = sourceEntityCfg->taskControllerCfg;
     if(taskHandlerCfg){
 
@@ -326,31 +472,66 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
                 return false;
             }
         }
+    }
 
-        /*
-        if(taskHandlerCfg->mPointToPointMovementTaskCfgs.empty()==false){
-            PointToPointMovementTask *task = new PointToPointMovementTask();
-            mTasks.push_back(task);
-            task->dataObjects().resize(taskHandlerCfg->mPointToPointMovementTaskCfgs.size());
-            for(unsigned int i=0; i<taskHandlerCfg->mPointToPointMovementTaskCfgs.size(); i++){
-                PointToPointMovementTaskCfg * cfg = taskHandlerCfg->mPointToPointMovementTaskCfgs.at(i);
-                PointToPointMovementTaskData & data = task->dataObjects().at(i);
-                data.cfg = cfg;
-            }
+
+    AttributeSetCfg * attributeSetCfg = sourceEntityCfg->attributeSetCfg;
+    if(attributeSetCfg){
+        mAttributeSet.reset(new AttributeSet(attributeSetCfg));
+        if(mAttributeSet->build()==false){
+            return false;
         }
+    }
 
-        //----
-        if(taskHandlerCfg->mStatesCfgs.empty()==false){
-            mTaskController.reset(new EntityController(taskHandlerCfg, this));
-            if(mTaskController->build()==false){
+    AttributeLogicStateCfg * attributeControllerCfg = sourceEntityCfg->attributeControllerCfg;
+    if(attributeControllerCfg){
+        mAttributeController.reset(new LogicState(attributeControllerCfg, this));
+        if(mAttributeController->build(attributeControllerCfg)==false){
+            return false;
+        }
+    }
+
+    /*
+    if(mSourceEntity->sourceEntityCfg()->entityPhasesHandler.empty()==false){
+        SimpleStorage<EntityPhasesHandlerCfg> &storageCfg = mSourceEntity->sourceEntityCfg()->entitySystem->entityPhasesHandlerCfgStorage();
+        EntityPhasesHandlerCfg *ephCfg = storageCfg.getObject(mSourceEntity->sourceEntityCfg()->entityPhasesHandler);
+        if(ephCfg==nullptr){
+            return false;
+        }
+        EntityPhasesHandler *eph = new EntityPhasesHandler();
+        if(eph->build(_scene, ephCfg)==false){
+            return false;
+        }
+        mEntityPhasesHandler.reset(eph);
+    }
+    */
+    if(mSourceEntity->sourceEntityCfg()->animation.empty()==false){
+        if(mMapElement.type()==EntityMapElement::Type::SPRITE){
+            mCurrentAnimationInstance = ObtainAnimationInstance(mMapElement.sprite(), mSourceEntity->sourceEntityCfg()->animation);
+            if(mCurrentAnimationInstance==nullptr){
                 return false;
             }
         }
-        */
     }
 
 
 
+    //---
+    /*
+    if(mSourceEntity->sourceEntityCfg()->item.empty()==false){
+        SourceItem *si = _scene->sourceItemsStorage()->sourceItems().getObject(mSourceEntity->sourceEntityCfg()->item);
+        if(si==nullptr){
+            return false;
+        }
+        mItem.reset(new Item(si));
+
+        if(mItem->setup(true)==false){
+            return false;
+        }
+    }
+    */
+
+    //----
     if(sourceEntity()->sourceEntityCfg()->name=="fancyPlatformA_light"){
         DummyFunction();
     }
@@ -369,17 +550,50 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
     //
     //}else
     if(mainShapeRole()==EntityRole::ACTOR){
-        mSigMovableObject = new BitsetSignal(static_cast<unsigned char>(SignalID::MOVABLE_OBJECT));
+        mSigMovableObject = new BitsetSignal();
         mSigMovableObject->setName("mSigMovableObject");
+        mSigMovableObject->createExtraData();
         mSignals.push_back(mSigMovableObject);
 
+
         mSigBlockedDirection = new BitsetSignal();
+        mSigBlockedDirection->createExtraData()->namedValues = &gDirectionNamedValues;
         mSignals.push_back(mSigBlockedDirection);
 
     }else if(mainShapeRole()==EntityRole::MOVABLE_OBJECT){
         mSigBlockedDirection = new BitsetSignal();
+        mSigBlockedDirection->createExtraData()->namedValues = &gDirectionNamedValues;
         mSignals.push_back(mSigBlockedDirection);
 
+    }else if(mainShapeRole()==EntityRole::SOLID_BULLET){
+        mSigItemPickable = new BoolSignal("", true);
+        mSignals.push_back(mSigItemPickable);
+    }
+
+
+    mSignalStorage.setIdentifiers(&mSourceEntity->signalIdentifiers());
+
+    mSignalStorage.addSignal_query(&mContactTrigger, "CONTACT");
+    mSignalStorage.addSignal_setter(&mSigSpawnEntity, "SPAWN");
+    mSignalStorage.addSignal_query(&mSigSpawnedSingleEntity, "SPAWNED_ONCE");
+
+
+    if(mSigMovableObject){
+        SignalIdentifier *si = mSignalStorage.addSignal_query(mSigMovableObject, "MOVABLE_OBJECT");
+        if(si) si->bitflagsIdentifier = &gMovableObjectNamedValues_query;
+        si = mSignalStorage.addSignal_setter(mSigMovableObject, "MOVABLE_OBJECT");
+        if(si) si->bitflagsIdentifier = &gMovableObjectNamedValues_setter;
+    }
+    if(mSigBlockedDirection){
+        SignalIdentifier *si = mSignalStorage.addSignal_query(mSigBlockedDirection, "BLOCKED_DIRECTION");
+        if(si) si->bitflagsIdentifier = &gDirectionNamedValues;
+    }
+    if(mSigItemPickable){
+        mSignalStorage.addSignal_query(mSigItemPickable, "ITEM_PICKABLE");
+    }
+
+    if(mEntityController.get()){
+        mEntityController->collectSignals(mSignalStorage, "");
     }
 
 
@@ -394,6 +608,146 @@ bool Entity::build(Sprite *_sprite, VectorShape *_vectorShape, SpriteLayer *_spr
 }
 
 
+bool Entity::initConnections1(PlayedScene *_scene)
+{
+
+    /*
+    if(mainShapeRole() != EntityRole::OBJECT_WITHOUT_SHAPE ){
+
+        mBody.reset(new Body(mSourceEntity->sourceBody(), this));
+
+        Sprite *s = mMapElement.sprite();
+        VectorShape *vs = mMapElement.vectorShape();
+        SpriteLayer *sl = mMapElement.spriteLayer();
+
+        if(vs){
+
+            Vec2f pos = vs->pathPoints().front();
+            Vec2f dPosVertices = -pos;
+
+            if(s){
+                // situation when the vector shape is stored inside a composite sprite
+                assert(s->type()==SpriteType::COMPOSITE);
+                pos = s->absPosition();
+                dPosVertices.set(0.0f, 0.0f);
+            }
+
+            //assert(mainShapeRole()==EntityRole::PASSABLE_AREA);
+
+            mSourceEntity->sourceBody()->addSourceFixtureFromMapVectorShape(vs, dPosVertices);
+
+            //mBody->init(mSourceEntity->sourceBody(), this, pos, 0.0f);
+            mBody->createB2Body(pos, 0.0f);
+
+        }else if(s){
+
+            if(mSourceEntity->sourceEntityCfg()->name=="doorA"){
+                DummyFunction();
+            }
+
+            //mBody->init(mSourceEntity->sourceBody(), this, s->position(), s->rotation());
+            mBody->createB2Body(s->position(), s->rotation());
+
+        }else if(sl){
+
+            //mBody->init(mSourceEntity->sourceBody(), this, {0.0f, 0.0f}, 0.0f);
+            mBody->createB2Body({0.0f, 0.0f}, 0.0f);
+
+        }else{
+
+            assert(false);
+        }
+
+    }
+    */
+
+    if(mSourceEntity->name()=="iGamepad"){
+        DummyFunction();
+    }
+
+    addToWorld();
+
+    for(MovementEngine* be : mMovementEngines){
+        if(be->initDataObjectsConnections(_scene, this)==false){
+            return false;
+        }
+        if(be->type()==MovementEngineType::GROUND_MOVEMENT){
+            mStatusFlags |= EntityStatusFlags::GROUNDED_ON_START;
+        }
+    }
+
+
+    for(TaskEngine *at : mTasks){
+        if(at->initDataObjectsConnections(_scene, this)==false){
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+bool Entity::initConnections2(PlayedScene *_scene)
+{
+
+    for(MovementEngine* be : mMovementEngines){
+        be->collectSignalsForLUT(mSignalStorage);
+    }
+
+    for(TaskEngine *at : mTasks){
+        at->collectSignalsForLUT(mSignalStorage);
+    }
+
+    if(mCustomActs.empty()==false){
+        SignalIdentifier *si = mSignalStorage.addSignal_query(&mSigCustomAct, "CUSTOM_ACT");
+        if(si) si->intValuesIdentifier = &mCustomActs;
+    }
+
+    if( mSourceEntity->name() =="iGamepad"){
+        DummyFunction();
+    }
+
+    /*
+    if(mSourceEntity->sourceEntityCfg()->item.empty()==false){
+
+        SourceItem *si = _scene->sourceItemsStorage()->findSourceItem(mSourceEntity->sourceEntityCfg()->item);
+        if(si==nullptr){
+            return false;
+        }
+        si->buildParsingIdentifiers(si->itemDataIdentifiers(), "", 0);
+
+        mItem = _scene->sourceItemsStorage()->acquireAndSetupItem(si, nullptr);
+        //mItem = si->acquireAndSetupNewItem(nullptr);
+
+    }
+
+
+    if(mSourceEntity->sourceEntityCfg()->relativeMover.empty()==false){
+        GfxObjectCfg *gfxObjectCfg = _scene->gfxObjectCfgStorage().getObject(mSourceEntity->sourceEntityCfg()->relativeMover);
+        if(gfxObjectCfg==nullptr){
+            return false;
+        }
+        if(gfxObjectCfg->type()!=GfxObjectType::RELATIVE_MOVER){
+            dbgSystem.addMessage("Gfx object '" + mSourceEntity->sourceEntityCfg()->relativeMover + "' is not of 'relativeMover' type!");
+            return false;
+        }
+        if(mMapElement.type()!=EntityMapElement::Type::SPRITE){
+            dbgSystem.addMessage("Gfx object '" + mSourceEntity->sourceEntityCfg()->relativeMover + "' san not be used in a non-sprite entity!");
+            return false;
+        }
+        mRelativeMover.reset(new GORelativeMover(static_cast<GORelativeMoverCfg*>(gfxObjectCfg), this, mMapElement.sprite()));
+
+        if(mRelativeMover->initConnections(_scene)==false){
+            return false;
+        }
+    }
+    */
+
+
+    return true;
+}
+
+
 bool Entity::initConnections(PlayedScene *_scene)
 {
 
@@ -403,10 +757,31 @@ bool Entity::initConnections(PlayedScene *_scene)
 
     DbgSystem & tmpDbgSystem = dbgSystem;
 
-    if( mSourceEntity->name() =="fancyPlatformA_light"){
-        DummyFunction();
+
+
+    if(mRelativeMover.get()){
+        if(mRelativeMover->initConnections(_scene)==false){
+            return false;
+        }
     }
 
+    if(mSourceEntity->sourceEntityCfg()->mSpawnerCfg.get()){
+        if(mSourceEntity->sourceEntityCfg()->mSpawnerCfg->initConnections(_scene, mSourceEntity->sourceEntityCfg()->entitySystem)==false){
+            return false;
+        }
+    }
+
+
+    /*
+    if(mEntityPhasesHandler.get()){
+        if(mEntityPhasesHandler->initConnections(_scene)==false){
+            return false;
+        }
+    }
+    */
+
+
+    /*
     if(mainShapeRole() != EntityRole::OBJECT_WITHOUT_SHAPE ){
 
         mBody.reset(new Body());
@@ -455,42 +830,53 @@ bool Entity::initConnections(PlayedScene *_scene)
             assert(false);
         }
 
-
-
-
-
-
-        //if(mSprite){
-        //    mBody->init(mSourceEntity->sourceBody(), this, mSprite->position(), mSprite->rotation());
-
-        //}else if(mVectorShape){
-        //    mBody->init(mSourceEntity->sourceBody(), this, mSprite->position(), mSprite->rotation());
-
-        //}
     }
+    */
 
 
-
+    /*
     for(MovementEngine* be : mMovementEngines){
-
         if(be->initDataObjectsConnections(_scene, this)==false){
             return false;
         }
-
         if(be->type()==MovementEngineType::GROUND_MOVEMENT){
             mStatusFlags |= EntityStatusFlags::GROUNDED_ON_START;
         }
     }
+    for(MovementEngine* be : mMovementEngines){
+        be->collectSignalsForLUT(mSignalStorage);
+    }
+
+
 
     if(mSourceEntity->name()=="hero"){
         DummyFunction();
     }
+
+    if(sourceEntity()->name()=="fancyPlatformA"){
+        DummyFunction();
+    }
+
+
+    //----
+    for(TaskEngine *at : mTasks){
+        if(at->initDataObjectsConnections(_scene, this)==false){
+            return false;
+        }
+    }
+
+    for(TaskEngine *at : mTasks){
+        at->collectSignalsForLUT(mSignalStorage);
+    }
+    */
+
 
     //----
     if(mEntityController.get() != nullptr){
         if(mEntityController->initConnections(_scene)==false){
             return false;
         }
+
 
         //--- set start state
         LogicState *startState = mEntityController->findChildState(sourceEntity()->sourceEntityCfg()->startState, false);
@@ -512,27 +898,6 @@ bool Entity::initConnections(PlayedScene *_scene)
         }
     }
 
-
-
-    //----
-
-    for(TaskEngine *at : mTasks){
-
-        if(at->initDataObjectsConnections(_scene, this)==false){
-            return false;
-        }
-
-        /*
-        if(at->type()==TaskType::POINT_TO_POINT_TRANSPORTER){
-            PointToPointMovementTask *t = static_cast<PointToPointMovementTask*>(at);
-            for(PointToPointMovementTaskData& d : t->dataObjects()){
-                if(d.initConnections(_scene, this)==false){
-                    return false;
-                }
-            }
-        }
-        */
-    }
 
     //----
     if(mTaskController.get() != nullptr){
@@ -556,8 +921,21 @@ bool Entity::initConnections(PlayedScene *_scene)
     }
 
 
+    //----
+    if(mAttributeController.get() != nullptr){
+        if(mAttributeController->initConnections(_scene)==false){
+            return false;
+        }
+    }
 
+    mInitialized = true;
 
+    //---
+    //if(mItem){
+    //    if(mItem->initConnections(_scene)==false){
+    //        return false;
+    //    }
+    //}
 
     /*
     if(mAiController.get() != nullptr){
@@ -575,6 +953,51 @@ bool Entity::initConnections(PlayedScene *_scene)
     //----
     dbgSystem.removeLastMessage();
     return true;
+
+}
+
+
+void Entity::addToWorld()
+{
+
+    if(mainShapeRole() == EntityRole::OBJECT_WITHOUT_SHAPE ){
+        return;
+    }
+
+    assert(mBody->B2Body()==nullptr);
+
+
+    Sprite *s = mMapElement.sprite();
+    VectorShape *vs = mMapElement.vectorShape();
+    SpriteLayer *sl = mMapElement.spriteLayer();
+
+    if(vs){
+        Vec2f pos = vs->pathPoints().front();
+        if(s){  // situation when the vector shape is stored inside a composite sprite
+            pos = s->absPosition();
+        }
+        mBody->createB2Body(pos, 0.0f);
+
+    }else if(s){
+        mBody->createB2Body(s->position(), s->rotation());
+
+    }else if(sl){
+        mBody->createB2Body({0.0f, 0.0f}, 0.0f);
+
+    }else{
+        assert(false);
+    }
+
+}
+
+
+void Entity::removeFromWorld()
+{
+
+    mBody->destroyB2Body();
+    if(mRelativeMover.get()){
+        mRelativeMover->finish();
+    }
 
 }
 
@@ -643,6 +1066,9 @@ bool Entity::startingPhaseUpdate()
 
     bool doStartingPhase = false;
 
+    if(mSourceEntity->name()=="iGamepad"){
+        DummyFunction();
+    }
     //mContactTrigger.preUpdate_postBox2dStep();
 
     if(mBody){
@@ -699,7 +1125,7 @@ void Entity::preUpdate_resolveContacts()
     }
 
 
-    if(mSourceEntity->name()=="hero"){
+    if(mSourceEntity->name()=="iGamepad"){
         DummyFunction();
     }
 
@@ -1148,7 +1574,6 @@ void Entity::preUpdate_resolveContacts_part2()
 }
 
 
-
 void Entity::checkGroundContactViaContactSignal()
 {
 
@@ -1207,7 +1632,81 @@ void Entity::checkGroundContactViaContactSignal()
 }
 
 
+void Entity::spawnEntity(SourceEntity *_sourceEntity)
+{
 
+    //if(_sourceEntity->sourceEntityCfg()->spawnedOnce){
+    //    if(StdVector::contains(_sourceEntity->spawners(), this)){
+    //        return;
+    //    }
+    //}
+
+
+    Entity *e = _sourceEntity->entityPool().acquireObject();
+    mSourceEntity->sourceEntityCfg()->entitySystem->spawnedEntities().push_back(e);
+    Sprite *sprite = nullptr;
+
+    Vec2f offset{0.0f, 0.0f};
+    SpawnerCfg *spawnerCfg = mSourceEntity->sourceEntityCfg()->mSpawnerCfg.get();
+    if(spawnerCfg){
+        MovementEngineCfg *engineCfg = mCurrentEngine->currentCfg();
+        offset = spawnerCfg->getOffsetForSpawnedEntity(_sourceEntity, engineCfg, mDirection);
+    }
+    //if(mSourceEntity->sourceEntityCfg()->mSpawnerCfg.get()){
+    //    offset = mSourceEntity->sourceEntityCfg()->mSpawnerCfg->getOffsetForSpawnedEntity(_sourceEntity, mDirection);
+    //}
+
+    if(e->initialized()==false){
+
+        PlayedScene *scene = _sourceEntity->sourceEntityCfg()->entitySystem->parentPlayerScene();
+        sprite = Sprite::makePassiveSprite(_sourceEntity->sourceSprite());
+        sprite->_setParentLayer(_sourceEntity->spriteLayer());
+        sprite->setPosition(mMapElement.sprite()->position() + offset);
+        sprite->initEngineObjects();
+        _sourceEntity->spriteLayer()->addSprite(sprite);
+
+        if(e->build(scene, _sourceEntity, sprite, nullptr, nullptr)==false){
+            DummyFunction();
+        }
+        if(e->initConnections1(scene)==false){
+            DummyFunction();
+        }
+        if(e->initConnections2(scene)==false){
+            DummyFunction();
+        }
+        if(e->initConnections(scene)==false){
+            DummyFunction();
+        }
+
+    }else{
+        sprite = e->mapElement().sprite();
+        sprite->setPosition(mMapElement.sprite()->position() + offset);
+        //sprite->setVisible(true);
+        sprite->setVisible(true);
+        sprite->setAlpha(1.0f);
+        e->mapElement().addToMap();
+        e->addToWorld();
+        //--- reset
+        e->mBlockedDirections = 0;
+        e->mContactPointsCount = 0;
+    }
+
+    if(_sourceEntity->sourceEntityCfg()->spawnedOnce){
+        //_sourceEntity->spawners().push_back(this);
+        mSigSpawnedSingleEntity.setValue(_sourceEntity);
+    }
+
+    if(e->mRelativeMover.get()){
+        e->mRelativeMover->start(sprite->position(), mDirection, this);
+        if(e->itemPickableSignal()){
+            e->itemPickableSignal()->setValue(false);
+        }
+        if(e->mRelativeMover->currentAnimationInstance()){
+            e->mCurrentAnimationInstance = e->mRelativeMover->currentAnimationInstance();
+        }
+    }
+
+}
 
 
 void Entity::preUpdate(UpdateMode &_updateMode)
@@ -1217,11 +1716,19 @@ void Entity::preUpdate(UpdateMode &_updateMode)
         DummyFunction();
     }
 
-
-
-
     if(mSourceEntity->sourceEntityCfg()->category->mB2BodyType==b2BodyType::b2_dynamicBody){
         preUpdate_resolveContacts_part2();
+    }
+
+
+    if(mSigSpawnEntity.value()){
+        SourceEntity* se = dynamic_cast<SourceEntity*>(mSigSpawnEntity.value());
+        assert(se);
+        //if(se){
+           // mSourceEntity->sourceEntityCfg()->entitySystem->entityLifespanHandler().addSourceEntityForSpawning(se);
+        //}
+        mSigSpawnEntity.reset();
+        spawnEntity(se);
     }
 
 
@@ -1242,7 +1749,6 @@ void Entity::preUpdate(UpdateMode &_updateMode)
                 }
             }
         }
-
     }
 
     //mContactTrigger.preUpdate_postBox2dStep();
@@ -1281,11 +1787,11 @@ void Entity::preUpdate_CheckActorGrouping()
 }
 
 
-
 void Entity::update_Controller(UpdateMode &_updateMode)
 {
 
     //mUpdateMode = _updateMode;
+
 
     if(sourceEntity()->name()=="box"){
         DummyFunction();
@@ -1308,8 +1814,6 @@ void Entity::update_Controller(UpdateMode &_updateMode)
         mEup.prevEngineVelocity = mEngineVelocity;
         mEup.entity = this;
     }
-
-
 
 
 
@@ -1372,27 +1876,41 @@ void Entity::update_Controller(UpdateMode &_updateMode)
                 DummyFunction();
             }
 
+            //---
+            //for(Signal *s : mUpdateSignals){
+            //    if(s->type()==SignalType::BOOL){
+            //        UpdatedBoolSignal* ces = static_cast<UpdatedBoolSignal*>(s);
+            //       ces->update();
+            //    }
+            //}
+
             EntityCustomLogicState *stateData = dynamic_cast<EntityCustomLogicState *>(currentState->customState());  assert(stateData);
             mCurrentAnimationInstance = stateData->animationInstance();
-            if(mCurrentAnimationInstance){
-                int aniPlayerFlags = 0;
-                if(mAnimationPlayer.GetAnimationInstance() != mCurrentAnimationInstance){
-                    aniPlayerFlags = mAnimationPlayer.Play(mCurrentAnimationInstance);
-                 }else{
-                    aniPlayerFlags = mAnimationPlayer.Update();
-                }
-
-                if(aniPlayerFlags & AnimationPlayerFlags::ANIMATED_PROPERTIES_CHANGED){
-                    mCurrentAnimationInstance->UpdateAnimatedSprites(true);
-                }
-            }
         }
-
-
     }
 
-}
 
+    if(mRelativeMover.get() && mRelativeMover->isActive()){
+        DummyFunction();
+    }
+
+    if(mCurrentAnimationInstance){
+
+
+        int aniPlayerFlags = 0;
+        if(mAnimationPlayer.GetAnimationInstance() != mCurrentAnimationInstance){
+            aniPlayerFlags = mAnimationPlayer.Play(mCurrentAnimationInstance);
+         }else{
+            aniPlayerFlags = mAnimationPlayer.Update();
+        }
+
+        if(aniPlayerFlags & AnimationPlayerFlags::ANIMATED_PROPERTIES_CHANGED){
+            mCurrentAnimationInstance->UpdateAnimatedSprites(true);
+        }
+    }
+
+
+}
 
 
 void Entity::update_Movement(UpdateMode &_updateMode)
@@ -1404,14 +1922,16 @@ void Entity::update_Movement(UpdateMode &_updateMode)
     if(sourceEntity()->name()=="hero"){
         DummyFunction();
 
-        if(mSigMovableObject->active(MovableObject::MOVED)){
-            print("MovableObject 1");
-        }else{
-            print("MovableObject   0");
-        }
+        //if(mSigMovableObject->active(MovableObject::MOVED)){
+        //    print("MovableObject 1");
+        //}else{
+        //    print("MovableObject   0");
+        //}
 
     }
-
+    if(sourceEntity()->name()=="iGamepad"){
+        DummyFunction();
+    }
 
 
     if(mBody.get()==nullptr){
@@ -1624,6 +2144,42 @@ void Entity::update_Movement(UpdateMode &_updateMode)
     }
     */
 
+    if(mRelativeMover.get()){
+        if(mRelativeMover->isActive()){
+            Vec2f velocity = mRelativeMover->update(mEup.timeStep, mMapElement.sprite()->position());
+            mVelocity = gWorldInfo.pixelsToMeters(velocity);
+
+            //if(mBlockedDirections & static_cast<int>(Direction::DOWN)){
+            if(mBlockedDirections != static_cast<int>(Direction::NONE)){
+                 mRelativeMover->finish();
+
+            }
+
+            if(mRelativeMover->state()==MoverState::IDLE){
+                if(mSigItemPickable){
+                    mSigItemPickable->setValue_onNextFrame(true);
+                }
+                if(StdVector::contains(mRelativeMover->tags(), std::string("REMOVE"))){
+                    mSourceEntity->sourceEntityCfg()->entitySystem->entityLifespanHandler().addEntityForErase(this);
+                    Entity *followedEntity = dynamic_cast<Entity*>(mRelativeMover->followedObject());
+                    if(followedEntity && followedEntity->spawnedSingleEntitySignal().value()==mSourceEntity){
+                        followedEntity->spawnedSingleEntitySignal().reset();
+                    }
+                }
+            }
+
+            //if(mContactTrigger.findEntityContactSignalWithEntityRoleA(EntityRole::SOLID_BULLET)){
+            //}
+        }else{
+            if((mBlockedDirections & static_cast<int>(Direction::DOWN))==0){
+                mVelocity.y = -8.0f;
+            }else{
+                mVelocity.y = -5.0f;
+            }
+        }
+    }
+
+
     b->SetLinearVelocity(mVelocity);
     b->SetAngularVelocity(mAngularVelocity);
 
@@ -1643,7 +2199,6 @@ void Entity::update_Movement(UpdateMode &_updateMode)
 
 
 }
-
 
 
 void Entity::postUpdate(UpdateMode &_updateMode)
@@ -1674,7 +2229,6 @@ void Entity::postUpdate(UpdateMode &_updateMode)
     //mCurrentEngine->postUpdateSignals();
     //mCurrentTaskEngine->postUpdateSignals();
 }
-
 
 
 void Entity::updateSpriteTransform()
@@ -1751,7 +2305,6 @@ bool Entity::startTaskEngine(TaskEngineData *_taskEngineData)
 }
 
 
-
 MovementEngine* Entity::getMovementEngine(MovementEngineFactory * _factory)
 {
 
@@ -1804,6 +2357,17 @@ TaskEngineData* Entity::getTaskData(const std::string &_name)
 
     return nullptr;
 }
+
+
+int Entity::addCustomActName(const std::string &_name)
+{
+
+    int id = mCustomActs.size()+1;
+    mCustomActs.push_back({_name, id});
+
+    return id;
+}
+
 
 
 /*
@@ -1994,7 +2558,8 @@ void Entity::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPat
 
     if(_psp.signalNamePartAt(0)=="MOVABLE_OBJECT"){
         if(mSigMovableObject){
-            _psp.obtainValue(_signalQuery, mSigMovableObject, &gMovableObjectNamedValues_query);
+            mSigMovableObject->extraData()->namedValues = &gMovableObjectNamedValues_query;
+            _psp.obtainValue(_signalQuery, mSigMovableObject);
 
             //_signalQuery.mSignal = mSigMovableObject;
 
@@ -2012,7 +2577,7 @@ void Entity::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPat
 
     }else if(_psp.signalNamePartAt(0)=="BLOCKED_DIRECTION"){
          if(mSigBlockedDirection){
-             _psp.obtainValue(_signalQuery, mSigBlockedDirection, &gDirectionNamedValues);
+             _psp.obtainValue(_signalQuery, mSigBlockedDirection);
 
              //_signalQuery.mSignal = mSigBlockedDirection;
 
@@ -2030,7 +2595,7 @@ void Entity::obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPat
     }
 
 
-    if(_signalQuery.mSignal==nullptr &&_setErrorMessage){
+    if(_signalQuery.signal()==nullptr &&_setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown!");
     }
 }
@@ -2073,7 +2638,8 @@ void Entity::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignal
     // signals stroed in entity
     if(_psp.signalNamePartAt(0)=="MOVABLE_OBJECT"){
         if(mSigMovableObject){
-            _psp.obtainValue(_signalSetter, mSigMovableObject, &gMovableObjectNamedValues_setter);
+            mSigMovableObject->extraData()->namedValues = &gMovableObjectNamedValues_setter;
+            _psp.obtainValue(_signalSetter, mSigMovableObject);
 
             //_signalSetter.mSignal = mSigMovableObject;
 
@@ -2095,7 +2661,7 @@ void Entity::obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignal
 
     }
 
-    if(_signalSetter.mSignal==nullptr &&_setErrorMessage){
+    if(_signalSetter.signal()==nullptr &&_setErrorMessage){
         dbgSystem.addMessage("Get signal '" + _psp.signalFullName() + "' error! The signal is unknown or not available for setting it!");
     }
 
@@ -2152,6 +2718,9 @@ TaskEngine* Entity::_obtainTaskEngineForSignal(const std::string &engineCfgName,
     return engine;
 
 }
+
+
+
 
 
 }

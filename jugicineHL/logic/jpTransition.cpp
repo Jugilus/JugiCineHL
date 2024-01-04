@@ -102,7 +102,7 @@ bool TransitionMember::initConnections(PlayedScene *_scene)
     //}
 
     if(mSpritesObject==nullptr){
-        mSpritesObject = dynamic_cast<GSpritesObject*>(_scene->gfxObjectsGroup()->getGfxObject(mSpritesObjectName));
+        //mSpritesObject = dynamic_cast<GSpritesObject*>(_scene->gfxObjectsGroup()->getGfxObject(mSpritesObjectName));
     }
     if(mSpritesObject==nullptr){
         return false;
@@ -140,9 +140,9 @@ std::vector<void*>& TransitionMember::objects()
 }
 
 
-GfxObjectType TransitionMember::objectType()
+GSpritesObjectType TransitionMember::objectType()
 {
-    return mSpritesObject->objectType();
+    return mSpritesObject->spritesObjectType();
 }
 
 
@@ -179,20 +179,20 @@ void TransitionMember::execute(TransitionType _transitionType)
     }else{
 
         std::vector<void*> &objects = mSpritesObject->objects();
-        GfxObjectType objectType =  mSpritesObject->objectType();
+        GSpritesObjectType objectType =  mSpritesObject->spritesObjectType();
 
         // If no transitions are defined we set visible property!
 
         bool visible = (mTransitionType==TransitionType::OUT)? false : true;
 
-        if(objectType==GfxObjectType::SPRITE){
+        if(objectType==GSpritesObjectType::SPRITE){
 
             for(void* obj : objects){
                 Sprite * sprite = static_cast<Sprite*>(obj);
                 sprite->setVisible(visible);
             }
 
-        }else if(objectType==GfxObjectType::SPRITE_LAYER){
+        }else if(objectType==GSpritesObjectType::SPRITE_LAYER){
 
             for(void* obj : objects){
                 SpriteLayer * spriteLayer = static_cast<SpriteLayer*>(obj);
@@ -208,7 +208,7 @@ void TransitionMember::execute(TransitionType _transitionType)
                 //}
             }
 
-        }else if(objectType==GfxObjectType::MAP){
+        }else if(objectType==GSpritesObjectType::MAP){
 
             for(void* obj : objects){
                 Map * map = static_cast<Map*>(obj);
@@ -263,26 +263,26 @@ void TransitionMember::onTransitionFinished()
     if(mSkipOnTransitionFinished) return;
 
     std::vector<void*> &objects = mSpritesObject->objects();
-    GfxObjectType objectType =  mSpritesObject->objectType();
+    GSpritesObjectType objectType =  mSpritesObject->spritesObjectType();
 
     bool visible = (mTransitionType==TransitionType::IN);
 
 
-    if(objectType==GfxObjectType::SPRITE){
+    if(objectType==GSpritesObjectType::SPRITE){
 
         for(void* obj : objects){
             Sprite * s = static_cast<Sprite*>(obj);
             s->setVisible(visible);
         }
 
-    }else if(objectType==GfxObjectType::SPRITE_LAYER){
+    }else if(objectType==GSpritesObjectType::SPRITE_LAYER){
 
         for(void* obj : objects){
             SpriteLayer * sl = static_cast<SpriteLayer*>(obj);
             sl->setVisible(visible);
         }
 
-    }else if(objectType==GfxObjectType::MAP){
+    }else if(objectType==GSpritesObjectType::MAP){
 
     }
 

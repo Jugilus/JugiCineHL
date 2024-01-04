@@ -35,6 +35,7 @@ public:
     bool initCfg(PlayedScene *_scene, const pugi::xml_node &_node) override;
     bool buildObjects(PlayedScene *_scene) override;
     bool initConnections(PlayedScene *_scene) override;
+    bool initConnections_setParameters(const std::string &parameters, PlayedScene *_scene) override;
 
 
     void start() override;
@@ -51,7 +52,7 @@ public:
 
     void setWidgetsToInitialState();
 
-    void updateWidgets();
+    void updateWidgets(Map *_map);
 
     void addWidget(GuiWidget* _widget){ mWidgets.push_back(_widget); }
 

@@ -46,7 +46,7 @@ int GetTransporterStatusFromString(const std::string &_type);
 
 //int GetTransporterStatusFromString_signalSetter(const std::string &_type);
 
-extern std::vector<NamedValue>gTransporterStatusNamedValues;
+extern std::vector<std::pair<std::string, unsigned int>>gTransporterStatusNamedValues;
 
 //------------------------------------------------------------------------------------
 
@@ -180,6 +180,7 @@ public:
 
     void createDataObjects(std::vector<TaskEngineCfg*> &_cfgs) override;
     bool initDataObjectsConnections(PlayedScene *_scene, Entity *_actor) override;
+    void collectSignalsForLUT(SignalStorage &_storage) override;
 
     TaskEngineData* getData(const std::string &_name, bool _setErrorMessage) override;
     TaskEngineData* currentData() override { return mCurrentData;}

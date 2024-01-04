@@ -173,7 +173,8 @@ bool UserSelector::initConnections(PlayedScene *_scene)
     mConfirmDeleteUserComponentData->mTextSegments.push_back(confirmDeleteTextSegment);
 
     //----
-    mTSActiveUserName= dynamic_cast<GTextSprite*>(mParentPlayerScene->gfxObjectsGroup()->getGfxObject("activeUserName"));
+    //mTSActiveUserName= dynamic_cast<GTextSprite*>(mParentPlayerScene->gfxObjectsGroup()->getGfxObject("activeUserName"));
+    mTSActiveUserName = dynamic_cast<GTextSprite*>(mParentPlayerScene->gfxObjectStorage().getObject("activeUserName"));
     if(mTSActiveUserName==nullptr){
         return false;
     }

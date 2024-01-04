@@ -122,7 +122,7 @@ bool TranslateInOutOfScreen::initConnections(PlayedScene *_scene)
 {
 
     std::vector<void*> &objects = mParentTransitionMember->objects();
-    GfxObjectType objectTypeId = mParentTransitionMember->objectType();
+    GSpritesObjectType objectTypeId = mParentTransitionMember->objectType();
 
 
     if(mTransitionType==TransitionType::OUT){
@@ -148,14 +148,14 @@ bool TranslateInOutOfScreen::initConnections(PlayedScene *_scene)
     BoundingBoxFloat bb;
     bb.setInitialSize();
 
-    if(objectTypeId==GfxObjectType::SPRITE){
+    if(objectTypeId==GSpritesObjectType::SPRITE){
 
         for(void* obj : objects){
             Sprite * s = static_cast<Sprite*>(obj);
             bb.Unite(s->boundingBox());
         }
 
-    }else if(objectTypeId==GfxObjectType::SPRITE_LAYER){
+    }else if(objectTypeId==GSpritesObjectType::SPRITE_LAYER){
 
         for(void* obj : objects){
             SpriteLayer * spriteLayer = static_cast<SpriteLayer*>(obj);
@@ -164,7 +164,7 @@ bool TranslateInOutOfScreen::initConnections(PlayedScene *_scene)
         }
 
 
-    }else if(objectTypeId==GfxObjectType::MAP){
+    }else if(objectTypeId==GSpritesObjectType::MAP){
 
 
     }
@@ -228,7 +228,7 @@ void TranslateInOutOfScreen::onTransitionStarted()
 {
 
     std::vector<void*> &mObjects = mParentTransitionMember->objects();
-    GfxObjectType mObjectType = mParentTransitionMember->objectType();
+    GSpritesObjectType mObjectType = mParentTransitionMember->objectType();
 
 
     Vec2f translation(0.0f, 0.0f);
@@ -239,7 +239,7 @@ void TranslateInOutOfScreen::onTransitionStarted()
     }
 
 
-    if(mObjectType==GfxObjectType::SPRITE){
+    if(mObjectType==GSpritesObjectType::SPRITE){
 
         for(void* obj : mObjects){
             Sprite * s = static_cast<Sprite*>(obj);
@@ -249,7 +249,7 @@ void TranslateInOutOfScreen::onTransitionStarted()
             s->setVisible(true);
         }
 
-    }else if(mObjectType==GfxObjectType::SPRITE_LAYER){
+    }else if(mObjectType==GSpritesObjectType::SPRITE_LAYER){
 
         for(void* obj : mObjects){
             SpriteLayer * sl = static_cast<SpriteLayer*>(obj);
@@ -264,7 +264,7 @@ void TranslateInOutOfScreen::onTransitionStarted()
             sl->setVisible(true);
         }
 
-    }else if(mObjectType==GfxObjectType::MAP){
+    }else if(mObjectType==GSpritesObjectType::MAP){
 
 
     }
@@ -294,7 +294,7 @@ void TranslateInOutOfScreen::update()
 {
 
     std::vector<void*> &mObjects = mParentTransitionMember->objects();
-    GfxObjectType mObjectType = mParentTransitionMember->objectType();
+    GSpritesObjectType mObjectType = mParentTransitionMember->objectType();
 
 
     if(mStatus==ActionStatus::IDLE) return;
@@ -327,7 +327,7 @@ void TranslateInOutOfScreen::update()
         }
 
 
-        if(mObjectType==GfxObjectType::SPRITE){
+        if(mObjectType==GSpritesObjectType::SPRITE){
 
             for(void* obj : mObjects){
                 Sprite * s = static_cast<Sprite*>(obj);
@@ -335,7 +335,7 @@ void TranslateInOutOfScreen::update()
                 s->updatePosition();
             }
 
-        }else if(mObjectType==GfxObjectType::SPRITE_LAYER){
+        }else if(mObjectType==GSpritesObjectType::SPRITE_LAYER){
 
             for(void* obj : mObjects){
                 SpriteLayer * sl = static_cast<SpriteLayer*>(obj);
@@ -347,7 +347,7 @@ void TranslateInOutOfScreen::update()
                 }
             }
 
-        }else if(mObjectType==GfxObjectType::MAP){
+        }else if(mObjectType==GSpritesObjectType::MAP){
 
 
         }
@@ -469,10 +469,10 @@ void AlphaFadeInOut::onTransitionStarted()
 {
 
     std::vector<void*> &objects = mParentTransitionMember->objects();
-    GfxObjectType objectTypeId = mParentTransitionMember->objectType();
+    GSpritesObjectType objectTypeId = mParentTransitionMember->objectType();
 
 
-    if(objectTypeId==GfxObjectType::SPRITE){
+    if(objectTypeId==GSpritesObjectType::SPRITE){
 
         for(void* obj : objects){
             Sprite * s = static_cast<Sprite*>(obj);
@@ -483,7 +483,7 @@ void AlphaFadeInOut::onTransitionStarted()
             s->setVisible(true);
         }
 
-    }else if(objectTypeId==GfxObjectType::SPRITE_LAYER){
+    }else if(objectTypeId==GSpritesObjectType::SPRITE_LAYER){
 
         for(void* obj : objects){
             SpriteLayer * sl = static_cast<SpriteLayer*>(obj);
@@ -501,7 +501,7 @@ void AlphaFadeInOut::onTransitionStarted()
             sl->setVisible(true);
         }
 
-    }else if(objectTypeId==GfxObjectType::MAP){
+    }else if(objectTypeId==GSpritesObjectType::MAP){
 
 
     }
@@ -537,7 +537,7 @@ void AlphaFadeInOut::update()
 
 
     std::vector<void*> &objects = mParentTransitionMember->objects();
-    GfxObjectType objectTypeId = mParentTransitionMember->objectType();
+    GSpritesObjectType objectTypeId = mParentTransitionMember->objectType();
 
 
     if(mStatus==ActionStatus::STARTED){
@@ -560,7 +560,7 @@ void AlphaFadeInOut::update()
         //---
         float alpha = mTween.Update();
 
-        if(objectTypeId==GfxObjectType::SPRITE){
+        if(objectTypeId==GSpritesObjectType::SPRITE){
 
             for(void* obj : objects){
                 Sprite * s = static_cast<Sprite*>(obj);
@@ -568,7 +568,7 @@ void AlphaFadeInOut::update()
                 s->setAlpha(s->alpha(false));
             }
 
-        }else if(objectTypeId==GfxObjectType::SPRITE_LAYER){
+        }else if(objectTypeId==GSpritesObjectType::SPRITE_LAYER){
 
             for(void* obj : objects){
                 SpriteLayer * sl = static_cast<SpriteLayer*>(obj);
@@ -580,7 +580,7 @@ void AlphaFadeInOut::update()
                 }
             }
 
-        }else if(objectTypeId==GfxObjectType::MAP){
+        }else if(objectTypeId==GSpritesObjectType::MAP){
 
 
         }
@@ -668,7 +668,7 @@ void ScaleInOut::onTransitionStarted()
 {
 
     std::vector<void*> &objects = mParentTransitionMember->objects();
-    GfxObjectType objectTypeId = mParentTransitionMember->objectType();
+    GSpritesObjectType objectTypeId = mParentTransitionMember->objectType();
 
 
     Vec2f initialScale;
@@ -681,7 +681,7 @@ void ScaleInOut::onTransitionStarted()
     }
 
 
-    if(objectTypeId==GfxObjectType::SPRITE){
+    if(objectTypeId==GSpritesObjectType::SPRITE){
 
         for(void* obj : objects){
             Sprite * s = static_cast<Sprite*>(obj);
@@ -691,7 +691,7 @@ void ScaleInOut::onTransitionStarted()
             s->setVisible(true);
         }
 
-    }else if(objectTypeId==GfxObjectType::SPRITE_LAYER){
+    }else if(objectTypeId==GSpritesObjectType::SPRITE_LAYER){
 
         for(void* obj : objects){
             SpriteLayer * sl = static_cast<SpriteLayer*>(obj);
@@ -705,7 +705,7 @@ void ScaleInOut::onTransitionStarted()
             sl->setVisible(true);
         }
 
-    }else if(objectTypeId==GfxObjectType::MAP){
+    }else if(objectTypeId==GSpritesObjectType::MAP){
 
 
     }
@@ -740,7 +740,7 @@ void ScaleInOut::update()
     if(mStatus==ActionStatus::IDLE) return;
 
     std::vector<void*> &objects = mParentTransitionMember->objects();
-    GfxObjectType objectTypeId = mParentTransitionMember->objectType();
+    GSpritesObjectType objectTypeId = mParentTransitionMember->objectType();
 
 
     if(mStatus==ActionStatus::STARTED){
@@ -765,7 +765,7 @@ void ScaleInOut::update()
         scale.x = mTweenX.Update();
         scale.y = mTweenY.Update();
 
-        if(objectTypeId==GfxObjectType::SPRITE){
+        if(objectTypeId==GSpritesObjectType::SPRITE){
 
             for(void* obj : objects){
                 Sprite * s = static_cast<Sprite*>(obj);
@@ -773,7 +773,7 @@ void ScaleInOut::update()
                 s->setScale(s->scale(false));
             }
 
-        }else if(objectTypeId==GfxObjectType::SPRITE_LAYER){
+        }else if(objectTypeId==GSpritesObjectType::SPRITE_LAYER){
 
             for(void* obj : objects){
                 SpriteLayer * sl = static_cast<SpriteLayer*>(obj);
@@ -785,7 +785,7 @@ void ScaleInOut::update()
                 }
             }
 
-        }else if(objectTypeId==GfxObjectType::MAP){
+        }else if(objectTypeId==GSpritesObjectType::MAP){
 
 
         }

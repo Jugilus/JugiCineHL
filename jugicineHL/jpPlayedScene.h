@@ -31,6 +31,12 @@ class OverlayState;
 struct SceneLogicStateCfg;
 //class EntitySystem;
 //class SourceEntitiesGroup;
+class SourceItemsStorage;
+class FunctionStorage;
+struct GfxObjectCfg;
+class GfxObject;
+
+
 
 
 
@@ -100,14 +106,16 @@ public:
 
     //---
     ComponentsGroup* componentsGroup(){ return mComponentsGroup.get(); }
-    //ComponentsGroup* overlayComponentsGroup(){ return mOverlayComponentsGroup.get(); }
-    GfxObjectsGroup* gfxObjectsGroup(){ return mGfxObjectsGroup.get(); }
-    //SourceEntitiesGroup* sourceEntitiesGroup(){ return mSourceEntitiesGroup.get(); }
+    //GfxObjectsGroup* gfxObjectsGroup(){ return mGfxObjectsGroup.get(); }
+    SimpleStorage<GfxObjectCfg*> & gfxObjectCfgStorage(){ return mGfxObjectCfgStorage; }
+    SimpleStorage<GfxObject*> & gfxObjectStorage(){ return mGfxObjectStorage; }
     AnimationManager* animationManager(){ return mAnimationManager.get(); }
 
     GuiSystem * guiSystem();
 
     CompoundStorage* compoundStorage(){ return mCompoundStorage.get(); }
+    SourceItemsStorage* sourceItemsStorage(){ return mSourceItemsStorage.get(); }
+    //FunctionStorage* functionStorage(){ return mFunctionStorage.get(); }
 
     //SimpleStorage<SceneLogicStateCfg*> & initStateCfgStorage(){ return mInitStateCfgStorage; }
     //SimpleStorage<SceneLogicStateCfg*> & startStateCfgStorage(){ return mStartStateCfgStorage; }
@@ -118,6 +126,9 @@ public:
     SceneLogicStateCfg* updateStateCfg(){ return mUpdateStateCfg.get(); }
 
     std::vector<OverlayState*> & overlayStates(){ return mOverlayStates;}
+
+    bool loadScene_LogicData(const std::string &sceneFilePath);
+    bool preloadScene_countObjects(const std::string &sceneFilePath);
 
 private:
     InitializationStatus mInitializationStatus = InitializationStatus::NONE;
@@ -148,11 +159,16 @@ private:
 
     std::unique_ptr<ComponentsGroup> mComponentsGroup;
     //std::unique_ptr<ComponentsGroup> mOverlayComponentsGroup;
-    std::unique_ptr<GfxObjectsGroup> mGfxObjectsGroup;
+    //std::unique_ptr<GfxObjectsGroup> mGfxObjectsGroup;
+    SimpleStorage<GfxObjectCfg*>mGfxObjectCfgStorage{"GfxObjectCfgStorage"};
+    SimpleStorage<GfxObject*>mGfxObjectStorage{"GfxObjectStorage"};
 
     std::unique_ptr<AnimationManager>mAnimationManager;
 
     std::unique_ptr<CompoundStorage>mCompoundStorage;
+
+    std::unique_ptr<SourceItemsStorage>mSourceItemsStorage;
+    //std::unique_ptr<FunctionStorage>mFunctionStorage;
 
     //SimpleStorage<SceneLogicStateCfg*>mInitStateCfgStorage;
     //SimpleStorage<SceneLogicStateCfg*>mStartStateCfgStorage;
@@ -164,6 +180,13 @@ private:
 
     //WidgetManager * mWidgetManager = nullptr;
     std::vector<OverlayState*>mOverlayStates;
+
+
+    //-----
+    std::vector<std::string>mAddGfxObjects;
+
+
+
 
 };
 

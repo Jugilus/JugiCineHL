@@ -23,8 +23,8 @@ class AnimationInstance;
 class Entity;
 class MovementEngineFactory;
 class MovementEngine;
-struct SignalQuery;
-struct SignalSetter;
+class SignalQuery;
+class SignalSetter;
 class Signal;
 class ParsedSignalPath;
 //struct EntitySignalStrings;
@@ -52,6 +52,8 @@ struct MovementEngineCfg
     virtual bool initCfg(const pugi::xml_node &_node) = 0;
     virtual void collectCustomSensors(std::vector<CustomSensorCfg> &_customSensors){}
 
+
+    std::string getSignalParsingPrefix(){ return "ENGINE:"+name +":";}
 
     MovementEngineFactory * factory = nullptr;     // LINK
     std::string name;
@@ -102,16 +104,18 @@ public:
 
     virtual void createDataObjects(std::vector<MovementEngineCfg*>& _cfgs) = 0;
     virtual bool initDataObjectsConnections(PlayedScene *_scene, Entity *_actor) = 0;
+    virtual void collectSignalsForLUT(SignalStorage &_storage){}
     virtual void stop() = 0;
 
     virtual MovementEngineData* getMovementEngineData(const std::string &_name, bool _setErrorMessage) = 0;
     virtual MovementEngineData* currentData() = 0;
+    virtual MovementEngineCfg* currentCfg() = 0;
 
     virtual void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true);
     virtual void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage=true);
 
 
-
+    Entity* parentEntity(){ return mParentEntity; }
     Direction direction(){ return mDirection; }
     //IntSignal directionSignal(){ return mDirectionSignal; }
 
@@ -130,6 +134,12 @@ public:
     void resetAnimationPlayer();
     void updateAnimationPlayer();
     bool isCurrentAnimationStalled();
+
+    AnimationInstance* activeAnimationInstance(){ return mActiveAnimationInstance; }
+    void setActiveAnimationInstance(AnimationInstance* _animInstance){ mActiveAnimationInstance = _animInstance; }
+
+    AnimationPlayer *animationPlayer(){ return mAnimationPlayer; }
+
 
     //void preUpdateSignals(){ Signal::preUpdateSignals(mSignals); }
     //void postUpdateSignals(){ Signal::postUpdateSignals(mSignals); }
@@ -234,7 +244,7 @@ public:
     void stop() override {}
     MovementEngineData* getMovementEngineData(const std::string &, bool ) override { return nullptr; }
     MovementEngineData* currentData() override { return nullptr; }
-
+    MovementEngineCfg* currentCfg() override { return nullptr; }
 
 };
 

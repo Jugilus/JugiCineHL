@@ -147,7 +147,7 @@ public:
 //protected:
 
      ShapeKind mKind = ShapeKind::NOT_DEFINED;
-     VectorLayer * mParentLayer = nullptr;
+     VectorLayer * mParentLayer = nullptr;              // LINK
      std::vector<ShapePoint>mCPoints;
      std::vector<PathPoint>mPoints;
      bool mClosed = false;

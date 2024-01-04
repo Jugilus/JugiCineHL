@@ -25,9 +25,10 @@ class AnimationPlayer;
 class PlayedScene;
 class Animation;
 
-struct SignalQuery;
-struct SignalSetter;
+class SignalQuery;
+class SignalSetter;
 class ParsedSignalPath;
+struct SignalParsingInfo ;
 
 
 
@@ -57,6 +58,7 @@ public:
     void obtainSignal_signalQuery(SignalQuery &_signalQuery, ParsedSignalPath &_psp, bool _setErrorMessage=true);
     void obtainSignal_signalSetter(SignalSetter &_signalSetter, ParsedSignalPath &_psp, bool _setErrorMessage=true);
 
+    bool obtainSignal(SignalParsingInfo &_spi, bool _setErrorMessage=true);
 
 
 private:

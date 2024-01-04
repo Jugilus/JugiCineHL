@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composedSprite name="score" set="spritesB" tileWidth="50" tileHeight="50" nTilesX="1" nTilesY="1">
+    <layer content="Free sprites" name="Layer 1">
+        <sprite type="Text" name="numScore" nameID="score" x="25" y="25" handleSource="true" text="numScore"/>
+    </layer>
+    <parameter name="widget" value="scoreSlot" type="string"/>
+    <parameter name="wName" value="scoreSlot" type="string"/>
+</composedSprite>

@@ -50,7 +50,7 @@ bool SourceBody::initBody(SourceEntityCfg *_sourceEntityCfg, b2Vec2 _bodyCenterP
     mSourceSprite = _sourceSprite;
 
 
-    if(_sourceEntityCfg->name == "fancyPlatformA"){
+    if(_sourceEntityCfg->name == "iGamepad"){
         DummyFunction();
     }
 
@@ -252,7 +252,8 @@ bool SourceBody::addVectorShapeBodyFixture(SourceEntityCfg *_sourceEntityCfg)
 bool SourceBody::addSensorsFixtures(std::vector<CustomSensorSourceEntityCfg> &_sensorCfgs)
 {
 
-    if(mCategory->role != EntityRole::ACTOR && mCategory->role != EntityRole::MOVABLE_OBJECT){
+    if(mCategory->role != EntityRole::ACTOR && mCategory->role != EntityRole::MOVABLE_OBJECT &&
+            mCategory->role != EntityRole::BULLET && mCategory->role != EntityRole::SOLID_BULLET){
         dbgSystem.addMessage( "Using add-on sensors is possible only with '"+ GetEntityRoleString(EntityRole::ACTOR) + "'!");
         return false;
     }
@@ -311,6 +312,16 @@ bool SourceBody::addSensorsFixtures(std::vector<CustomSensorSourceEntityCfg> &_s
             sf.mVertices[2] = b2Vec2(mBodyBoundingBox.max.x - d, mBodyBoundingBox.max.y + gWorldInfo.ceilingSensorHeightMeters());
             sf.mVertices[3] = b2Vec2(mBodyBoundingBox.min.x + d, mBodyBoundingBox.max.y + gWorldInfo.ceilingSensorHeightMeters());
 
+
+        }else if(bodyKind == EntityRole::SOLID_BULLET_SENSOR){
+
+            // the shape is the same as the body
+            sf.mShapeType = b2Shape::Type::e_polygon;
+            sf.mVertices.resize(4);
+            sf.mVertices[0] = b2Vec2(mBodyBoundingBox.min.x, mBodyBoundingBox.min.y);
+            sf.mVertices[1] = b2Vec2(mBodyBoundingBox.max.x, mBodyBoundingBox.min.y);
+            sf.mVertices[2] = b2Vec2(mBodyBoundingBox.max.x, mBodyBoundingBox.max.y);
+            sf.mVertices[3] = b2Vec2(mBodyBoundingBox.min.x, mBodyBoundingBox.max.y);
 
         }else if(bodyKind == EntityRole::CUSTOM_SENSOR){
 
@@ -607,6 +618,10 @@ void SourceBody::setFixtureDef(EntityCategory *_category, b2FixtureDef &_b2Fixtu
 
             }else if(_category->role==EntityRole::MOVABLE_OBJECT){
                 _b2FixtureDef.density = 10.0;
+
+            }else if(_category->role==EntityRole::SOLID_BULLET){
+                _b2FixtureDef.density = 5.0;
+                //_b2FixtureDef.friction = 0.5f;
             }
 
 
@@ -712,13 +727,19 @@ bool SourceBody::ObtainFixtureUserDatas(SourceSprite *_sourceSprite)
 //=================================================================================================
 
 
-
-bool Body::init(SourceBody *_sourceBody, Entity *_parentEntity, Vec2f _bodyPos, float _bodyAngle)
+Body::Body(SourceBody *_sourceBody, Entity *_parentEntity) : mSourceBody(_sourceBody), mParentEntity(_parentEntity)
 {
 
-    mSourceBody = _sourceBody;
-    mParentEntity = _parentEntity;
+}
 
+
+//bool Body::init(SourceBody *_sourceBody, Entity *_parentEntity, Vec2f _bodyPos, float _bodyAngle)
+//{
+
+    //mSourceBody = _sourceBody;
+    //mParentEntity = _parentEntity;
+
+    /*
     b2BodyDef bodyDef = mSourceBody->B2bodyDef();
     bodyDef.position = gWorldInfo.pixelsToMeters(_bodyPos);
     bodyDef.angle = _bodyAngle * b2_pi / 180.0f ;
@@ -730,36 +751,28 @@ bool Body::init(SourceBody *_sourceBody, Entity *_parentEntity, Vec2f _bodyPos, 
 
     std::vector<SourceFixture> &sourceFixtures = mSourceBody->sourceFixtures();
 
-    /*
-    if(_parentEntity->type()==EntityType::PATHWAY){
-        // These entities does not have defined shared vertex data in source fixtures (as the shapes are the map vector shapes)
-        // We need to recreate fixture vertex data for the current vector shape!
-
-        EPathway *e = static_cast<EPathway*>(_parentEntity);
-        VectorShape *vs = e->vectorShape();
-        assert(sourceFixtures.size()==1);
-        SourceFixture &sf = sourceFixtures.front();
-        assert(sf.fud->role==FixtureRole::PATHWAY_SENSOR);
-
-        sf.fud->vectorShape = vs;
-        createB2ShapeVerticesForTileSprite(sf, -_bodyPos, nullptr);
-
-    }else if(_parentEntity->type()==EntityType::AREA){
-        // These entities does not have defined shared vertex data in source fixtures (as the shapes are the map vector shapes)
-        // We need to recreate fixture vertex data for the current vector shape!
-
-        Actor *a = static_cast<Actor*>(_parentEntity);
-        VectorShape *vs = a->vectorShape();
-        assert(sourceFixtures.size()==1);
-        SourceFixture &sf = sourceFixtures.front();
-        assert(sf.fud->role==FixtureRole::AREA_SENSOR);
-
-        sf.fud->vectorShape = vs;
-        createB2ShapeVerticesForTileSprite(sf, -_bodyPos, nullptr);
+    for(const SourceFixture &sf : sourceFixtures){
+        if(sf.temporaryFixture){
+            continue;
+        }
+        createFixture(sf);
     }
-
     */
 
+//    return true;
+//}
+
+
+void Body::createB2Body(Vec2f _bodyPos, float _bodyAngle)
+{
+
+    b2BodyDef bodyDef = mSourceBody->B2bodyDef();
+    bodyDef.position = gWorldInfo.pixelsToMeters(_bodyPos);
+    bodyDef.angle = _bodyAngle * b2_pi / 180.0f ;
+    bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(mParentEntity);
+    mB2Body = mParentEntity->parentEntitySystem()->world()->CreateBody(&bodyDef);
+
+    std::vector<SourceFixture> &sourceFixtures = mSourceBody->sourceFixtures();
 
     for(const SourceFixture &sf : sourceFixtures){
         if(sf.temporaryFixture){
@@ -768,8 +781,8 @@ bool Body::init(SourceBody *_sourceBody, Entity *_parentEntity, Vec2f _bodyPos, 
         createFixture(sf);
     }
 
-    return true;
 }
+
 
 
 void Body::createFixture(const SourceFixture &_sf)
@@ -814,6 +827,17 @@ void Body::createFixture(const SourceFixture &_sf)
         bodyFixtureDef.shape = &shape;
         mB2Body->CreateFixture(&bodyFixtureDef);
     }
+}
+
+
+
+
+void Body::destroyB2Body()
+{
+
+    mParentEntity->parentEntitySystem()->world()->DestroyBody(mB2Body);
+    mB2Body = nullptr;
+
 }
 
 

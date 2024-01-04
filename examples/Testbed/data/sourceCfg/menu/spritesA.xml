@@ -32,7 +32,7 @@
             <image name="checkBoxA-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
             <image name="checkBoxA-jfr2" file="data/graphics/menu/spritesA.png"/>
             <parameter name="wName" value="value" type="string"/>
-            <parameter name="widgetNew" value="checkBoxA" type="string"/>
+            <parameter name="widget" value="checkBoxA" type="string"/>
         </sprite>
         <sprite name="slotItemA_background">
             <image name="slotItemA__background-jfr1" file="data/graphics/menu/spritesA.png" marker="1"/>
@@ -68,9 +68,7 @@
             <image name="buttonArrowA__right-jfr2" file="data/graphics/menu/spritesA.png"/>
             <image name="buttonArrowA__right-jfr3" file="data/graphics/menu/spritesA.png"/>
         </sprite>
-        <sprite name="inputBoxA_background" imageName="inputBoxA__background-jfr1" imageFile="data/graphics/menu/spritesA.png">
-            <constantParameter name="wTextInputBox" value="true" type="bool"/>
-        </sprite>
+        <sprite name="inputBoxA_background" imageName="inputBoxA__background-jfr1" imageFile="data/graphics/menu/spritesA.png"/>
         <sprite name="inputDeviceSelectorDummySlot" imageName="inputDeviceSelectorDummySlot" imageFile="data/graphics/menu/spritesA.png">
             <constantParameter name="invisibleDummy" value="true" type="bool"/>
         </sprite>
@@ -80,7 +78,7 @@
             <image name="radioBoxA-jfr2" file="data/graphics/menu/spritesA.png"/>
             <parameter name="wName" value="value" type="string"/>
             <parameter name="wExclusiveGroup" value="value" type="string"/>
-            <parameter name="widgetNew" value="radioBoxA" type="string"/>
+            <parameter name="widget" value="radioBoxA" type="string"/>
         </sprite>
     </sprites>
 </sourceGraphicSet>

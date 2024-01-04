@@ -1,5 +1,7 @@
 #include <string>
 #include <sstream>
+
+#include "pugixml/pugixml.hpp"
 #include "jmSystem.h"
 #include "jmMapLoader_bin.h"
 #include "jmSourceSprite.h"
@@ -51,6 +53,92 @@ bool SceneMapInfo::operator==(SceneMapInfo &other)
 
     return true;
 
+}
+
+
+
+bool SceneMapInfo::loadCfg(const pugi::xml_node &_node)
+{
+
+    dbgSystem.addMessage("Loading scene map '" + name +"' ...");
+
+
+    for(pugi::xml_attribute a = _node.first_attribute(); a; a = a.next_attribute()){
+        std::string attributeName =std::string(a.name());
+
+        if(attributeName=="name"){
+            //mName = a.as_string("name");
+
+        }else if(attributeName=="mapFile"){
+            mapRelativeFilePath = a.as_string();
+
+        }else if(attributeName=="mapType"){
+            std::string sValue = a.as_string("World");
+            mapType = GetMapTypeFromString(sValue);
+
+        }else if(attributeName=="worldSceneMapForParrallaxMap"){
+            worldSceneMapForParallaxMap = a.as_string();
+
+        }else{
+
+            dbgSystem.addMessage("Unknown attribute '" + attributeName + "' in node '" + std::string(_node.name()) +"' !");
+            return false;
+        }
+    }
+
+    for(pugi::xml_node n = _node.first_child(); n; n = n.next_sibling()){
+        std::string nodeName = std::string(n.name());
+
+        if(nodeName=="viewport"){
+
+            for(pugi::xml_attribute a = n.first_attribute(); a; a = a.next_attribute()){
+                std::string attributeName =std::string(a.name());
+
+                if(attributeName=="xMinRel"){
+                    xMinRel = a.as_int(0);
+
+                }else if(attributeName=="xMinAbs"){
+                    xMinAbs = a.as_int(0);
+
+                }else if(attributeName=="yMinRel"){
+                    yMinRel = a.as_int(0);
+
+                }else if(attributeName=="yMinAbs"){
+                    yMinAbs = a.as_int(0);
+
+                }else if(attributeName=="xMaxRel"){
+                    xMaxRel = a.as_int(100);
+
+                }else if(attributeName=="xMaxAbs"){
+                    xMaxAbs = a.as_int(0);
+
+                }else if(attributeName=="yMaxRel"){
+                    yMaxRel = a.as_int(100);
+
+                }else if(attributeName=="yMaxAbs"){
+                    yMaxAbs = a.as_int(0);
+
+                }else{
+
+                    dbgSystem.addMessage("Unknown attribute '" + attributeName + "' in node '" + std::string(_node.name()) +"' !");
+                    return false;
+                }
+            }
+
+        }else if(nodeName=="parameter"){
+
+
+        }else{
+
+            dbgSystem.addMessage("Unknown node '" + nodeName + "' !");
+            return false;
+
+        }
+    }
+
+
+    dbgSystem.removeLastMessage();
+    return true;
 }
 
 

@@ -28,7 +28,7 @@
 #include "jpGuiTextInput.h"
 #include "jpGuiSystem.h"
 #include "jpVariables.h"
-#include "jpLogicState.h"
+#include "jpLogicAction.h"
 #include "jpItemsCommon.h"
 #include "jpItemSlotData.h"
 #include "jpPlayedScene.h"
@@ -246,6 +246,8 @@ bool GuiTable::initConnections(GuiSystem * _guiSystem)
 {
 
     dbgSystem.addMessage("Init connections for the widget '" + mCfg->name + "' ...");
+
+    mRootMap = mRootSprite->parentLayer()->rootMap();
 
     mName = mRootSprite->parameters().value("wName");
     if(mName.empty()){
@@ -1469,7 +1471,7 @@ void GuiSlot::removeItem()
         }
     }
 
-    slotData->setSlot(nullptr);
+    //slotData->setSlot(nullptr);
     mGameItem = nullptr;
 
 
@@ -1516,7 +1518,7 @@ void GuiSlot::updateComponents()
 {
 
     GuiSlotData *slotData = mGameItem->slotData();
-    slotData->setSlot(this);
+    //slotData->setSlot(this);
 
 
     for(GuiSlotDataComponent *c : slotData->components()){

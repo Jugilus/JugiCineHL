@@ -24,13 +24,15 @@ class VectorShape;
 class GuiWidget;
 class WidgetFactory;
 
+class Item;
+
 class PlayedScene;
 class GuiSystem;
 
 class WidgetFactory;
 
-struct SignalQuery;
-struct SignalSetter;
+class SignalQuery;
+class SignalSetter;
 class ParsedSignalPath;
 
 /// \addtogroup Gui
@@ -103,6 +105,16 @@ class GuiWidget : public SignalCallback
 {
 
 public:
+
+    struct Attributes
+    {
+        static const int NONE = 0;
+        static const int CHILD_WIDGET =      1 << 0 ;
+        static const int ITEM_ASSIGNABLE =    1 << 1 ;
+
+    };
+
+
 
     GuiWidget(){}
 
@@ -207,6 +219,8 @@ public:
     ///\brief Returns the kind of this widget.
     WidgetType type(){ return mType; }
 
+    Map *rootMap(){return mRootMap;}
+
 
     ///\brief Returns the design kind of this widget.
     std::string designKind(){ return mDesignKind; }
@@ -240,13 +254,16 @@ public:
 
     virtual void _setHighlighted(bool _highlighted);
 
-
     virtual void update() = 0;
 
     virtual void setToInitialState(){}
 
-
     bool isInitialized(){ return mInitialized; }
+
+
+    virtual void setItem(Item* _item){}
+
+    //----
 
     void addModalBlockLevel(){ mModalBlockLevel ++;}
 
@@ -260,6 +277,9 @@ public:
 
     int modalBlockLevel(){ return mModalBlockLevel; }
 
+
+    //----
+    int attributeFlags(){ return mAttributeFlags; }
 
     //void preUpdateSignals(){ Signal::preUpdateSignals(mSignals); }
     //void postUpdateSignals(){ Signal::postUpdateSignals(mSignals); }
@@ -414,10 +434,7 @@ public:
     static GuiWidget* GetInteracted_CursorDown(CustomObject* _customObject){ return (interactedWidget && interactedWidget->isPressed() && interactedWidget->customObject()==_customObject)? interactedWidget : nullptr; }
 
 
-
-
     //-----------------------------------------------------------------
-
 
 
     static void _SetInteractedWidget(GuiWidget *_widget);
@@ -433,6 +450,9 @@ protected:
     std::string mDesignKind;
     CustomObject* mObj = nullptr;                            // owned
     GuiWidgetCallback *mCallbackObj = nullptr;               // owned
+    Map *mRootMap = nullptr;                                    // LINK
+
+    int mAttributeFlags = 0;
 
     // state flags
     bool mDisabled = false;

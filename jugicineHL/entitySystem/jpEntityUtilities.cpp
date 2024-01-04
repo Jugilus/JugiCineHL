@@ -11,9 +11,13 @@
 #include "jmCommonFunctions.h"
 
 #include "jpPlayedApp.h"
+#include "jpPlayedScene.h"
 #include "jpInput.h"
 #include "jpUtilities.h"
+#include "jpCommands.h"
 
+#include "data/jpItem.h"
+#include "data/jpDataUtilities.h"
 #include "jpEntityCommon.h"
 #include "jpB2Body.h"
 #include "jpB2Fixture.h"
@@ -308,6 +312,442 @@ TaskEngineData* ObtainTaskEngineData(Entity* _entity, const std::string &name, b
 //===============================================================================================================
 
 
+void EntitySignalsParser::reset()
+{
+
+    mThisLogicState = nullptr;
+    mEntitySystem = nullptr;
+    mThisEntity = nullptr;
+    mOriginEntity = nullptr;
+    mOriginSourceEntity = nullptr;
+    mOriginObtainer = nullptr;
+
+    mAccessorNotUsed = false;
+}
+
+
+bool EntitySignalsParser::parseObject(PlayedScene *_scene, SignalParsingInfo &_spi)
+{
+
+    reset();
+
+    mThisEntity = static_cast<Entity*>(_spi.rootParentObject);
+    mThisLogicState = _spi.logicState;
+    mEntitySystem = dynamic_cast<EntitySystem*>(_scene->componentsGroup()->getComponent("entitySystem"));
+    if(mEntitySystem==nullptr){
+        dbgSystem.addMessage("Entity system not found!");
+        return false;
+    }
+
+    if(_spi.originObjectPath.size()>7 && _spi.originObjectPath.substr(0,7)=="ENTITY:"){
+
+        if(parseOriginEntity(_scene, _spi.originObjectPath)==false){
+            return false;
+        }
+        _spi.originObjectObtainer = mOriginObtainer;
+
+
+    }else if(_spi.originObjectPath.size()>14 && _spi.originObjectPath.substr(0,14)=="SOURCE_ENTITY:"){
+        std::string sourceEntity =_spi.originObjectPath.substr(14);
+
+        SourceEntity *se =mEntitySystem->sourceEntitiesGroup()->getSourceEntitiy(sourceEntity);
+        if(se==nullptr){
+            return false;
+        }
+        _spi.originObject = se;
+
+
+    }else{
+        dbgSystem.addMessage("Error parsing origin object path '" + _spi.originObjectPath +"'!");
+        return false;
+    }
+
+    return true;
+}
+
+
+bool EntitySignalsParser::parseSignalAccessorNEW(PlayedScene *_scene, SignalParsingInfo &_spi, const std::string &_signalValue)
+{
+
+    reset();
+
+    mThisEntity = static_cast<Entity*>(_spi.rootParentObject);
+    mThisLogicState = _spi.logicState;
+    mEntitySystem = dynamic_cast<EntitySystem*>(_scene->componentsGroup()->getComponent("entitySystem"));
+    if(mEntitySystem==nullptr){
+        dbgSystem.addMessage("Entity system not found!");
+        return false;
+    }
+
+
+    if(_spi.originObjectPath.size()>7 && _spi.originObjectPath.substr(0,7)=="ENTITY:"){
+
+        if(parseEntitySignal(_scene, _spi, _signalValue)==false){
+            return false;
+        }
+
+
+    }else if(_spi.originObjectPath=="ENTITY_MANAGER"){
+
+        if(parseEntityManagerSignal(_scene, _spi, _signalValue)==false){
+            return false;
+        }
+
+    }else{
+        dbgSystem.addMessage("Error parsing origin object path '" + _spi.originObjectPath +"'!");
+        return false;
+    }
+
+    return true;
+}
+
+
+bool EntitySignalsParser::parseOriginEntity(PlayedScene *_scene, const std::string &_originPath)
+{
+
+
+    if(_originPath.size()>7 && _originPath.substr(0,7)=="ENTITY:"){
+
+        std::string originEntityName = _originPath.substr(7);
+
+        if(originEntityName=="THIS"){
+            mOriginEntity = mThisEntity;
+            mOriginSourceEntity = mOriginEntity->sourceEntity();
+
+
+        }else if(originEntityName.size()>10 && originEntityName.substr(0,10)=="CONTACTED:"){
+            originEntityName = originEntityName.substr(10);
+            mOriginSourceEntity = mEntitySystem->sourceEntitiesGroup()->getSourceEntitiy(originEntityName);
+            if(mOriginSourceEntity==nullptr){
+                return false;
+            }
+
+            mOriginObtainer = new ContactedEntityObtainer(mThisEntity, mOriginSourceEntity, nullptr);
+
+        }else{
+
+            CompositeSprite *rootCompositeSprite = mThisEntity->mapElement().rootCompositeSprite();
+
+            if(rootCompositeSprite){
+                DummyFunction();
+            }
+            if(originEntityName=="groundSwitch_doorA2"){
+                DummyFunction();
+            }
+
+            // when another entity is the origin it is found via 'linkedGroupID' which must be different than 0
+            // and the same as for thisEntity !
+            if(rootCompositeSprite==nullptr && mThisEntity->linkedGroupID()==0){
+                dbgSystem.addMessage("An entity '"+ mThisEntity->sourceEntity()->sourceEntityCfg()->name +"' must have defined 'eLinkedGroupID' parameter in order to connect with other entities with the same 'eLinkedGroupID' parameter!");
+                return false;
+            }
+
+            std::vector<std::string>entityNameParts = StdString::splitString(originEntityName, ":");
+
+            std::string name = originEntityName;
+            int linkedEntityID = 0;
+
+            if(entityNameParts.size()>1){
+                name = entityNameParts[0];
+                if(StdString::integerNumber(entityNameParts[1], linkedEntityID)==false){
+                    return false;
+                }
+                //linkedEntityID = StdString::stringToInt(entityNameParts[1], 0);
+            }
+
+            mOriginEntity = mEntitySystem->getActor(name, mThisEntity->linkedGroupID(), linkedEntityID, rootCompositeSprite);
+
+
+            if(mOriginEntity==nullptr){
+
+                // this bellow handle situation when you have varring number of linked entities, which can make designing linking easier
+                if(linkedEntityID>1){
+                    mAccessorNotUsed = true;
+                    dbgSystem.removeLastMessage();
+
+                }else{
+                    return false;
+                }
+
+            }else{
+
+                mOriginSourceEntity = mOriginEntity->sourceEntity();
+            }
+        }
+
+    }else{
+        dbgSystem.addMessage("Wrong origin path '" + _originPath +"' !");
+        return false;
+    }
+
+
+    return true;
+
+}
+
+
+bool EntitySignalsParser::parseEntitySignal(PlayedScene *_scene, SignalParsingInfo &_spi, const std::string &_signalValue)
+{
+
+
+    if(parseOriginEntity(_scene, _spi.originObjectPath)==false){
+        return false;
+    }
+
+    if(mAccessorNotUsed){
+        _spi.accessorNotUsed = true;
+        return true;
+    }
+
+
+    _spi.originObjectObtainer = mOriginObtainer;
+
+
+    //---
+    std::string signalIdentifier = _spi.signalIdentifierPath;
+
+    if(signalIdentifier=="STATE:THIS"){
+        assert(mThisLogicState);
+        signalIdentifier = obtainStateIdentifierString(mThisLogicState, "STATE");
+
+
+    }else if(signalIdentifier=="STATE_ANIMATION:THIS"){
+        assert(mThisLogicState);
+        signalIdentifier = obtainStateIdentifierString(mThisLogicState, "STATE_ANIMATION");
+
+
+    }else if(_spi.signalIdentifierPath.size()>8 && _spi.signalIdentifierPath.substr(0,8)=="CONTACT:"){
+        signalIdentifier = _spi.signalIdentifierPath.substr(0,7);        // without the last ':'
+
+        std::string contacted = _spi.signalIdentifierPath.substr(8);
+
+        if(contacted=="ANY"){
+
+            if(mOriginEntity==nullptr){
+                _spi.signalObtainer = new ContactSignalObtainer(mOriginEntity, nullptr, nullptr, true);
+            }
+
+        }else if(contacted=="THIS"){
+            //_spi.signalObtainer = new ContactSignalObtainer(mOriginEntity, sourceEntity, nullptr, false);
+            if(mOriginEntity==nullptr){
+                _spi.signalObtainer = new ContactSignalObtainer(nullptr, mThisEntity->sourceEntity(), nullptr, false);
+            }
+
+        }else{
+
+            std::vector<std::string> parts = StdString::splitString(contacted, "|");
+
+            if(parts.size()==1){
+
+                const std::string & part = parts.front();
+
+                if(part.size()>4 && part.substr(0,4)=="ENT:"){
+
+                    std::string entityName = part.substr(4);
+                    SourceEntity *sourceEntity = mEntitySystem->sourceEntitiesGroup()->getSourceEntitiy(entityName);
+                    if(sourceEntity==nullptr){
+                        return false;
+                    }
+                    _spi.signalObtainer = new ContactSignalObtainer(mOriginEntity, sourceEntity, nullptr, false);
+
+
+                }else if(part.size()>4 && part.substr(0,4)=="CAT:"){
+
+                    std::string categoryName = part.substr(4);
+                    EntityCategory *ec = mEntitySystem->entityCategoriesGroup().getEntityCategory(categoryName);
+                    if(ec==nullptr){
+                        return false;
+                    }
+                    _spi.signalObtainer = new ContactSignalObtainer(mOriginEntity, nullptr, ec, false);
+
+                }else{
+
+                    dbgSystem.addMessage("Error parsing contact path'" + contacted + "'!");
+                    return false;
+                }
+
+
+            }else{
+
+                _spi.signalObtainer = new ContactSignalObtainer_multi(mOriginEntity);
+
+                for(const std::string & part : parts){
+
+                    if(part.size()>4 && part.substr(0,4)=="ENT:"){
+
+                        std::string entityName = part.substr(4);
+                        SourceEntity *se = mEntitySystem->sourceEntitiesGroup()->getSourceEntitiy(entityName);
+                        if(se==nullptr){
+                            return false;
+                        }
+                        static_cast<ContactSignalObtainer_multi*>(_spi.signalObtainer)->addSourceEntity(se);
+
+                    }else if(part.size()>4 && part.substr(0,4)=="CAT:"){
+
+                        std::string categoryName = part.substr(4);
+                        EntityCategory *ec = mEntitySystem->entityCategoriesGroup().getEntityCategory(categoryName);
+                        if(ec==nullptr){
+                            return false;
+                        }
+                        static_cast<ContactSignalObtainer_multi*>(_spi.signalObtainer)->addEntityCategory(ec);
+
+                    }else{
+
+                        dbgSystem.addMessage("Error parsing contact path'" + contacted + "'!");
+                        return false;
+                    }
+                }
+
+            }
+
+            /*
+            SourceEntity *sourceEntity = mEntitySystem->sourceEntitiesGroup()->getSourceEntitiy(contacted);
+            if(sourceEntity==nullptr){
+                return false;
+            }
+            _spi.signalObtainer = new ContactSignalObtainer(mOriginEntity, sourceEntity, nullptr, false);
+            */
+        }
+    }
+
+
+    if(_spi.signalAccessorType==SignalAccessorType::QUERY){
+        if(mOriginSourceEntity->signalIdentifiers().getParsingInfo_query(_spi, signalIdentifier, _signalValue)==false){
+            return false;
+        }
+
+        if(mOriginEntity){
+            _spi.originObject = mOriginEntity;
+            _spi.signal = _spi.originObject->signalStorage()->getSignal_query(_spi.signalIndex);
+        }
+
+    }else if(_spi.signalAccessorType==SignalAccessorType::SETTER){
+        if(mOriginSourceEntity->signalIdentifiers().getParsingInfo_setter(_spi, signalIdentifier, _signalValue)==false){
+            return false;
+        }
+
+        if(mOriginEntity){
+            _spi.originObject = mOriginEntity;
+            _spi.signal = _spi.originObject->signalStorage()->getSignal_setter(_spi.signalIndex);
+        }
+    }
+
+    return true;
+
+}
+
+
+bool EntitySignalsParser::parseEntityManagerSignal(PlayedScene *_scene, SignalParsingInfo &_spi, const std::string &_signalValue)
+{
+
+    //---
+    std::string signalIdentifier = _spi.signalIdentifierPath;
+
+    if(_spi.signalAccessorType==SignalAccessorType::QUERY){
+        if(mEntitySystem->signalIdentifiers().getParsingInfo_query(_spi, signalIdentifier, _signalValue)==false){
+            return false;
+        }
+
+        _spi.originObject = mEntitySystem;
+        _spi.signal = _spi.originObject->signalStorage()->getSignal_query(_spi.signalIndex);
+
+    }else if(_spi.signalAccessorType==SignalAccessorType::SETTER){
+        if(mEntitySystem->signalIdentifiers().getParsingInfo_setter(_spi, signalIdentifier, _signalValue)==false){
+            return false;
+        }
+
+        _spi.originObject = mEntitySystem;
+        _spi.signal = _spi.originObject->signalStorage()->getSignal_setter(_spi.signalIndex);
+
+    }
+
+    return true;
+
+}
+
+
+bool EntitySignalsParser::parseItemDataPairNEW(PlayedScene *_scene, ItemDataParsingHelper &_dpi)
+{
+
+    reset();
+
+    mThisEntity = static_cast<Entity*>(_dpi.rootParentObject);
+    mThisLogicState = _dpi.logicState;
+    mEntitySystem = dynamic_cast<EntitySystem*>(_scene->componentsGroup()->getComponent("entitySystem"));
+    if(mEntitySystem==nullptr){
+        dbgSystem.addMessage("Entity system not found!");
+        return false;
+    }
+
+
+    if(parseOriginEntity(_scene, _dpi.originObjectPath)==false){
+        return false;
+    }
+
+    if(mAccessorNotUsed){
+        _dpi.accessorNotUsed = true;
+        return true;
+    }
+
+
+    //----
+    SourceItem *sourceItem = _scene->sourceItemsStorage()->findSourceItem(mOriginSourceEntity->sourceEntityCfg()->item);
+    if(sourceItem==nullptr){
+        return false;
+    }
+
+    if(_dpi.dataAccessorType==DataAccessorType::DATA_QUERY){
+        if(sourceItem->itemDataIdentifiers().getParsingHelper(_dpi, _dpi.itemAndDataPath)==false){
+            return false;
+        }
+
+    }else if(_dpi.dataAccessorType==DataAccessorType::DATA_SETTER){
+        if(sourceItem->itemDataIdentifiers().getParsingHelper(_dpi, _dpi.itemAndDataPath)==false){
+            return false;
+        }
+
+    }else if(_dpi.dataAccessorType==DataAccessorType::DATA_TO_TEXT){
+        if(sourceItem->itemDataIdentifiers().getParsingHelper(_dpi, _dpi.itemAndDataPath)==false){
+            return false;
+        }
+
+    }else if(_dpi.dataAccessorType==DataAccessorType::ITEM_QUERY){
+        if(sourceItem->itemDataIdentifiers().getParsingHelper(_dpi, _dpi.itemAndDataPath)==false){
+            return false;
+        }
+
+    }else if(_dpi.dataAccessorType==DataAccessorType::ITEM_MOVER){
+        if(sourceItem->itemDataIdentifiers().getParsingHelper(_dpi, _dpi.itemAndDataPath)==false){
+            return false;
+        }
+    }
+
+    //----
+    _dpi.accesorData->originObject = mOriginEntity;
+    _dpi.accesorData->originObjectObtainer = mOriginObtainer;
+
+    // item and data are not obtained immediately becouse the items in origin object may change at runtime
+    /*
+    if(mOriginEntity){
+        _dpi.accesorData->originObject = mOriginEntity;
+        _dpi.accesorData->item = _dpi.accesorData->originObject->item()->findFirstChildItem(_dpi.accesorData->sourceItem);
+        if(_dpi.accesorData->item==nullptr){
+            dbgSystem.addMessage("Item with path '" + _dpi.itemAndDataPath + "' not found within entity '" + mOriginSourceEntity->name() + "'!");
+            return false;
+        }
+
+        if(_dpi.accesorData->item && _dpi.accesorData->dataIndex != -1){
+             _dpi.accesorData->data = _dpi.accesorData->item->dataStorage().at(_dpi.accesorData->dataIndex);
+        }
+
+        //_dpi.signal = _spi.signalOriginObject->signalStorage()->getSignal_query(_spi.signalIndex);
+    }
+    */
+
+    return true;
+}
+
+
 void EntitySignalsParser::parseSignalAccessor(PlayedScene *_scene, const std::string &_path, SignalAccessor &_signalAccessor, BaseObject *obj1, BaseObject *obj2)
 {
 
@@ -339,21 +779,6 @@ void EntitySignalsParser::parseSignalAccessor(PlayedScene *_scene, const std::st
     }
 
 
-    //-----
-
-    //if(_ParseSignalAccessorStyle(signalStyle, _signalAccessor)==false){
-    //    return;
-    //}
-
-
-    //-----
-    //if(signalOrigin=="INPUT_COMMAND"){
-
-    //    _signalAccessor.mSignal = app->inputSystem()->getGameInputCommand(signalName);
-    //    return;
-    //
-
-  //  }else
 
     if(signalOrigin.substr(0,7)=="ENTITY:"){
 
@@ -396,10 +821,9 @@ void EntitySignalsParser::parseSignalAccessor(PlayedScene *_scene, const std::st
             triggerOriginEntity = entitySystem->getActor(name, _actor->linkedGroupID(), linkedEntityID, rootCompositeSprite);
 
             if(triggerOriginEntity==nullptr && linkedEntityID>1){
-                _signalAccessor.mNotUsed = true;
+                _signalAccessor._setNotUsed(true);
                 dbgSystem.removeLastMessage();
             }
-
 
 
             //std::vector<Entity*>entities;
@@ -412,177 +836,17 @@ void EntitySignalsParser::parseSignalAccessor(PlayedScene *_scene, const std::st
 
 
         //---
-        if(_signalAccessor.mType==SignalAccessor::Type::QUERY){
-            //_ParseEntitySignal_SignalQuery(triggerOriginEntity, _state, signalName, static_cast<SignalQuery&>(_signalAccessor));
+        if(_signalAccessor.type()==SignalAccessorType::QUERY){
             parse_signalQuery(_scene, triggerOriginEntity, _state, signalNameAndValue, static_cast<SignalQuery&>(_signalAccessor));
 
-        }else if(_signalAccessor.mType==SignalAccessor::Type::SETTER){
-            //_ParseEntitySignal_SignalSetter(triggerOriginEntity, _state, signalName, static_cast<SignalSetter&>(_signalAccessor));
+        }else if(_signalAccessor.type()==SignalAccessorType::SETTER){
             parse_signalSetter(_scene, triggerOriginEntity, _state, signalNameAndValue, static_cast<SignalSetter&>(_signalAccessor));
 
         }
 
-        /*
-        if(_signalAccessor.mSignal){
-
-            if(_signalAccessor.mSignal->id() == static_cast<unsigned char>(SignalID::CUSTOM_ENTITY_SIGNAL)){
-                if(_state){
-                    _state->customUpdatedSignals().push_back(_signalAccessor.mSignal);
-                }
-                _signalAccessor.mOwnedSignal = true;   // Cstom signals are owned by signal accessors !
-            }
-            return;
-        }
-        */
-
     }
 
-
-    dbgSystem.addMessage("Error parsing '" + _path +"' !");
-    return;
-
-
-
 }
-
-
-/*
-
-void EntitySignalsParser::parse_signalQuery(PlayedScene *_scene, Entity *_entity, LogicState *_state, const std::string &_signalNameAndValue, SignalQuery &_signalQuery)
-{
-
-    EntitySystem *entitySystem = _entity->parentEntitySystem();
-
-
-    ParsedSignalPath psp(_signalNameAndValue);
-
-
-    if(_signalNameAndValue=="CONTACT" || _signalNameAndValue=="CONTACT:ANY"){
-
-        _signalQuery.mSignal = &_entity->contactTrigger();
-        return;
-
-
-    }else if(_signalNameAndValue.substr(0,8)=="CONTACT:"){
-
-
-        FilteredContactTriggersGroup &g = entitySystem->filteredContactTriggersGroup();
-        FilteredContactTrigger *trigger = g.getNewFilteredContactTrigger(&_entity->contactTrigger());
-
-        std::string contactedEntity = _signalNameAndValue.substr(8);
-
-        if(contactedEntity.substr(0,9)=="CATEGORY:"){
-
-            EntityCategoriesGroup & ecs = entitySystem->entityCategoriesGroup();
-
-            unsigned int bits = 0;
-
-            std::string sContactedEntityCategories = contactedEntity.substr(9);
-            std::vector<std::string> contactedEntityCategories = StdString::splitString(sContactedEntityCategories, "|");
-            for(std::string & csName : contactedEntityCategories){
-                EntityCategory *ec = ecs.getEntityCategory(csName);
-                if(ec==nullptr){
-                    return;
-                }
-                bits |= ec->contactBits;
-            }
-
-
-            trigger->setCategoriesBits(bits);
-
-            _signalQuery.mSignal = trigger;
-            return;
-
-
-        }else{
-
-            std::vector<std::string>parts = StdString::splitString(contactedEntity, ":");
-
-            if(parts.size()==1){
-
-                const std::string & entityNames = parts[0];
-                std::vector<std::string>vEntitiyNames = StdString::splitString(entityNames, ",");
-
-                for(const std::string & s : vEntitiyNames){
-                    Entity *e = entitySystem->getActor(s);
-                    if(e==nullptr){
-                        return;
-                    }
-                    trigger->addSourceEntity(e->sourceEntity());
-                }
-
-                _signalQuery.mSignal = trigger;
-                return;
-
-
-            }else if(parts.size()==2){
-
-                //const std::string & entityName = parts[0];
-                //i std::string & entityName = parts[0];
-
-            }
-
-            // TO DO target entites by 'source entity' or 'entity'
-            assert(false);
-
-        }
-
-        dbgSystem.addMessage("Error parsing '" + _signalNameAndValue +"' ! Contacts with specified entities are not yet implemented!");
-        return;
-
-
-
-    }else if(_signalNameAndValue.substr(0,6)=="STATE:"){
-
-        std::string stateName = _signalNameAndValue.substr(6);
-        LogicState *state = nullptr;
-
-        if(stateName=="THIS"){
-            state = _state;
-
-        }else{
-            //state = _entity->entityController()->findState(stateName);
-            //state = _entity->entityController()->findChildStateViaPath(stateName);
-            //state = ObtainLogicStateFromPath(_scene, _state, stateName);
-            state = ObtainLogicStateFromPath_SeekFromRootState(_scene, _entity->entityController(), stateName);
-            if(state==nullptr){
-                return;
-            }
-        }
-
-        //_signalQuery.mSignal = &state->stateTrigger();
-        _signalQuery.mSignal = &state->stateSignal();
-
-    }else if(_signalNameAndValue.substr(0,16)=="STATE_ANIMATION:"){
-
-        std::string stateName = _signalNameAndValue.substr(16);
-        LogicState *state = nullptr;
-
-        if(stateName=="THIS"){
-            state = _state;
-
-        }else{
-            state = _entity->entityController()->findChildState(stateName);
-            if(state==nullptr){
-                return;
-            }
-        }
-        EntityCustomLogicState *entityCustomState = dynamic_cast<EntityCustomLogicState *>(state->customState());  assert(entityCustomState);
-        _signalQuery.mSignal = &entityCustomState->animationTrigger();
-
-
-    }else{
-
-        // engine and custom entity signals
-
-        _entity->obtainSignal_signalQuery(_signalQuery, _signalNameAndValue, "");
-
-    }
-}
-
-*/
-
-
 
 
 void EntitySignalsParser::parse_signalQuery(PlayedScene *_scene, Entity *_entity, LogicState *_state, const std::string &_signalNameAndValue, SignalQuery &_signalQuery)
@@ -724,7 +988,6 @@ void EntitySignalsParser::parse_signalQuery(PlayedScene *_scene, Entity *_entity
 }
 
 
-
 void EntitySignalsParser::parse_signalSetter(PlayedScene *_scene, Entity *_entity, LogicState *_state, const std::string &_signalNameAndValue, SignalSetter &_signalSetter)
 {
 
@@ -737,100 +1000,106 @@ void EntitySignalsParser::parse_signalSetter(PlayedScene *_scene, Entity *_entit
 }
 
 
-//--------------------------------------------------------------------------------------------
-
-/*
- *
-bool EntitySignalStrings::parse(const std::string &_path)
+void EntitySignalsParser::parseItemDataPair(PlayedScene *scene, const std::string &_path, ItemDataPair &_itemDataPair, ParseItemMode _parseItemMode, BaseObject *obj1, BaseObject *obj2)
 {
 
-    std::vector<std::string> parts = StdString::splitString(_path, ":");
-
-    if(parts.size()>0){
-        if(parts[0]=="ENGINE"){
-            engineCfgName = parts[1];
-             if(parts.size()>2){
-                 signalName = parts[2];
-             }
-             if(parts.size()>3){
-                 signalValue = parts[3];
-            }
-
-        }else if(parts[0]=="TASK"){
-             taskCfgName = parts[1];
-             if(parts.size()>2){
-                 signalName = parts[2];
-             }
-             if(parts.size()>3){
-                 signalValue = parts[3];
-             }
-
-        }else{
-
-            signalName = parts[0];
-            if(parts.size()>1){
-                signalValue = parts[1];
-            }
-        }
+    assert(obj1);
+    Entity *thisEntity = dynamic_cast<Entity*>(obj1);
+    LogicState * _state = nullptr;
+    if(obj2 !=nullptr){
+        _state = static_cast<LogicState*>(obj2);
     }
 
-    if(signalName.empty()){
-        dbgSystem.addMessage("Error parsing signal path '" + _path + "'!");
+
+    //EntitySystem *entitySystem = thisEntity->parentEntitySystem();
+
+    EntitySystem *entitySystem = dynamic_cast<EntitySystem*>(scene->componentsGroup()->getComponent("entitySystem"));
+    if(entitySystem==nullptr){
+        dbgSystem.addMessage("Entity system not found!");
+        return;
+    }
+
+
+    std::vector<std::string>pathParts = StdString::splitString(_path, "/");
+
+    std::string origin;
+    std::string itemAndDataName;
+
+    if(pathParts.size()>0){
+        origin = pathParts[0];
+    }
+    if(pathParts.size()>1){
+        itemAndDataName = pathParts[1];
+    }
+
+
+    if(origin.substr(0,7)=="ENTITY:"){
+
+        std::string entityName = origin.substr(7);
+        Entity *entity = nullptr;
+
+        if(entityName=="THIS"){
+            entity = thisEntity;
+
+        }else{
+            entity = entitySystem->getActor(entityName);
+        }
+
+        if(entity==nullptr){
+            return;
+        }
+
+
+        //---
+        Item *rootItem = entity->item();
+
+        if(rootItem==nullptr){
+            dbgSystem.addMessage("Entity '" + entityName + "' does not have assigned an item!");
+            return;
+        }
+
+        rootItem->findChildItemDataViaPath(itemAndDataName, _itemDataPair, _parseItemMode);
+
+    }
+
+}
+
+
+bool EntitySignalsParser::parseObjectName(PlayedScene *_scene, PrintParsingHelper &_pph)
+{
+
+    mThisEntity = static_cast<Entity*>(_pph.rootParentObject);
+    mThisLogicState = _pph.logicState;
+
+    if(parseOriginEntity(_scene, _pph.originObject)==false){
         return false;
     }
 
-    // parsing value state for bool signals
-    std::vector<std::string> parts2 = StdString::splitString(signalName, "=");
-    if(parts2.size()==2){
-        signalName = parts2[0];
-        signalValueState = parts2[1];
-    }
+    _pph.originObtainer = mOriginObtainer;
 
-    // parsing value state for int signals and bitflag signals
-    if(signalValue.empty()==false){
-        parts2 = StdString::splitString(signalValue, "=");
-        if(parts2.size()==2){
-            signalValue = parts2[0];
-            signalValueState = parts2[1];
+
+    if(_pph.textKind=="OBJECT_NAME"){
+        _pph.text = mOriginSourceEntity->name();
+
+    }else if(_pph.textKind=="ITEM"){
+
+        if(mOriginEntity){
+            Item *rootItem = mOriginEntity->item();
+
+            if(rootItem==nullptr){
+                dbgSystem.addMessage("Entity '" + mOriginEntity->sourceEntity()->name() + "' does not have assigned an item!");
+                return false;
+            }
+
+            rootItem->findChildItemDataViaPath(_pph.originData, _pph.itemDataPair, ParseItemMode::DATA);
         }
+
     }
 
     return true;
 
-}
-
-
-bool EntitySignalStrings::getBoolValue(bool &_state, bool _setErrorMessage) const
-{
-
-    if(signalValueState=="TRUE" || signalValueState=="ON" || signalValueState=="1"){
-        _state = true;
-        return true;
-
-    }else if(signalValueState=="FALSE" || signalValueState=="OFF" || signalValueState=="0"){
-        _state = false;
-        return true;
-    }
-
-    if(_setErrorMessage){
-        dbgSystem.addMessage("Wrong signal value '" + signalValueState +" ' !");
-    }
-
-    return false;
 
 }
-
-
-bool EntitySignalStrings::getIntValue(int &_value) const
-{
-
-    _value = StdString::stringToInt(signalValueState, 0);
-
-    return true;
-
-}
-
-*/
 
 
 }

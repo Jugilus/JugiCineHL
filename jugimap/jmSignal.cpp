@@ -3,14 +3,11 @@
 #include "jmCommonFunctions.h"
 #include "jmCommon.h"
 #include "jmStreams.h"
+#include "jmSystem.h"
 #include "jmSignal.h"
 
 
-
 namespace jugimap {
-
-
-
 
 
 
@@ -64,6 +61,12 @@ void SignalUpdater::preUpdateSignals()
             sig->setValue(sig->value_setOnNextFrame());
             //ss->preUpdate();
 
+        }else if(s->type()==SignalType::BASE_OBJECT){
+
+            ObjectSignal* sig = static_cast<ObjectSignal*>(s);
+            sig->setValue(sig->value_setOnNextFrame());
+            //ss->preUpdate();
+
         }
 
         s->mStored_forValueSetOnNextFrame = false;
@@ -102,6 +105,10 @@ void SignalUpdater::postUpdateSignals()
         }else if(s->type()==SignalType::STRING){
             StringSignal* sig = static_cast<StringSignal*>(s);
             sig->postUpdate();
+
+        }else if(s->type()==SignalType::BASE_OBJECT){
+            ObjectSignal* sig = static_cast<ObjectSignal*>(s);
+            sig->postUpdate();
         }
 
         s->mStored_forPostUpdate = false;
@@ -121,6 +128,7 @@ void SignalUpdater::removeSignal_forValueSetOnNextFrame(Signal *_signal)
 
 }
 
+
 void SignalUpdater::removeSignal_forPostUpdate(Signal *_signal)
 {
 
@@ -131,7 +139,6 @@ void SignalUpdater::removeSignal_forPostUpdate(Signal *_signal)
 
 
 SignalUpdater gSignalUpdater;
-
 
 
 
@@ -151,6 +158,7 @@ Signal::~Signal()
         DummyFunction();
         gSignalUpdater.removeSignal_forPostUpdate(this);
     }
+
 
 }
 
@@ -174,6 +182,9 @@ void Signal::resetSignals(std::vector<Signal*> &_signals)
 
         }else if(s->mType==SignalType::STRING){
             static_cast<StringSignal*>(s)->reset();
+
+        }else if(s->mType==SignalType::BASE_OBJECT){
+            static_cast<ObjectSignal*>(s)->reset();
 
         }
     }
@@ -215,7 +226,6 @@ std::string Signal::getDbgInfo()
 }
 
 
-
 void Signal::resetValueFromString(const std::string &_value)
 {
 
@@ -246,7 +256,6 @@ void Signal::resetValueFromString(const std::string &_value)
     }
 
 }
-
 
 
 void Signal::writeValueAsIniEntry(TextStreamWriter &_writer, bool writeFloatAsInt)
@@ -294,6 +303,15 @@ BitsetSignal::BitsetSignal(const std::string &_name, unsigned int _value, unsign
     mDefaultValue = mValue = mPreviousValue = _value;
 }
 
+
+BitsetSignal::~BitsetSignal()
+{
+
+    if(mExtraData){
+        delete mExtraData;
+    }
+
+}
 
 
 void BitsetSignal::setValue(unsigned int _value)
@@ -424,92 +442,35 @@ void BitsetSignal::setDefaultValue(unsigned int _value)
 }
 
 
+BitflagsSignalExtraData *BitsetSignal::createExtraData()
+{
+
+    if(mExtraData){
+        delete mExtraData;
+    }
+    mExtraData = new BitflagsSignalExtraData();
+
+    return mExtraData;
+
+}
+
 
 
 //===================================================================================
 
 
-/*
-
-void StringSignal::setValue(const std::string &  _value)
+StringSignalExtraData *StringSignal::createExtraData()
 {
 
-    if(_value == mValue) return;
-
-    mValue = _value;
-
-    if(mValue != mPreviousValue){
-        mValueStarted = mValue;
-        mValueEnded = mPreviousValue;
-        mValueEndedStartedIsValid = true;
-
-    }else{
-        mValueStarted.clear();
-        mValueEnded.clear();
-        mValueEndedStartedIsValid = false;
+    if(mExtraData){
+        delete mExtraData;
     }
 
-    if(mStored_forPostUpdate==false){
-        gSignalUpdater.addSignal_forPostUpdate(this);
-        mStored_forPostUpdate = true;
-    }
-}
-
-
-void StringSignal::setValue_onNextFrame(const std::string &  _value)
-{
-
-    if(_value == mValue && mStored_forValueSetOnNextFrame==false) return;
-
-    mValue_setOnNextFrame = _value;
-
-    if(mStored_forValueSetOnNextFrame==false){
-        gSignalUpdater.addSignal_forValueSetOnNextFrame(this);
-        mStored_forValueSetOnNextFrame = true;
-    }
+    mExtraData = new StringSignalExtraData();
+    return mExtraData;
 
 }
 
-
-void StringSignal::reset(const std::string & _value)
-{
-    mValue = _value;
-    mPreviousValue =_value;
-    mValueStarted.clear();
-    mValueEnded.clear();
-    mValueEndedStartedIsValid = false;
-}
-
-void StringSignal::reset()
-{
-    reset(mDefaultValue);
-};
-
-void StringSignal::setDefaultValue(const std::string & _value)
-{
-    mDefaultValue = _value;
-}
-
-
-
-
-void StringSignal::postUpdate()
-{
-    mPreviousValue = mValue;
-    mValueStarted.clear();
-    mValueEnded.clear();
-    mValueEndedStartedIsValid = false;
-}
-
-
-
-std::string StringSignal::getDbgInfo()
-{
-    return "value=" + mValue + " valueEnded=" + mValueEnded + " valueStarted=" + mValueStarted +
-            " mValueEndedStartedIsValid=" + std::to_string(mValueEndedStartedIsValid) + " mValue_setOnNextFrame=" + mValue_setOnNextFrame;
-}
-
-*/
 
 
 
